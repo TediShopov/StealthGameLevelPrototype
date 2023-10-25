@@ -13,9 +13,11 @@ public class PatrolPath : MonoBehaviour
     public Transform CurrentWP => Transforms.ElementAtOrDefault(_wayPointIndex);
     [SerializeField] public Vector2 Velocity;
     [SerializeField] public float Speed;
+    public    FieldOfView FieldOfView;
     private Rigidbody2D _rigidBody2D;
     public float ReachRadius;
     public float DebugRadius;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -51,6 +53,8 @@ public class PatrolPath : MonoBehaviour
         } 
         //Store user input as a movement vector
         Velocity = SeekNextWaypoint();
+        LookAtPosition(Velocity);
+
         if (!Helpers.CompareVectors(Velocity, new Vector3(0, 0, 0), 0.01f))
         {
             _rigidBody2D.MovePosition(_rigidBody2D.position + Velocity* Speed * Time.fixedDeltaTime);
@@ -59,6 +63,12 @@ public class PatrolPath : MonoBehaviour
         {
             Velocity = Vector3.zero;
         }
+    }
+    public void LookAtPosition(Vector3 lookAt) 
+    {
+        // the second argument, upwards, defaults to Vector3.up
+        Quaternion rotation = Quaternion.Euler(0,0,Helpers.GetAngleFromVectorFloat(lookAt));
+        transform.rotation = rotation;
     }
     public void OnDrawGizmos()
     {
