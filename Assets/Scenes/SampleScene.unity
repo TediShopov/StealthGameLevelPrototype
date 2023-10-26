@@ -969,6 +969,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3796764076782940127, guid: d583d41a5be5abf4794907a71ef64745, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4642827256912696367, guid: d583d41a5be5abf4794907a71ef64745, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
@@ -1575,6 +1579,10 @@ PrefabInstance:
       propertyPath: Transforms.Array.data[2]
       value: 
       objectReference: {fileID: 964720224}
+    - target: {fileID: 177592571048017179, guid: d583d41a5be5abf4794907a71ef64745, type: 3}
+      propertyPath: SearchedObject
+      value: 
+      objectReference: {fileID: 2097330438}
     - target: {fileID: 3796764076782940127, guid: d583d41a5be5abf4794907a71ef64745, type: 3}
       propertyPath: m_Name
       value: Enemy

@@ -216,6 +216,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meshFilter: {fileID: 7658449880448983089}
+  MeshCollider: {fileID: 0}
   FOV: 90
   ViewDistance: 3
   RayCount: 30
