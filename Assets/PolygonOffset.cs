@@ -95,6 +95,7 @@ public class PolygonOffset : MonoBehaviour
     public void OnDrawGizmos()
     {
 
+        
         if (PolygonCollider == null) return;
             Gizmos.color = Color.white;
         foreach (var point in PolygonCollider.points)
@@ -109,7 +110,6 @@ public class PolygonOffset : MonoBehaviour
             {
                 foreach (var point in polygon)
                 {
-
                     UnityEngine.Vector2 vec = new UnityEngine.Vector2((float)point.x, (float)point.y);
                     Gizmos.DrawSphere(this.transform.TransformPoint(vec), DebugDistance);
                 }
