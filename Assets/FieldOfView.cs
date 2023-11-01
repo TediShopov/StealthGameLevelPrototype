@@ -44,7 +44,7 @@ public class FieldOfView : MonoBehaviour
 
 
             float globalAngle = angle + modifer; 
-            RaycastHit2D raycastHit2D = Physics2D.Raycast(GlobalOrigin, Helpers.GetVectorFromAngle(globalAngle), ViewDistance);
+            RaycastHit2D raycastHit2D = Physics2D.Raycast(GlobalOrigin, Helpers.GetVectorFromAngle(globalAngle), ViewDistance, LayerMask.NameToLayer("Boundary"));
             if (raycastHit2D.collider == null)
             {
                 //Local Angle

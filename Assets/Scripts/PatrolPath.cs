@@ -8,20 +8,28 @@ using UnityEngine;
 public class PatrolPath : MonoBehaviour
 {
     public List<Transform> Transforms = new List<Transform>();
+    public List<Vector2> Positions = new List<Vector2>();
     private int _wayPointIndex;
-    public Transform NextWP => Transforms.ElementAtOrDefault(_wayPointIndex+1);
-    public Transform CurrentWP => Transforms.ElementAtOrDefault(_wayPointIndex);
+    public Vector2 NextWP => Positions.ElementAtOrDefault(_wayPointIndex+1);
+    public Vector2 CurrentWP => Positions.ElementAtOrDefault(_wayPointIndex);
     [SerializeField] public Vector2 Velocity;
     [SerializeField] public float Speed;
     public    FieldOfView FieldOfView;
     private Rigidbody2D _rigidBody2D;
     public float ReachRadius;
     public float DebugRadius;
-    
+
+    private Vector2 CurrentPosition => new Vector2(this.transform.position.x, this.transform.position.y); 
     // Start is called before the first frame update
     void Start()
     {
+
         _rigidBody2D = this.GetComponent<Rigidbody2D>();
+        if(Positions.Count > 0 && _rigidBody2D != null) 
+        {
+            _rigidBody2D.position = Positions.First();
+        }
+//        Positions = Transforms.Select(t => new Vector2(t.position.x, t.position.y)).ToList();
     }
 
     // Update is called once per frame
@@ -29,14 +37,21 @@ public class PatrolPath : MonoBehaviour
     {
         
     }
-    public Vector3 SeekNextWaypoint() 
+    public void SetInitialPositionToPath() 
     {
-        return (NextWP.position - this.transform.position).normalized;
+        if(Positions.Count > 0 && _rigidBody2D != null) 
+        {
+            _rigidBody2D.position = Positions.First();
+        }
+    }
+    public Vector2 SeekNextWaypoint() 
+    {
+        return (NextWP - CurrentPosition).normalized;
     }
     public bool ReachedNextWayPoint() 
     {
         if (NextWP != null)
-            return Vector3.Distance(NextWP.position, this.transform.position) < ReachRadius;
+            return Vector3.Distance(NextWP, CurrentPosition) < ReachRadius;
         else
             return false;
     }
@@ -45,9 +60,9 @@ public class PatrolPath : MonoBehaviour
         if (ReachedNextWayPoint()) 
         {
             _wayPointIndex++;
-            if(_wayPointIndex+1 >= Transforms.Count) 
+            if(_wayPointIndex+1 >= Positions.Count) 
             {
-                Transforms.Reverse();
+                Positions.Reverse();
                 _wayPointIndex = 0; 
             }
         } 
@@ -73,7 +88,7 @@ public class PatrolPath : MonoBehaviour
     public void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        foreach (Transform t in Transforms)
+        foreach (Vector2 t in Positions)
         {
             if (t.Equals(CurrentWP))
                 Gizmos.color = Color.blue;
@@ -81,7 +96,7 @@ public class PatrolPath : MonoBehaviour
                 Gizmos.color = Color.red;
             else 
                 Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(t.position, DebugRadius);
+            Gizmos.DrawSphere(t, DebugRadius);
         }
 
     }

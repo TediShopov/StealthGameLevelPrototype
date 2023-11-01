@@ -834,8 +834,8 @@ GameObject:
   m_Component:
   - component: {fileID: 627463364}
   - component: {fileID: 627463363}
-  - component: {fileID: 627463362}
   - component: {fileID: 627463365}
+  - component: {fileID: 627463366}
   m_Layer: 0
   m_Name: FinishDestination
   m_TagString: Untagged
@@ -843,22 +843,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!58 &627463362
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 627463361}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.5
 --- !u!212 &627463363
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -938,6 +922,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20e6feda5f14fb84dba1f60018e6254d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!60 &627463366
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 627463361}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.47947884, y: -0.5274558}
+      - {x: 0.53262806, y: 0.48978043}
+      - {x: -0.51558495, y: 0.47084093}
+      - {x: -0.5050888, y: -0.5632448}
 --- !u!1 &861896486
 GameObject:
   m_ObjectHideFlags: 0
@@ -998,7 +1011,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02d10b672199c0548b333e37457e05cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Simplify: 0
   SimplifyDistance: 0.5
   DebugClusters: 1
   DebugGraph: 1
@@ -1184,6 +1196,10 @@ PrefabInstance:
       propertyPath: Transforms.Array.data[2]
       value: 
       objectReference: {fileID: 252349032}
+    - target: {fileID: 177592571048017179, guid: d583d41a5be5abf4794907a71ef64745, type: 3}
+      propertyPath: SearchedObject
+      value: 
+      objectReference: {fileID: 2097330438}
     - target: {fileID: 3796764076782940127, guid: d583d41a5be5abf4794907a71ef64745, type: 3}
       propertyPath: m_Name
       value: Enemy (1)
@@ -1246,6 +1262,53 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d583d41a5be5abf4794907a71ef64745, type: 3}
+--- !u!1 &1506136515
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1506136517}
+  - component: {fileID: 1506136516}
+  m_Layer: 0
+  m_Name: LevelInitializer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1506136516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1506136515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83899a95c137d464695c5a1592f2bcfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RoadMapGenerator: {fileID: 1511257164}
+  Graph: {fileID: 915105949}
+  PatrolPaths: []
+--- !u!4 &1506136517
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1506136515}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.3546844, y: -0.013117742, z: -0.14596793}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1511257163
 GameObject:
   m_ObjectHideFlags: 0
@@ -1279,7 +1342,6 @@ MonoBehaviour:
   BoundaryPoints: []
   PolygonBoundary: {fileID: 64142021}
   DistanceFromPoint: 0.5
-  Graph: {fileID: 915105949}
 --- !u!4 &1511257165
 Transform:
   m_ObjectHideFlags: 0
@@ -1910,10 +1972,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 120563276}
     m_Modifications:
-    - target: {fileID: 1189769679, guid: d583d41a5be5abf4794907a71ef64745, type: 3}
-      propertyPath: Speed
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 1189769679, guid: d583d41a5be5abf4794907a71ef64745, type: 3}
       propertyPath: DebugRadius
       value: 0.13

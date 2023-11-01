@@ -3,39 +3,65 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class Graph : MonoBehaviour
 {
     public Dictionary<Vector2, List<Vector2>> adjacencyList = new Dictionary<Vector2, List<Vector2>>();
-    public bool Simplify = false;
     public float SimplifyDistance = 1.0f;
     List<List<Vector2>> clusters=new List<List<Vector2>>();
     public bool DebugClusters=true;
     public bool DebugGraph=true;
+    private void Start()
+    {
+        
+    }
+    public void Simplify() 
+    {
+        clusters = MergeNodesIntoClusters();
+        foreach (var cluster in clusters)
+        {
+            if (cluster.Count > 1)
+            {
+                MergeNodes(cluster);
+            }
+
+        }
+    }
 
     void Update()
     {
         Vector2 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        
-        if (Simplify) 
-        {
-            Debug.Log($"Total connection: {GetTotalConnectionsCount()}");
-            Simplify = false;
-            //            SimplifyGraph( SimplifyDistance);
 
-            clusters = MergeNodesIntoClusters();
-            foreach (var cluster in clusters)
-            {
-                if (cluster.Count > 1) 
-                {
-                    MergeNodes(cluster);
-                }
+        //        if (Simplify) 
+        //        {
+        //            Debug.Log($"Total connection: {GetTotalConnectionsCount()}");
+        //            Simplify = false;
+        //            //            SimplifyGraph( SimplifyDistance);
+        //
+        //            clusters = MergeNodesIntoClusters();
+        //            foreach (var cluster in clusters)
+        //            {
+        //                if (cluster.Count > 1) 
+        //                {
+        //                    MergeNodes(cluster);
+        //                }
+        //
+        //            }
+        //            Debug.Log($"Clusters: {clusters.Count} ");
+        //        }
 
-            }
-            Debug.Log($"Clusters: {clusters.Count} ");
-        }
-        
+    }
+    public List<Vector2> GetRandomPathInDistance(float distanceToCover) 
+    {
+        var keyValueList = this.adjacencyList.Keys.ToArray();
+
+        // Generate a random index to pick an element.
+        int randomIndex = Random.Range(0,this.adjacencyList.Count);
+        // Get the randomly selected key-value pair.
+        return RandomPathDFS(keyValueList[randomIndex], distanceToCover);
+
     }
     public int GetTotalConnectionsCount() 
     {
@@ -84,6 +110,69 @@ public class Graph : MonoBehaviour
         }
 
         return clusters;
+    }
+    public List<Vector2> RandomPathDFS(Vector2 startNode, float maxDistance)
+    {
+        List<Vector2> path = new List<Vector2>();
+        HashSet<Vector2> visited = new HashSet<Vector2>();
+
+        RandomPathDFSHelper(startNode, visited, path,0,maxDistance );
+
+        return path;
+    }
+
+    private bool RandomPathDFSHelper(   Vector2 currentNode, HashSet<Vector2> visited, List<Vector2> path, float coveredDistance,float maxDistance)
+    {
+        visited.Add(currentNode);
+        path.Add(currentNode);
+
+        List<Vector2> unvisitedNeighbors = GetUnvisitedNeighbors(currentNode, visited);
+
+        if (unvisitedNeighbors.Count == 0)
+            return false;
+        if (coveredDistance > maxDistance)
+        {
+            return true;
+        }
+
+        // Shuffle the neighbors randomly.
+        Shuffle(unvisitedNeighbors);
+
+        foreach (var neighbor in unvisitedNeighbors)
+        {
+            float distToNeighbor= Vector2.Distance(currentNode, neighbor);
+            if (RandomPathDFSHelper(neighbor, visited, path, coveredDistance+distToNeighbor,maxDistance)) 
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private List<Vector2> GetUnvisitedNeighbors(Vector2 node, HashSet<Vector2> visited)
+    {
+        List<Vector2> neighbors = new List<Vector2>();
+
+        foreach (var neighbor in this.GetNeighbors(node))
+        {
+            if (!visited.Contains(neighbor))
+                neighbors.Add(neighbor);
+        }
+
+        return neighbors;
+    }
+
+    // Fisher-Yates shuffle for randomly ordering the list.
+    private void Shuffle<T>(List<T> list)
+    {
+        int n = list.Count;
+        for (int i = 0; i < n; i++)
+        {
+            int r = i + (int)(Random.value * (n - i));
+            T temp = list[i];
+            list[i] = list[r];
+            list[r] = temp;
+        }
     }
 
     private void DFS(Vector2 currentNode, List<Vector2> cluster, HashSet<Vector2> visited)
@@ -269,5 +358,18 @@ public class Graph : MonoBehaviour
                 }
             }
         }
+//        if (DebugClusters) 
+//        {
+//            if (RandomPath!=null && RandomPath.Count > 0) 
+//            {
+//
+//                    foreach (var pathPoint in RandomPath)
+//                    {
+//
+//                        Gizmos.color = Color.blue;
+//                        Gizmos.DrawSphere(pathPoint, 0.1f);
+//                    }
+//            }
+//        }
     }
 }

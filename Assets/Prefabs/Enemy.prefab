@@ -164,8 +164,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  Positions: []
   Velocity: {x: 0, y: 0}
-  Speed: 5
+  Speed: 3
   FieldOfView: {fileID: 177592571048017179}
   ReachRadius: 0.1
   DebugRadius: 0.1
@@ -216,7 +217,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meshFilter: {fileID: 7658449880448983089}
-  MeshCollider: {fileID: 0}
+  SearchedObject: {fileID: 0}
   FOV: 90
   ViewDistance: 3
   RayCount: 30

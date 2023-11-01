@@ -16,15 +16,17 @@ public class VoronoiRoadMapGenerator : MonoBehaviour
     private List<Point2d> _voronoiPoints;
     public List<Vector2> ObstaclePoints;
     public List<Vector2> BoundaryPoints;
-    private DelaunayTriangulation2<EEK> _triangulation; 
+    public DelaunayTriangulation2<EEK> _triangulation; 
     public PolygonBoundary PolygonBoundary;
     List<PolygonCollider2D> Colldiers;
     PolygonCollider2D Boundary;
     List<Vector2> SimplifiedPoints;
     public float DistanceFromPoint=0.5f;
-    public Graph Graph;
     // Start is called before the first frame update
     void Start()
+    {
+    }
+    public void InitializeRoadmap() 
     {
         this.Colldiers = new List<PolygonCollider2D>();
         ObstaclePoints = CollectAllPolygonObstaclePoints();
@@ -63,11 +65,11 @@ public class VoronoiRoadMapGenerator : MonoBehaviour
                 AddIfFarEnough(end);
             }
         }
-        if (Graph) 
-        {
-            GenerateGraphFromLineSegments(Graph);
-        }
-        Debug.Log($" Simplified count: { SimplifiedPoints.Count.ToString()}");
+//        if (Graph) 
+//        {
+//            GenerateGraphFromLineSegments(Graph);
+//        }
+//        Debug.Log($" Simplified count: { SimplifiedPoints.Count.ToString()}");
     }
     private void AddIfFarEnough(Vector2 p) 
     {
@@ -170,9 +172,10 @@ public class VoronoiRoadMapGenerator : MonoBehaviour
         return true;
 
     }
-    void GenerateGraphFromLineSegments(Graph graph )
+    public List<Vector2> GetValidSegments( DelaunayTriangulation2<EEK> triangulation )
     {
-        foreach (var segment in _triangulation.GetVoronoiSegments())
+        List<Vector2 > segments = new List<Vector2>();
+        foreach (var segment in triangulation.GetVoronoiSegments())
         {
             Vector2 start = segment.A.ToUnityVector2();
             Vector2 end = segment.B.ToUnityVector2();
@@ -181,11 +184,11 @@ public class VoronoiRoadMapGenerator : MonoBehaviour
             }
             else
             {
-                graph.AddNode(start);
-                graph.AddNode(end);
-                graph.AddEdge(start, end);
+                segments.Add(start);
+                segments.Add(end);
             }
         }
+        return segments;
     }
 
     
