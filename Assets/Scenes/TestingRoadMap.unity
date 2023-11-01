@@ -285,7 +285,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 587302028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.13, y: -0.16, z: 0}
+  m_LocalPosition: {x: 0.13, y: 2.64, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -476,7 +476,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!60 &957476895
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -503,8 +503,31 @@ PolygonCollider2D:
   m_Points:
     m_Paths:
     - - {x: 10.18, y: 4.54}
-      - {x: -10.53, y: 4.5}
+      - {x: 8.17882, y: 4.375004}
+      - {x: 4.5000677, y: 4.0716925}
+      - {x: 1.7479666, y: 3.844783}
+      - {x: -1.7030667, y: 3.5602472}
+      - {x: -3.318251, y: 3.427076}
+      - {x: -5.1270533, y: 3.2779415}
+      - {x: -6.6235795, y: 3.1545537}
+      - {x: -7.9978256, y: 3.0412478}
+      - {x: -8.306208, y: 2.0377562}
+      - {x: -8.698545, y: 0.7610667}
+      - {x: -9.265016, y: -1.082261}
+      - {x: -9.697766, y: -2.4904587}
+      - {x: -9.994385, y: -3.4556735}
       - {x: -10.26, y: -4.32}
+      - {x: -9.075574, y: -4.3272734}
+      - {x: -6.8460746, y: -4.3409643}
+      - {x: -4.5345144, y: -4.355159}
+      - {x: -2.5258727, y: -4.367493}
+      - {x: -1.0119609, y: -4.3767896}
+      - {x: 0.96949697, y: -4.3889575}
+      - {x: 2.786495, y: -4.4001155}
+      - {x: 4.8508587, y: -4.412792}
+      - {x: 6.502384, y: -4.422765}
+      - {x: 8.154931, y: -4.4329762}
+      - {x: 9.365244, y: -4.440455}
       - {x: 10.91, y: -4.45}
 --- !u!4 &957476896
 Transform:
@@ -557,6 +580,51 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!1 &1065491419
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1065491421}
+  - component: {fileID: 1065491420}
+  m_Layer: 0
+  m_Name: VoronoidRoadmapCreator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1065491420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1065491419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f949a15c40c6b8458fef2ecf71be013, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VoronoiPoints: []
+--- !u!4 &1065491421
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1065491419}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.8898644, y: 0.026965782, z: -1.1074923}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1753272982
 GameObject:
   m_ObjectHideFlags: 0
@@ -573,7 +641,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1753272983
 MonoBehaviour:
   m_ObjectHideFlags: 0
