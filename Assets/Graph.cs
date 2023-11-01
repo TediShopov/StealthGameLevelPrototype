@@ -11,6 +11,8 @@ public class Graph : MonoBehaviour
     public bool Simplify = false;
     public float SimplifyDistance = 1.0f;
     List<List<Vector2>> clusters=new List<List<Vector2>>();
+    public bool DebugClusters=true;
+    public bool DebugGraph=true;
 
     void Update()
     {
@@ -23,6 +25,14 @@ public class Graph : MonoBehaviour
             //            SimplifyGraph( SimplifyDistance);
 
             clusters = MergeNodesIntoClusters();
+            foreach (var cluster in clusters)
+            {
+                if (cluster.Count > 1) 
+                {
+                    MergeNodes(cluster);
+                }
+
+            }
             Debug.Log($"Clusters: {clusters.Count} ");
         }
         
@@ -112,9 +122,15 @@ public class Graph : MonoBehaviour
             // Either ignore the edge or add the missing nodes.
             return;
         }
+        if (!adjacencyList[node1].Contains(node2)) 
+        {
+            adjacencyList[node1].Add(node2);
+        }
+        if (!adjacencyList[node2].Contains(node1)) 
+        {
+            adjacencyList[node2].Add(node1); // For an undirected graph
+        }
 
-        adjacencyList[node1].Add(node2);
-        adjacencyList[node2].Add(node1); // For an undirected graph
     }
 
     public List<Vector2> GetNeighbors(Vector2 node)
@@ -151,6 +167,56 @@ public class Graph : MonoBehaviour
             }
         }
     }
+     public void MergeNodes(List<Vector2> nodesToMerge)
+    {
+        if (nodesToMerge.Count == 0)
+            return;
+
+        // Calculate the centroid of the nodes to be merged.
+        Vector2 centroid = CalculateCentroid(nodesToMerge);
+
+        // Create a new node at the centroid.
+        this.AddNode(centroid);
+
+        // Get the neighbors of the nodes to be merged.
+        List<Vector2> neighborsToMerge = new List<Vector2>();
+        foreach (var node in nodesToMerge)
+        {
+            neighborsToMerge.AddRange(this.GetNeighbors(node));
+        }
+
+        // Add the new node as a neighbor to all the neighbors of the merged nodes.
+        foreach (var neighbor in neighborsToMerge)
+        {
+            this.AddEdge(centroid, neighbor);
+        }
+
+        // Remove the merged nodes from the this.
+        foreach (var node in nodesToMerge)
+        {
+            this.RemoveNode(node);
+        }
+    }
+
+    private Vector2 CalculateCentroid(List<Vector2> nodes)
+    {
+        if (nodes.Count == 0)
+            return Vector2.zero;
+
+        float totalX = 0;
+        float totalY = 0;
+
+        foreach (var node in nodes)
+        {
+            totalX += node.x;
+            totalY += node.y;
+        }
+
+        float centroidX = totalX / nodes.Count;
+        float centroidY = totalY / nodes.Count;
+
+        return new Vector2(centroidX, centroidY);
+    }
 
     private static void MergeNodes(Graph graph, Vector2 nodeA, Vector2 nodeB)
     {
@@ -170,26 +236,36 @@ public class Graph : MonoBehaviour
     // Start is called before the first frame update
     private void OnDrawGizmosSelected()
     {
-        foreach (var node in adjacencyList)
+        if (DebugGraph)
         {
-            Gizmos.color = Color.black;
-            Gizmos.DrawSphere(node.Key, 0.1f);
-            foreach (var connection in node.Value)
+            foreach (var node in adjacencyList)
             {
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine(node.Key, connection);
+                Gizmos.color = Color.black;
+                Gizmos.DrawSphere(node.Key, 0.1f);
+                foreach (var connection in node.Value)
+                {
+                    Gizmos.color = Color.green;
+                    Gizmos.DrawLine(node.Key, connection);
+                }
             }
         }
-        foreach (var cluster in clusters)
+        if (DebugClusters) 
         {
-            if (cluster.Count > 1) 
+            foreach (var cluster in clusters)
             {
-
-                foreach (var node in cluster)
+                if (cluster.Count > 1)
                 {
 
+
+                    foreach (var node in cluster)
+                    {
+
+                        Gizmos.color = Color.yellow;
+                        Gizmos.DrawSphere(node, 0.1f);
+                    }
+                    var centroid = CalculateCentroid(cluster);
                     Gizmos.color = Color.red;
-                    Gizmos.DrawSphere(node, 1.0f);
+                    Gizmos.DrawSphere(centroid, 0.2f);
                 }
             }
         }

@@ -999,7 +999,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Simplify: 0
-  SimplifyDistance: 1
+  SimplifyDistance: 0.5
+  DebugClusters: 1
+  DebugGraph: 1
 --- !u!4 &915105950
 Transform:
   m_ObjectHideFlags: 0
