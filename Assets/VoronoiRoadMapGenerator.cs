@@ -9,6 +9,7 @@ using CGALDotNet.Triangulations;
 using Vector2 = UnityEngine.Vector2;
 using UnityEngine.UIElements;
 using Unity.VisualScripting;
+using UnityEditor;
 
 public class VoronoiRoadMapGenerator : MonoBehaviour
 {
@@ -19,6 +20,9 @@ public class VoronoiRoadMapGenerator : MonoBehaviour
     public PolygonBoundary PolygonBoundary;
     List<PolygonCollider2D> Colldiers;
     PolygonCollider2D Boundary;
+    List<Vector2> SimplifiedPoints;
+    public float DistanceFromPoint=0.5f;
+    public Graph Graph;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,7 +34,6 @@ public class VoronoiRoadMapGenerator : MonoBehaviour
         VoronoiPoints.AddRange(ObstaclePoints);
         VoronoiPoints.AddRange(BoundaryPoints);
         
-
         this.Colldiers.AddRange(FindObjectsOfType<PolygonCollider2D>());
         this.Boundary = this.PolygonBoundary.GetComponent<PolygonCollider2D>();
         this.Colldiers.Remove(Boundary);
@@ -38,6 +41,7 @@ public class VoronoiRoadMapGenerator : MonoBehaviour
         //Internal representation of  the voronoi points;
         _voronoiPoints = ConvertoToPoint2D(VoronoiPoints);
 
+       
         //Create triangulation
         _triangulation = new DelaunayTriangulation2<EEK>();
         _triangulation.Insert(_voronoiPoints.ToArray(), _voronoiPoints.Count);
@@ -45,7 +49,43 @@ public class VoronoiRoadMapGenerator : MonoBehaviour
         Debug.Log($" Obstacle points used: { ObstaclePoints.Count.ToString()}");
         Debug.Log($" Boundary points used: { BoundaryPoints.Count.ToString()}");
         Debug.Log($" Collider count: { Colldiers.Count.ToString()}");
-
+        SimplifiedPoints = new List<Vector2>();
+        foreach (var segment in _triangulation.GetVoronoiSegments())
+        {
+            Vector2 start = segment.A.ToUnityVector2();
+            Vector2 end = segment.B.ToUnityVector2();
+            if (!Valid(start) || !Valid(end))
+            {
+            }
+            else
+            {
+                AddIfFarEnough(start);
+                AddIfFarEnough(end);
+            }
+        }
+        if (Graph) 
+        {
+            GenerateGraphFromLineSegments(Graph);
+        }
+        Debug.Log($" Simplified count: { SimplifiedPoints.Count.ToString()}");
+    }
+    private void AddIfFarEnough(Vector2 p) 
+    {
+        var index=SimplifiedPoints.FindIndex(x => Vector2.Distance(x, p) < DistanceFromPoint);
+        if (index == -1)
+        {
+            SimplifiedPoints.Add(p);
+        }
+        else 
+        {
+            Debug.Log("Adjusted");
+            Vector2 newPos = (SimplifiedPoints[index] +p)/ 2.0f;
+            SimplifiedPoints[index] = newPos;
+        }
+    }
+    private bool CompateFloats(float a, float b, float eps) 
+    {
+        return Mathf.Abs(a - b) < eps;
     }
 
     // Update is called once per frame
@@ -82,6 +122,11 @@ public class VoronoiRoadMapGenerator : MonoBehaviour
         return pointsList;
     }
 
+    private static List<Vector2> GetCenterPointsFromCollider(PolygonCollider2D collider2D) 
+    {
+        return new List<UnityEngine.Vector2>() { collider2D.bounds.center };
+
+    }
     private static List<Vector2> GetGlobalPointsFromCollider( PolygonCollider2D collider)
     {
         Vector2[] colliderPoints = collider.points;
@@ -103,48 +148,80 @@ public class VoronoiRoadMapGenerator : MonoBehaviour
                 return true;
             }
             
+
         }
         return false;
     }
-    private bool IsInsideBoundary(Vector2 p) 
+    private bool IsOutsideBoundary(Vector2 p) 
     {
-        return Boundary.OverlapPoint(p);
+        return !Boundary.OverlapPoint(p);
     }
-    private bool IsValid(Vector2 p) 
+    private bool Valid(Vector2 p) 
     {
-        return !IsCollidingObstacle((Vector2)p) && IsInsideBoundary(p);
+        return !IsCollidingObstacle((Vector2)p) && !IsOutsideBoundary(p);
     }
-
-    private void OnDrawGizmos()
+    private bool IsValidSegment(Vector2 start, Vector2 end) 
     {
-        Gizmos.color = Color.green;
-        foreach (var obstaclePoint in ObstaclePoints)
+        var hit= Physics2D.Linecast(start, end, LayerMask.NameToLayer("Boundary"));
+        if(hit) 
         {
-            Gizmos.DrawSphere(obstaclePoint, 0.2f);
+            return false;
         }
+        return true;
 
-        Gizmos.color = Color.black;
-        foreach (var boundaryPoint in BoundaryPoints)
+    }
+    void GenerateGraphFromLineSegments(Graph graph )
+    {
+        foreach (var segment in _triangulation.GetVoronoiSegments())
         {
-            Gizmos.DrawSphere(boundaryPoint, 0.2f);
-        }
-
-        foreach (var segment in _triangulation.GetVoronoiSegments()) 
-        {
-            
             Vector2 start = segment.A.ToUnityVector2();
             Vector2 end = segment.B.ToUnityVector2();
-            if (!IsValid(start) || !IsValid(end))
+            if (!Valid(start) || !Valid(end) || !IsValidSegment(start, end))
             {
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(start, end);
             }
             else
             {
-
-                Gizmos.color = Color.yellow;
-                Gizmos.DrawLine(start, end);
+                graph.AddNode(start);
+                graph.AddNode(end);
+                graph.AddEdge(start, end);
             }
         }
+    }
+
+    
+    private void OnDrawGizmosSelected()
+    {
+        //        Gizmos.color = Color.green;
+        //        foreach (var obstaclePoint in ObstaclePoints)
+        //        {
+        //            Gizmos.DrawSphere(obstaclePoint, 0.2f);
+        //        }
+        //
+        //        Gizmos.color = Color.black;
+        //        foreach (var boundaryPoint in BoundaryPoints)
+        //        {
+        //            Gizmos.DrawSphere(boundaryPoint, 0.2f);
+        //        }
+                int iter = 0;
+        //
+                foreach (var segment in _triangulation.GetVoronoiSegments()) 
+                {
+                    iter++;
+                    
+                    Vector2 start = segment.A.ToUnityVector2();
+                    Vector2 end = segment.B.ToUnityVector2();
+                    if (!Valid(start) || !Valid(end) || !IsValidSegment(start,end))
+                    {
+                        Gizmos.color = Color.red;
+                        Gizmos.DrawLine(start, end);
+                    }
+                    else
+                    {
+                
+        
+                        Gizmos.color = Color.yellow;
+                        Gizmos.DrawLine(start, end);
+                    }
+                }
     }
 }
