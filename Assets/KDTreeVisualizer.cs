@@ -75,12 +75,12 @@ public class KDTree
         KDTree temp = NearestNeighbor(branched[0], target);
         KDTree best = Closest(target, temp, root); 
         float distanceToBest = Vector2.Distance(target,best.Point);
-        float distPerpenicular =Math.Abs(target[root.Depth%2] - root.Point[root.Depth % 2]);
+        float distPerpenicular =Mathf.Abs(target[root.Depth%2] - root.Point[root.Depth % 2]);
 
         if (distPerpenicular < distanceToBest) 
         {
             temp = NearestNeighbor(branched[1],target);
-            best = Closest(target, temp, root);
+            best = Closest(target, temp, best);
         }
         return best;
 
@@ -101,6 +101,9 @@ public class KDTreeVisualizer : MonoBehaviour
 {
      private KDTree rootKDNode;
     private List<Transform> kdNodeTransforms = new List<Transform>();
+    private Vector2 NearestFoundInTree = new Vector2();
+    private Vector2 LastClicked;
+    public bool RedoLast = false;
 
     private void Start()
     {
@@ -110,32 +113,41 @@ public class KDTreeVisualizer : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Vector2 clickPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            LastClicked = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             if (rootKDNode == null) 
             {
-                rootKDNode = new KDTree(clickPosition);
+                rootKDNode = new KDTree(LastClicked);
             }
             else
             {
-                rootKDNode.AddKDNode(clickPosition);
+            NearestFoundInTree = KDTree.NearestNeighbor(rootKDNode, LastClicked).Point;
+                rootKDNode.AddKDNode(LastClicked);
             }
             //AddKDNode( clickPosition);
+        }
+        if (RedoLast) 
+        {
+            NearestFoundInTree = KDTree.NearestNeighbor(rootKDNode,LastClicked).Point;
+            RedoLast = false;
         }
     }
 
      private void OnDrawGizmos()
     {
         DrawTree(rootKDNode);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(NearestFoundInTree, 0.2f); 
     }
 
-    private void DrawTree(KDTree node)
+    public static void DrawTree(KDTree node)
+       
     {
         if (node == null)
             return;
 
         // Draw the node as a red sphere using Gizmos
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(node.Point, 0.1f);
+//        Gizmos.color = Color.red;
+//        Gizmos.DrawSphere(node.Point, 0.1f);
 
         // Draw lines to left and right children, if they exist
         if (node.Left != null)

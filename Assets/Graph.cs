@@ -325,6 +325,12 @@ public class Graph : MonoBehaviour
     // Start is called before the first frame update
     private void OnDrawGizmosSelected()
     {
+        DebugDrawGraph();
+        DebigDrawClusters();
+    }
+
+    public void DebugDrawGraph()
+    {
         if (DebugGraph)
         {
             foreach (var node in adjacencyList)
@@ -338,7 +344,11 @@ public class Graph : MonoBehaviour
                 }
             }
         }
-        if (DebugClusters) 
+    }
+
+    private void DebigDrawClusters()
+    {
+        if (DebugClusters)
         {
             foreach (var cluster in clusters)
             {
@@ -358,18 +368,5 @@ public class Graph : MonoBehaviour
                 }
             }
         }
-//        if (DebugClusters) 
-//        {
-//            if (RandomPath!=null && RandomPath.Count > 0) 
-//            {
-//
-//                    foreach (var pathPoint in RandomPath)
-//                    {
-//
-//                        Gizmos.color = Color.blue;
-//                        Gizmos.DrawSphere(pathPoint, 0.1f);
-//                    }
-//            }
-//        }
     }
 }
