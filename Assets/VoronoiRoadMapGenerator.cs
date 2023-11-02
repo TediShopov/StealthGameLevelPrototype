@@ -22,6 +22,7 @@ public class VoronoiRoadMapGenerator : MonoBehaviour
     PolygonCollider2D Boundary;
     List<Vector2> SimplifiedPoints;
     public float DistanceFromPoint=0.5f;
+    public LayerMask BoundaryObstacleLayerMask;
     // Start is called before the first frame update
     void Start()
     {
@@ -164,7 +165,7 @@ public class VoronoiRoadMapGenerator : MonoBehaviour
     }
     private bool IsValidSegment(Vector2 start, Vector2 end) 
     {
-        var hit= Physics2D.Linecast(start, end, LayerMask.NameToLayer("Boundary"));
+        var hit= Physics2D.Linecast(start, end, BoundaryObstacleLayerMask);
         if(hit) 
         {
             return false;
