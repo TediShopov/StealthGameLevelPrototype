@@ -9,10 +9,11 @@ public class RapidlyExploringRandomTree : MonoBehaviour
     public Transform EndNode;
     public float maxStepSize = 1.0f;
     public int maxIterations = 1000;
+    public bool BuildAtBegining = true;
     public bool DoRRTStep = false;
     public PolygonBoundary Boundary;
     public Bounds RandomBounds;
-    public Graph RRTGraph;
+    private Graph RRTGraph;
     private KDTree kdTree;
    // private List<Transform> nodes = new List<Transform>();
 
@@ -24,7 +25,11 @@ public class RapidlyExploringRandomTree : MonoBehaviour
         {
             RandomBounds = Boundary.GetComponent<PolygonCollider2D>().bounds;
         }
-        BuildRRT();
+        if(BuildAtBegining) 
+        {
+
+            BuildRRT();
+        }
     }
     public void Update()
     {

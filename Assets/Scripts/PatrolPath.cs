@@ -20,6 +20,7 @@ public class PatrolPath : MonoBehaviour
     public float ReachRadius;
     public float DebugRadius;
     public float TimeSincePathStart = 1.0f;
+    public bool DrawFuturePosition=false;
 
     private Vector2 CurrentPosition => new Vector2(this.transform.position.x, this.transform.position.y); 
     // Start is called before the first frame update
@@ -54,6 +55,7 @@ public class PatrolPath : MonoBehaviour
     public bool ReachedNextWayPoint() 
     {
         if (NextWP != null)
+
             return Vector3.Distance(NextWP, CurrentPosition) < ReachRadius;
         else
             return false;
@@ -103,10 +105,14 @@ public class PatrolPath : MonoBehaviour
         }
                 Gizmos.color = Color.blue;
         
-            Gizmos.DrawSphere(CalculateFuturePosition(TimeSincePathStart), 1.0f);
-        var flatPos= CalculateFuturePosition(TimeSincePathStart);
-        flatPos.z = 0;
-            Gizmos.DrawLine(CalculateFuturePosition(TimeSincePathStart), flatPos );
+        if(DrawFuturePosition) 
+        {
+
+            Gizmos.DrawSphere(CalculateFuturePosition(TimeSincePathStart), 0.2f);
+            var flatPos = CalculateFuturePosition(TimeSincePathStart);
+            flatPos.z = 0;
+            Gizmos.DrawLine(CalculateFuturePosition(TimeSincePathStart), flatPos);
+        }
 
     }
     private Vector3 CalculateFuturePosition(float time)
