@@ -97,7 +97,6 @@ public class FieldOfView : MonoBehaviour
         float angle = Vector3.Angle(globalPointingDirection, vectorToTarget);
         if (angle < FOV / 2.0f && Vector3.Distance(testPosition, this.transform.position) <= ViewDistance) 
         {
-            Debug.Log($"Object is detected");
             return true;
         }
         return false;

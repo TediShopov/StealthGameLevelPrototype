@@ -67,14 +67,11 @@ public class PolygonOffset : MonoBehaviour
         Polygon= new Polygon2<EIK>(points);
         if (Polygon.IsSimple) 
         {
-            Debug.Log("Polygon is simple");
             if (!Polygon.IsCounterClockWise)
             {
-                Debug.Log("Polygon was reversed");
                 Polygon.Reverse();
             }
         }
-        Debug.Log("Enetered offset method");
     }
     public void SetOffsetPollygon() 
     {

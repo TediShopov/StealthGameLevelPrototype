@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 2026546169810676321}
   - component: {fileID: 943190348502344540}
   - component: {fileID: 9120195787964500920}
-  - component: {fileID: 4631560909534527348}
   m_Layer: 6
   m_Name: SQR_Obstacle
   m_TagString: Untagged
@@ -137,18 +136,3 @@ PolygonCollider2D:
       - {x: -0.5, y: -0.5}
       - {x: 0.5, y: -0.5}
       - {x: 0.5, y: 0.5}
---- !u!114 &4631560909534527348
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6228754912093341014}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4569154fcddb6a844b66b58980a1c6a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsExpandingOutWards: 1
-  DebugDistance: 0.1
-  PolygonCollider: {fileID: 9120195787964500920}

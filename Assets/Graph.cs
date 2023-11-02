@@ -116,23 +116,45 @@ public class Graph : MonoBehaviour
         List<Vector2> path = new List<Vector2>();
         HashSet<Vector2> visited = new HashSet<Vector2>();
 
-        RandomPathDFSHelper(startNode, visited, path,0,maxDistance );
+        RandomPathDFSHelper(startNode, visited, path,maxDistance );
 
         return path;
+
+    }
+    public bool IsValidPath(List<Vector2> path) 
+    {
+        //Test path 
+        for (int i = 0; i < path.Count-1; i++) 
+        {
+            if (path[i] == null) return false;
+            if (!this.GetNeighbors(path[i]).Contains(path[i+1]))
+            { return false; }
+        }
+        return true;
+    }
+    public float PathLength(List<Vector2> path) 
+    {
+        float length = 0;
+        for (int i = 0; i < path.Count - 1; i++) 
+        {
+            length += Vector2.Distance(path[i], path[i + 1]);
+        }
+        return length;
     }
 
-    private bool RandomPathDFSHelper(   Vector2 currentNode, HashSet<Vector2> visited, List<Vector2> path, float coveredDistance,float maxDistance)
+    private float RandomPathDFSHelper(   Vector2 currentNode, HashSet<Vector2> visited, List<Vector2> path, float maxDistance)
     {
         visited.Add(currentNode);
         path.Add(currentNode);
 
         List<Vector2> unvisitedNeighbors = GetUnvisitedNeighbors(currentNode, visited);
 
+        float coveredDistance= PathLength(path);
         if (unvisitedNeighbors.Count == 0)
-            return false;
+            return coveredDistance;
         if (coveredDistance > maxDistance)
         {
-            return true;
+            return coveredDistance;
         }
 
         // Shuffle the neighbors randomly.
@@ -141,12 +163,19 @@ public class Graph : MonoBehaviour
         foreach (var neighbor in unvisitedNeighbors)
         {
             float distToNeighbor= Vector2.Distance(currentNode, neighbor);
-            if (RandomPathDFSHelper(neighbor, visited, path, coveredDistance+distToNeighbor,maxDistance)) 
+            if (RandomPathDFSHelper(neighbor, visited, path, maxDistance)  >maxDistance) 
             {
-                return true;
+                return PathLength(path);
+            }
+            else
+            {
+
+                //If path doesnt satisfy criteria remove the nodes from it and try the next neighbour;
+                int index = path.FindIndex(x=>x==currentNode);
+                path.RemoveRange(index+1, path.Count - index - 1);
             }
         }
-        return false;
+        return PathLength(path);
     }
 
     private List<Vector2> GetUnvisitedNeighbors(Vector2 node, HashSet<Vector2> visited)

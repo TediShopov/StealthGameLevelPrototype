@@ -10,7 +10,8 @@ public class InitializeStealthLevel : MonoBehaviour
 {
     public VoronoiRoadMapGenerator RoadMapGenerator;
     public Graph Graph;
-    public PatrolPath[] PatrolPaths;
+    public float BiasPathDistance = 15.0f;
+    private PatrolPath[] PatrolPaths;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,14 +21,19 @@ public class InitializeStealthLevel : MonoBehaviour
         GenerateGraphFromLineSegments(Graph, RoadMapGenerator.GetValidSegments(RoadMapGenerator._triangulation));
         Graph.Simplify();
         PatrolPaths = FindObjectsOfType<PatrolPath>();
-        foreach (PatrolPath p in PatrolPaths) 
+        foreach (PatrolPath p in PatrolPaths)
         {
-            p.Positions = Graph.GetRandomPathInDistance(10.0f);
+            p.Positions = Graph.GetRandomPathInDistance(BiasPathDistance);
+            Debug.Log($"Path Length is: {Graph.PathLength(p.Positions)}");
+            if (!Graph.IsValidPath(p.Positions))
+            {
+                Debug.Log("Invalid Path");
+            }
             p.SetInitialPositionToPath();
         }
-        
+
     }
-    
+
 
     // Update is called once per frame
     void Update()
