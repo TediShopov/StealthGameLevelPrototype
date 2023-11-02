@@ -9,6 +9,7 @@ public class PatrolPath : MonoBehaviour
 {
     public List<Transform> Transforms = new List<Transform>();
     public List<Vector2> Positions = new List<Vector2>();
+    public List<Vector2> InitialPositions = new List<Vector2>();
     private int _wayPointIndex;
     public Vector2 NextWP => Positions.ElementAtOrDefault(_wayPointIndex+1);
     public Vector2 CurrentWP => Positions.ElementAtOrDefault(_wayPointIndex);
@@ -18,6 +19,7 @@ public class PatrolPath : MonoBehaviour
     private Rigidbody2D _rigidBody2D;
     public float ReachRadius;
     public float DebugRadius;
+    public float TimeSincePathStart = 1.0f;
 
     private Vector2 CurrentPosition => new Vector2(this.transform.position.x, this.transform.position.y); 
     // Start is called before the first frame update
@@ -39,6 +41,7 @@ public class PatrolPath : MonoBehaviour
     }
     public void SetInitialPositionToPath() 
     {
+        InitialPositions=new List<Vector2>(Positions);
         if(Positions.Count > 0 && _rigidBody2D != null) 
         {
             _rigidBody2D.position = Positions.First();
@@ -85,7 +88,7 @@ public class PatrolPath : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(0,0,Helpers.GetAngleFromVectorFloat(lookAt));
         transform.rotation = rotation;
     }
-    public void OnDrawGizmos()
+    public void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
         foreach (Vector2 t in Positions)
@@ -98,6 +101,48 @@ public class PatrolPath : MonoBehaviour
                 Gizmos.color = Color.yellow;
             Gizmos.DrawSphere(t, DebugRadius);
         }
+                Gizmos.color = Color.blue;
+        
+            Gizmos.DrawSphere(CalculateFuturePosition(TimeSincePathStart), 1.0f);
+        var flatPos= CalculateFuturePosition(TimeSincePathStart);
+        flatPos.z = 0;
+            Gizmos.DrawLine(CalculateFuturePosition(TimeSincePathStart), flatPos );
 
+    }
+    private Vector3 CalculateFuturePosition(float time)
+    {
+        if(Positions == null || Positions.Count < 2) return Vector3.zero;
+        // Calculate the character's future position based on time and 
+        float distanceCovered = Speed * time;
+
+
+        // Interpolate the character's position along the path
+        Vector3 newPosition = Vector3.zero;
+        float distance = 0.0f;
+        var waypoints = new List<Vector2>(InitialPositions);
+        int i = 0;
+        while (distance <= distanceCovered)
+        {
+            if (i >= waypoints.Count-1)
+            {
+                waypoints.Reverse();
+                i = 0;
+            }
+            float segmentLength = Vector3.Distance(waypoints[i], waypoints[i + 1]);
+            if (distance + segmentLength >= distanceCovered)
+            {
+                float t = (distanceCovered - distance) / segmentLength;
+                newPosition = Vector3.Lerp(waypoints[i], waypoints[i + 1], t);
+                break;
+            }
+            distance += segmentLength;
+
+            i++;
+        }
+
+
+
+        newPosition.z = time;
+        return newPosition;
     }
 }
