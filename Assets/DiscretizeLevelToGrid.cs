@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[RequireComponent(typeof(Grid))]
 public class DiscretizeLevelToGrid : MonoBehaviour
 {
-     public Grid Grid;
-     public PolygonBoundary PolygonBoundary;
-    public Vector3Int GridMin;
-    public Vector3Int GridMax;
-    public List<Vector3Int> Obstacles;
+    [HideInInspector] public Grid Grid;
+    private Vector3Int GridMin;
+    private Vector3Int GridMax;
     public LayerMask ObstacleLayerMask;
+    [HideInInspector]  public List<Vector3Int> Obstacles;
+    [HideInInspector]  public List<FieldOfView> EnemyFieldOfViews;
+     public PolygonBoundary PolygonBoundary;
     
     // Start is called before the first frame update
     void Start()
     {
+        this.Grid = GetComponent<Grid>();
         Obstacles = new List<Vector3Int>();
         if (PolygonBoundary != null) 
         {
@@ -22,7 +25,7 @@ public class DiscretizeLevelToGrid : MonoBehaviour
             GridMin = Grid.WorldToCell(levelBounds.min);
             GridMax = Grid.WorldToCell(levelBounds.max);
         }
-        UpdateGrid();
+        this.EnemyFieldOfViews=FindObjectsOfType<FieldOfView>().ToList();
 
         
     }
@@ -35,7 +38,7 @@ public class DiscretizeLevelToGrid : MonoBehaviour
                 Vector3Int cellPosition = new Vector3Int(x, y, 0);
                 Vector3 worldPosition = Grid.GetCellCenterWorld(cellPosition);
 
-                if (IsObstacleAtPosition(worldPosition))
+                if (IsObstacleAtPosition(worldPosition) || IsEnemiesVisionOnPosition(worldPosition))
                 {
                     SetTile(cellPosition);
                 }
@@ -49,6 +52,19 @@ public class DiscretizeLevelToGrid : MonoBehaviour
     public void SetTile(Vector3Int obstacle) 
     {
         this.Obstacles.Add(obstacle);
+    }
+    private bool IsEnemiesVisionOnPosition(Vector3 worldPosition) 
+    {
+
+        foreach (var fov in EnemyFieldOfViews)
+        {
+            if (fov.TestCollisition(worldPosition)) 
+            {
+                return true;
+            }
+
+        }
+        return false;
     }
 
     private bool IsObstacleAtPosition(Vector3 worldPosition)
@@ -73,6 +89,8 @@ public class DiscretizeLevelToGrid : MonoBehaviour
     void Update()
     {
         
+        this.Obstacles.Clear();
+        UpdateGrid();
     }
     private void OnDrawGizmosSelected()
     {
