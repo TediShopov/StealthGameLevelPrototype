@@ -14,6 +14,7 @@ public class InitializeStealthLevel : MonoBehaviour
     public int AttempsToGetCorrectBiasPathDistance = 3;
     public List<List<Vector2>> Clusters;
     private PatrolPath[] PatrolPaths;
+    public PathGeneratorClass PathGenerator;
 
     public float ClusterDistance = 1.0f;
     private Vector2 CalculateCentroid(List<Vector2> nodes)
@@ -43,7 +44,6 @@ public class InitializeStealthLevel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         if (RoadMapGenerator == null) return;
         //Use voronoi roadmap generator to produce culled roadmap graph
         Graph = RoadMapGenerator.GetRoadmapGraph();
@@ -57,22 +57,19 @@ public class InitializeStealthLevel : MonoBehaviour
             Graph.MergeNodes(cluster, CalculateCentroid);
         }
 
-        //Generate Patrol Paths
-        PatrolPaths = FindObjectsOfType<PatrolPath>();
-        foreach (PatrolPath p in PatrolPaths)
+        if(PathGenerator !=  null) 
         {
-            for (int i = 0;i<AttempsToGetCorrectBiasPathDistance;i++) 
+
+            PathGenerator.Roadmap = Graph;
+            PatrolPaths = FindObjectsOfType<PatrolPath>();
+            var paths = PathGenerator.GeneratePaths(PatrolPaths.Length);
+            for (int i = 0;i<PatrolPaths.Length;i++) 
             {
-                p.Positions = p.GetRandomPathInDistance(Graph,BiasPathDistance);
-                if (p.PathLength(p.Positions) >= BiasPathDistance) { break; }
+                PatrolPaths[i].Positions = paths[i];
+                PatrolPaths[i].SetInitialPositionToPath();
             }
-            Debug.Log($"Path Length is: {p.PathLength(p.Positions)}");
-            if (!Graph.IsValidPath(p.Positions))
-            {
-                Debug.Log("Invalid Path");
-            }
-            p.SetInitialPositionToPath();
         }
+        //Generate Patrol Paths
 
     }
 
