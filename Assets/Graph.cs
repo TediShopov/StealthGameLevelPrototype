@@ -1,25 +1,24 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
-public class Graph : MonoBehaviour
+public class Graph 
 {
     public Dictionary<Vector2, List<Vector2>> adjacencyList = new Dictionary<Vector2, List<Vector2>>();
-    public float SimplifyDistance = 1.0f;
     List<List<Vector2>> clusters=new List<List<Vector2>>();
-    public bool DebugClusters=true;
-    public bool DebugGraph=true;
     private void Start()
     {
         
     }
-    public void Simplify() 
+    public void Cluster(Func<Vector2,Vector2, bool> pred) 
     {
-        clusters = MergeNodesIntoClusters();
+        clusters = MergeNodesIntoClusters(pred);
         foreach (var cluster in clusters)
         {
             if (cluster.Count > 1)
@@ -33,46 +32,17 @@ public class Graph : MonoBehaviour
     void Update()
     {
         Vector2 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        //        if (Simplify) 
-        //        {
-        //            Debug.Log($"Total connection: {GetTotalConnectionsCount()}");
-        //            Simplify = false;
-        //            //            SimplifyGraph( SimplifyDistance);
-        //
-        //            clusters = MergeNodesIntoClusters();
-        //            foreach (var cluster in clusters)
-        //            {
-        //                if (cluster.Count > 1) 
-        //                {
-        //                    MergeNodes(cluster);
-        //                }
-        //
-        //            }
-        //            Debug.Log($"Clusters: {clusters.Count} ");
-        //        }
-
     }
     public List<Vector2> GetRandomPathInDistance(float distanceToCover) 
     {
         var keyValueList = this.adjacencyList.Keys.ToArray();
 
         // Generate a random index to pick an element.
-        int randomIndex = Random.Range(0,this.adjacencyList.Count);
+        int randomIndex = UnityEngine.Random.Range(0,this.adjacencyList.Count);
         // Get the randomly selected key-value pair.
         return RandomPathDFS(keyValueList[randomIndex], distanceToCover);
 
     }
-    public int GetTotalConnectionsCount() 
-    {
-        int totalConnections = 0;
-        foreach (var node in adjacencyList)
-        {
-            totalConnections += node.Value.Count;
-        }
-        return totalConnections;
-    }
-
     public void AddNode(Vector2 node)
     {
         if (!adjacencyList.ContainsKey(node))
@@ -94,7 +64,7 @@ public class Graph : MonoBehaviour
         }
         adjacencyList.Remove(node);
     }
-     public List<List<Vector2>> MergeNodesIntoClusters()
+     public List<List<Vector2>> MergeNodesIntoClusters(Func<Vector2,Vector2,bool> clusterPredicate)
     {
         List<List<Vector2>> clusters = new List<List<Vector2>>();
         HashSet<Vector2> visited = new HashSet<Vector2>();
@@ -104,13 +74,16 @@ public class Graph : MonoBehaviour
             if (!visited.Contains(node))
             {
                 List<Vector2> cluster = new List<Vector2>();
-                DFS(node, cluster, visited);
+                ClusterDFS(node, clusterPredicate, cluster, visited);
                 clusters.Add(cluster);
             }
         }
 
         return clusters;
     }
+
+
+    #region RandomPathCreation
     public List<Vector2> RandomPathDFS(Vector2 startNode, float maxDistance)
     {
         List<Vector2> path = new List<Vector2>();
@@ -121,27 +94,6 @@ public class Graph : MonoBehaviour
         return path;
 
     }
-    public bool IsValidPath(List<Vector2> path) 
-    {
-        //Test path 
-        for (int i = 0; i < path.Count-1; i++) 
-        {
-            if (path[i] == null) return false;
-            if (!this.GetNeighbors(path[i]).Contains(path[i+1]))
-            { return false; }
-        }
-        return true;
-    }
-    public float PathLength(List<Vector2> path) 
-    {
-        float length = 0;
-        for (int i = 0; i < path.Count - 1; i++) 
-        {
-            length += Vector2.Distance(path[i], path[i + 1]);
-        }
-        return length;
-    }
-
     private float RandomPathDFSHelper(   Vector2 currentNode, HashSet<Vector2> visited, List<Vector2> path, float maxDistance)
     {
         visited.Add(currentNode);
@@ -177,6 +129,28 @@ public class Graph : MonoBehaviour
         }
         return PathLength(path);
     }
+    #endregion
+    public bool IsValidPath(List<Vector2> path) 
+    {
+        //Test path 
+        for (int i = 0; i < path.Count-1; i++) 
+        {
+            if (path[i] == null) return false;
+            if (!this.GetNeighbors(path[i]).Contains(path[i+1]))
+            { return false; }
+        }
+        return true;
+    }
+    public float PathLength(List<Vector2> path) 
+    {
+        float length = 0;
+        for (int i = 0; i < path.Count - 1; i++) 
+        {
+            length += Vector2.Distance(path[i], path[i + 1]);
+        }
+        return length;
+    }
+
 
     private List<Vector2> GetUnvisitedNeighbors(Vector2 node, HashSet<Vector2> visited)
     {
@@ -197,24 +171,23 @@ public class Graph : MonoBehaviour
         int n = list.Count;
         for (int i = 0; i < n; i++)
         {
-            int r = i + (int)(Random.value * (n - i));
+            int r = i + (int)(UnityEngine.Random.value * (n - i));
             T temp = list[i];
             list[i] = list[r];
             list[r] = temp;
         }
     }
 
-    private void DFS(Vector2 currentNode, List<Vector2> cluster, HashSet<Vector2> visited)
+    private void ClusterDFS(Vector2 currentNode, Func<Vector2,Vector2,bool> clusterPredicate,List<Vector2> cluster, HashSet<Vector2> visited)
     {
         visited.Add(currentNode);
         cluster.Add(currentNode);
 
         foreach (var neighbor in this.GetNeighbors(currentNode))
         {
-            float distance = Vector2.Distance(currentNode, neighbor);
-            if (!visited.Contains(neighbor) && distance<= SimplifyDistance)
+            if (!visited.Contains(neighbor) && clusterPredicate(currentNode,neighbor))
             {
-                DFS(neighbor, cluster, visited);
+                ClusterDFS(neighbor, clusterPredicate,cluster, visited);
             }
         }
     }
@@ -258,11 +231,6 @@ public class Graph : MonoBehaviour
             return adjacencyList[node];
         }
         return new List<Vector2>();
-    }
-
-    public Dictionary<Vector2, List<Vector2>> GetGraph()
-    {
-        return adjacencyList;
     }
     public void SimplifyGraph( float mergeDistance)
     {
@@ -351,50 +319,39 @@ public class Graph : MonoBehaviour
 
         graph.RemoveNode(nodeB);
     }
-    // Start is called before the first frame update
-    private void OnDrawGizmosSelected()
-    {
-        DebugDrawGraph();
-        DebigDrawClusters();
-    }
+    // Start is called before the first frame updatepublic
 
-    public void DebugDrawGraph()
+    public void DebugDrawGraph(Color nodeColor, Color connectionColor)
     {
-        if (DebugGraph)
+        foreach (var node in adjacencyList)
         {
-            foreach (var node in adjacencyList)
+            Gizmos.color = nodeColor;
+            Gizmos.DrawSphere(node.Key, 0.1f);
+            foreach (var connection in node.Value)
             {
-                Gizmos.color = Color.black;
-                Gizmos.DrawSphere(node.Key, 0.1f);
-                foreach (var connection in node.Value)
-                {
-                    Gizmos.color = Color.green;
-                    Gizmos.DrawLine(node.Key, connection);
-                }
+                Gizmos.color = connectionColor;
+                Gizmos.DrawLine(node.Key, connection);
             }
         }
     }
 
     private void DebigDrawClusters()
     {
-        if (DebugClusters)
+        foreach (var cluster in clusters)
         {
-            foreach (var cluster in clusters)
+            if (cluster.Count > 1)
             {
-                if (cluster.Count > 1)
+
+
+                foreach (var node in cluster)
                 {
 
-
-                    foreach (var node in cluster)
-                    {
-
-                        Gizmos.color = Color.yellow;
-                        Gizmos.DrawSphere(node, 0.1f);
-                    }
-                    var centroid = CalculateCentroid(cluster);
-                    Gizmos.color = Color.red;
-                    Gizmos.DrawSphere(centroid, 0.2f);
+                    Gizmos.color = Color.yellow;
+                    Gizmos.DrawSphere(node, 0.1f);
                 }
+                var centroid = CalculateCentroid(cluster);
+                Gizmos.color = Color.red;
+                Gizmos.DrawSphere(centroid, 0.2f);
             }
         }
     }

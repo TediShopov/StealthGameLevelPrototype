@@ -369,6 +369,76 @@ PolygonCollider2D:
       - {x: -16.352444, y: -5.1073103}
       - {x: -16.658348, y: -6.9432335}
       - {x: -13.099195, y: -7.0236716}
+--- !u!1 &102394056
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 102394059}
+  - component: {fileID: 102394058}
+  - component: {fileID: 102394057}
+  m_Layer: 0
+  m_Name: RRT
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &102394057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102394056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d9bad1cd77a7a246a48d5e6516c70fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StartNode: {fileID: 2097330441}
+  EndNode: {fileID: 627463364}
+  maxStepSize: 0.5
+  maxIterations: 500
+  BuildAtBegining: 1
+  DoRRTStep: 0
+  Boundary: {fileID: 64142021}
+  BoundaryObstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+--- !u!114 &102394058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102394056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02d10b672199c0548b333e37457e05cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SimplifyDistance: 1
+  DebugClusters: 1
+  DebugGraph: 1
+--- !u!4 &102394059
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102394056}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -16.72, y: -0.72, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &120563275
 GameObject:
   m_ObjectHideFlags: 0
@@ -1371,7 +1441,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RoadMapGenerator: {fileID: 1511257164}
   Graph: {fileID: 915105949}
-  BiasPathDistance: 5
+  BiasPathDistance: 25
+  AttempsToGetCorrectBiasPathDistance: 3
 --- !u!4 &1506136517
 Transform:
   m_ObjectHideFlags: 0
@@ -1765,7 +1836,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2097330438}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -16.72, y: -0.72, z: 0}
+  m_LocalPosition: {x: -14.51, y: -4.14, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

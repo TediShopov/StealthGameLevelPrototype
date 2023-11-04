@@ -13,14 +13,22 @@ public class InitializeStealthLevel : MonoBehaviour
     public float BiasPathDistance = 15.0f;
     public int AttempsToGetCorrectBiasPathDistance = 3;
     private PatrolPath[] PatrolPaths;
+
+    public float ClusterDistance = 1.0f;
+
+    public bool RangeBasedClusterPredicate(Vector2 node, Vector2 neighbour ) 
+    {
+        return Vector2.Distance( node, neighbour ) < ClusterDistance;
+
+    }
     // Start is called before the first frame update
     void Start()
     {
 
-        if (RoadMapGenerator == null || Graph == null) return;
-        RoadMapGenerator.InitializeRoadmap();
+        if (RoadMapGenerator == null) return;
+        Graph = RoadMapGenerator.GetRoadmapGraph();
         GenerateGraphFromLineSegments(Graph, RoadMapGenerator.GetValidSegments(RoadMapGenerator._triangulation));
-        Graph.Simplify();
+        Graph.Cluster(RangeBasedClusterPredicate);
         PatrolPaths = FindObjectsOfType<PatrolPath>();
         foreach (PatrolPath p in PatrolPaths)
         {
@@ -45,13 +53,9 @@ public class InitializeStealthLevel : MonoBehaviour
     {
         
     }
-    void GenerateGraphFromLineSegments(Graph graph, List<Vector2>segments)
+    public void OnDrawGizmosSelected()
     {
-        for (int i = 0;i<segments.Count-1;i+=2) 
-        {
-            graph.AddNode(segments[i]);
-            graph.AddNode(segments[i+1]);
-            graph.AddEdge(segments[i], segments[i+1]);
-        }
+        if (Graph == null) return;
+        Graph.DebugDrawGraph(Color.black, Color.green);
     }
 }

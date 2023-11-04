@@ -93,6 +93,22 @@ public class PatrolPath : MonoBehaviour
     public void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
+        for (int i = 0; i < Positions.Count - 1; i++) 
+        {
+            Vector2 t = Positions[i];
+            if (t.Equals(CurrentWP))
+                Gizmos.color = Color.blue;
+            else if (t.Equals(NextWP))
+                Gizmos.color = Color.red;
+            else 
+                Gizmos.color = Color.yellow;
+            Gizmos.DrawSphere(t, DebugRadius);
+            //Draw path 
+            Vector2 t1 = Positions[i+1];
+
+            Gizmos.DrawLine(t1, t);
+
+        }
         foreach (Vector2 t in Positions)
         {
             if (t.Equals(CurrentWP))

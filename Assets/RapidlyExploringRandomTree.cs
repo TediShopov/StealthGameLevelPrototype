@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Graph))]
 public class RapidlyExploringRandomTree : MonoBehaviour
 {
     public Transform StartNode;
@@ -12,14 +11,15 @@ public class RapidlyExploringRandomTree : MonoBehaviour
     public bool BuildAtBegining = true;
     public bool DoRRTStep = false;
     public PolygonBoundary Boundary;
-    public Bounds RandomBounds;
+    public LayerMask BoundaryObstacleLayerMask;
+    private Bounds RandomBounds;
     private Graph RRTGraph;
     private KDTree kdTree;
    // private List<Transform> nodes = new List<Transform>();
 
     private void Start()
     {
-        this.RRTGraph = GetComponent<Graph>();
+        this.RRTGraph = new Graph();
         kdTree = new KDTree(StartNode.position,0);
         if (Boundary != null)
         {
@@ -96,18 +96,25 @@ public class RapidlyExploringRandomTree : MonoBehaviour
         return fromPoint + direction * maxStepSize;
     }
 
+    private bool IsValidSegment(Vector2 start, Vector2 end) 
+    {
+        var hit= Physics2D.Linecast(start, end, BoundaryObstacleLayerMask);
+        if(hit) 
+        {
+            return false;
+        }
+        return true;
+
+    }
     private bool ObstacleInPath(Vector2 fromPoint, Vector2 toPoint)
     {
-        // Implement collision checking here
-        // Check if there are obstacles between fromPoint and toPoint
-        // You may need to use Physics2D.Raycast or other methods
-        // Return true if an obstacle is in the path, otherwise return false
-        return false;
+        return !IsValidSegment(fromPoint, toPoint);
     }
     private void OnDrawGizmosSelected()
     {
         //KDTreeVisualizer.DrawTree(kdTree);
-        RRTGraph.DebugDrawGraph();
+        if (RRTGraph == null) return;
+        RRTGraph.DebugDrawGraph(Color.black, Color.green);
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(randomPoint, 0.1f);
         if(nearestNode != null) 
