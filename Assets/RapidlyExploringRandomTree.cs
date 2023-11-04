@@ -20,7 +20,7 @@ public class RapidlyExploringRandomTree : MonoBehaviour
     private void Start()
     {
         this.RRTGraph = new Graph<Vector2>();
-        kdTree = new KDTree(StartNode.position,0);
+        kdTree = new KDTree(KDTree.ToFloatArray((Vector2)StartNode.position),0);
         if (Boundary != null)
         {
             RandomBounds = Boundary.GetComponent<PolygonCollider2D>().bounds;
@@ -43,7 +43,7 @@ public class RapidlyExploringRandomTree : MonoBehaviour
 
     private void BuildRRT()
     {
-        kdTree = new KDTree(StartNode.position,0);
+        kdTree = new KDTree(KDTree.ToFloatArray((Vector2)StartNode.position),0);
        // nodes.Add(startNode);
 
         for (int i = 0; i < maxIterations; i++)
@@ -61,16 +61,16 @@ public class RapidlyExploringRandomTree : MonoBehaviour
 
         randomPoint = RandomPoint();
         Debug.Log($"Radom point: {randomPoint}");
-        nearestNode = KDTree.NearestNeighbor(kdTree, randomPoint);
+        nearestNode = KDTree.NearestNeighbor(kdTree, KDTree.ToFloatArray(randomPoint));
 
-        newPoint = Steer(nearestNode.Point, randomPoint);
+        newPoint = Steer((Vector2)nearestNode, randomPoint);
         Debug.Log($"New point: {newPoint}");
 
-        if (!ObstacleInPath(nearestNode.Point, newPoint))
+        if (!ObstacleInPath((Vector2)nearestNode, newPoint))
         { 
-            kdTree.AddKDNode(newPoint);
+            kdTree.AddKDNode(KDTree.ToFloatArray(newPoint));
             RRTGraph.AddNode(newPoint);
-            RRTGraph.AddEdge(nearestNode.Point, newPoint);
+            RRTGraph.AddEdge((Vector2)nearestNode, newPoint);
             //nodes.Add(newNodeTransform);
 
             if (Vector2.Distance(newPoint, EndNode.position) < maxStepSize)
@@ -120,7 +120,7 @@ public class RapidlyExploringRandomTree : MonoBehaviour
         if(nearestNode != null) 
         {
             Gizmos.color = Color.blue;
-            Gizmos.DrawSphere(nearestNode.Point, 0.1f);
+            Gizmos.DrawSphere((Vector2)nearestNode, 0.1f);
         }
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(newPoint, 0.1f);
