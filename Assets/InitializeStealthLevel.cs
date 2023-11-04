@@ -9,7 +9,7 @@ using System.Linq;
 public class InitializeStealthLevel : MonoBehaviour
 {
     public VoronoiRoadMapGenerator RoadMapGenerator;
-    public Graph Graph;
+    public Graph<Vector2> Graph;
     public float BiasPathDistance = 15.0f;
     public int AttempsToGetCorrectBiasPathDistance = 3;
     public List<List<Vector2>> Clusters;
@@ -63,10 +63,10 @@ public class InitializeStealthLevel : MonoBehaviour
         {
             for (int i = 0;i<AttempsToGetCorrectBiasPathDistance;i++) 
             {
-                p.Positions = Graph.GetRandomPathInDistance(BiasPathDistance);
-                if (Graph.PathLength(p.Positions) >= BiasPathDistance) { break; }
+                p.Positions = p.GetRandomPathInDistance(Graph,BiasPathDistance);
+                if (p.PathLength(p.Positions) >= BiasPathDistance) { break; }
             }
-            Debug.Log($"Path Length is: {Graph.PathLength(p.Positions)}");
+            Debug.Log($"Path Length is: {p.PathLength(p.Positions)}");
             if (!Graph.IsValidPath(p.Positions))
             {
                 Debug.Log("Invalid Path");
@@ -85,7 +85,7 @@ public class InitializeStealthLevel : MonoBehaviour
     public void OnDrawGizmosSelected()
     {
         if (Graph == null) return;
-        Graph.DebugDrawGraph(Color.black, Color.green);
-        Graph.DebigDrawClusters(Clusters);
+        Graph<Vector2>.DebugDrawGraph(Graph,Color.black, Color.green);
+        Graph<Vector2>.DebigDrawClusters(Clusters);
     }
 }

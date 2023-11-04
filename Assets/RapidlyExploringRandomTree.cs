@@ -13,13 +13,13 @@ public class RapidlyExploringRandomTree : MonoBehaviour
     public PolygonBoundary Boundary;
     public LayerMask BoundaryObstacleLayerMask;
     private Bounds RandomBounds;
-    private Graph RRTGraph;
+    private Graph<Vector2> RRTGraph;
     private KDTree kdTree;
    // private List<Transform> nodes = new List<Transform>();
 
     private void Start()
     {
-        this.RRTGraph = new Graph();
+        this.RRTGraph = new Graph<Vector2>();
         kdTree = new KDTree(StartNode.position,0);
         if (Boundary != null)
         {
@@ -114,7 +114,7 @@ public class RapidlyExploringRandomTree : MonoBehaviour
     {
         //KDTreeVisualizer.DrawTree(kdTree);
         if (RRTGraph == null) return;
-        RRTGraph.DebugDrawGraph(Color.black, Color.green);
+        Graph<Vector2>.DebugDrawGraph(RRTGraph, Color.black, Color.green);
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(randomPoint, 0.1f);
         if(nearestNode != null) 

@@ -27,7 +27,7 @@ public class VoronoiRoadMapGenerator : MonoBehaviour
     void Start()
     {
     }
-    public Graph GetRoadmapGraph()
+    public Graph<Vector2> GetRoadmapGraph()
     {
         this.Colldiers = new List<PolygonCollider2D>();
         ObstaclePoints = CollectAllPolygonObstaclePoints();
@@ -60,9 +60,9 @@ public class VoronoiRoadMapGenerator : MonoBehaviour
         { return new List<UnityEngine.Vector2>(); }
         return GetGlobalPointsFromCollider(PolygonBoundary.GetComponent<PolygonCollider2D>());
     }
-    public Graph GenerateGraphFromLineSegments(List<Vector2>segments)
+    public Graph<Vector2> GenerateGraphFromLineSegments(List<Vector2>segments)
     {
-        var graph =new Graph();
+        var graph =new Graph<Vector2>();
         for (int i = 0;i<segments.Count-1;i+=2) 
         {
             graph.AddNode(segments[i]);

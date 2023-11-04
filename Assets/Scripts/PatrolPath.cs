@@ -11,6 +11,7 @@ public class PatrolPath : MonoBehaviour
     public List<Vector2> Positions = new List<Vector2>();
     public List<Vector2> InitialPositions = new List<Vector2>();
     private int _wayPointIndex;
+    Graph<Vector2> RoadmapGraph;
     public Vector2 NextWP => Positions.ElementAtOrDefault(_wayPointIndex+1);
     public Vector2 CurrentWP => Positions.ElementAtOrDefault(_wayPointIndex);
     [SerializeField] public Vector2 Velocity;
@@ -40,6 +41,73 @@ public class PatrolPath : MonoBehaviour
     {
         
     }
+    public List<Vector2> GetRandomPathInDistance(Graph<Vector2> roadmapt,float distanceToCover) 
+    {
+        this.RoadmapGraph = roadmapt;
+        var keyValueList = this.RoadmapGraph.adjacencyList.Keys.ToArray();
+
+        // Generate a random index to pick an element.
+        int randomIndex = UnityEngine.Random.Range(0,this.RoadmapGraph.adjacencyList.Count);
+        // Get the randomly selected key-value pair.
+        return RandomPathDFS(keyValueList[randomIndex], distanceToCover);
+
+    }
+    #region RandomPathCreation
+    private List<Vector2> RandomPathDFS(Vector2 startNode, float maxDistance)
+    {
+        List<Vector2> path = new List<Vector2>();
+        HashSet<Vector2> visited = new HashSet<Vector2>();
+
+        RandomPathDFSHelper(startNode, visited, path,maxDistance );
+
+        return path;
+
+    }
+    private float RandomPathDFSHelper(   Vector2 currentNode, HashSet<Vector2> visited, List<Vector2> path, float maxDistance)
+    {
+        visited.Add(currentNode);
+        path.Add(currentNode);
+
+        List<Vector2> unvisitedNeighbors = RoadmapGraph.GetUnvisitedNeighbors(currentNode, visited);
+
+        float coveredDistance= PathLength(path);
+        if (unvisitedNeighbors.Count == 0)
+            return coveredDistance;
+        if (coveredDistance > maxDistance)
+        {
+            return coveredDistance;
+        }
+
+        // Shuffle the neighbors randomly.
+        RoadmapGraph.Shuffle(unvisitedNeighbors);
+
+        foreach (var neighbor in unvisitedNeighbors)
+        {
+            float distToNeighbor= Vector2.Distance(currentNode, neighbor);
+            if (RandomPathDFSHelper(neighbor, visited, path, maxDistance)  >maxDistance) 
+            {
+                return PathLength(path);
+            }
+            else
+            {
+
+                //If path doesnt satisfy criteria remove the nodes from it and try the next neighbour;
+                int index = path.FindIndex(x=>x==currentNode);
+                path.RemoveRange(index+1, path.Count - index - 1);
+            }
+        }
+        return PathLength(path);
+    }
+    public float PathLength(List<Vector2> path) 
+    {
+        float length = 0;
+        for (int i = 0; i < path.Count - 1; i++) 
+        {
+            length += Vector2.Distance(path[i], path[i + 1]);
+        }
+        return length;
+    }
+    #endregion
     public void SetInitialPositionToPath() 
     {
         InitialPositions=new List<Vector2>(Positions);
