@@ -57,12 +57,12 @@ public class KDTree
     }
 
     public bool IsLeft(float[] target) => 
-        (target[this.Depth % 2] < this.Point[this.Depth % 2]);
+        (target[this.Depth % this.MaxDimensions] < this.Point[this.Depth % MaxDimensions]);
 
 
     public KDTree[] GetCorrectNode( float[] target) 
     {
-        if (target[this.Depth % 2] < this.Point[this.Depth % 2]) 
+        if (target[this.Depth % MaxDimensions] < this.Point[this.Depth % MaxDimensions]) 
             return new KDTree[] { this.Left, this.Right};
         else
             return new KDTree[] { this.Right, this.Left};
@@ -90,7 +90,7 @@ public class KDTree
         KDTree temp = NearestNeighbor(branched[0], target);
         KDTree best = Closest(target, temp, root); 
         float distanceToBest = FloatDistance(target,best.Point);
-        float distPerpenicular =Mathf.Abs(target[root.Depth%2] - root.Point[root.Depth % 2]);
+        float distPerpenicular =Mathf.Abs(target[root.Depth%root.MaxDimensions] - root.Point[root.Depth % root.MaxDimensions]);
 
         if (distPerpenicular < distanceToBest) 
         {
