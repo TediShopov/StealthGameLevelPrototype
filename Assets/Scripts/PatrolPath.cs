@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PatrolPath : MonoBehaviour
@@ -22,6 +23,7 @@ public class PatrolPath : MonoBehaviour
     public float DebugRadius;
     public float TimeSincePathStart = 1.0f;
     public bool DrawFuturePosition=false;
+    public bool SeekPath=true;
 
     private Vector2 CurrentPosition => new Vector2(this.transform.position.x, this.transform.position.y); 
     // Start is called before the first frame update
@@ -63,6 +65,7 @@ public class PatrolPath : MonoBehaviour
     }
     void FixedUpdate()
     {
+        if (SeekPath == false) { return; }
         if (ReachedNextWayPoint()) 
         {
             _wayPointIndex++;
@@ -125,22 +128,21 @@ public class PatrolPath : MonoBehaviour
         if(DrawFuturePosition) 
         {
 
-            Gizmos.DrawSphere(CalculateFuturePosition(TimeSincePathStart), 0.2f);
+            Gizmos.DrawSphere(CalculateFuturePosition(TimeSincePathStart).Item1, 0.2f);
             var flatPos = CalculateFuturePosition(TimeSincePathStart);
-            flatPos.z = 0;
-            Gizmos.DrawLine(CalculateFuturePosition(TimeSincePathStart), flatPos);
         }
 
     }
-    private Vector3 CalculateFuturePosition(float time)
+    public Tuple<Vector2,Vector2> CalculateFuturePosition(float time)
     {
-        if(Positions == null || Positions.Count < 2) return Vector3.zero;
+        if(Positions == null || Positions.Count < 2) return new Tuple<Vector2, Vector2>(Vector2.zero,Vector2.zero);
         // Calculate the character's future position based on time and 
         float distanceCovered = Speed * time;
 
 
         // Interpolate the character's position along the path
         Vector3 newPosition = Vector3.zero;
+        Vector2 newDirection = Vector2.zero;
         float distance = 0.0f;
         var waypoints = new List<Vector2>(InitialPositions);
         int i = 0;
@@ -156,6 +158,7 @@ public class PatrolPath : MonoBehaviour
             {
                 float t = (distanceCovered - distance) / segmentLength;
                 newPosition = Vector3.Lerp(waypoints[i], waypoints[i + 1], t);
+                newDirection= (waypoints[i+1] - waypoints[i]).normalized;
                 break;
             }
             distance += segmentLength;
@@ -166,6 +169,6 @@ public class PatrolPath : MonoBehaviour
 
 
         newPosition.z = time;
-        return newPosition;
+        return new Tuple<Vector2, Vector2>(newPosition,newDirection);
     }
 }

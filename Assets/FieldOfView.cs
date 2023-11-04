@@ -101,6 +101,17 @@ public class FieldOfView : MonoBehaviour
         }
         return false;
     }
+    public  bool TestCollision(Vector2 testPosition, Vector2 fovPosition, Vector2 globalDirection) 
+    {
+        //Gloabar direction vector 
+        Vector2 vectorToTarget = (testPosition- fovPosition).normalized;
+        float angle = Vector2.Angle(globalDirection, vectorToTarget);
+        if (angle < FOV / 2.0f && Vector2.Distance(testPosition, fovPosition) <= ViewDistance) 
+        {
+            return true;
+        }
+        return false;
+    }
     public float GetStartinAngle ()
     {
         return (PointingAngle + FOV / 2.0f); 

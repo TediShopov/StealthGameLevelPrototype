@@ -421,9 +421,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02d10b672199c0548b333e37457e05cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SimplifyDistance: 1
-  DebugClusters: 1
-  DebugGraph: 1
 --- !u!4 &102394059
 Transform:
   m_ObjectHideFlags: 0
@@ -1026,7 +1023,9 @@ MonoBehaviour:
     m_Bits: 64
   Obstacles: []
   EnemyFieldOfViews: []
+  PatrolPaths: []
   PolygonBoundary: {fileID: 64142021}
+  Future: 0
 --- !u!156049354 &639582059
 Grid:
   m_ObjectHideFlags: 0
@@ -1159,9 +1158,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02d10b672199c0548b333e37457e05cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SimplifyDistance: 1
-  DebugClusters: 1
-  DebugGraph: 1
 --- !u!4 &915105950
 Transform:
   m_ObjectHideFlags: 0
@@ -1420,6 +1416,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1506136517}
   - component: {fileID: 1506136516}
+  - component: {fileID: 1506136518}
   m_Layer: 0
   m_Name: LevelInitializer
   m_TagString: Untagged
@@ -1440,9 +1437,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RoadMapGenerator: {fileID: 1511257164}
-  Graph: {fileID: 915105949}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
+  PathGenerator: {fileID: 1506136518}
+  ClusterDistance: 1
 --- !u!4 &1506136517
 Transform:
   m_ObjectHideFlags: 0
@@ -1458,6 +1456,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1506136518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1506136515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e991e23512a1cb42ab19a232eec1611, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BiasPathDistance: 15
+  AttemptsToMatchBiasedDistance: 3
 --- !u!1 &1511257163
 GameObject:
   m_ObjectHideFlags: 0
@@ -1487,8 +1499,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f949a15c40c6b8458fef2ecf71be013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObstaclePoints: []
-  BoundaryPoints: []
   PolygonBoundary: {fileID: 64142021}
   DistanceFromPoint: 0.5
   BoundaryObstacleLayerMask:

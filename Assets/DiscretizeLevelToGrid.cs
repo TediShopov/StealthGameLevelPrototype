@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(Grid))]
@@ -11,12 +12,13 @@ public class DiscretizeLevelToGrid : MonoBehaviour
     private Vector3Int GridMax;
     public LayerMask ObstacleLayerMask;
     [HideInInspector]  public List<Vector3Int> Obstacles;
-    [HideInInspector]  public List<FieldOfView> EnemyFieldOfViews;
+    [HideInInspector]  public List<PatrolPath> PatrolPaths;
      public PolygonBoundary PolygonBoundary;
-    
+    public float Future;
     // Start is called before the first frame update
     void Start()
     {
+        
         this.Grid = GetComponent<Grid>();
         Obstacles = new List<Vector3Int>();
         if (PolygonBoundary != null) 
@@ -25,12 +27,24 @@ public class DiscretizeLevelToGrid : MonoBehaviour
             GridMin = Grid.WorldToCell(levelBounds.min);
             GridMax = Grid.WorldToCell(levelBounds.max);
         }
-        this.EnemyFieldOfViews=FindObjectsOfType<FieldOfView>().ToList();
+        PatrolPaths = FindObjectsOfType<PatrolPath>().ToList();
 
         
     }
     public void UpdateGrid()
     {
+        //Update enemy position AND DIRECTION
+
+///        foreach (var patrolPath in PatrolPaths)
+///        {
+///            patrolPath.gameObject.transform.position = patrolPath.CalculateFuturePosition(Future);
+///
+///        }
+
+
+
+
+        
         for (int x = GridMin.x; x < GridMax.x; x++)
         {
             for (int y = GridMin.y; y < GridMax.y; y++)
@@ -42,10 +56,6 @@ public class DiscretizeLevelToGrid : MonoBehaviour
                 {
                     SetTile(cellPosition);
                 }
-//                else
-//                {
-//                    gridTilemap.SetTile(cellPosition, emptyTile);
-//                }
             }
         }
     }
@@ -56,9 +66,10 @@ public class DiscretizeLevelToGrid : MonoBehaviour
     private bool IsEnemiesVisionOnPosition(Vector3 worldPosition) 
     {
 
-        foreach (var fov in EnemyFieldOfViews)
+        foreach (var patrolPath in PatrolPaths)
         {
-            if (fov.TestCollisition(worldPosition)) 
+            var positionAndDirection = patrolPath.CalculateFuturePosition(Future);
+            if (patrolPath.FieldOfView.TestCollision(worldPosition,positionAndDirection.Item1,positionAndDirection.Item2)) 
             {
                 return true;
             }
@@ -103,6 +114,12 @@ public class DiscretizeLevelToGrid : MonoBehaviour
             {
                 Gizmos.DrawCube(Grid.GetCellCenterWorld(obstacle), Grid.cellSize);
             }
+        }
+        //Draw future positions
+        foreach (var enemyPath in PatrolPaths) 
+        {
+            Vector2 futurePos = enemyPath.CalculateFuturePosition(Future).Item1;
+            Gizmos.DrawSphere(futurePos,0.1f);
         }
     }
 }
