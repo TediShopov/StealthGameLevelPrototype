@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,16 +12,18 @@ public class DiscretizeLevelToGrid : MonoBehaviour
     private Vector3Int GridMin;
     private Vector3Int GridMax;
     public LayerMask ObstacleLayerMask;
-    [HideInInspector]  public List<Vector3Int> Obstacles;
     [HideInInspector]  public List<PatrolPath> PatrolPaths;
      public PolygonBoundary PolygonBoundary;
-    public float Future;
+    public float Step;
+    public float Iterations;
+    public int LookAtGrid = 0;
+    public List<bool[,]> FutureGrids;
+    //public float Future;
     // Start is called before the first frame update
     void Start()
     {
         
         this.Grid = GetComponent<Grid>();
-        Obstacles = new List<Vector3Int>();
         if (PolygonBoundary != null) 
         {
             Bounds levelBounds = PolygonBoundary.GetComponent<PolygonCollider2D>().bounds;
@@ -28,47 +31,43 @@ public class DiscretizeLevelToGrid : MonoBehaviour
             GridMax = Grid.WorldToCell(levelBounds.max);
         }
         PatrolPaths = FindObjectsOfType<PatrolPath>().ToList();
+        FutureGrids = new List<bool[,]>();
+        for (int i = 0;i<Iterations;i++) 
+        {
+            var grid = GetFutureGrid(i * Step);
+            FutureGrids.Add(grid);
+        }
+        Debug.Log($"Future Grid Count");
 
         
     }
-    public void UpdateGrid()
+    
+    public bool[,] GetFutureGrid(float future) 
     {
-        //Update enemy position AND DIRECTION
 
-///        foreach (var patrolPath in PatrolPaths)
-///        {
-///            patrolPath.gameObject.transform.position = patrolPath.CalculateFuturePosition(Future);
-///
-///        }
-
-
-
-
-        
-        for (int x = GridMin.x; x < GridMax.x; x++)
+        int rows = GridMax.y - GridMin.y;
+        int cols = GridMax.x - GridMin.x;
+        var futureGrid = new bool[rows,cols];
+        for (int row = 0; row < rows; row++)
         {
-            for (int y = GridMin.y; y < GridMax.y; y++)
+            for (int col = 0; col < cols; col++)
             {
-                Vector3Int cellPosition = new Vector3Int(x, y, 0);
+                Vector3Int cellPosition = new Vector3Int(col+GridMin.x, row+GridMin.y, 0);
                 Vector3 worldPosition = Grid.GetCellCenterWorld(cellPosition);
-
-                if (IsObstacleAtPosition(worldPosition) || IsEnemiesVisionOnPosition(worldPosition))
+                if (IsObstacleAtPosition(worldPosition) || IsEnemiesVisionOnPosition(worldPosition,future ))
                 {
-                    SetTile(cellPosition);
+                    futureGrid[row,col] = true;
                 }
             }
         }
+        return futureGrid;
     }
-    public void SetTile(Vector3Int obstacle) 
-    {
-        this.Obstacles.Add(obstacle);
-    }
-    private bool IsEnemiesVisionOnPosition(Vector3 worldPosition) 
+    private bool IsEnemiesVisionOnPosition(Vector3 worldPosition,float future) 
     {
 
         foreach (var patrolPath in PatrolPaths)
         {
-            var positionAndDirection = patrolPath.CalculateFuturePosition(Future);
+            var positionAndDirection = patrolPath.CalculateFuturePosition(future);
             if (patrolPath.FieldOfView.TestCollision(worldPosition,positionAndDirection.Item1,positionAndDirection.Item2)) 
             {
                 return true;
@@ -99,27 +98,35 @@ public class DiscretizeLevelToGrid : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        this.Obstacles.Clear();
-        UpdateGrid();
+
+
     }
     private void OnDrawGizmosSelected()
     {
+        if (FutureGrids == null) return;
+        LookAtGrid = Mathf.Clamp(LookAtGrid, 0, FutureGrids.Count-1);
+        
+        int rows = GridMax.y - GridMin.y;
+        int cols = GridMax.x - GridMin.x;
         Gizmos.color = Color.blue;
-        Gizmos.DrawCube(Grid.GetCellCenterWorld(GridMin), Grid.cellSize);
-        Gizmos.DrawCube(Grid.GetCellCenterWorld(GridMax), Grid.cellSize);
-        if(Obstacles.Count > 0) 
+        for (int row = 0; row < rows; row++)
         {
-            foreach (var obstacle in Obstacles) 
+            for (int col = 0; col < cols; col++)
             {
-                Gizmos.DrawCube(Grid.GetCellCenterWorld(obstacle), Grid.cellSize);
+                if (FutureGrids[LookAtGrid][row, col]) 
+                {
+
+                Vector3Int cellPosition = new Vector3Int(col+GridMin.x, row+GridMin.y, 0);
+                Vector3 worldPosition = Grid.GetCellCenterWorld(cellPosition);
+                Gizmos.DrawCube(worldPosition, Grid.cellSize);
+                }
             }
         }
-        //Draw future positions
-        foreach (var enemyPath in PatrolPaths) 
-        {
-            Vector2 futurePos = enemyPath.CalculateFuturePosition(Future).Item1;
-            Gizmos.DrawSphere(futurePos,0.1f);
-        }
+//        //Draw future positions
+//        foreach (var enemyPath in PatrolPaths) 
+//        {
+//            Vector2 futurePos = enemyPath.CalculateFuturePosition(Future).Item1;
+//            Gizmos.DrawSphere(futurePos,0.1f);
+//        }
     }
 }
