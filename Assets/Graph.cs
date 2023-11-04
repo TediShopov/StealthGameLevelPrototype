@@ -11,22 +11,14 @@ using UnityEngine;
 public class Graph 
 {
     public Dictionary<Vector2, List<Vector2>> adjacencyList = new Dictionary<Vector2, List<Vector2>>();
-    List<List<Vector2>> clusters=new List<List<Vector2>>();
     private void Start()
     {
         
     }
-    public void Cluster(Func<Vector2,Vector2, bool> pred) 
+    public List<List<Vector2>> Cluster(Func<Vector2,Vector2, bool> pred) 
     {
-        clusters = MergeNodesIntoClusters(pred);
-        foreach (var cluster in clusters)
-        {
-            if (cluster.Count > 1)
-            {
-                MergeNodes(cluster);
-            }
-
-        }
+        List<List<Vector2>> clusters = MergeNodesIntoClusters(pred);
+        return clusters.Where(x => x.Count > 1).ToList();
     }
 
     void Update()
@@ -232,34 +224,34 @@ public class Graph
         }
         return new List<Vector2>();
     }
-    public void SimplifyGraph( float mergeDistance)
-    {
-        Debug.Log("Simplifying");
-        var nodes = new List<Vector2>(this.adjacencyList.Keys);
-
-        for (int i = 0; i < nodes.Count; i++)
-        {
-            for (int j = i + 1; j < nodes.Count; j++)
-            {
-                Vector2 nodeA = nodes[i];
-                Vector2 nodeB = nodes[j];
-
-                if (Vector2.Distance(nodeA, nodeB) <= mergeDistance)
-                {
-                    MergeNodes(this, nodeA, nodeB);
-                    nodes.Remove(nodeB);
-                    j--;
-                }
-            }
-        }
-    }
-     public void MergeNodes(List<Vector2> nodesToMerge)
+//    public void SimplifyGraph( float mergeDistance)
+//    {
+//        Debug.Log("Simplifying");
+//        var nodes = new List<Vector2>(this.adjacencyList.Keys);
+//
+//        for (int i = 0; i < nodes.Count; i++)
+//        {
+//            for (int j = i + 1; j < nodes.Count; j++)
+//            {
+//                Vector2 nodeA = nodes[i];
+//                Vector2 nodeB = nodes[j];
+//
+//                if (Vector2.Distance(nodeA, nodeB) <= mergeDistance)
+//                {
+//                    MergeNodes(this, nodeA, nodeB);
+//                    nodes.Remove(nodeB);
+//                    j--;
+//                }
+//            }
+//        }
+//    }
+     public void MergeNodes(List<Vector2> nodesToMerge, Func<List<Vector2>,Vector2> newNodeCalculation)
     {
         if (nodesToMerge.Count == 0)
             return;
 
         // Calculate the centroid of the nodes to be merged.
-        Vector2 centroid = CalculateCentroid(nodesToMerge);
+        Vector2 centroid = newNodeCalculation(nodesToMerge);
 
         // Create a new node at the centroid.
         this.AddNode(centroid);
@@ -284,25 +276,6 @@ public class Graph
         }
     }
 
-    private Vector2 CalculateCentroid(List<Vector2> nodes)
-    {
-        if (nodes.Count == 0)
-            return Vector2.zero;
-
-        float totalX = 0;
-        float totalY = 0;
-
-        foreach (var node in nodes)
-        {
-            totalX += node.x;
-            totalY += node.y;
-        }
-
-        float centroidX = totalX / nodes.Count;
-        float centroidY = totalY / nodes.Count;
-
-        return new Vector2(centroidX, centroidY);
-    }
 
     private static void MergeNodes(Graph graph, Vector2 nodeA, Vector2 nodeB)
     {
@@ -335,23 +308,18 @@ public class Graph
         }
     }
 
-    private void DebigDrawClusters()
+    public void DebigDrawClusters(List<List<Vector2>> clusters)
     {
         foreach (var cluster in clusters)
         {
             if (cluster.Count > 1)
             {
-
-
                 foreach (var node in cluster)
                 {
 
                     Gizmos.color = Color.yellow;
                     Gizmos.DrawSphere(node, 0.1f);
                 }
-                var centroid = CalculateCentroid(cluster);
-                Gizmos.color = Color.red;
-                Gizmos.DrawSphere(centroid, 0.2f);
             }
         }
     }
