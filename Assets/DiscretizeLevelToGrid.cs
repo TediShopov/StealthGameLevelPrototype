@@ -17,7 +17,11 @@ public class DiscretizeLevelToGrid : MonoBehaviour
     public float Step;
     public float Iterations;
     public int LookAtGrid = 0;
+    public int LookAtRange ;
     public List<bool[,]> FutureGrids;
+    public bool EnableDebugCamera;
+    public Camera MainCamera;
+    public Camera DebugCamera;
     //public float Future;
     // Start is called before the first frame update
     void Start()
@@ -99,6 +103,18 @@ public class DiscretizeLevelToGrid : MonoBehaviour
     void Update()
     {
 
+        if (EnableDebugCamera) 
+        {
+            MainCamera.enabled = false;
+            DebugCamera.enabled = true;
+            DebugCamera.transform.LookAt(new Vector3(0,0,0),Vector3.back);
+        }
+        else
+        {
+
+            MainCamera.enabled = true;
+            DebugCamera.enabled = false;
+        }
 
     }
     private void OnDrawGizmosSelected()
@@ -109,24 +125,32 @@ public class DiscretizeLevelToGrid : MonoBehaviour
         int rows = GridMax.y - GridMin.y;
         int cols = GridMax.x - GridMin.x;
         Gizmos.color = Color.blue;
-        for (int row = 0; row < rows; row++)
+        for (int i = LookAtGrid-LookAtRange; i < LookAtGrid+LookAtRange; i++)
         {
-            for (int col = 0; col < cols; col++)
+            var lookAtCurrent = i;
+            for (int row = 0; row < rows; row++)
             {
-                if (FutureGrids[LookAtGrid][row, col]) 
+                for (int col = 0; col < cols; col++)
                 {
+                    if (FutureGrids[lookAtCurrent][row, col])
+                    {
+                        Vector3Int cellPosition = new Vector3Int(col + GridMin.x, row + GridMin.y, 0);
+                        Vector3 worldPosition = Grid.GetCellCenterWorld(cellPosition);
 
-                Vector3Int cellPosition = new Vector3Int(col+GridMin.x, row+GridMin.y, 0);
-                Vector3 worldPosition = Grid.GetCellCenterWorld(cellPosition);
-                Gizmos.DrawCube(worldPosition, Grid.cellSize);
+                        worldPosition.z = lookAtCurrent * Step;
+                        Vector3 cellsize = Grid.cellSize;
+                        cellsize.z = Step;
+                        Gizmos.DrawCube(worldPosition, Grid.cellSize);
+                    }
                 }
             }
+
         }
-//        //Draw future positions
-//        foreach (var enemyPath in PatrolPaths) 
-//        {
-//            Vector2 futurePos = enemyPath.CalculateFuturePosition(Future).Item1;
-//            Gizmos.DrawSphere(futurePos,0.1f);
-//        }
+        //        //Draw future positions
+        //        foreach (var enemyPath in PatrolPaths) 
+        //        {
+        //            Vector2 futurePos = enemyPath.CalculateFuturePosition(Future).Item1;
+        //            Gizmos.DrawSphere(futurePos,0.1f);
+        //        }
     }
 }
