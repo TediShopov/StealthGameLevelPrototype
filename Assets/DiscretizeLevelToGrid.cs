@@ -9,8 +9,8 @@ using UnityEngine;
 public class DiscretizeLevelToGrid : MonoBehaviour
 {
     [HideInInspector] public Grid Grid;
-    private Vector3Int GridMin;
-    private Vector3Int GridMax;
+    public Vector3Int GridMin;
+    public Vector3Int GridMax;
     public LayerMask ObstacleLayerMask;
     [HideInInspector]  public List<PatrolPath> PatrolPaths;
      public PolygonBoundary PolygonBoundary;

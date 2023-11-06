@@ -399,16 +399,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d9bad1cd77a7a246a48d5e6516c70fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  VoxelizedLevel: {fileID: 639582058}
   StartNode: {fileID: 2097330441}
   EndNode: {fileID: 627463364}
-  maxStepSize: 0.5
-  maxIterations: 500
   BuildAtBegining: 1
   DoRRTStep: 0
-  Boundary: {fileID: 64142021}
-  BoundaryObstacleLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
+  maxStepSize: 0.5
+  maxIterations: 500
+  CurrentFuture: 0
 --- !u!114 &102394058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1018,6 +1016,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Grid: {fileID: 639582059}
+  GridMin: {x: 0, y: 0, z: 0}
+  GridMax: {x: 0, y: 0, z: 0}
   ObstacleLayerMask:
     serializedVersion: 2
     m_Bits: 64

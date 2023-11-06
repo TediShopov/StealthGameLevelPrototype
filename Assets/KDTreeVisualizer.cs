@@ -15,17 +15,18 @@ public class KDTree
     public KDTree(float[] point, int maxDimension,int depth =0)
     {
         Point = point;
+        this.MaxDimensions = maxDimension;
         Left = null;
         Right = null;
         Depth = depth;
     }
     public void AddLeft(float[] point) 
     {
-        this.Left = new KDTree(point, Depth + 1);
+        this.Left = new KDTree(point, point.Length,Depth + 1);
     }
     public void AddRight(float[] point) 
     {
-        this.Right = new KDTree(point, Depth + 1);
+        this.Right = new KDTree(point, point.Length,Depth + 1);
     }
 
     public void AddKDNode(float[] target)
@@ -118,6 +119,7 @@ public class KDTree
         return new float[] { pos.x, pos.y,pos.z};
     }
      public static implicit operator Vector2(KDTree node) => new Vector2(node.Point[0], node.Point[1]);
+     public static implicit operator Vector3(KDTree node) => new Vector3(node.Point[0], node.Point[1], node.Point[2]);
 
 }
 

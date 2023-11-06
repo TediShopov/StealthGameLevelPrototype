@@ -237,6 +237,19 @@ public class Graph<T>
             }
         }
     }
+    public static void DebugDrawGraph(Graph<Vector3> graph,Color nodeColor, Color connectionColor)
+    {
+        foreach (var node in graph.adjacencyList)
+        {
+            Gizmos.color = nodeColor;
+            Gizmos.DrawSphere(node.Key, 0.1f);
+            foreach (var connection in node.Value)
+            {
+                Gizmos.color = connectionColor;
+                Gizmos.DrawLine(node.Key, connection);
+            }
+        }
+    }
 
     public static void DebigDrawClusters(List<List<Vector2>> clusters)
     {
