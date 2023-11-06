@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 
@@ -83,7 +84,7 @@ public class RapidlyExploringRandomTree : MonoBehaviour
         newPoint = Steer((Vector3)nearestNode, target);
         Debug.Log($"New point: {newPoint}");
 
-        if (!ObstacleInPath((Vector3)nearestNode, newPoint))
+        if (IsValidSegment((Vector3)nearestNode, newPoint))
         {
             if (nearestNode.Point[2] > newPoint.z) 
             {
@@ -121,14 +122,12 @@ public class RapidlyExploringRandomTree : MonoBehaviour
 
     private bool IsValidSegment(Vector3 start, Vector3 end) 
     {
-        return true;
-//        var hit= Physics2D.Linecast(start, end, BoundaryObstacleLayerMask);
-//        if(hit) 
-//        {
-//            return false;
-//        }
-//        return true;Vector2
-//
+
+        if(end.z < start.z) return false;
+        Vector2Int startCell = (Vector2Int)this.VoxelizedLevel.Grid.WorldToCell(start);
+        Vector2Int endCell = (Vector2Int)this.VoxelizedLevel.Grid.WorldToCell(end);
+        var listOfRCells = DiscretizeLevelToGrid.GetCellsInLine(startCell, endCell);
+        return !VoxelizedLevel.CheckCellsColliding(listOfRCells.ToList(), start.z, end.z);
     }
     private bool ObstacleInPath(Vector2 fromPoint, Vector2 toPoint)
     {
