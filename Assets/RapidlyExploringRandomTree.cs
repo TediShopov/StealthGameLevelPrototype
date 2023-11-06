@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 
 public class RapidlyExploringRandomTree : MonoBehaviour
@@ -15,7 +17,7 @@ public class RapidlyExploringRandomTree : MonoBehaviour
 
     private Vector3 RandomMin;
     private Vector3 RandomMax;
-    private Graph<Vector3> RRTGraph;
+    Graph<Vector3> RRTGraph;
     private KDTree kdTree;
     public float CurrentFuture;
     public int EndBias;
@@ -28,7 +30,7 @@ public class RapidlyExploringRandomTree : MonoBehaviour
         RandomMin = VoxelizedLevel.Grid.GetCellCenterWorld(VoxelizedLevel.GridMin);
         RandomMin.z = 0;
         RandomMax = VoxelizedLevel.Grid.GetCellCenterWorld(VoxelizedLevel.GridMax);
-        RandomMax.z = VoxelizedLevel.Iterations * maxStepSize * VoxelizedLevel.Grid.cellSize.z;
+        RandomMax.z = VoxelizedLevel.Iterations * VoxelizedLevel.Step ;
         if (BuildAtBegining)
         {
             BuildRRT();
@@ -104,9 +106,9 @@ public class RapidlyExploringRandomTree : MonoBehaviour
 
     private Vector3 RandomPoint()
     {
-        float x = Random.Range(RandomMin.x, RandomMax.x);
-        float y = Random.Range(RandomMin.y, RandomMax.y);
-        float z = Random.Range(RandomMin.z, RandomMax.z);
+        float x = UnityEngine.Random.Range(RandomMin.x, RandomMax.x);
+        float y = UnityEngine.Random.Range(RandomMin.y, RandomMax.y);
+        float z = UnityEngine.Random.Range(RandomMin.z, RandomMax.z);
         return new Vector3(x, y,z);
     }
 
@@ -146,6 +148,22 @@ public class RapidlyExploringRandomTree : MonoBehaviour
         }
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(newPoint, 0.1f);
+    }
+    public void DebugDrawGraph( Func<Vector3,bool> condition,Color nodeColor , Color connectionColor ) 
+    {
+        if(RRTGraph == null) return;
+        foreach (var node in RRTGraph.adjacencyList)
+        {
+            if (!condition(node.Key))
+                continue;
+            Gizmos.color = nodeColor;
+            Gizmos.DrawSphere(node.Key, 0.1f);
+            foreach (var connection in node.Value)
+            {
+                Gizmos.color = connectionColor;
+                Gizmos.DrawLine(node.Key, connection);
+            }
+        }
     }
 
 }
