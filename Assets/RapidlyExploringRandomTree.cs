@@ -18,6 +18,7 @@ public class RapidlyExploringRandomTree : MonoBehaviour
     private Graph<Vector3> RRTGraph;
     private KDTree kdTree;
     public float CurrentFuture;
+    public int EndBias;
     private void Start()
     {
         if (VoxelizedLevel == null) return;
@@ -37,7 +38,7 @@ public class RapidlyExploringRandomTree : MonoBehaviour
     {
         if(DoRRTStep) 
         {
-            RRTStep();
+            RRTStep(EndBias);
             DoRRTStep = false;
         }
         
@@ -46,30 +47,47 @@ public class RapidlyExploringRandomTree : MonoBehaviour
     private void BuildRRT()
     {
         kdTree = new KDTree(KDTree.ToFloatArray(StartNode.position),3,0);
-       // nodes.Add(startNode);
-
-        for (int i = 0; i < maxIterations; i++)
+        // nodes.Add(startNode);
+        int iter = 0;
+        while (iter < maxIterations) 
         {
-            RRTStep();
+            RRTStep(iter);
+            iter++;
         }
+
 
         Debug.Log("RRT did not reach the goal.");
     }
-    Vector3 randomPoint;
+    Vector3 target;
     Vector3 newPoint;
     KDTree nearestNode;
-    public bool RRTStep()
+    public bool RRTStep(int iterCount)
     {
 
-        randomPoint = RandomPoint();
-        Debug.Log($"Radom point: {randomPoint}");
-        nearestNode = KDTree.NearestNeighbor(kdTree, KDTree.ToFloatArray(randomPoint));
+        if (iterCount % EndBias == 0)
+        {
+            target = EndNode.position;
+            target.z = RandomMax.z;
+        }
+        else
+        {
+            target = RandomPoint();
+        }
 
-        newPoint = Steer((Vector3)nearestNode, randomPoint);
+
+        Debug.Log($"Radom point: {target}");
+        nearestNode = KDTree.NearestNeighbor(kdTree, KDTree.ToFloatArray(target));
+
+        newPoint = Steer((Vector3)nearestNode, target);
         Debug.Log($"New point: {newPoint}");
 
         if (!ObstacleInPath((Vector3)nearestNode, newPoint))
-        { 
+        {
+            if (nearestNode.Point[2] > newPoint.z) 
+            {
+                Debug.Log("Cannot run time back");
+                return false;
+            }
             kdTree.AddKDNode(KDTree.ToFloatArray(newPoint));
             RRTGraph.AddNode(newPoint);
             RRTGraph.AddEdge((Vector3)nearestNode, newPoint);
@@ -78,8 +96,8 @@ public class RapidlyExploringRandomTree : MonoBehaviour
             if (Vector3.Distance(newPoint, EndNode.position) < maxStepSize)
             {
                 Debug.Log("Goal reached!");
-                return true;
             }
+            return true;
         }
         return false;
     }
@@ -120,7 +138,7 @@ public class RapidlyExploringRandomTree : MonoBehaviour
         if (RRTGraph == null) return;
         Graph<Vector3>.DebugDrawGraph(RRTGraph, Color.black, Color.green);
         Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(randomPoint, 0.1f);
+        Gizmos.DrawSphere(target, 0.1f);
         if(nearestNode != null) 
         {
             Gizmos.color = Color.blue;

@@ -407,6 +407,7 @@ MonoBehaviour:
   maxStepSize: 0.5
   maxIterations: 500
   CurrentFuture: 0
+  EndBias: 12
 --- !u!114 &102394058
 MonoBehaviour:
   m_ObjectHideFlags: 0
