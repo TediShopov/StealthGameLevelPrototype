@@ -59,6 +59,42 @@ public class Graph<T>
 
         return clusters;
     }
+    public List<T> FindPath(T start, T goal)
+       
+    {
+        List<T> path = new List<T>();
+        HashSet<T> visited = new HashSet<T>();
+        DFS(start, goal, visited, path);
+        return path;
+    }
+
+     bool DFS(T current, T goal, HashSet<T> visited, List<T> path)
+    {
+        visited.Add(current);
+        path.Add(current);
+
+        if (current.Equals(goal))
+        {
+            return true; // Path found
+        }
+
+        var neighbors = this.adjacencyList[current];
+        foreach (T neighbor in neighbors)
+        {
+            if (!visited.Contains(neighbor))
+            {
+                if (DFS(neighbor, goal, visited, path))
+                {
+                    return true;
+                }
+            }
+        }
+
+        // If the goal is not reachable from the current node, backtrack
+        path.Remove(current);
+
+        return false;
+    }
 
 
     public bool IsValidPath(List<T> path) 

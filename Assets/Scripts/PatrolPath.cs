@@ -109,6 +109,8 @@ public class PatrolPath : MonoBehaviour
             Gizmos.DrawSphere(t, DebugRadius);
             //Draw path 
             Vector2 t1 = Positions[i+1];
+            {
+        }
 
             Gizmos.DrawLine(t1, t);
 

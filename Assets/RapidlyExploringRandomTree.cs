@@ -16,6 +16,8 @@ public class RapidlyExploringRandomTree : MonoBehaviour
     public bool DoRRTStep = false;
     public int Runs = 1;
     public int maxIterations = 1000;
+    private Vector3 lastAddedNode = Vector3.zero;
+    public List<List<Vector3>> FoundPaths;
     // private List<Transform> nodes = new List<Transform>();
 
     private Vector3 RandomMin;
@@ -27,8 +29,6 @@ public class RapidlyExploringRandomTree : MonoBehaviour
     private void Start()
     {
         if (VoxelizedLevel == null) return;
-        this.RRTGraph = new Graph<Vector3>();
-        kdTree = new KDTree(KDTree.ToFloatArray((Vector3)StartNode.position),0);
         //Set boudnaries of sampler to be inside the goemtry based on the boudns of the volxelized spaece
         RandomMin = VoxelizedLevel.Grid.GetCellCenterWorld(VoxelizedLevel.GridMin);
         RandomMin.z = 0;
@@ -36,9 +36,13 @@ public class RapidlyExploringRandomTree : MonoBehaviour
         RandomMax.z = VoxelizedLevel.Iterations * VoxelizedLevel.Step ;
         if (BuildAtBegining)
         {
-            BuildRRT();
+           FoundPaths=  BuildManyRRTPaths();
         }
         
+    }
+    public List<Vector2> FlattenedPath() 
+    {
+       return this.RRTGraph.FindPath(StartNode.position,lastAddedNode).Select(s=> new Vector2(s.x,s.y)).ToList();
     }
     public void Update()
     {
@@ -49,10 +53,25 @@ public class RapidlyExploringRandomTree : MonoBehaviour
         }
         
     }
-
-    private void BuildRRT()
+    public List<List<Vector3>> BuildManyRRTPaths() 
     {
+        var paths = new List<List<Vector3>>();
+        for (int i = 0;i < Runs;i++) 
+        {
+            var path = BuildRRTPath();
+            if (path.Count > 0) 
+            {
+                paths.Add(BuildRRTPath());
+            }
+        }
+        return paths;
+    }
+
+    private List<Vector3> BuildRRTPath()
+    {
+        this.RRTGraph = new Graph<Vector3>();
         kdTree = new KDTree(KDTree.ToFloatArray(StartNode.position),3,0);
+        RRTGraph.AddNode(StartNode.position);
         int iter = 0;
         bool reachedGoal = false;
         while (iter < maxIterations) 
@@ -60,17 +79,11 @@ public class RapidlyExploringRandomTree : MonoBehaviour
             if (RRTStep(iter)) 
             {
                 reachedGoal = true;
-                Debug.Log("RRT goal reached");
-                break;
+                return this.RRTGraph.FindPath(StartNode.position,lastAddedNode);
             }
             iter++;
         }
-
-
-        if(reachedGoal==false) 
-        {
-            Debug.Log("RRT did not reach the goal.");
-        }
+        return new List<Vector3>();
     }
     Vector3 target;
     Vector3 newPoint;
@@ -100,6 +113,7 @@ public class RapidlyExploringRandomTree : MonoBehaviour
             kdTree.AddKDNode(KDTree.ToFloatArray(newPoint));
             RRTGraph.AddNode(newPoint);
             RRTGraph.AddEdge((Vector3)nearestNode, newPoint);
+            lastAddedNode = newPoint;
             //nodes.Add(newNodeTransform);
 
             if (ReachedGoal(newPoint, EndNode.position, 1.0f))
