@@ -9,8 +9,8 @@ public class FutureDebugVisualization : MonoBehaviour
     public RapidlyExploringRandomTree RRT;
     public float Future;
     public float FutureBias;
-    public Vector2Int StartRLine = Vector2Int.zero;
-    public Vector2Int EndRLine = Vector2Int.zero;
+//    public Vector2Int StartRLine = Vector2Int.zero;
+//    public Vector2Int EndRLine = Vector2Int.zero;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,6 +25,7 @@ public class FutureDebugVisualization : MonoBehaviour
     private void OnDrawGizmos()
     {
 
+        //Debug.DrawRay(RRT.StartNode.position, Vector3.right * RRT.Controller.MaxSpeed, Color.cyan);
         if (Future < 0) { Future = 0; }
         if (FutureBias < 0) { FutureBias = 0; }
 
@@ -36,19 +37,21 @@ public class FutureDebugVisualization : MonoBehaviour
 
 
 
-        var listOfRCells = DiscretizeLevelToGrid.GetCellsInLine(StartRLine, EndRLine);
-        if (VoxelizedLevel.CheckCellsColliding(listOfRCells.ToList(), Future, Future+VoxelizedLevel.Step))
-        {
-            Gizmos.color = Color.red;
-        }
-        else 
-        {
-            Gizmos.color = Color.blue;
-        }
-        foreach (var cell in listOfRCells) 
-        {
-            Gizmos.DrawSphere(VoxelizedLevel.Grid.GetCellCenterWorld(new Vector3Int(cell.x,cell.y,0)), 0.5f);
-        }
+
+
+//        var listOfRCells = DiscretizeLevelToGrid.GetCellsInLine(StartRLine, EndRLine);
+//        if (VoxelizedLevel.CheckCellsColliding(listOfRCells.ToList(), Future, Future+VoxelizedLevel.Step))
+//        {
+//            Gizmos.color = Color.red;
+//        }
+//        else 
+//        {
+//            Gizmos.color = Color.blue;
+//        }
+//        foreach (var cell in listOfRCells) 
+//        {
+//            Gizmos.DrawSphere(VoxelizedLevel.Grid.GetCellCenterWorld(new Vector3Int(cell.x,cell.y,0)), 0.5f);
+//        }
 
     }
     public bool RRTNodeCloseToFuture(Vector3 nodePoint) 

@@ -2,17 +2,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 
 public class RapidlyExploringRandomTree : MonoBehaviour
 {
     public DiscretizeLevelToGrid VoxelizedLevel;
+    public CharacterController2D Controller;
     public Transform StartNode;
     public Transform EndNode;
     public bool BuildAtBegining = true;
     public bool DoRRTStep = false;
-    public float maxStepSize = 1.0f;
+    public int Runs = 1;
     public int maxIterations = 1000;
     // private List<Transform> nodes = new List<Transform>();
 
@@ -36,6 +38,7 @@ public class RapidlyExploringRandomTree : MonoBehaviour
         {
             BuildRRT();
         }
+        
     }
     public void Update()
     {
@@ -50,16 +53,24 @@ public class RapidlyExploringRandomTree : MonoBehaviour
     private void BuildRRT()
     {
         kdTree = new KDTree(KDTree.ToFloatArray(StartNode.position),3,0);
-        // nodes.Add(startNode);
         int iter = 0;
+        bool reachedGoal = false;
         while (iter < maxIterations) 
         {
-            RRTStep(iter);
+            if (RRTStep(iter)) 
+            {
+                reachedGoal = true;
+                Debug.Log("RRT goal reached");
+                break;
+            }
             iter++;
         }
 
 
-        Debug.Log("RRT did not reach the goal.");
+        if(reachedGoal==false) 
+        {
+            Debug.Log("RRT did not reach the goal.");
+        }
     }
     Vector3 target;
     Vector3 newPoint;
@@ -69,20 +80,15 @@ public class RapidlyExploringRandomTree : MonoBehaviour
 
         if (iterCount % EndBias == 0)
         {
-            target = EndNode.position;
-            target.z = RandomMax.z;
+            target = GetRandomGoalState();
         }
         else
         {
             target = RandomPoint();
         }
 
-
-        Debug.Log($"Radom point: {target}");
         nearestNode = KDTree.NearestNeighbor(kdTree, KDTree.ToFloatArray(target));
-
         newPoint = Steer((Vector3)nearestNode, target);
-        Debug.Log($"New point: {newPoint}");
 
         if (IsValidSegment((Vector3)nearestNode, newPoint))
         {
@@ -96,28 +102,55 @@ public class RapidlyExploringRandomTree : MonoBehaviour
             RRTGraph.AddEdge((Vector3)nearestNode, newPoint);
             //nodes.Add(newNodeTransform);
 
-            if (Vector3.Distance(newPoint, EndNode.position) < maxStepSize)
+            if (ReachedGoal(newPoint, EndNode.position, 1.0f))
             {
-                Debug.Log("Goal reached!");
+                return true;
             }
-            return true;
         }
         return false;
+    }
+    private Vector3 GetRandomGoalState() 
+    {
+        float d = Vector2.Distance(StartNode.position, EndNode.position);
+        float minimumTimeToReach = d / (float)Controller.MaxSpeed;
+        float z = UnityEngine.Random.Range(minimumTimeToReach, RandomMax.z);
+        return new Vector3(EndNode.position.x, EndNode.position.y, z);
+    }
+    private bool ReachedGoal(Vector3 from, Vector3 goal, float bias) 
+    {
+        return Vector2.Distance(from, goal) < bias;
     }
 
     private Vector3 RandomPoint()
     {
-        float x = UnityEngine.Random.Range(RandomMin.x, RandomMax.x);
-        float y = UnityEngine.Random.Range(RandomMin.y, RandomMax.y);
-        float z = UnityEngine.Random.Range(RandomMin.z, RandomMax.z);
-        return new Vector3(x, y,z);
+        Vector2 goalSubState = new Vector2(UnityEngine.Random.Range(RandomMin.x, RandomMax.x), UnityEngine.Random.Range(RandomMin.y, RandomMax.y));
+        float d = Vector2.Distance(StartNode.position, goalSubState);
+        float minimumTimeToReach = d / Controller.MaxSpeed;
+        float z = UnityEngine.Random.Range(minimumTimeToReach, RandomMax.z);
+        return new Vector3(goalSubState.x, goalSubState.y, z);
+//        float x = UnityEngine.Random.Range(RandomMin.x, RandomMax.x);
+//        float y = UnityEngine.Random.Range(RandomMin.y, RandomMax.y);
+//        float z = UnityEngine.Random.Range(RandomMin.z, RandomMax.z);
+//        return new Vector3(x, y,z);
     }
 
 
     private Vector3 Steer(Vector3 fromPoint, Vector3 toPoint)
     {
-        Vector3 direction = (toPoint - fromPoint).normalized;
-        return fromPoint + direction * maxStepSize;
+        Vector2 direction = (toPoint - fromPoint).normalized;
+        float distanceToGoal = Vector2.Distance(fromPoint, toPoint); 
+        float timePassed= toPoint.z - fromPoint.z;
+        if (distanceToGoal / timePassed <= Controller.MaxSpeed) 
+        {
+            return new Vector3(toPoint.x, toPoint.y, toPoint.z);
+        }
+        else
+        {
+
+            Vector2 reachedPosition = new Vector2(fromPoint.x, fromPoint.y) + direction * (Controller.MaxSpeed * timePassed); 
+            return new Vector3(reachedPosition.x,reachedPosition.y, fromPoint.z + timePassed);
+
+        }
     }
 
     private bool IsValidSegment(Vector3 start, Vector3 end) 
