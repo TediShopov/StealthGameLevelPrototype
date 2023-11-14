@@ -59,7 +59,7 @@ public class FutureDebugVisualization : MonoBehaviour
         bool[,] LookAtGrid = VoxelizedLevel.FutureGrids[lookAtGridIndex];
         VoxelizedLevel.DebugDrawGridByIndex(lookAtGridIndex);
         if(VisualizeLatestGraph)
-            RRT.DebugDrawGraph(RRTNodeCloseToFuture, Color.green, Color.black);
+            //RRT.DebugDrawGraph(RRTNodeCloseToFuture, Color.green, Color.black);
         if(VisualizePaths)
             DrawFlattenedFoundPath();
 

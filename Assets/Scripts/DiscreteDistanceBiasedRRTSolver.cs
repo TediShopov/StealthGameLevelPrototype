@@ -67,9 +67,13 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
     public float BiasDistance;
     //If distance between some state and and end state is below this distance the state is treated as a solution
     public float GoalDistance;
-    public DiscreteDistanceBasedRRTSolver(DiscretizeLevelToGrid discretizedLevel, int bias, int goalDist, float maxvel)
+    public DiscreteDistanceBasedRRTSolver(DiscretizeLevelToGrid discretizedLevel, float bias, float goalDist, float maxvel)
     {
         this.VoxelizedLevel = discretizedLevel;
+        _randomMin = discretizedLevel.Grid.GetCellCenterWorld(discretizedLevel.GridMin);
+        _randomMin.z =0 ;
+        _randomMax = discretizedLevel.Grid.GetCellCenterWorld(discretizedLevel.GridMax);
+        _randomMax.z =discretizedLevel.Iterations * discretizedLevel.Step ;
         this.BiasDistance= bias;
         this.GoalDistance = goalDist;
         this.MaxVelocity = maxvel;
@@ -90,7 +94,7 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
         while (iter < maxIteration) 
         {
             TreeNode<Vector3> stepResult = null;
-            if (!_lastBiasedState.Equals(_lastAddedState) && IsInBiasDistance(_lastAddedState.Content, end))
+            if (_lastAddedState!=null && !_lastBiasedState.Equals(_lastAddedState) && IsInBiasDistance(_lastAddedState.Content, end))
             {
                 stepResult = DoBiasedStep();
             }
@@ -144,7 +148,7 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
         if(GoalNodeFound==null) return path;
 
         TreeNode<Vector3> currentlyTraversedNode = GoalNodeFound;
-        while (currentlyTraversedNode.Parent != null) 
+        while (currentlyTraversedNode!= null) 
         {
             path.Add(currentlyTraversedNode.Content);
             currentlyTraversedNode= currentlyTraversedNode.Parent;
