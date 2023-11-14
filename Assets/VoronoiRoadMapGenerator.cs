@@ -47,11 +47,11 @@ public class VoronoiRoadMapGenerator : MonoBehaviour
         //Create triangulation
         _triangulation = new DelaunayTriangulation2<EEK>();
         _triangulation.Insert(_voronoiPoints.ToArray(), _voronoiPoints.Count);
-        Debug.Log($" Voronoi Points used: {_voronoiPoints.Count.ToString()}");
-        Debug.Log($" Obstacle points used: {ObstaclePoints.Count.ToString()}");
-        Debug.Log($" Boundary points used: {BoundaryPoints.Count.ToString()}");
-        Debug.Log($" Collider count: {Colldiers.Count.ToString()}");
-
+//        Debug.Log($" Voronoi Points used: {_voronoiPoints.Count.ToString()}");
+//        Debug.Log($" Obstacle points used: {ObstaclePoints.Count.ToString()}");
+//        Debug.Log($" Boundary points used: {BoundaryPoints.Count.ToString()}");
+//        Debug.Log($" Collider count: {Colldiers.Count.ToString()}");
+//
         return GenerateGraphFromLineSegments(GetValidSegments(_triangulation));
     }
     private List<Vector2> GetBoundingPolygonPoints()

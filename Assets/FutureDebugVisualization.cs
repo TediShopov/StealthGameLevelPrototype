@@ -9,12 +9,18 @@ public class FutureDebugVisualization : MonoBehaviour
     public RapidlyExploringRandomTree RRT;
     public float Future;
     public float FutureBias;
+    public bool VisualizeLatestGraph=false; 
+    public bool VisualizePaths=true; 
 //    public Vector2Int StartRLine = Vector2Int.zero;
 //    public Vector2Int EndRLine = Vector2Int.zero;
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (this.RRT != null && this.RRT.FoundPaths !=null) 
+        {
+
+            Debug.Log($"Runs: {this.RRT.Runs} Found Paths: {this.RRT.FoundPaths.Count}");
+        } 
     }
 
     // Update is called once per frame
@@ -48,30 +54,32 @@ public class FutureDebugVisualization : MonoBehaviour
         if (Future < 0) { Future = 0; }
         if (FutureBias < 0) { FutureBias = 0; }
 
-        if (VoxelizedLevel == null || VoxelizedLevel.FutureGrids.Count == 0) return;
+        if (VoxelizedLevel == null || VoxelizedLevel.FutureGrids ==null) return;
         int lookAtGridIndex = Mathf.CeilToInt(Future / VoxelizedLevel.Step);
         bool[,] LookAtGrid = VoxelizedLevel.FutureGrids[lookAtGridIndex];
         VoxelizedLevel.DebugDrawGridByIndex(lookAtGridIndex);
-        RRT.DebugDrawGraph(RRTNodeCloseToFuture, Color.green, Color.black);
-        DrawFlattenedFoundPath();
+        if(VisualizeLatestGraph)
+            RRT.DebugDrawGraph(RRTNodeCloseToFuture, Color.green, Color.black);
+        if(VisualizePaths)
+            DrawFlattenedFoundPath();
 
 
 
 
 
-//        var listOfRCells = DiscretizeLevelToGrid.GetCellsInLine(StartRLine, EndRLine);
-//        if (VoxelizedLevel.CheckCellsColliding(listOfRCells.ToList(), Future, Future+VoxelizedLevel.Step))
-//        {
-//            Gizmos.color = Color.red;
-//        }
-//        else 
-//        {
-//            Gizmos.color = Color.blue;
-//        }
-//        foreach (var cell in listOfRCells) 
-//        {
-//            Gizmos.DrawSphere(VoxelizedLevel.Grid.GetCellCenterWorld(new Vector3Int(cell.x,cell.y,0)), 0.5f);
-//        }
+        //        var listOfRCells = DiscretizeLevelToGrid.GetCellsInLine(StartRLine, EndRLine);
+        //        if (VoxelizedLevel.CheckCellsColliding(listOfRCells.ToList(), Future, Future+VoxelizedLevel.Step))
+        //        {
+        //            Gizmos.color = Color.red;
+        //        }
+        //        else 
+        //        {
+        //            Gizmos.color = Color.blue;
+        //        }
+        //        foreach (var cell in listOfRCells) 
+        //        {
+        //            Gizmos.DrawSphere(VoxelizedLevel.Grid.GetCellCenterWorld(new Vector3Int(cell.x,cell.y,0)), 0.5f);
+        //        }
 
     }
     public bool RRTNodeCloseToFuture(Vector3 nodePoint) 

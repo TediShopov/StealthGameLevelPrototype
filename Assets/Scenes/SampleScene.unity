@@ -400,14 +400,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   VoxelizedLevel: {fileID: 639582058}
+  Controller: {fileID: 2097330442}
   StartNode: {fileID: 2097330441}
   EndNode: {fileID: 627463364}
   BuildAtBegining: 1
   DoRRTStep: 0
-  maxStepSize: 1
-  maxIterations: 2000
+  Runs: 10
+  maxIterations: 1500
   CurrentFuture: 0
-  EndBias: 50
+  BiasDistance: 6.32
 --- !u!114 &102394058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1470,6 +1471,8 @@ MonoBehaviour:
   RRT: {fileID: 102394057}
   Future: 0
   FutureBias: 0
+  VisualizeLatestGraph: 0
+  VisualizePaths: 0
 --- !u!4 &1248218790
 Transform:
   m_ObjectHideFlags: 0
@@ -2040,7 +2043,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Velocity: {x: 0, y: 0}
-  MaxSpeed: 7
+  MaxSpeed: 5
   Acceleration: 25
   Friction: 6
 --- !u!50 &2097330443
