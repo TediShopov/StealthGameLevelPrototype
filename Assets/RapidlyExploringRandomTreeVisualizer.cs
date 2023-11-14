@@ -5,8 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
-
-public class RapidlyExploringRandomTree : MonoBehaviour
+public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
 {
     public DiscretizeLevelToGrid VoxelizedLevel;
     public CharacterController2D Controller;

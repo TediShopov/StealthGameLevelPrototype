@@ -6,7 +6,7 @@ using UnityEngine;
 public class FutureDebugVisualization : MonoBehaviour
 {
     public DiscretizeLevelToGrid VoxelizedLevel;
-    public RapidlyExploringRandomTree RRT;
+    public RapidlyExploringRandomTreeVisualizer RRT;
     public float Future;
     public float FutureBias;
     public bool VisualizeLatestGraph=false; 
