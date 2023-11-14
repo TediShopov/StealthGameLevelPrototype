@@ -16,11 +16,11 @@ public class FutureDebugVisualization : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (this.RRT != null && this.RRT.FoundPaths !=null) 
-        {
-
-            Debug.Log($"Runs: {this.RRT.Runs} Found Paths: {this.RRT.FoundPaths.Count}");
-        } 
+//        if (this.RRT != null && this.RRT.FoundPaths !=null) 
+//        {
+//
+//            Debug.Log($"Runs: {this.RRT.Runs} Found Paths: {this.RRT.FoundPaths.Count}");
+//        } 
     }
 
     // Update is called once per frame
@@ -31,21 +31,21 @@ public class FutureDebugVisualization : MonoBehaviour
     private void DrawFlattenedFoundPath() 
     {
 
-        Gizmos.color = Color.yellow;
-        foreach (var path in this.RRT.FoundPaths) 
-        {
-            for (int i = 0; i < path.Count - 1; i++)
-            {
-                if (RRTNodeCloseToFuture(path[i])) 
-                {
-                    Vector2 t = path[i];
-                    Gizmos.DrawSphere(t, 0.2f);
-                    //Draw path 
-                    Vector2 t1 = path[i + 1];
-                    Gizmos.DrawLine(t1, t);
-                }
-            }
-        }
+//        Gizmos.color = Color.yellow;
+//        foreach (var path in this.RRT.FoundPaths) 
+//        {
+//            for (int i = 0; i < path.Count - 1; i++)
+//            {
+//                if (RRTNodeCloseToFuture(path[i])) 
+//                {
+//                    Vector2 t = path[i];
+//                    Gizmos.DrawSphere(t, 0.2f);
+//                    //Draw path 
+//                    Vector2 t1 = path[i + 1];
+//                    Gizmos.DrawLine(t1, t);
+//                }
+//            }
+//        }
     }
     private void OnDrawGizmos()
     {

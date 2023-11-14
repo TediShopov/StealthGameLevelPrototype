@@ -134,7 +134,8 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
 
     public bool IsColliding(Vector3 from, Vector3 to)
     {
-        if(to.z < from.z) return false;
+        if(from.z <0 || to.z<0) return true;
+        if(from.z > to.z) return true;
         Vector2Int startCell = (Vector2Int)this.VoxelizedLevel.Grid.WorldToCell(from);
         Vector2Int endCell = (Vector2Int)this.VoxelizedLevel.Grid.WorldToCell(to);
         var listOfRCells = DiscretizeLevelToGrid.GetCellsInLine(startCell, endCell);
@@ -177,7 +178,7 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
     {
         float d = Vector2.Distance(from, goalState);
         float minimumTimeToReach = d / MaxVelocity;
-        return new Vector3(goalState.x, goalState.y, minimumTimeToReach);
+        return new Vector3(goalState.x, goalState.y, from.z + minimumTimeToReach);
     }
     private TreeNode<Vector3> DoStep() 
     {
@@ -226,6 +227,6 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
 
     public bool IsGoalState(Vector3 state)
     {
-        return Vector2.Distance(state, Goal) < 0.2f;
+        return Vector2.Distance(state, Goal) < GoalDistance;
     }
 }
