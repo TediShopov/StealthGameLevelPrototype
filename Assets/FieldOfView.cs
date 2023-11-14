@@ -14,6 +14,7 @@ public class FieldOfView : MonoBehaviour
     public int RayCount;
     public float PointingAngle;
     
+    public LayerMask ObstacleLayerMask;
     // Start is called before the first frame update
     void Start()
     {
@@ -44,7 +45,7 @@ public class FieldOfView : MonoBehaviour
 
 
             float globalAngle = angle + modifer; 
-            RaycastHit2D raycastHit2D = Physics2D.Raycast(GlobalOrigin, Helpers.GetVectorFromAngle(globalAngle), ViewDistance, LayerMask.NameToLayer("Boundary"));
+            RaycastHit2D raycastHit2D = Physics2D.Raycast(GlobalOrigin, Helpers.GetVectorFromAngle(globalAngle), ViewDistance, ObstacleLayerMask);
             if (raycastHit2D.collider == null)
             {
                 //Local Angle
@@ -94,10 +95,13 @@ public class FieldOfView : MonoBehaviour
         //Gloabar direction vector 
         Vector3 globalPointingDirection = GetGlobalDirection().normalized;
         Vector3 vectorToTarget = (testPosition- transform.position).normalized;
-        float angle = Vector3.Angle(globalPointingDirection, vectorToTarget);
-        if (angle < FOV / 2.0f && Vector3.Distance(testPosition, this.transform.position) <= ViewDistance) 
+        if (!Physics2D.Linecast(this.transform.position, testPosition,ObstacleLayerMask)) 
         {
-            return true;
+            float angle = Vector3.Angle(globalPointingDirection, vectorToTarget);
+            if (angle < FOV / 2.0f && Vector3.Distance(testPosition, this.transform.position) <= ViewDistance)
+            {
+                return true;
+            }
         }
         return false;
     }
@@ -105,10 +109,13 @@ public class FieldOfView : MonoBehaviour
     {
         //Gloabar direction vector 
         Vector2 vectorToTarget = (testPosition- fovPosition).normalized;
-        float angle = Vector2.Angle(globalDirection, vectorToTarget);
-        if (angle < FOV / 2.0f && Vector2.Distance(testPosition, fovPosition) <= ViewDistance) 
+        if (!Physics2D.Linecast(testPosition, fovPosition,ObstacleLayerMask)) 
         {
-            return true;
+            float angle = Vector2.Angle(globalDirection, vectorToTarget);
+            if (angle < FOV / 2.0f && Vector2.Distance(testPosition, fovPosition) <= ViewDistance)
+            {
+                return true;
+            }
         }
         return false;
     }

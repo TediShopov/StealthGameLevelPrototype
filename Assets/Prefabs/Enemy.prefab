@@ -165,11 +165,16 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   Positions: []
+  InitialPositions: []
+  Randomized: 1
   Velocity: {x: 0, y: 0}
   Speed: 3
   FieldOfView: {fileID: 177592571048017179}
   ReachRadius: 0.1
   DebugRadius: 0.1
+  TimeSincePathStart: 1
+  DrawFuturePosition: 0
+  SeekPath: 1
 --- !u!1 &6721944321965592131
 GameObject:
   m_ObjectHideFlags: 0
@@ -219,9 +224,12 @@ MonoBehaviour:
   meshFilter: {fileID: 7658449880448983089}
   SearchedObject: {fileID: 0}
   FOV: 90
-  ViewDistance: 3
+  ViewDistance: 5
   RayCount: 30
   PointingAngle: 0
+  ObstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!33 &7658449880448983089
 MeshFilter:
   m_ObjectHideFlags: 0

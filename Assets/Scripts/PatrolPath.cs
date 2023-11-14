@@ -11,6 +11,7 @@ public class PatrolPath : MonoBehaviour
     public List<Transform> Transforms = new List<Transform>();
     public List<Vector2> Positions = new List<Vector2>();
     public List<Vector2> InitialPositions = new List<Vector2>();
+    public bool Randomized=true;
     private int _wayPointIndex;
     Graph<Vector2> RoadmapGraph;
     public Vector2 NextWP => Positions.ElementAtOrDefault(_wayPointIndex+1);
@@ -35,6 +36,10 @@ public class PatrolPath : MonoBehaviour
         {
             _rigidBody2D.position = Positions.First();
         }
+        else
+        {
+            Positions = new List<Vector2>() { this.gameObject.transform.position };
+        }
 //        Positions = Transforms.Select(t => new Vector2(t.position.x, t.position.y)).ToList();
     }
 
@@ -53,12 +58,13 @@ public class PatrolPath : MonoBehaviour
     }
     public Vector2 SeekNextWaypoint() 
     {
+        if (Positions.Count == 1) return Vector2.zero;
         return (NextWP - CurrentPosition).normalized;
     }
     public bool ReachedNextWayPoint() 
     {
-        if (NextWP != null)
 
+        if (NextWP != null)
             return Vector3.Distance(NextWP, CurrentPosition) < ReachRadius;
         else
             return false;
@@ -91,6 +97,7 @@ public class PatrolPath : MonoBehaviour
     public void LookAtPosition(Vector3 lookAt) 
     {
         // the second argument, upwards, defaults to Vector3.up
+        if(Positions.Count == 1) return;
         Quaternion rotation = Quaternion.Euler(0,0,Helpers.GetAngleFromVectorFloat(lookAt));
         transform.rotation = rotation;
     }
@@ -137,7 +144,8 @@ public class PatrolPath : MonoBehaviour
     }
     public Tuple<Vector2,Vector2> CalculateFuturePosition(float time)
     {
-        if(Positions == null || Positions.Count < 2) return new Tuple<Vector2, Vector2>(Vector2.zero,Vector2.zero);
+        if(Positions == null ) return new Tuple<Vector2, Vector2>(Vector2.zero,Vector2.zero);
+        if(Positions.Count==1) return new Tuple<Vector2, Vector2>(Positions[0], this.gameObject.transform.right);
         // Calculate the character's future position based on time and 
         float distanceCovered = Speed * time;
 

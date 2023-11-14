@@ -15,6 +15,7 @@ public class InitializeStealthLevel : MonoBehaviour
     public List<List<Vector2>> Clusters;
     private PatrolPath[] PatrolPaths;
     public PathGeneratorClass PathGenerator;
+    
 
     public float ClusterDistance = 1.0f;
     private Vector2 CalculateCentroid(List<Vector2> nodes)
@@ -61,7 +62,7 @@ public class InitializeStealthLevel : MonoBehaviour
         {
 
             PathGenerator.Roadmap = Graph;
-            PatrolPaths = FindObjectsOfType<PatrolPath>();
+            PatrolPaths = FindObjectsOfType<PatrolPath>().Where(x=>x.Randomized == true).ToArray();
             var paths = PathGenerator.GeneratePaths(PatrolPaths.Length);
             for (int i = 0;i<PatrolPaths.Length;i++) 
             {
