@@ -30,7 +30,15 @@ public class VoxelizedLevelBase : MonoBehaviour
         int indexStart = GetFutureLevelIndex((float)futureStart);
         int indexEnd = GetFutureLevelIndex((float)futureEnd);
         int range = indexEnd - indexStart;
-        List<bool[,]> relevantFutureMaps = this.FutureGrids.GetRange(indexStart,range);
+        List<bool[,]> relevantFutureMaps; 
+        if(range == 0) 
+        {
+            relevantFutureMaps = new List<bool[,]>() { this.FutureGrids[indexEnd] };
+        }
+        else
+        {
+            relevantFutureMaps = this.FutureGrids.GetRange(indexStart, range);
+        }
 
         foreach (var map in relevantFutureMaps) 
         {

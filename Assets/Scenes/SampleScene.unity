@@ -432,6 +432,7 @@ MonoBehaviour:
   GoalDistance: 1
   BiasDistance: 6.32
   Path: []
+  OutputDiscretized: 0
 --- !u!4 &102394059
 Transform:
   m_ObjectHideFlags: 0
@@ -995,7 +996,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f2c9c944f1b59e4bbed09d82da0dab7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Runs: 5
+  Runs: 14
   RRTPrefab: {fileID: 102394056}
 --- !u!114 &639582062
 MonoBehaviour:
@@ -2062,11 +2063,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7804134629173156345, guid: d583d41a5be5abf4794907a71ef64745, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.65
+      value: 8.05
       objectReference: {fileID: 0}
     - target: {fileID: 7804134629173156345, guid: d583d41a5be5abf4794907a71ef64745, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.1
+      value: -4.84
       objectReference: {fileID: 0}
     - target: {fileID: 7804134629173156345, guid: d583d41a5be5abf4794907a71ef64745, type: 3}
       propertyPath: m_LocalPosition.z
