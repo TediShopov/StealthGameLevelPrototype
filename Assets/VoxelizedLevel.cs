@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngineInternal;
@@ -16,7 +17,8 @@ public class VoxelizedLevel : VoxelizedLevelBase
     public PolygonBoundary PolygonBoundary;
     public int LookAtGrid = 0;
     public int LookAtRange =1;
-    [HideInInspector]  public List<PatrolPath> PatrolPaths;
+    //    [HideInInspector]  public List<PatrolPath> PatrolPaths;
+    public List<DynamicObstacleDiscretizer> Discrtizers;
     private bool[,] _staticObstacleGrid;
     // Start is called before the first frame update
     void Start()
@@ -35,7 +37,7 @@ public class VoxelizedLevel : VoxelizedLevelBase
             _gridMax = Grid.WorldToCell(levelBounds.max);
         }
         FutureGrids = new List<bool[,]>();
-        PatrolPaths = FindObjectsOfType<PatrolPath>().ToList();
+        Discrtizers = FindObjectsOfType<DynamicObstacleDiscretizer>().ToList();
         _staticObstacleGrid = GetStaticObstacleLevel();
         for (int i = 0; i < Iterations; i++)
         {
@@ -84,9 +86,14 @@ public class VoxelizedLevel : VoxelizedLevelBase
         bool[,] futureGrid = Copy(_staticObstacleGrid);
         List<Vector2Int> DynamicObstacle=new List<Vector2Int>();
         //Calculate enemny future position
-        foreach (var path in PatrolPaths)
+        foreach (var discretizer in Discrtizers)
         {
-            DynamicObstacle.AddRange(MarkedCellsFromEnemy(path, future, futureGrid));
+            var possiblyAffectedCells = discretizer.GetPossibleAffectedCells(this.Grid, future)
+                .Where(x => IsInBounds(x))
+                .Where(x => discretizer.IsObstacle(Grid.GetCellCenterWorld(x), future))
+                .Select(x => (Vector2Int)x);
+
+            DynamicObstacle.AddRange(possiblyAffectedCells);
         }
         foreach (var obs in DynamicObstacle) 
         {
@@ -97,51 +104,6 @@ public class VoxelizedLevel : VoxelizedLevelBase
         return futureGrid;  
     }
 
-    public List<Vector3Int> GetPossibleAffectedCells(PatrolPath path, float future) 
-    {
-        var toReturn = new List<Vector3Int>();
-
-        var position = path.CalculateFuturePosition(future).Item1;
-        var direction = path.CalculateFuturePosition(future).Item2;
-        Bounds bounds= new Bounds();
-        bounds.center = position;
-//        bounds.center = position + direction * path.EnemyProperties.ViewDistance/2.0f;
-//        bounds.Expand(path.EnemyProperties.ViewDistance*2.0f);
-        
-        Vector2 minLeft = position + Vector2.Perpendicular(direction)  * path.EnemyProperties.ViewDistance;
-        Vector2 maxRight= position + Vector2.Perpendicular(-direction)  * path.EnemyProperties.ViewDistance;
-        maxRight += direction * path.EnemyProperties.ViewDistance;
-        bounds.Encapsulate(minLeft);
-        bounds.Encapsulate(maxRight);
-
-        Vector3Int min = Grid.WorldToCell(bounds.min);
-        Vector3Int max = Grid.WorldToCell(bounds.max);
-        for (int row = min.y; row < max.y; row++)
-        {
-            for (int col = min.x; col < max.x; col++)
-            {
-
-                toReturn.Add(new Vector3Int(col, row, 0));
-            }
-
-        }
-        return toReturn;
-
-    }
-    public List<Vector2Int> MarkedCellsFromEnemy(PatrolPath path,float future, bool[,] staticLevel) 
-    {
-        var d = path.FieldOfView.EnemyProperties.ViewDistance;
-        var positionDirecion = path.CalculateFuturePosition(future);
-        var pos = positionDirecion.Item1;
-        //Bounding Box for checking
-        var listAffected = GetPossibleAffectedCells(path,future)
-            .Where(x=> IsInBounds(x))
-            .Where(x=> path.FieldOfView.TestCollision(Grid.GetCellCenterWorld(x),pos,positionDirecion.Item2))
-            .Select(x=> (Vector2Int)x);
-        return listAffected.ToList();
-
-
-    }
 
     private Vector3Int GetVectorFromInternaclCoordinates(int row, int col) => new Vector3Int(col + _gridMin.x, row + _gridMin.y, 0); 
     private bool IsStaticObstacleAtPosition(Vector3 worldPosition)

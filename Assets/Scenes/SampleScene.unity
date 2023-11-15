@@ -1018,7 +1018,7 @@ MonoBehaviour:
   PolygonBoundary: {fileID: 64142021}
   LookAtGrid: 1
   LookAtRange: 1
-  PatrolPaths: []
+  Discrtizers: []
 --- !u!4 &1042293687 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6103404734450912121, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
