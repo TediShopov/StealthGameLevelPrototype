@@ -8,22 +8,18 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PatrolPath : MonoBehaviour
 {
+    public DefaultEnemyProperties EnemyProperties;
     public List<Transform> Transforms = new List<Transform>();
-    public List<Vector2> Positions = new List<Vector2>();
-    public List<Vector2> InitialPositions = new List<Vector2>();
     public bool Randomized=true;
+    [HideInInspector] public List<Vector2> Positions = new List<Vector2>();
+    [HideInInspector] public List<Vector2> InitialPositions = new List<Vector2>();
+    [HideInInspector] public Vector2 Velocity;
     private int _wayPointIndex;
     Graph<Vector2> RoadmapGraph;
     public Vector2 NextWP => Positions.ElementAtOrDefault(_wayPointIndex+1);
     public Vector2 CurrentWP => Positions.ElementAtOrDefault(_wayPointIndex);
     public    FieldOfView FieldOfView;
     private Rigidbody2D _rigidBody2D;
-    public float TimeSincePathStart = 1.0f;
-    public bool DrawFuturePosition=false;
-    public bool SeekPath=true;
-    public DefaultEnemyProperties EnemyProperties;
-    [SerializeField] public Vector2 Velocity;
-
     private Vector2 CurrentPosition => new Vector2(this.transform.position.x, this.transform.position.y); 
     // Start is called before the first frame update
     void Start()
@@ -69,7 +65,6 @@ public class PatrolPath : MonoBehaviour
     }
     void FixedUpdate()
     {
-        if (SeekPath == false) { return; }
         if (ReachedNextWayPoint()) 
         {
             _wayPointIndex++;
@@ -131,14 +126,6 @@ public class PatrolPath : MonoBehaviour
             Gizmos.DrawSphere(t, EnemyProperties.DebugRadius);
         }
                 Gizmos.color = Color.blue;
-        
-        if(DrawFuturePosition) 
-        {
-
-            Gizmos.DrawSphere(CalculateFuturePosition(TimeSincePathStart).Item1, 0.2f);
-            var flatPos = CalculateFuturePosition(TimeSincePathStart);
-        }
-
     }
     public Tuple<Vector2,Vector2> CalculateFuturePosition(float time)
     {

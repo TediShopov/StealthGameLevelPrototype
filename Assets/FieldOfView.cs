@@ -4,9 +4,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
+[RequireComponent(typeof(MeshFilter))]
 public class FieldOfView : MonoBehaviour
 {
-    public MeshFilter meshFilter;
+    private MeshFilter _meshFilter;
     public GameObject SearchedObject;
     Mesh mesh;
     public int RayCount;
@@ -18,7 +19,9 @@ public class FieldOfView : MonoBehaviour
     void Start()
     {
         mesh=new Mesh();
-        meshFilter.mesh = mesh;
+        _meshFilter=this.gameObject.GetComponent<MeshFilter>();
+        _meshFilter.mesh = mesh;
+        
     }
     public void RebuidMeshComponent() 
     {
