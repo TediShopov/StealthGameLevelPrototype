@@ -167,14 +167,12 @@ MonoBehaviour:
   Positions: []
   InitialPositions: []
   Randomized: 1
-  Velocity: {x: 0, y: 0}
-  Speed: 3
   FieldOfView: {fileID: 177592571048017179}
-  ReachRadius: 0.1
-  DebugRadius: 0.1
   TimeSincePathStart: 1
   DrawFuturePosition: 0
   SeekPath: 1
+  EnemyProperties: {fileID: 11400000, guid: af134477030a6c949bcb81be6fcaa1ff, type: 2}
+  Velocity: {x: 0, y: 0}
 --- !u!1 &6721944321965592131
 GameObject:
   m_ObjectHideFlags: 0
@@ -223,10 +221,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshFilter: {fileID: 7658449880448983089}
   SearchedObject: {fileID: 0}
-  FOV: 90
-  ViewDistance: 5
   RayCount: 30
   PointingAngle: 0
+  EnemyProperties: {fileID: 11400000, guid: af134477030a6c949bcb81be6fcaa1ff, type: 2}
   ObstacleLayerMask:
     serializedVersion: 2
     m_Bits: 64

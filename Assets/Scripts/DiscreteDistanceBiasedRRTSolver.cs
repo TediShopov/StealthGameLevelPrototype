@@ -70,9 +70,9 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
     public DiscreteDistanceBasedRRTSolver(DiscretizeLevelToGrid discretizedLevel, float bias, float goalDist, float maxvel)
     {
         this.VoxelizedLevel = discretizedLevel;
-        _randomMin = discretizedLevel.Grid.GetCellCenterWorld(discretizedLevel.GridMin);
-        _randomMin.z =0 ;
-        _randomMax = discretizedLevel.Grid.GetCellCenterWorld(discretizedLevel.GridMax);
+        _randomMin = discretizedLevel.GetMinimumBound();
+        //_randomMin.z =0 ;
+        _randomMax = discretizedLevel.GetMaximumBound();
         _randomMax.z =discretizedLevel.Iterations * discretizedLevel.Step ;
         this.BiasDistance= bias;
         this.GoalDistance = goalDist;

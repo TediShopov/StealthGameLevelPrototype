@@ -9,10 +9,9 @@ public class FieldOfView : MonoBehaviour
     public MeshFilter meshFilter;
     public GameObject SearchedObject;
     Mesh mesh;
-    public float FOV = 90.0f;
-    public float ViewDistance = 50f;
     public int RayCount;
     public float PointingAngle;
+    public DefaultEnemyProperties EnemyProperties;
     
     public LayerMask ObstacleLayerMask;
     // Start is called before the first frame update
@@ -27,7 +26,7 @@ public class FieldOfView : MonoBehaviour
         Vector3 GlobalOrigin = this.transform.position;
 
         float angle = GetStartinAngle();
-        float angleIncrease = FOV / RayCount;
+        float angleIncrease = EnemyProperties.FOV / RayCount;
 
         Vector3[] vertices = new Vector3[RayCount + 2];
         Vector2[] uv = new Vector2[vertices.Length];
@@ -45,11 +44,11 @@ public class FieldOfView : MonoBehaviour
 
 
             float globalAngle = angle + modifer; 
-            RaycastHit2D raycastHit2D = Physics2D.Raycast(GlobalOrigin, Helpers.GetVectorFromAngle(globalAngle), ViewDistance, ObstacleLayerMask);
+            RaycastHit2D raycastHit2D = Physics2D.Raycast(GlobalOrigin, Helpers.GetVectorFromAngle(globalAngle), EnemyProperties.ViewDistance, ObstacleLayerMask);
             if (raycastHit2D.collider == null)
             {
                 //Local Angle
-                vertex =  LocalOrigin + Helpers.GetVectorFromAngle(angle) * ViewDistance;
+                vertex =  LocalOrigin + Helpers.GetVectorFromAngle(angle) * EnemyProperties.ViewDistance;
             }
             else 
             {
@@ -98,7 +97,7 @@ public class FieldOfView : MonoBehaviour
         if (!Physics2D.Linecast(this.transform.position, testPosition,ObstacleLayerMask)) 
         {
             float angle = Vector3.Angle(globalPointingDirection, vectorToTarget);
-            if (angle < FOV / 2.0f && Vector3.Distance(testPosition, this.transform.position) <= ViewDistance)
+            if (angle < EnemyProperties.FOV / 2.0f && Vector3.Distance(testPosition, this.transform.position) <= EnemyProperties.ViewDistance)
             {
                 return true;
             }
@@ -112,7 +111,7 @@ public class FieldOfView : MonoBehaviour
         if (!Physics2D.Linecast(testPosition, fovPosition,ObstacleLayerMask)) 
         {
             float angle = Vector2.Angle(globalDirection, vectorToTarget);
-            if (angle < FOV / 2.0f && Vector2.Distance(testPosition, fovPosition) <= ViewDistance)
+            if (angle < EnemyProperties.FOV / 2.0f && Vector2.Distance(testPosition, fovPosition) <= EnemyProperties.ViewDistance)
             {
                 return true;
             }
@@ -121,7 +120,7 @@ public class FieldOfView : MonoBehaviour
     }
     public float GetStartinAngle ()
     {
-        return (PointingAngle + FOV / 2.0f); 
+        return (PointingAngle + EnemyProperties.FOV / 2.0f); 
     }
     public void OnDrawGizmos()
     {

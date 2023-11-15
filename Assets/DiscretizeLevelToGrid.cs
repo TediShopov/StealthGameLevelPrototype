@@ -11,8 +11,7 @@ using UnityEngine;
 public class DiscretizeLevelToGrid : MonoBehaviour
 {
     [HideInInspector] public Grid Grid;
-    public Vector3Int GridMin;
-    public Vector3Int GridMax;
+
     public LayerMask ObstacleLayerMask;
     [HideInInspector]  public List<PatrolPath> PatrolPaths;
      public PolygonBoundary PolygonBoundary;
@@ -21,10 +20,10 @@ public class DiscretizeLevelToGrid : MonoBehaviour
     public int LookAtGrid = 0;
     public int LookAtRange ;
     public List<bool[,]> FutureGrids;
-    public bool EnableDebugCamera;
-    public Camera MainCamera;
-    public Camera DebugCamera;
-    //public float Future;
+
+
+    private Vector3Int _gridMin;
+    private Vector3Int _gridMax;
     // Start is called before the first frame update
     void Start()
     {
@@ -33,8 +32,8 @@ public class DiscretizeLevelToGrid : MonoBehaviour
         if (PolygonBoundary != null) 
         {
             Bounds levelBounds = PolygonBoundary.GetComponent<PolygonCollider2D>().bounds;
-            GridMin = Grid.WorldToCell(levelBounds.min);
-            GridMax = Grid.WorldToCell(levelBounds.max);
+            _gridMin = Grid.WorldToCell(levelBounds.min);
+            _gridMax = Grid.WorldToCell(levelBounds.max);
         }
         PatrolPaths = FindObjectsOfType<PatrolPath>().ToList();
         FutureGrids = new List<bool[,]>();
@@ -47,18 +46,20 @@ public class DiscretizeLevelToGrid : MonoBehaviour
 
         
     }
+    public Vector2 GetMinimumBound()  => this.Grid.GetCellCenterWorld(_gridMin); 
+    public Vector2 GetMaximumBound()  => this.Grid.GetCellCenterWorld(_gridMax); 
     
     public bool[,] GetFutureGrid(float future) 
     {
 
-        int rows = GridMax.y - GridMin.y;
-        int cols = GridMax.x - GridMin.x;
+        int rows = _gridMax.y - _gridMin.y;
+        int cols = _gridMax.x - _gridMin.x;
         var futureGrid = new bool[rows,cols];
         for (int row = 0; row < rows; row++)
         {
             for (int col = 0; col < cols; col++)
             {
-                Vector3Int cellPosition = new Vector3Int(col+GridMin.x, row+GridMin.y, 0);
+                Vector3Int cellPosition = new Vector3Int(col+_gridMin.x, row+_gridMin.y, 0);
                 Vector3 worldPosition = Grid.GetCellCenterWorld(cellPosition);
                 if (IsObstacleAtPosition(worldPosition) || IsEnemiesVisionOnPosition(worldPosition,future ))
                 {
@@ -105,18 +106,6 @@ public class DiscretizeLevelToGrid : MonoBehaviour
     void Update()
     {
 
-        if (EnableDebugCamera) 
-        {
-            MainCamera.enabled = false;
-            DebugCamera.enabled = true;
-            DebugCamera.transform.LookAt(new Vector3(0,0,0),Vector3.back);
-        }
-        else
-        {
-
-            MainCamera.enabled = true;
-            DebugCamera.enabled = false;
-        }
 
     }
     private void OnDrawGizmosSelected()
@@ -131,12 +120,6 @@ public class DiscretizeLevelToGrid : MonoBehaviour
             DebugDrawGridByIndex( lookAtCurrent);
 
         }
-        //        //Draw future positions
-        //        foreach (var enemyPath in PatrolPaths) 
-        //        {
-        //            Vector2 futurePos = enemyPath.CalculateFuturePosition(Future).Item1;
-        //            Gizmos.DrawSphere(futurePos,0.1f);
-        //        }
     }
 
     public int GetFutureLevelIndex(float future) 
@@ -155,9 +138,9 @@ public class DiscretizeLevelToGrid : MonoBehaviour
         {
             foreach (var cell in cells) 
             {
-                int col = cell.x- GridMin.x;
-                int row = cell.y- GridMin.y;
-                if ((col < 0 || col >= (GridMax.x-GridMin.x)) || (row < 0 || row >= (GridMax.y-GridMin.y)))
+                int col = cell.x- _gridMin.x;
+                int row = cell.y- _gridMin.y;
+                if ((col < 0 || col >= (_gridMax.x-_gridMin.x)) || (row < 0 || row >= (_gridMax.y-_gridMin.y)))
                 {
                     return true;
                 }
@@ -215,15 +198,15 @@ public class DiscretizeLevelToGrid : MonoBehaviour
 
     public void DebugDrawGridByIndex(int lookAtCurrent)
     {
-        int rows = GridMax.y - GridMin.y;
-        int cols = GridMax.x - GridMin.x;
+        int rows = _gridMax.y - _gridMin.y;
+        int cols = _gridMax.x - _gridMin.x;
         for (int row = 0; row < rows; row++)
         {
             for (int col = 0; col < cols; col++)
             {
                 if (FutureGrids[lookAtCurrent][row, col])
                 {
-                    Vector3Int cellPosition = new Vector3Int(col + GridMin.x, row + GridMin.y, 0);
+                    Vector3Int cellPosition = new Vector3Int(col + _gridMin.x, row + _gridMin.y, 0);
                     Vector3 worldPosition = Grid.GetCellCenterWorld(cellPosition);
 
                     worldPosition.z = lookAtCurrent * Step;

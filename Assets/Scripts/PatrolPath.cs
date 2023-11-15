@@ -16,15 +16,13 @@ public class PatrolPath : MonoBehaviour
     Graph<Vector2> RoadmapGraph;
     public Vector2 NextWP => Positions.ElementAtOrDefault(_wayPointIndex+1);
     public Vector2 CurrentWP => Positions.ElementAtOrDefault(_wayPointIndex);
-    [SerializeField] public Vector2 Velocity;
-    [SerializeField] public float Speed;
     public    FieldOfView FieldOfView;
     private Rigidbody2D _rigidBody2D;
-    public float ReachRadius;
-    public float DebugRadius;
     public float TimeSincePathStart = 1.0f;
     public bool DrawFuturePosition=false;
     public bool SeekPath=true;
+    public DefaultEnemyProperties EnemyProperties;
+    [SerializeField] public Vector2 Velocity;
 
     private Vector2 CurrentPosition => new Vector2(this.transform.position.x, this.transform.position.y); 
     // Start is called before the first frame update
@@ -65,7 +63,7 @@ public class PatrolPath : MonoBehaviour
     {
 
         if (NextWP != null)
-            return Vector3.Distance(NextWP, CurrentPosition) < ReachRadius;
+            return Vector3.Distance(NextWP, CurrentPosition) < EnemyProperties.ReachRadius;
         else
             return false;
     }
@@ -82,12 +80,12 @@ public class PatrolPath : MonoBehaviour
             }
         } 
         //Store user input as a movement vector
-        Velocity = SeekNextWaypoint();
+        Velocity= SeekNextWaypoint();
         LookAtPosition(Velocity);
 
         if (!Helpers.CompareVectors(Velocity, new Vector3(0, 0, 0), 0.01f))
         {
-            _rigidBody2D.MovePosition(_rigidBody2D.position + Velocity* Speed * Time.fixedDeltaTime);
+            _rigidBody2D.MovePosition(_rigidBody2D.position + Velocity* EnemyProperties.Speed * Time.fixedDeltaTime);
         }
         else
         {
@@ -113,7 +111,7 @@ public class PatrolPath : MonoBehaviour
                 Gizmos.color = Color.red;
             else 
                 Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(t, DebugRadius);
+            Gizmos.DrawSphere(t, EnemyProperties.DebugRadius);
             //Draw path 
             Vector2 t1 = Positions[i+1];
             {
@@ -130,7 +128,7 @@ public class PatrolPath : MonoBehaviour
                 Gizmos.color = Color.red;
             else 
                 Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(t, DebugRadius);
+            Gizmos.DrawSphere(t, EnemyProperties.DebugRadius);
         }
                 Gizmos.color = Color.blue;
         
@@ -147,7 +145,7 @@ public class PatrolPath : MonoBehaviour
         if(Positions == null ) return new Tuple<Vector2, Vector2>(Vector2.zero,Vector2.zero);
         if(Positions.Count==1) return new Tuple<Vector2, Vector2>(Positions[0], this.gameObject.transform.right);
         // Calculate the character's future position based on time and 
-        float distanceCovered = Speed * time;
+        float distanceCovered = EnemyProperties.Speed * time;
 
 
         // Interpolate the character's position along the path
