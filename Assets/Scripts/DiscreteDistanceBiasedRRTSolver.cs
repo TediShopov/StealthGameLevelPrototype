@@ -90,12 +90,19 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
         _kdTree = new KDTree(KDTree.ToFloatArray(start), 3, 0 );
 
         int iter = 0;
-        Vector3 _lastBiasedState = Vector3.zero;
+       Vector3 _lastBiasedState = Vector3.zero;
         while (iter < maxIteration) 
         {
             TreeNode<Vector3> stepResult = null;
-            if (_lastAddedState!=null && !_lastBiasedState.Equals(_lastAddedState) && IsInBiasDistance(_lastAddedState.Content, end))
+
+            bool cannotBiasStateThatWasAlreadyBiased = _lastAddedState!=null && _lastBiasedState.Equals(_lastAddedState.Content);
+            if(cannotBiasStateThatWasAlreadyBiased ) 
             {
+                Debug.Log("cannotBiasStateThatWasAlreadyBiased");
+            }
+            if (_lastAddedState!=null && !_lastBiasedState.Equals(_lastAddedState.Content) && IsInBiasDistance(_lastAddedState.Content, end))
+            {
+                _lastBiasedState = _lastAddedState.Content;
                 stepResult = DoBiasedStep();
             }
             else
