@@ -7,7 +7,7 @@ using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
 {
-       public DiscretizeLevelToGrid VoxelizedLevel;
+       public VoxelizedLevelBase VoxelizedLevel;
        public CharacterController2D Controller;
        public Transform StartNode;
        public Transform EndNode;

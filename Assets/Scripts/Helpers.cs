@@ -9,7 +9,14 @@ public class Helpers : MonoBehaviour
     {
         return Mathf.Abs(a - b) < bias;
     }
-    public static void TrackExecutionTime(System.Action function, string functionName)
+    public static float LogExecutionTime(System.Action function, string funName) 
+    {
+        var ms = TrackExecutionTime(function); 
+        // Log the execution time
+        UnityEngine.Debug.Log($"{funName} executed in {ms} milliseconds");
+        return ms; 
+    }
+    public static float TrackExecutionTime(System.Action function)
     {
         // Start the stopwatch
         Stopwatch stopwatch = Stopwatch.StartNew();
@@ -20,8 +27,7 @@ public class Helpers : MonoBehaviour
         // Stop the stopwatch
         stopwatch.Stop();
 
-        // Log the execution time
-        UnityEngine.Debug.Log($"{functionName} executed in {stopwatch.ElapsedMilliseconds} milliseconds");
+        return stopwatch.ElapsedMilliseconds;
     }
 
 

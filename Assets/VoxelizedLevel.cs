@@ -10,28 +10,19 @@ using UnityEngine.UIElements;
 using UnityEngineInternal;
 
 [RequireComponent(typeof(Grid))]
-public class VoxelizedLevel : MonoBehaviour
+public class VoxelizedLevel : VoxelizedLevelBase
 {
-    [HideInInspector] public Grid Grid;
     public LayerMask ObstacleLayerMask;
     public PolygonBoundary PolygonBoundary;
-    public float Step;
-    public float Iterations;
-    public List<bool[,]> FutureGrids;
-    //Debug
     public int LookAtGrid = 0;
     public int LookAtRange =1;
     [HideInInspector]  public List<PatrolPath> PatrolPaths;
-
-
-    private Vector3Int _gridMin;
-    private Vector3Int _gridMax;
     private bool[,] _staticObstacleGrid;
     // Start is called before the first frame update
     void Start()
     {
         Init();
-        Helpers.TrackExecutionTime(Init, "Voxelized level grid");
+        Helpers.LogExecutionTime(Init,"Voxelized level grid");
     }
 
     private void Init()
@@ -48,13 +39,11 @@ public class VoxelizedLevel : MonoBehaviour
         _staticObstacleGrid = GetStaticObstacleLevel();
         for (int i = 0; i < Iterations; i++)
         {
-            var grid = VoxelizeFutureStateOfLevel(i * Step);
+            var grid = GenerateFutureGrid(i * Step);
             FutureGrids.Add(grid);
         }
     }
 
-    public Vector2 GetMinimumBound()  => this.Grid.GetCellCenterWorld(_gridMin); 
-    public Vector2 GetMaximumBound()  => this.Grid.GetCellCenterWorld(_gridMax);
     public bool[,] GetStaticObstacleLevel() 
     {
         var futureGrid = new bool[GetRows(),GetCols()];
@@ -90,7 +79,7 @@ public class VoxelizedLevel : MonoBehaviour
 
         return copy;
     }
-    public bool[,] VoxelizeFutureStateOfLevel(float future)
+    public override bool[,] GenerateFutureGrid(float future)
     {
         bool[,] futureGrid = Copy(_staticObstacleGrid);
         List<Vector2Int> DynamicObstacle=new List<Vector2Int>();
@@ -153,12 +142,6 @@ public class VoxelizedLevel : MonoBehaviour
 
 
     }
-    public bool IsInBounds(Vector3Int cellCoordinate) 
-    {
-        if (cellCoordinate.x >= _gridMin.x && cellCoordinate.y >= _gridMin.y && cellCoordinate.x <= _gridMax.x && cellCoordinate.y <= _gridMax.y)
-            return true;
-        return false;
-    }
 
     private Vector3Int GetVectorFromInternaclCoordinates(int row, int col) => new Vector3Int(col + _gridMin.x, row + _gridMin.y, 0); 
     private bool IsStaticObstacleAtPosition(Vector3 worldPosition)
@@ -198,91 +181,7 @@ public class VoxelizedLevel : MonoBehaviour
             DebugDrawGridByIndex( lookAtCurrent);
 
         }
-        foreach (var path in PatrolPaths)
-        {
-            
-            var l = GetPossibleAffectedCells(path, 1);
-            foreach (var cell in l) 
-            {
-                Gizmos.DrawSphere(Grid.GetCellCenterWorld(cell), 0.1f);
-            }
-        }
     }
-
-    public int GetFutureLevelIndex(float future) 
-    {
-        return (int)Mathf.Clamp(Mathf.Ceil(future / this.Step), 0, this.Iterations-1);
-    }
-    public bool CheckCellsColliding(List<Vector2Int> cells, float futureStart, float futureEnd) 
-    {
-        
-        int indexStart = GetFutureLevelIndex((float)futureStart);
-        int indexEnd = GetFutureLevelIndex((float)futureEnd);
-        int range = indexEnd - indexStart;
-        List<bool[,]> relevantFutureMaps = this.FutureGrids.GetRange(indexStart,range);
-
-        foreach (var map in relevantFutureMaps) 
-        {
-            foreach (var cell in cells) 
-            {
-                int col = cell.x- _gridMin.x;
-                int row = cell.y- _gridMin.y;
-                if ((col < 0 || col >= (_gridMax.x-_gridMin.x)) || (row < 0 || row >= (_gridMax.y-_gridMin.y)))
-                {
-                    return true;
-                }
-                
-                if (map[row, col]) 
-                { 
-                    return true;
-                }
-            }
-            
-        }
-        return false;
-    }
-    // Function to get cells in a 2D grid that lie in a line
-    public static Vector2Int[] GetCellsInLine(Vector2Int start, Vector2Int end)
-    {
-        Vector2Int[] cells = new Vector2Int[Mathf.Max(Mathf.Abs(end.x - start.x), Mathf.Abs(end.y - start.y)) + 1];
-        int i = 0;
-
-        int x = start.x;
-        int y = start.y;
-
-        int dx = Mathf.Abs(end.x - start.x);
-        int dy = Mathf.Abs(end.y - start.y);
-
-        int sx = (start.x < end.x) ? 1 : -1;
-        int sy = (start.y < end.y) ? 1 : -1;
-        int err = dx - dy;
-
-        while (true)
-        {
-            cells[i] = new Vector2Int(x, y);
-            i++;
-
-            if (x == end.x && y == end.y)
-                break;
-
-            int err2 = 2 * err;
-
-            if (err2 > -dy)
-            {
-                err -= dy;
-                x += sx;
-            }
-
-            if (err2 < dx)
-            {
-                err += dx;
-                y += sy;
-            }
-        }
-
-        return cells;
-    }
-
     public void DebugDrawGridByIndex(int lookAtCurrent)
     {
         int rows = _gridMax.y - _gridMin.y;

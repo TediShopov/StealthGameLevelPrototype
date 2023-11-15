@@ -59,7 +59,7 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
     private KDTree _kdTree;
     private Vector3 _randomMin;
     private Vector3 _randomMax;
-    private DiscretizeLevelToGrid VoxelizedLevel;
+    private VoxelizedLevelBase VoxelizedLevel;
     private Dictionary<Vector3, TreeNode<Vector3>> _stateToTreeNode;
     private TreeNode<Vector3> _lastAddedState;
     //If nodes distance to goal is closer than this bias distance, node will performed Biased Step next
@@ -67,7 +67,7 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
     public float BiasDistance;
     //If distance between some state and and end state is below this distance the state is treated as a solution
     public float GoalDistance;
-    public DiscreteDistanceBasedRRTSolver(DiscretizeLevelToGrid discretizedLevel, float bias, float goalDist, float maxvel)
+    public DiscreteDistanceBasedRRTSolver(VoxelizedLevelBase discretizedLevel, float bias, float goalDist, float maxvel)
     {
         this.VoxelizedLevel = discretizedLevel;
         _randomMin = discretizedLevel.GetMinimumBound();
