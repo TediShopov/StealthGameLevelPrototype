@@ -183,6 +183,7 @@ public class VoronoiRoadMapGenerator : MonoBehaviour
     }
     private void OnDrawGizmosSelected()
     {
+        if (_triangulation == null) return;
         //Draw valid and invalid semgents
         DebugDrawAsSegments(
             SegmentList(_triangulation.GetVoronoiSegments()),

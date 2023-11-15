@@ -14,7 +14,7 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
        public int maxIterations = 1000;
        public float GoalDistance = 1.0f;
        public float BiasDistance = 25.0f;
-    public List<Vector3> Path;
+    public List<Vector3> Path=new List<Vector3>();
     IRapidlyEpxploringRandomTree<Vector3> RRT;
 
     private void Start()
@@ -36,6 +36,8 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
 
+        //Do not draw anything as algorithm has not been stared
+        if (RRT == null) return;
         //Draw whole tree 
         Gizmos.color = Color.black;
         DFSDraw(this.RRT.StartNode);
