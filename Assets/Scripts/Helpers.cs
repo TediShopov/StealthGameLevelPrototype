@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 public class Helpers : MonoBehaviour
@@ -8,6 +9,21 @@ public class Helpers : MonoBehaviour
     {
         return Mathf.Abs(a - b) < bias;
     }
+    public static void TrackExecutionTime(System.Action function, string functionName)
+    {
+        // Start the stopwatch
+        Stopwatch stopwatch = Stopwatch.StartNew();
+
+        // Execute the function
+        function.Invoke();
+
+        // Stop the stopwatch
+        stopwatch.Stop();
+
+        // Log the execution time
+        UnityEngine.Debug.Log($"{functionName} executed in {stopwatch.ElapsedMilliseconds} milliseconds");
+    }
+
 
     public static bool CompareVectors(Vector3 a, Vector3 b, float bias)
     {

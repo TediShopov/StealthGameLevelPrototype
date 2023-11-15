@@ -1,33 +1,37 @@
-using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
+using UnityEngineInternal;
 
 [RequireComponent(typeof(Grid))]
-public class DiscretizeLevelToGrid : MonoBehaviour
+public class VoxelizedLevel : MonoBehaviour
 {
     [HideInInspector] public Grid Grid;
-
     public LayerMask ObstacleLayerMask;
-    [HideInInspector]  public List<PatrolPath> PatrolPaths;
-     public PolygonBoundary PolygonBoundary;
+    public PolygonBoundary PolygonBoundary;
     public float Step;
     public float Iterations;
-    public int LookAtGrid = 0;
-    public int LookAtRange ;
     public List<bool[,]> FutureGrids;
+    //Debug
+    public int LookAtGrid = 0;
+    public int LookAtRange =1;
+    [HideInInspector]  public List<PatrolPath> PatrolPaths;
 
 
     private Vector3Int _gridMin;
     private Vector3Int _gridMax;
+    private bool[,] _staticObstacleGrid;
     // Start is called before the first frame update
     void Start()
     {
-        Helpers.TrackExecutionTime(Init, "Discretize level to grid");
+        Init();
+        Helpers.TrackExecutionTime(Init, "Voxelized level grid");
     }
 
     private void Init()
@@ -39,31 +43,27 @@ public class DiscretizeLevelToGrid : MonoBehaviour
             _gridMin = Grid.WorldToCell(levelBounds.min);
             _gridMax = Grid.WorldToCell(levelBounds.max);
         }
-        PatrolPaths = FindObjectsOfType<PatrolPath>().ToList();
         FutureGrids = new List<bool[,]>();
+        PatrolPaths = FindObjectsOfType<PatrolPath>().ToList();
+        _staticObstacleGrid = GetStaticObstacleLevel();
         for (int i = 0; i < Iterations; i++)
         {
-            var grid = GetFutureGrid(i * Step);
+            var grid = VoxelizeFutureStateOfLevel(i * Step);
             FutureGrids.Add(grid);
         }
     }
 
     public Vector2 GetMinimumBound()  => this.Grid.GetCellCenterWorld(_gridMin); 
-    public Vector2 GetMaximumBound()  => this.Grid.GetCellCenterWorld(_gridMax); 
-    
-    public bool[,] GetFutureGrid(float future) 
+    public Vector2 GetMaximumBound()  => this.Grid.GetCellCenterWorld(_gridMax);
+    public bool[,] GetStaticObstacleLevel() 
     {
-
-        int rows = _gridMax.y - _gridMin.y;
-        int cols = _gridMax.x - _gridMin.x;
-        var futureGrid = new bool[rows,cols];
-        for (int row = 0; row < rows; row++)
+        var futureGrid = new bool[GetRows(),GetCols()];
+        for (int row = 0; row < GetRows(); row++)
         {
-            for (int col = 0; col < cols; col++)
+            for (int col = 0; col < GetCols(); col++)
             {
-                Vector3Int cellPosition = new Vector3Int(col+_gridMin.x, row+_gridMin.y, 0);
-                Vector3 worldPosition = Grid.GetCellCenterWorld(cellPosition);
-                if (IsObstacleAtPosition(worldPosition) || IsEnemiesVisionOnPosition(worldPosition,future ))
+                Vector3 worldPosition = Grid.GetCellCenterWorld(GetVectorFromInternaclCoordinates(row,col));
+                if (IsStaticObstacleAtPosition(worldPosition))
                 {
                     futureGrid[row,col] = true;
                 }
@@ -71,22 +71,97 @@ public class DiscretizeLevelToGrid : MonoBehaviour
         }
         return futureGrid;
     }
-    private bool IsEnemiesVisionOnPosition(Vector3 worldPosition,float future) 
-    {
+    public int GetRows() => _gridMax.y - _gridMin.y;
+    public int GetCols() => _gridMax.x - _gridMin.x;
 
-        foreach (var patrolPath in PatrolPaths)
+    public static T[,] Copy<T>(T[,] array)
+    {
+        int width = array.GetLength(0);
+        int height = array.GetLength(1);
+        T[,] copy = new T[width, height];
+
+        for (int w = 0; w < width; w++)
         {
-            var positionAndDirection = patrolPath.CalculateFuturePosition(future);
-            if (patrolPath.FieldOfView.TestCollision(worldPosition,positionAndDirection.Item1,positionAndDirection.Item2)) 
+            for (int h = 0; h < height; h++)
             {
-                return true;
+                copy[w, h] = array[w, h];
+            }
+        }
+
+        return copy;
+    }
+    public bool[,] VoxelizeFutureStateOfLevel(float future)
+    {
+        bool[,] futureGrid = Copy(_staticObstacleGrid);
+        List<Vector2Int> DynamicObstacle=new List<Vector2Int>();
+        //Calculate enemny future position
+        foreach (var path in PatrolPaths)
+        {
+            DynamicObstacle.AddRange(MarkedCellsFromEnemy(path, future, futureGrid));
+        }
+        foreach (var obs in DynamicObstacle) 
+        {
+            int row = obs.y - _gridMin.y;
+            int col = obs.x - _gridMin.x;
+            futureGrid[row,col]=true;
+        }
+        return futureGrid;  
+    }
+
+    public List<Vector3Int> GetPossibleAffectedCells(PatrolPath path, float future) 
+    {
+        var toReturn = new List<Vector3Int>();
+
+        var position = path.CalculateFuturePosition(future).Item1;
+        var direction = path.CalculateFuturePosition(future).Item2;
+        Bounds bounds= new Bounds();
+        bounds.center = position;
+//        bounds.center = position + direction * path.EnemyProperties.ViewDistance/2.0f;
+//        bounds.Expand(path.EnemyProperties.ViewDistance*2.0f);
+        
+        Vector2 minLeft = position + Vector2.Perpendicular(direction)  * path.EnemyProperties.ViewDistance;
+        Vector2 maxRight= position + Vector2.Perpendicular(-direction)  * path.EnemyProperties.ViewDistance;
+        maxRight += direction * path.EnemyProperties.ViewDistance;
+        bounds.Encapsulate(minLeft);
+        bounds.Encapsulate(maxRight);
+
+        Vector3Int min = Grid.WorldToCell(bounds.min);
+        Vector3Int max = Grid.WorldToCell(bounds.max);
+        for (int row = min.y; row < max.y; row++)
+        {
+            for (int col = min.x; col < max.x; col++)
+            {
+
+                toReturn.Add(new Vector3Int(col, row, 0));
             }
 
         }
+        return toReturn;
+
+    }
+    public List<Vector2Int> MarkedCellsFromEnemy(PatrolPath path,float future, bool[,] staticLevel) 
+    {
+        var d = path.FieldOfView.EnemyProperties.ViewDistance;
+        var positionDirecion = path.CalculateFuturePosition(future);
+        var pos = positionDirecion.Item1;
+        //Bounding Box for checking
+        var listAffected = GetPossibleAffectedCells(path,future)
+            .Where(x=> IsInBounds(x))
+            .Where(x=> path.FieldOfView.TestCollision(Grid.GetCellCenterWorld(x),pos,positionDirecion.Item2))
+            .Select(x=> (Vector2Int)x);
+        return listAffected.ToList();
+
+
+    }
+    public bool IsInBounds(Vector3Int cellCoordinate) 
+    {
+        if (cellCoordinate.x >= _gridMin.x && cellCoordinate.y >= _gridMin.y && cellCoordinate.x <= _gridMax.x && cellCoordinate.y <= _gridMax.y)
+            return true;
         return false;
     }
 
-    private bool IsObstacleAtPosition(Vector3 worldPosition)
+    private Vector3Int GetVectorFromInternaclCoordinates(int row, int col) => new Vector3Int(col + _gridMin.x, row + _gridMin.y, 0); 
+    private bool IsStaticObstacleAtPosition(Vector3 worldPosition)
     {
         Vector2 position2D = new Vector2(worldPosition.x, worldPosition.y);
         Vector2 halfBoxSize = Grid.cellSize * 0.5f;
@@ -118,9 +193,19 @@ public class DiscretizeLevelToGrid : MonoBehaviour
         Gizmos.color = Color.blue;
         for (int i = LookAtGrid-LookAtRange; i < LookAtGrid+LookAtRange; i++)
         {
+            if (i < 0 || i >= FutureGrids.Count) continue;
             var lookAtCurrent = i;
             DebugDrawGridByIndex( lookAtCurrent);
 
+        }
+        foreach (var path in PatrolPaths)
+        {
+            
+            var l = GetPossibleAffectedCells(path, 1);
+            foreach (var cell in l) 
+            {
+                Gizmos.DrawSphere(Grid.GetCellCenterWorld(cell), 0.1f);
+            }
         }
     }
 
