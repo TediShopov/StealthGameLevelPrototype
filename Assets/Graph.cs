@@ -8,14 +8,15 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
-public class Graph<T> 
+public class Graph<T>
 {
     public Dictionary<T, List<T>> adjacencyList = new Dictionary<T, List<T>>();
+
     private void Start()
     {
-        
     }
-    public List<List<T>> Cluster(Func<T,T, bool> pred) 
+
+    public List<List<T>> Cluster(Func<T, T, bool> pred)
     {
         List<List<T>> clusters = MergeNodesIntoClusters(pred);
         return clusters.Where(x => x.Count > 1).ToList();
@@ -28,21 +29,21 @@ public class Graph<T>
             adjacencyList[node] = new List<T>();
         }
     }
-    public void RemoveNode(T node) 
-    {
 
+    public void RemoveNode(T node)
+    {
         if (adjacencyList.ContainsKey(node))
         {
             List<T> neighbours = GetNeighbors(node).ToList();
-            for (int i = 0; i < neighbours.Count; i++) 
+            for (int i = 0; i < neighbours.Count; i++)
             {
-                RemoveEdge(node,neighbours[i]);
+                RemoveEdge(node, neighbours[i]);
             }
-
         }
         adjacencyList.Remove(node);
     }
-     public List<List<T>> MergeNodesIntoClusters(Func<T,T,bool> clusterPredicate)
+
+    public List<List<T>> MergeNodesIntoClusters(Func<T, T, bool> clusterPredicate)
     {
         List<List<T>> clusters = new List<List<T>>();
         HashSet<T> visited = new HashSet<T>();
@@ -59,8 +60,9 @@ public class Graph<T>
 
         return clusters;
     }
+
     public List<T> FindPath(T start, T goal)
-       
+
     {
         List<T> path = new List<T>();
         HashSet<T> visited = new HashSet<T>();
@@ -68,7 +70,7 @@ public class Graph<T>
         return path;
     }
 
-     bool DFS(T current, T goal, HashSet<T> visited, List<T> path)
+    private bool DFS(T current, T goal, HashSet<T> visited, List<T> path)
     {
         visited.Add(current);
         path.Add(current);
@@ -96,19 +98,17 @@ public class Graph<T>
         return false;
     }
 
-
-    public bool IsValidPath(List<T> path) 
+    public bool IsValidPath(List<T> path)
     {
-        //Test path 
-        for (int i = 0; i < path.Count-1; i++) 
+        //Test path
+        for (int i = 0; i < path.Count - 1; i++)
         {
             if (path[i] == null) return false;
-            if (!this.GetNeighbors(path[i]).Contains(path[i+1]))
+            if (!this.GetNeighbors(path[i]).Contains(path[i + 1]))
             { return false; }
         }
         return true;
     }
-
 
     public List<T> GetUnvisitedNeighbors(T node, HashSet<T> visited)
     {
@@ -136,20 +136,21 @@ public class Graph<T>
         }
     }
 
-    private void ClusterDFS(T currentNode, Func<T,T,bool> clusterPredicate,List<T> cluster, HashSet<T> visited)
+    private void ClusterDFS(T currentNode, Func<T, T, bool> clusterPredicate, List<T> cluster, HashSet<T> visited)
     {
         visited.Add(currentNode);
         cluster.Add(currentNode);
 
         foreach (var neighbor in this.GetNeighbors(currentNode))
         {
-            if (!visited.Contains(neighbor) && clusterPredicate(currentNode,neighbor))
+            if (!visited.Contains(neighbor) && clusterPredicate(currentNode, neighbor))
             {
-                ClusterDFS(neighbor, clusterPredicate,cluster, visited);
+                ClusterDFS(neighbor, clusterPredicate, cluster, visited);
             }
         }
     }
-    public void RemoveEdge(T node1, T node2) 
+
+    public void RemoveEdge(T node1, T node2)
     {
         if (!adjacencyList.ContainsKey(node1) || !adjacencyList.ContainsKey(node2))
         {
@@ -162,7 +163,6 @@ public class Graph<T>
         adjacencyList[node2].Remove(node1); // For an undirected graph
     }
 
-
     public void AddEdge(T node1, T node2)
     {
         if (!adjacencyList.ContainsKey(node1) || !adjacencyList.ContainsKey(node2))
@@ -171,15 +171,14 @@ public class Graph<T>
             // Either ignore the edge or add the missing nodes.
             return;
         }
-        if (!adjacencyList[node1].Contains(node2)) 
+        if (!adjacencyList[node1].Contains(node2))
         {
             adjacencyList[node1].Add(node2);
         }
-        if (!adjacencyList[node2].Contains(node1)) 
+        if (!adjacencyList[node2].Contains(node1))
         {
             adjacencyList[node2].Add(node1); // For an undirected graph
         }
-
     }
 
     public List<T> GetNeighbors(T node)
@@ -190,28 +189,29 @@ public class Graph<T>
         }
         return new List<T>();
     }
-//    public void SimplifyGraph( float mergeDistance)
-//    {
-//        Debug.Log("Simplifying");
-//        var nodes = new List<T>(this.adjacencyList.Keys);
-//
-//        for (int i = 0; i < nodes.Count; i++)
-//        {
-//            for (int j = i + 1; j < nodes.Count; j++)
-//            {
-//                T nodeA = nodes[i];
-//                T nodeB = nodes[j];
-//
-//                if (Vector2.Distance(nodeA, nodeB) <= mergeDistance)
-//                {
-//                    MergeNodes(this, nodeA, nodeB);
-//                    nodes.Remove(nodeB);
-//                    j--;
-//                }
-//            }
-//        }
-//    }
-     public void MergeNodes(List<T> nodesToMerge, Func<List<T>,T> newNodeCalculation)
+
+    //    public void SimplifyGraph( float mergeDistance)
+    //    {
+    //        Debug.Log("Simplifying");
+    //        var nodes = new List<T>(this.adjacencyList.Keys);
+    //
+    //        for (int i = 0; i < nodes.Count; i++)
+    //        {
+    //            for (int j = i + 1; j < nodes.Count; j++)
+    //            {
+    //                T nodeA = nodes[i];
+    //                T nodeB = nodes[j];
+    //
+    //                if (Vector2.Distance(nodeA, nodeB) <= mergeDistance)
+    //                {
+    //                    MergeNodes(this, nodeA, nodeB);
+    //                    nodes.Remove(nodeB);
+    //                    j--;
+    //                }
+    //            }
+    //        }
+    //    }
+    public void MergeNodes(List<T> nodesToMerge, Func<List<T>, T> newNodeCalculation)
     {
         if (nodesToMerge.Count == 0)
             return;
@@ -242,7 +242,6 @@ public class Graph<T>
         }
     }
 
-
     private static void MergeNodes(Graph<T> graph, T nodeA, T nodeB)
     {
         Debug.Log("Merged Nodes");
@@ -258,14 +257,15 @@ public class Graph<T>
 
         graph.RemoveNode(nodeB);
     }
+
     // Start is called before the first frame updatepublic
 
-    public static void DebugDrawGraph(Graph<Vector2> graph,Color nodeColor, Color connectionColor)
+    public static void DebugDrawGraph(Graph<Vector2> graph, Color nodeColor, Color connectionColor, float nodeRadius = 0.1f)
     {
         foreach (var node in graph.adjacencyList)
         {
             Gizmos.color = nodeColor;
-            Gizmos.DrawSphere(node.Key, 0.1f);
+            Gizmos.DrawSphere(node.Key, nodeRadius);
             foreach (var connection in node.Value)
             {
                 Gizmos.color = connectionColor;
@@ -273,7 +273,8 @@ public class Graph<T>
             }
         }
     }
-    public static void DebugDrawGraph(Graph<Vector3> graph,Color nodeColor, Color connectionColor)
+
+    public static void DebugDrawGraph(Graph<Vector3> graph, Color nodeColor, Color connectionColor)
     {
         foreach (var node in graph.adjacencyList)
         {
@@ -295,7 +296,6 @@ public class Graph<T>
             {
                 foreach (var node in cluster)
                 {
-
                     Gizmos.color = Color.yellow;
                     Gizmos.DrawSphere(node, 0.1f);
                 }
