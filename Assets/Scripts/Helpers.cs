@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using UnityEngine;
 
 public class Helpers : MonoBehaviour
@@ -18,16 +20,37 @@ public class Helpers : MonoBehaviour
     }
     public static float TrackExecutionTime(System.Action function)
     {
-        // Start the stopwatch
         Stopwatch stopwatch = Stopwatch.StartNew();
-
-        // Execute the function
         function.Invoke();
-
-        // Stop the stopwatch
         stopwatch.Stop();
-
         return stopwatch.ElapsedMilliseconds;
+    }
+    public static float[] TrackExecutionTime(System.Action function, int iterations) 
+    {
+        var results = new float[iterations];
+        for (int i = 0; i < iterations; i++) 
+        {
+            results[i] = TrackExecutionTime(function);
+        }
+        return results;
+    }
+
+    public static void SaveToCSV(string filePath, string s)
+    {
+        try
+        {
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                // Write CSV header
+                writer.WriteLine(s);
+            }
+
+            UnityEngine.Debug.Log($"Performance data saved to {filePath}");
+        }
+        catch (Exception ex)
+        {
+            UnityEngine.Debug.Log($"Error saving performance data: {ex.Message}");
+        }
     }
 
 

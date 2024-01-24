@@ -27,7 +27,7 @@ public class VoxelizedLevel : VoxelizedLevelBase
         Helpers.LogExecutionTime(Init,"Voxelized level grid");
     }
 
-    private void Init()
+    public override void Init()
     {
         this.Grid = GetComponent<Grid>();
         if (PolygonBoundary != null)

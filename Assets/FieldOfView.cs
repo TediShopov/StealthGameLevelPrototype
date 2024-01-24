@@ -84,7 +84,7 @@ public class FieldOfView : MonoBehaviour
         if (TestCollisition(SearchedObject.transform.position))
         {
             Debug.Log("Game is lost");
-            SceneManager.LoadScene(0);
+            //SceneManager.LoadScene(0);
         }
     }
     public Vector3 GetGlobalDirection() 

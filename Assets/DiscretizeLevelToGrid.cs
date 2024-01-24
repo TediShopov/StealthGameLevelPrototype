@@ -17,6 +17,7 @@ public class VoxelizedLevelBase : MonoBehaviour
     public List<bool[,]> FutureGrids;
     protected Vector3Int _gridMin;
     protected Vector3Int _gridMax;
+    virtual public void Init() { }
     virtual public bool[,] GenerateFutureGrid(float future) { return new bool[1, 1]; }
     public int GetFutureLevelIndex(float future) 
     {
@@ -122,7 +123,7 @@ public class DiscretizeLevelToGrid : VoxelizedLevelBase
         Helpers.LogExecutionTime(Init, "Discretize level to grid");
     }
 
-    private void Init()
+    public override void Init() 
     {
         this.Grid = GetComponent<Grid>();
         if (PolygonBoundary != null)
