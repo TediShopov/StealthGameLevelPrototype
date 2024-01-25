@@ -4,25 +4,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEditor;
+using UnityEditor.Rendering;
 using UnityEditor.Search;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI.Table;
 
 public class FloodfillAlgorithm : MonoBehaviour
 {
-    public Grid Grid;
-    public LayerMask ObstacleLayerMask;
-    public PolygonBoundary PolygonBoundary;
-
     //Dictionary exposed to Unity editor
     public List<Collider2D> ColliderKeys;
 
     public List<Color> Colors;
+    public bool DebugDraw;
+    public Grid Grid;
+    public LayerMask ObstacleLayerMask;
+    public PolygonBoundary PolygonBoundary;
     public Graph<Vector2> RoadMap = new Graph<Vector2>();
 
     private Vector3Int _gridMax;
     private Vector3Int _gridMin;
-    public bool DebugDraw;
+    private Queue<Tuple<int, int>> BoundaryCells = new Queue<Tuple<int, int>>();
+    public List<Tuple<Vector2, Vector2>> _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
 
     //Transforms the unity grid to c# binary represenetaion of the level
     private int[,] LevelGrid;
@@ -44,35 +46,6 @@ public class FloodfillAlgorithm : MonoBehaviour
         return copy;
     }
 
-    public int GetColliderIndex(Collider2D collider)
-    {
-        if (collider == null) return -1;
-        int index = ColliderKeys.FindIndex(x => x.Equals(collider));
-        if (index >= 0)
-        {
-            return index;
-        }
-        else
-        {
-            ColliderKeys.Add(collider);
-            return ColliderKeys.Count - 1;
-        }
-    }
-
-    public Color GetColorForValue(int index)
-    {
-        if (index >= 0)
-        {
-            int colorIndex = index % Colors.Count;
-            //Circular buffer to assign colors
-            return Colors[colorIndex];
-        }
-        else
-        {
-            return new Color(0, 0, 0);
-        }
-    }
-
     public int[,] CalculateLevelGrid()
     {
         var futureGrid = new int[GetRows(), GetCols()];
@@ -87,42 +60,6 @@ public class FloodfillAlgorithm : MonoBehaviour
             }
         }
         return futureGrid;
-    }
-
-    public Queue<Tuple<int, int>> GetInitialBoundaryCells()
-    {
-        Queue<Tuple<int, int>> cells = new Queue<Tuple<int, int>>();
-        for (int row = 0; row < GetRows(); row++)
-        {
-            for (int col = 0; col < GetCols(); col++)
-            {
-                if (IsBoundaryCell(row, col))
-                    cells.Enqueue(Tuple.Create(row, col));
-            }
-        }
-        return cells;
-    }
-
-    public int GetCols() => _gridMax.x - _gridMin.x;
-
-    public int GetRows() => _gridMax.y - _gridMin.y;
-
-    private Queue<Tuple<int, int>> BoundaryCells = new Queue<Tuple<int, int>>();
-
-    public bool IsInGrid(int row, int col) => row >= 0 && col >= 0 && row < LevelGrid.GetLength(0) && col < LevelGrid.GetLength(1);
-
-    public Vector3Int GetVectorFromCoordinates(int row, int col) => new Vector3Int(col + _gridMin.x, row + _gridMin.y, 0);
-
-    public Tuple<int, int>[] GetNeighbours(int row, int col)
-    {
-        // Check neighbors (up, down, left, right)
-        Tuple<int, int>[] neighbors = {
-                Tuple.Create(row - 1, col),
-                Tuple.Create(row + 1, col),
-                Tuple.Create(row, col - 1),
-                Tuple.Create(row, col + 1)
-            };
-        return neighbors.Where(x => IsInGrid(x.Item1, x.Item2)).ToArray();
     }
 
     public void FloodRegions()
@@ -154,7 +91,9 @@ public class FloodfillAlgorithm : MonoBehaviour
                             {
                                 Vector3 gridCenter = Grid.GetCellCenterWorld(new Vector3Int(neighborCol + _gridMin.x, neighborRow + _gridMin.y, 0));
                                 Vector3 lowerLeft = gridCenter + new Vector3(-Grid.cellSize.x / 2.0f, -Grid.cellSize.y / 2.0f, 0);
+                                lowerLeft = Snapping.Snap(lowerLeft, (Vector2)Grid.cellSize);
                                 Vector3 lowerRight = gridCenter + new Vector3(Grid.cellSize.x / 2.0f, -Grid.cellSize.y / 2.0f, 0);
+                                lowerRight = Snapping.Snap(lowerRight, (Vector2)Grid.cellSize);
                                 RoadMap.AddNode(lowerLeft);
                                 RoadMap.AddNode(lowerRight);
                                 RoadMap.AddEdge(lowerLeft, lowerRight);
@@ -166,7 +105,9 @@ public class FloodfillAlgorithm : MonoBehaviour
                             {
                                 Vector3 gridCenter = Grid.GetCellCenterWorld(new Vector3Int(neighborCol + _gridMin.x, neighborRow + _gridMin.y, 0));
                                 Vector3 upperLeft = gridCenter + new Vector3(-Grid.cellSize.x / 2.0f, +Grid.cellSize.y / 2.0f, 0);
+                                upperLeft = Snapping.Snap(upperLeft, (Vector2)Grid.cellSize);
                                 Vector3 lowerLeft = gridCenter + new Vector3(-Grid.cellSize.x / 2.0f, -Grid.cellSize.y / 2.0f, 0);
+                                lowerLeft = Snapping.Snap(lowerLeft, (Vector2)Grid.cellSize);
                                 RoadMap.AddNode(upperLeft);
                                 RoadMap.AddNode(lowerLeft);
                                 RoadMap.AddEdge(upperLeft, lowerLeft);
@@ -178,11 +119,127 @@ public class FloodfillAlgorithm : MonoBehaviour
         }
     }
 
-    public void Start()
+    public void RemoveRedundantNodes(Vector2 start)
     {
-        Init();
-        Helpers.LogExecutionTime(Init, "Floodfill algorithm intitializaiton");
+        int totalRecursions = 0;
+        var neighbors = RoadMap.GetNeighbors(start);
+        for (int i = 0; i < neighbors.Count; i++)
+        {
+            RemoveRedundantNodesInConnection(start, neighbors[i], ref totalRecursions);
+        }
+        //        foreach (var startNeighbour in neighbors)
+        //        {
+        //            RemoveRedundantNodesInConnection(start, startNeighbour, ref totalRecursions);
+        //        }
     }
+
+    public void RemoveRedundantNodesInConnection(Vector2 start, Vector2 end, ref int recursionCount)
+    {
+        recursionCount++;
+        if (recursionCount >= 1000) return;
+        HashSet<Vector2> visited = new HashSet<Vector2>();
+        visited.Add(start);
+        //Should be changed to a while
+        for (int i = 0; i < 1000; i++)
+        {
+            //Expand end
+            var endNeghbors = RoadMap.GetNeighbors(end);
+            //Possibly redundant - it has exactly one connection to unvisted node
+            int unvisitedCount = endNeghbors.Count(x => !visited.Contains(x));
+            bool hit = Physics2D.Linecast(start, end, ObstacleLayerMask);
+            if (unvisitedCount == 1 && hit == false)
+            {
+                //Previous end is marked as visited
+                visited.Add(end);
+                //End is expanded to node that is not yet visited
+                end = endNeghbors.First(x => visited.Contains(x) == false);
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        //Remove the visited nodes without start node
+        //        if (RoadMap.GetNeighbors(start).Contains(end) == false)
+        //        {
+        //
+        //        }
+        bool b = RoadMap.AddEdge(start, end);
+        if (b)
+        {
+            _debugSimplifiedConnections.Add(Tuple.Create(start, end));
+        }
+        //                RoadMap.Remo
+
+        //        foreach (var endNeighbor in RoadMap.GetNeighbors(end))
+        //        {
+        //            if (endNeighbor.Equals(start)) continue;
+        //            RemoveRedundantNodesInConnection(end, endNeighbor, ref recursionCount);
+        //        }
+        return;
+    }
+
+    public int GetColliderIndex(Collider2D collider)
+    {
+        if (collider == null) return -1;
+        int index = ColliderKeys.FindIndex(x => x.Equals(collider));
+        if (index >= 0)
+        {
+            return index;
+        }
+        else
+        {
+            ColliderKeys.Add(collider);
+            return ColliderKeys.Count - 1;
+        }
+    }
+
+    public Color GetColorForValue(int index)
+    {
+        if (index >= 0)
+        {
+            int colorIndex = index % Colors.Count;
+            //Circular buffer to assign colors
+            return Colors[colorIndex];
+        }
+        else
+        {
+            return new Color(0, 0, 0);
+        }
+    }
+
+    public int GetCols() => _gridMax.x - _gridMin.x;
+
+    public Queue<Tuple<int, int>> GetInitialBoundaryCells()
+    {
+        Queue<Tuple<int, int>> cells = new Queue<Tuple<int, int>>();
+        for (int row = 0; row < GetRows(); row++)
+        {
+            for (int col = 0; col < GetCols(); col++)
+            {
+                if (IsBoundaryCell(row, col))
+                    cells.Enqueue(Tuple.Create(row, col));
+            }
+        }
+        return cells;
+    }
+
+    public Tuple<int, int>[] GetNeighbours(int row, int col)
+    {
+        // Check neighbors (up, down, left, right)
+        Tuple<int, int>[] neighbors = {
+                Tuple.Create(row - 1, col),
+                Tuple.Create(row + 1, col),
+                Tuple.Create(row, col - 1),
+                Tuple.Create(row, col + 1)
+            };
+        return neighbors.Where(x => IsInGrid(x.Item1, x.Item2)).ToArray();
+    }
+
+    public int GetRows() => _gridMax.y - _gridMin.y;
+
+    public Vector3Int GetVectorFromCoordinates(int row, int col) => new Vector3Int(col + _gridMin.x, row + _gridMin.y, 0);
 
     public void Init()
     {
@@ -195,6 +252,38 @@ public class FloodfillAlgorithm : MonoBehaviour
         }
         LevelGrid = CalculateLevelGrid();
         FloodRegions();
+        Debug.Log($"Roadmap nodes: {RoadMap.adjacencyList.Count}");
+        foreach (var node in RoadMap.adjacencyList)
+        {
+            Debug.Log($"Roadmap nodes: {node.Key} Neighbors: {node.Value.Count}");
+        }
+        Vector2 superNode = RoadMap.adjacencyList.First().Key;
+        foreach (var nodeInfoPair in RoadMap.adjacencyList)
+        {
+            if (nodeInfoPair.Value.Count > 2)
+            {
+                superNode = nodeInfoPair.Key;
+                break;
+            }
+        }
+        RemoveRedundantNodes(superNode);
+    }
+
+    public bool IsBoundaryCell(int row, int col)
+    {
+        var neighbours = GetNeighbours(row, col);
+        //Bondary cells must be at the boundary of an obstacle so must be oocupied
+        if (LevelGrid[row, col] == -1) return false;
+        //Atleast one excited and one empty/unnocupied cell
+        return neighbours.Any(x => LevelGrid[x.Item1, x.Item2] != -1) && neighbours.Any(x => LevelGrid[x.Item1, x.Item2] == -1);
+    }
+
+    public bool IsInGrid(int row, int col) => row >= 0 && col >= 0 && row < LevelGrid.GetLength(0) && col < LevelGrid.GetLength(1);
+
+    public void Start()
+    {
+        Init();
+        Helpers.LogExecutionTime(Init, "Floodfill algorithm intitializaiton");
     }
 
     private Collider2D GetStaticColliderAt(Vector3 worldPosition)
@@ -215,26 +304,7 @@ public class FloodfillAlgorithm : MonoBehaviour
         return hit.collider;
     }
 
-    public bool IsBoundaryCell(int row, int col)
-    {
-        var neighbours = GetNeighbours(row, col);
-        //Bondary cells must be at the boundary of an obstacle so must be oocupied
-        if (LevelGrid[row, col] == -1) return false;
-        //Atleast one excited and one empty/unnocupied cell
-        return neighbours.Any(x => LevelGrid[x.Item1, x.Item2] != -1) && neighbours.Any(x => LevelGrid[x.Item1, x.Item2] == -1);
-    }
-
     #region Debug
-
-    private void OnDrawGizmosSelected()
-    {
-        if (DebugDraw)
-        {
-            Gizmos.color = Color.blue;
-            DebugDrawGridByIndex();
-            Graph<Vector2>.DebugDrawGraph(RoadMap, Color.red, Color.green, 0.01f);
-        }
-    }
 
     private void DebugDrawGridByIndex()
     {
@@ -254,6 +324,34 @@ public class FloodfillAlgorithm : MonoBehaviour
                     cellsize.z = 1;
                     Gizmos.DrawCube(worldPosition, Grid.cellSize);
                 }
+            }
+        }
+    }
+
+    private void DebugSimplifiedConnections()
+    {
+        Gizmos.color = Color.red;
+        foreach (var sc in _debugSimplifiedConnections)
+        {
+            Vector3 cellsize = Grid.cellSize;
+            cellsize.z = 1;
+            Gizmos.DrawLine(sc.Item1, sc.Item2);
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (DebugDraw)
+        {
+            Gizmos.color = Color.blue;
+            DebugDrawGridByIndex();
+            //Graph<Vector2>.DebugDrawGraph(RoadMap, Color.red, Color.green, 0.01f);
+            DebugSimplifiedConnections();
+            //Debug draw nodes with only one connecitons
+            foreach (var n in RoadMap.adjacencyList)
+            {
+                if (n.Value.Count <= 1)
+                    Gizmos.DrawSphere(new Vector3(n.Key.x, n.Key.y, 0), 0.1f);
             }
         }
     }

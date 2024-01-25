@@ -163,13 +163,13 @@ public class Graph<T>
         adjacencyList[node2].Remove(node1); // For an undirected graph
     }
 
-    public void AddEdge(T node1, T node2)
+    public bool AddEdge(T node1, T node2)
     {
         if (!adjacencyList.ContainsKey(node1) || !adjacencyList.ContainsKey(node2))
         {
             // You can handle this case as needed.
             // Either ignore the edge or add the missing nodes.
-            return;
+            return false;
         }
         if (!adjacencyList[node1].Contains(node2))
         {
@@ -179,6 +179,7 @@ public class Graph<T>
         {
             adjacencyList[node2].Add(node1); // For an undirected graph
         }
+        return true;
     }
 
     public List<T> GetNeighbors(T node)
