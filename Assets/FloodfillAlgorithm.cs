@@ -119,13 +119,23 @@ public class FloodfillAlgorithm : MonoBehaviour
         }
     }
 
-    public void RemoveRedundantNodes(Vector2 start)
+    public void RemoveRedundantNodes(Vector2 start, ref int totalRecursions, List<Vector2> visited)
     {
-        int totalRecursions = 0;
-        var neighbors = RoadMap.GetNeighbors(start);
+        visited.Add(start);
+        var neighbors = RoadMap.GetNeighbors(start).Where(x => visited.Contains(x) == false).ToList();
+
+        List<Vector2> visitedFromStart = new List<Vector2>();
+        //Mark all immediate negihbours as visited and removed redundant ones
         for (int i = 0; i < neighbors.Count; i++)
         {
-            RemoveRedundantNodesInConnection(start, neighbors[i], ref totalRecursions);
+            Vector2 reachedEnd = RemoveRedundantNodesInConnection(start, neighbors[i], ref totalRecursions);
+            if (reachedEnd.Equals(start) == false)
+                visitedFromStart.Add(reachedEnd);
+        }
+        visited.AddRange(visitedFromStart);
+        foreach (var neighbor in visitedFromStart)
+        {
+            RemoveRedundantNodes(neighbor, ref totalRecursions, visited);
         }
         //        foreach (var startNeighbour in neighbors)
         //        {
@@ -133,51 +143,57 @@ public class FloodfillAlgorithm : MonoBehaviour
         //        }
     }
 
-    public void RemoveRedundantNodesInConnection(Vector2 start, Vector2 end, ref int recursionCount)
+    public Vector2 RemoveRedundantNodesInConnection(Vector2 start, Vector2 end, ref int recursionCount)
     {
         recursionCount++;
-        if (recursionCount >= 1000) return;
-        HashSet<Vector2> visited = new HashSet<Vector2>();
-        visited.Add(start);
+        if (recursionCount >= 200) return start;
+        List<Vector2> visited = new List<Vector2>();
         //Should be changed to a while
         for (int i = 0; i < 1000; i++)
         {
             //Expand end
             var endNeghbors = RoadMap.GetNeighbors(end);
             //Possibly redundant - it has exactly one connection to unvisted node
-            int unvisitedCount = endNeghbors.Count(x => !visited.Contains(x));
-            bool hit = Physics2D.Linecast(start, end, ObstacleLayerMask);
-            if (unvisitedCount == 1 && hit == false)
+            int unvisitedCount = endNeghbors.Count(x => !visited.Contains(x) && !x.Equals(start));
+            if (unvisitedCount > 1)
             {
-                //Previous end is marked as visited
-                visited.Add(end);
-                //End is expanded to node that is not yet visited
-                end = endNeghbors.First(x => visited.Contains(x) == false);
+                //Node is Super node -> break as endj
+                break;
             }
             else
             {
-                break;
+                //Continue getting nodes along the line
+                var endCandidate = endNeghbors.FirstOrDefault(x => visited.Contains(x) == false);
+                if (endCandidate == null) break;
+                if (Physics2D.Linecast(start, endCandidate, ObstacleLayerMask))
+                {
+                    //if obstacle is hit cannot simplify more break without changing end
+                    break;
+                }
+                else
+                {
+                    //Can continue simplifyiund
+                    visited.Add(end);
+
+                    end = endCandidate;
+                }
             }
         }
 
-        //Remove the visited nodes without start node
-        //        if (RoadMap.GetNeighbors(start).Contains(end) == false)
-        //        {
-        //
-        //        }
-        bool b = RoadMap.AddEdge(start, end);
-        if (b)
+        if (visited.Count >= 1)
         {
-            _debugSimplifiedConnections.Add(Tuple.Create(start, end));
+            RoadMap.RemoveEdge(start, visited[0]);
+            for (int j = 0; j < visited.Count - 1; j++)
+            {
+                RoadMap.RemoveEdge(visited[j], visited[j + 1]);
+            }
+            RoadMap.RemoveEdge(visited[visited.Count - 1], end);
         }
-        //                RoadMap.Remo
 
-        //        foreach (var endNeighbor in RoadMap.GetNeighbors(end))
-        //        {
-        //            if (endNeighbor.Equals(start)) continue;
-        //            RemoveRedundantNodesInConnection(end, endNeighbor, ref recursionCount);
-        //        }
-        return;
+        RoadMap.AddEdge(start, end);
+        _debugSimplifiedConnections.Add(Tuple.Create(start, end));
+
+        return end;
     }
 
     public int GetColliderIndex(Collider2D collider)
@@ -243,6 +259,7 @@ public class FloodfillAlgorithm : MonoBehaviour
 
     public void Init()
     {
+        _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
         this.Grid = GetComponent<Grid>();
         if (PolygonBoundary != null)
         {
@@ -252,11 +269,6 @@ public class FloodfillAlgorithm : MonoBehaviour
         }
         LevelGrid = CalculateLevelGrid();
         FloodRegions();
-        Debug.Log($"Roadmap nodes: {RoadMap.adjacencyList.Count}");
-        foreach (var node in RoadMap.adjacencyList)
-        {
-            Debug.Log($"Roadmap nodes: {node.Key} Neighbors: {node.Value.Count}");
-        }
         Vector2 superNode = RoadMap.adjacencyList.First().Key;
         foreach (var nodeInfoPair in RoadMap.adjacencyList)
         {
@@ -266,7 +278,11 @@ public class FloodfillAlgorithm : MonoBehaviour
                 break;
             }
         }
-        RemoveRedundantNodes(superNode);
+        int totalRecursion = 0;
+        RemoveRedundantNodes(superNode, ref totalRecursion, new List<Vector2>());
+        Debug.Log($"Roadmap nodes: {RoadMap.adjacencyList.Count}");
+        Debug.Log($"Simplified connection count : {_debugSimplifiedConnections.Count}");
+        Debug.Log($"Recursion count is : {totalRecursion}");
     }
 
     public bool IsBoundaryCell(int row, int col)
@@ -282,7 +298,6 @@ public class FloodfillAlgorithm : MonoBehaviour
 
     public void Start()
     {
-        Init();
         Helpers.LogExecutionTime(Init, "Floodfill algorithm intitializaiton");
     }
 
@@ -345,8 +360,8 @@ public class FloodfillAlgorithm : MonoBehaviour
         {
             Gizmos.color = Color.blue;
             DebugDrawGridByIndex();
-            //Graph<Vector2>.DebugDrawGraph(RoadMap, Color.red, Color.green, 0.01f);
-            DebugSimplifiedConnections();
+            Graph<Vector2>.DebugDrawGraph(RoadMap, Color.red, Color.green, 0.01f);
+            //DebugSimplifiedConnections();
             //Debug draw nodes with only one connecitons
             foreach (var n in RoadMap.adjacencyList)
             {

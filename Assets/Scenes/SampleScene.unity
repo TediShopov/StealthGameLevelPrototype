@@ -1031,7 +1031,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 639582057}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -6.6496034, y: 0.122786805, z: -0.028779104}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1087,11 +1087,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21a08b686282bfe45b29a57479147342, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Grid: {fileID: 639582059}
-  ObstacleLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  PolygonBoundary: {fileID: 64142021}
   ColliderKeys: []
   Colors:
   - {r: 1, g: 0, b: 0, a: 0.54901963}
@@ -1104,6 +1099,11 @@ MonoBehaviour:
   - {r: 0, g: 0.4528302, b: 0.12705263, a: 0.54901963}
   - {r: 0, g: 0.1175334, b: 0.3584906, a: 0.54901963}
   DebugDraw: 0
+  Grid: {fileID: 639582059}
+  ObstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  PolygonBoundary: {fileID: 64142021}
 --- !u!4 &1042293687 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6103404734450912121, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
@@ -1394,7 +1394,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1506136515}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.3546844, y: -0.013117742, z: -0.14596793}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
