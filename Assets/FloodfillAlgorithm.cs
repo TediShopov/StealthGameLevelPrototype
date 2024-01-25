@@ -154,8 +154,8 @@ public class FloodfillAlgorithm : MonoBehaviour
             //Expand end
             var endNeghbors = RoadMap.GetNeighbors(end);
             //Possibly redundant - it has exactly one connection to unvisted node
-            int unvisitedCount = endNeghbors.Count(x => !visited.Contains(x) && !x.Equals(start));
-            if (unvisitedCount > 1)
+            var unvisited = endNeghbors.Where(x => !visited.Contains(x) && !x.Equals(start)).ToList();
+            if (unvisited.Count > 1)
             {
                 //Node is Super node -> break as endj
                 break;
@@ -163,7 +163,7 @@ public class FloodfillAlgorithm : MonoBehaviour
             else
             {
                 //Continue getting nodes along the line
-                var endCandidate = endNeghbors.FirstOrDefault(x => visited.Contains(x) == false);
+                var endCandidate = unvisited.FirstOrDefault();
                 if (endCandidate == null) break;
                 if (Physics2D.Linecast(start, endCandidate, ObstacleLayerMask))
                 {
@@ -363,11 +363,6 @@ public class FloodfillAlgorithm : MonoBehaviour
             Graph<Vector2>.DebugDrawGraph(RoadMap, Color.red, Color.green, 0.01f);
             //DebugSimplifiedConnections();
             //Debug draw nodes with only one connecitons
-            foreach (var n in RoadMap.adjacencyList)
-            {
-                if (n.Value.Count <= 1)
-                    Gizmos.DrawSphere(new Vector3(n.Key.x, n.Key.y, 0), 0.1f);
-            }
         }
     }
 
