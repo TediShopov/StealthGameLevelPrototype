@@ -279,9 +279,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21b977b58b736d54187e182b67c973ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsExpandingOutWards: 1
-  DebugDistance: 0.1
-  PolygonCollider: {fileID: 64142022}
 --- !u!60 &64142022
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -1060,7 +1057,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 639582057}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d2897c38e816c344995c4b300cc9fa29, type: 3}
   m_Name: 
@@ -1084,20 +1081,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 639582057}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21a08b686282bfe45b29a57479147342, type: 3}
+  m_Script: {fileID: 11500000, guid: 1eca56f97ff41134aa470027e4ab51eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ColliderKeys: []
   Colors:
-  - {r: 1, g: 0, b: 0, a: 0.54901963}
-  - {r: 0, g: 0.025485534, b: 0.9622642, a: 0.54901963}
-  - {r: 0, g: 1, b: 0.060156345, a: 0.54901963}
-  - {r: 1, g: 0.91517913, b: 0, a: 0.54901963}
-  - {r: 0, g: 0.8598914, b: 1, a: 0.54901963}
-  - {r: 1, g: 0, b: 0.7586026, a: 0.54901963}
-  - {r: 1, g: 0.56868994, b: 0, a: 0.54901963}
-  - {r: 0, g: 0.4528302, b: 0.12705263, a: 0.54901963}
-  - {r: 0, g: 0.1175334, b: 0.3584906, a: 0.54901963}
+  - {r: 1, g: 0, b: 0, a: 0.5176471}
+  - {r: 1, g: 0.92892253, b: 0, a: 0.5019608}
+  - {r: 0.3253131, g: 1, b: 0, a: 0.6117647}
+  - {r: 0, g: 1, b: 0.6075773, a: 0.57254905}
+  - {r: 0, g: 0.41886997, b: 1, a: 0.6117647}
+  - {r: 0.9726496, g: 0, b: 1, a: 0.5686275}
+  - {r: 0, g: 0.08543253, b: 1, a: 0.6117647}
   DebugDraw: 0
   Grid: {fileID: 639582059}
   ObstacleLayerMask:
@@ -1361,7 +1356,6 @@ GameObject:
   - component: {fileID: 1506136517}
   - component: {fileID: 1506136516}
   - component: {fileID: 1506136518}
-  - component: {fileID: 1506136519}
   m_Layer: 0
   m_Name: LevelInitializer
   m_TagString: Untagged
@@ -1381,11 +1375,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83899a95c137d464695c5a1592f2bcfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RoadMapGenerator: {fileID: 1506136519}
+  RoadMapGenerator: {fileID: 639582063}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
   PathGenerator: {fileID: 1506136518}
-  ClusterDistance: 1
 --- !u!4 &1506136517
 Transform:
   m_ObjectHideFlags: 0
@@ -1417,23 +1410,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BiasPathDistance: 15
   AttemptsToMatchBiasedDistance: 3
---- !u!114 &1506136519
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1506136515}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f949a15c40c6b8458fef2ecf71be013, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PolygonBoundary: {fileID: 64142021}
-  DistanceFromPoint: 0.5
-  BoundaryObstacleLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!1 &1612957678
 GameObject:
   m_ObjectHideFlags: 0
