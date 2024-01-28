@@ -18,7 +18,7 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
     public bool DebugDraw;
     public Grid Grid;
     public LayerMask ObstacleLayerMask;
-    public PolygonBoundary PolygonBoundary;
+    public Collider2D Boundary;
     public Graph<Vector2> RoadMap = new Graph<Vector2>();
 
     private Vector3Int _gridMax;
@@ -268,9 +268,9 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
     {
         _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
         this.Grid = GetComponent<Grid>();
-        if (PolygonBoundary != null)
+        if (Boundary != null)
         {
-            Bounds levelBounds = PolygonBoundary.GetComponent<PolygonCollider2D>().bounds;
+            Bounds levelBounds = Boundary.gameObject.GetComponent<Collider2D>().bounds;
             _gridMin = Grid.WorldToCell(levelBounds.min);
             _gridMax = Grid.WorldToCell(levelBounds.max);
         }

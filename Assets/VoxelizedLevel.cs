@@ -14,7 +14,7 @@ using UnityEngineInternal;
 public class VoxelizedLevel : VoxelizedLevelBase
 {
     public LayerMask ObstacleLayerMask;
-    public PolygonBoundary PolygonBoundary;
+    public Collider2D Boundary;
     public int LookAtGrid = 0;
     public int LookAtRange =1;
     //    [HideInInspector]  public List<PatrolPath> PatrolPaths;
@@ -30,9 +30,9 @@ public class VoxelizedLevel : VoxelizedLevelBase
     public override void Init()
     {
         this.Grid = GetComponent<Grid>();
-        if (PolygonBoundary != null)
+        if (Boundary != null)
         {
-            Bounds levelBounds = PolygonBoundary.GetComponent<PolygonCollider2D>().bounds;
+            Bounds levelBounds = Boundary.GetComponent<Collider2D>().bounds;
             _gridMin = Grid.WorldToCell(levelBounds.min);
             _gridMax = Grid.WorldToCell(levelBounds.max);
         }
