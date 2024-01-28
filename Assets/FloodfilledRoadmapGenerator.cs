@@ -18,7 +18,8 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
     public bool DebugDraw;
     public Grid Grid;
     public LayerMask ObstacleLayerMask;
-    public Collider2D Boundary;
+    public LayerMask BoundaryLayerMask;
+    private Collider2D _boundary;
     public Graph<Vector2> RoadMap = new Graph<Vector2>();
 
     private Vector3Int _gridMax;
@@ -268,9 +269,10 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
     {
         _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
         this.Grid = GetComponent<Grid>();
-        if (Boundary != null)
+        _boundary =Physics2D.OverlapPoint(this.transform.position, BoundaryLayerMask);
+        if (_boundary != null)
         {
-            Bounds levelBounds = Boundary.gameObject.GetComponent<Collider2D>().bounds;
+            Bounds levelBounds = _boundary.gameObject.GetComponent<Collider2D>().bounds;
             _gridMin = Grid.WorldToCell(levelBounds.min);
             _gridMax = Grid.WorldToCell(levelBounds.max);
         }

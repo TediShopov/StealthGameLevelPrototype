@@ -14,7 +14,8 @@ using UnityEngineInternal;
 public class VoxelizedLevel : VoxelizedLevelBase
 {
     public LayerMask ObstacleLayerMask;
-    public Collider2D Boundary;
+    public LayerMask BoundaryLayerMask;
+    private Collider2D _boundary;
     public int LookAtGrid = 0;
     public int LookAtRange =1;
     //    [HideInInspector]  public List<PatrolPath> PatrolPaths;
@@ -30,9 +31,10 @@ public class VoxelizedLevel : VoxelizedLevelBase
     public override void Init()
     {
         this.Grid = GetComponent<Grid>();
-        if (Boundary != null)
+        _boundary =Physics2D.OverlapPoint(this.transform.position, BoundaryLayerMask);
+        if (_boundary != null)
         {
-            Bounds levelBounds = Boundary.GetComponent<Collider2D>().bounds;
+            Bounds levelBounds = _boundary.GetComponent<Collider2D>().bounds;
             _gridMin = Grid.WorldToCell(levelBounds.min);
             _gridMax = Grid.WorldToCell(levelBounds.max);
         }
