@@ -8,6 +8,7 @@ using UnityEngine;
 public class SpawnRandomStealthLevel : MonoBehaviour
 {
     public GameObject PlayerPrefab;
+    public GameObject DestinationPrefab;
     public GameObject EnemyPrefab;
     public GameObject BoundaryViualPrefab;
     public GameObject LevelInitializer;
@@ -17,6 +18,8 @@ public class SpawnRandomStealthLevel : MonoBehaviour
     private GameObject CompositeVisualBoundary;
     public int RandomSeed;
     public int RandomObjectSpawned;
+    public int MinEnemiesSpawned=1;
+    public int MaxEnemiesSpawned=3;
     public LayerMask ObstacleLayerMask;
 
 
@@ -38,7 +41,13 @@ public class SpawnRandomStealthLevel : MonoBehaviour
             SpawnRandomObject(box,Obstacles);
         }
         var playerInstance =  SpawnPrefabWithoutCollision(PlayerPrefab,box, 150);
-        SetupRRT(playerInstance.GetComponent<CharacterController2D>(),new Vector3());
+        var destinationIntance =  SpawnPrefabWithoutCollision(DestinationPrefab,box, 150);
+        int enemiesToSpaw= Random.Range(MinEnemiesSpawned,MaxEnemiesSpawned);
+        for (int i = 0; i < enemiesToSpaw; i++)
+        {
+            SpawnPrefabWithoutCollision(EnemyPrefab, box, 25);
+        }
+        SetupRRT(playerInstance.GetComponent<CharacterController2D>(),destinationIntance);
         Instantiate(LevelInitializer, this.transform);
 
     }
@@ -143,14 +152,14 @@ public class SpawnRandomStealthLevel : MonoBehaviour
         // If there are any colliders in the array, there is a collision
         return colliders.Length > 0;
     }
-    void SetupRRT(CharacterController2D characterController, Vector3 destination) 
+    void SetupRRT(CharacterController2D characterController, GameObject destination) 
     {
          RapidlyExploringRandomTreeVisualizer[] rrts= LevelInitializer.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
         foreach (var rrt in rrts)
         {
             rrt.StartNode = characterController.transform;
             rrt.Controller = characterController;
-            rrt.EndNode = characterController.transform;
+            rrt.EndNode = destination.transform;
 
        }
 
