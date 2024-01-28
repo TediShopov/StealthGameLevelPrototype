@@ -182,12 +182,19 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
 
         if (visited.Count >= 1)
         {
+            //Remove redundant edges 
             RoadMap.RemoveEdge(start, visited[0]);
             for (int j = 0; j < visited.Count - 1; j++)
             {
                 RoadMap.RemoveEdge(visited[j], visited[j + 1]);
             }
             RoadMap.RemoveEdge(visited[visited.Count - 1], end);
+            //Remove redundant nodes 
+            for (int j = 0; j < visited.Count; j++) 
+            {
+                RoadMap.RemoveNode(visited[j]);
+            }
+
         }
 
         RoadMap.AddEdge(start, end);

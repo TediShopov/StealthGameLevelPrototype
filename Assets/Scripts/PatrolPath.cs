@@ -11,7 +11,7 @@ public class PatrolPath : MonoBehaviour
     public DefaultEnemyProperties EnemyProperties;
     public List<Transform> Transforms = new List<Transform>();
     public bool Randomized=true;
-    [HideInInspector] public List<Vector2> Positions = new List<Vector2>();
+    [SerializeField] public List<Vector2> Positions = new List<Vector2>();
     [HideInInspector] public List<Vector2> InitialPositions = new List<Vector2>();
     [HideInInspector] public Vector2 Velocity;
     private int _wayPointIndex;
