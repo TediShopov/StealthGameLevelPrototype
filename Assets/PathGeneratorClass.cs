@@ -14,11 +14,16 @@ public class PathGeneratorClass : MonoBehaviour, IPathGenerator
 {
     public float BiasPathDistance;
     public int AttemptsToMatchBiasedDistance;
-    public int RandomPathSeed;
+    public System.Random LevelRandom;
 
     public void Awake()
     {
-        Random.InitState(seed: RandomPathSeed);
+        //Random.InitState(seed: RandomPathSeed);
+        var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
+        if (level)
+            LevelRandom = level.GetComponent<SpawnRandomStealthLevel>().LevelRandom;
+        else
+            LevelRandom = new System.Random();
     }
 
     public Graph<Vector2> Roadmap { get; set; }
@@ -37,7 +42,9 @@ public class PathGeneratorClass : MonoBehaviour, IPathGenerator
             for (int j = 0; j < AttemptsToMatchBiasedDistance; j++)
             {
                 // Generate a random index to pick an element.
-                int randomIndex = UnityEngine.Random.Range(0, this.Roadmap.adjacencyList.Count);
+                int randomIndex = LevelRandom.Next(0, this.Roadmap.adjacencyList.Count);
+                if (randomIndex > this.Roadmap.adjacencyList.Count)
+                    randomIndex = LevelRandom.Next(0, this.Roadmap.adjacencyList.Count);
                 RandomPathDFS(keyValueList[randomIndex], ref visited, ref path, ref bestFoundPath, BiasPathDistance);
                 if (PathLength(bestFoundPath) >= BiasPathDistance) { break; }
             }
@@ -60,7 +67,7 @@ public class PathGeneratorClass : MonoBehaviour, IPathGenerator
             if (coveredDistance > PathLength(bestPath))
                 bestPath = new List<Vector2>(currentPath);
             // Shuffle the neighbors randomly.
-            Roadmap.Shuffle(unvisitedNeighbors);
+            Roadmap.Shuffle(LevelRandom, unvisitedNeighbors);
             foreach (var neighbor in unvisitedNeighbors)
             {
                 RandomPathDFS(neighbor, ref visited, ref currentPath, ref bestPath, maxDistance);

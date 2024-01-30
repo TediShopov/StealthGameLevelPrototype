@@ -480,7 +480,7 @@ MonoBehaviour:
   - {fileID: 6228754912093341014, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
   - {fileID: 6228754912093341014, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
   VisualBoundWidth: 1
-  RandomSeed: 96
+  RandomSeed: 100
   RandomObjectSpawned: 5
   MinEnemiesSpawned: 1
   MaxEnemiesSpawned: 3
@@ -497,7 +497,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 394683628}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 25, y: 0, z: 0}
+  m_LocalPosition: {x: 26, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1107,7 +1107,7 @@ MonoBehaviour:
   - {fileID: 6228754912093341014, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
   - {fileID: 6228754912093341014, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
   VisualBoundWidth: 1
-  RandomSeed: 96
+  RandomSeed: 100
   RandomObjectSpawned: 5
   MinEnemiesSpawned: 1
   MaxEnemiesSpawned: 3

@@ -124,12 +124,12 @@ public class Graph<T>
     }
 
     // Fisher-Yates shuffle for randomly ordering the list.
-    public void Shuffle<T>(List<T> list)
+    public void Shuffle<T>(System.Random random, List<T> list)
     {
         int n = list.Count;
         for (int i = 0; i < n; i++)
         {
-            int r = i + (int)(UnityEngine.Random.value * (n - i));
+            int r = i + (int)(Helpers.GetRandomFloat(random, 0.0f, 1.0f) * (n - i));
             T temp = list[i];
             list[i] = list[r];
             list[r] = temp;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using System;
 
 public class SpawnRandomStealthLevel : MonoBehaviour
 {
@@ -29,12 +30,14 @@ public class SpawnRandomStealthLevel : MonoBehaviour
     [Range(10, 50)]
     public float MinDimension = 50.0f;
 
+    public System.Random LevelRandom;
+
     // Start is called before the first frame update
     private void Start()
     {
         //Assign this object to be root object of level by assignign tag
         this.tag = "Level";
-        Random.InitState(RandomSeed);
+        this.LevelRandom = new System.Random(RandomSeed);
         BoxCollider2D box = InitLevelBoundary();
         PlaceBoundaryVisualPrefabs(box);
 
@@ -51,7 +54,8 @@ public class SpawnRandomStealthLevel : MonoBehaviour
         }
         var playerInstance = SpawnPrefabWithoutCollision(PlayerPrefab, box, 150);
         var destinationIntance = SpawnPrefabWithoutCollision(DestinationPrefab, box, 150);
-        int enemiesToSpaw = Random.Range(MinEnemiesSpawned, MaxEnemiesSpawned);
+        //int enemiesToSpaw = Random.Range(MinEnemiesSpawned, MaxEnemiesSpawned);
+        int enemiesToSpaw = LevelRandom.Next(MinEnemiesSpawned, MaxEnemiesSpawned + 1);
         for (int i = 0; i < enemiesToSpaw; i++)
         {
             SpawnPrefabWithoutCollision(EnemyPrefab, box, 25);
@@ -69,7 +73,10 @@ public class SpawnRandomStealthLevel : MonoBehaviour
         var boxCollider = Boundary.GetComponent<BoxCollider2D>();
         boxCollider.isTrigger = true;
         //Pick random sizes
-        boxCollider.size = new Vector2(Random.Range(MinDimension, MaxDimension), Random.Range(MinDimension, MaxDimension));
+        //boxCollider.size = new Vector2(Random.Range(MinDimension, MaxDimension), Random.Range(MinDimension, MaxDimension));
+        boxCollider.size = new Vector2(
+            Helpers.GetRandomFloat(LevelRandom, MinDimension
+            , MaxDimension), Helpers.GetRandomFloat(LevelRandom, MinDimension, MaxDimension));
         return boxCollider;
     }
 
@@ -111,11 +118,11 @@ public class SpawnRandomStealthLevel : MonoBehaviour
             Debug.LogError("Object list is empty. Please assign GameObjects to the ObstaclePrefabs array.");
             return null;
         }
-        GameObject randomPrefab = ObstaclePrefabs[Random.Range(0, ObstaclePrefabs.Count)];
-        float scaleRandom = Random.Range(0.2f, 5.0f);
+        GameObject randomPrefab = ObstaclePrefabs[LevelRandom.Next(0, ObstaclePrefabs.Count)];
+        float scaleRandom = Helpers.GetRandomFloat(LevelRandom, 0.2f, 5.0f);
         randomPrefab.transform.localScale = new Vector3(scaleRandom, scaleRandom, 0); ;
 
-        int randomRotationIndex = Random.Range(0, 8);
+        int randomRotationIndex = LevelRandom.Next(0, 8);
         float angle = Mathf.Lerp(0f, 90f, randomRotationIndex / 7f); // 7 because there are 8 positions
         randomPrefab.transform.rotation = Quaternion.Euler(0f, 0f, angle);
         return randomPrefab;
@@ -139,8 +146,8 @@ public class SpawnRandomStealthLevel : MonoBehaviour
     {
         Vector2 colliderSize = spawnArea.size;
         Vector2 colliderCenter = spawnArea.bounds.center;
-        float randomX = Random.Range(colliderCenter.x - colliderSize.x / 2f, colliderCenter.x + colliderSize.x / 2f);
-        float randomY = Random.Range(colliderCenter.y - colliderSize.y / 2f, colliderCenter.y + colliderSize.y / 2f);
+        float randomX = Helpers.GetRandomFloat(LevelRandom, colliderCenter.x - colliderSize.x / 2f, colliderCenter.x + colliderSize.x / 2f);
+        float randomY = Helpers.GetRandomFloat(LevelRandom, colliderCenter.y - colliderSize.y / 2f, colliderCenter.y + colliderSize.y / 2f);
         return new Vector2(randomX, randomY);
     }
 

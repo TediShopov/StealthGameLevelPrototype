@@ -91,6 +91,7 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
                             if (LevelGrid[neighborRow, neighborCol] != LevelGrid[currentCell.Item1, currentCell.Item2])
                             {
                                 Vector3 gridCenter = Grid.GetCellCenterWorld(new Vector3Int(neighborCol + _gridMin.x, neighborRow + _gridMin.y, 0));
+
                                 Vector3 lowerLeft = gridCenter + new Vector3(-Grid.cellSize.x / 2.0f, -Grid.cellSize.y / 2.0f, 0);
                                 lowerLeft = Snapping.Snap(lowerLeft, (Vector2)Grid.cellSize);
                                 Vector3 lowerRight = gridCenter + new Vector3(Grid.cellSize.x / 2.0f, -Grid.cellSize.y / 2.0f, 0);
@@ -183,19 +184,18 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
 
         if (visited.Count >= 1)
         {
-            //Remove redundant edges 
+            //Remove redundant edges
             RoadMap.RemoveEdge(start, visited[0]);
             for (int j = 0; j < visited.Count - 1; j++)
             {
                 RoadMap.RemoveEdge(visited[j], visited[j + 1]);
             }
             RoadMap.RemoveEdge(visited[visited.Count - 1], end);
-            //Remove redundant nodes 
-            for (int j = 0; j < visited.Count; j++) 
+            //Remove redundant nodes
+            for (int j = 0; j < visited.Count; j++)
             {
                 RoadMap.RemoveNode(visited[j]);
             }
-
         }
 
         RoadMap.AddEdge(start, end);
@@ -269,7 +269,7 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
     {
         _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
         this.Grid = GetComponent<Grid>();
-        _boundary =Physics2D.OverlapPoint(this.transform.position, BoundaryLayerMask);
+        _boundary = Physics2D.OverlapPoint(this.transform.position, BoundaryLayerMask);
         if (_boundary != null)
         {
             Bounds levelBounds = _boundary.gameObject.GetComponent<Collider2D>().bounds;
@@ -379,4 +379,3 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
 
     // Start is called before the first frame update
 }
-

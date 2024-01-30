@@ -38,17 +38,7 @@ public class InitializeStealthLevel : MonoBehaviour
 
     private PatrolPath[] GetPatrolPaths()
     {
-        // The root object the stealth level
-        GameObject level = this.gameObject;
-        while (level != null)
-        {
-            if (level.CompareTag("Level"))
-                break;
-            if (level.transform.parent != null)
-                level = level.transform.parent.gameObject;
-            else
-                break;
-        }
+        GameObject level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
         if (level == null)
             return new PatrolPath[0];
         return level.GetComponentsInChildren<PatrolPath>();
