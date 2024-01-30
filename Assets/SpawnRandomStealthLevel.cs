@@ -12,45 +12,47 @@ public class SpawnRandomStealthLevel : MonoBehaviour
     public GameObject EnemyPrefab;
     public GameObject BoundaryViualPrefab;
     public GameObject LevelInitializer;
-    public List<GameObject> ObstaclePrefabs ;
+    public List<GameObject> ObstaclePrefabs;
     private GameObject Boundary;
     public float VisualBoundWidth;
     private GameObject CompositeVisualBoundary;
     public int RandomSeed;
     public int RandomObjectSpawned;
-    public int MinEnemiesSpawned=1;
-    public int MaxEnemiesSpawned=3;
+    public int MinEnemiesSpawned = 1;
+    public int MaxEnemiesSpawned = 3;
     public LayerMask ObstacleLayerMask;
 
-
-    //Size modificaiton 
-    [Range(10,100)]
+    //Size modificaiton
+    [Range(10, 100)]
     public float MaxDimension = 50.0f;
-    [Range(10,50)]
+
+    [Range(10, 50)]
     public float MinDimension = 50.0f;
+
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         Random.InitState(RandomSeed);
         BoxCollider2D box = InitLevelBoundary();
 
         var Obstacles = new GameObject("Obstacles");
         Obstacles.transform.SetParent(this.transform);
-        for (int i = 0; i < RandomObjectSpawned; i++) 
+        for (int i = 0; i < RandomObjectSpawned; i++)
         {
-            SpawnRandomObject(box,Obstacles);
+            GameObject randomPrefab = GetRandomPrefab();
+            SpawnPrefabWithoutCollision(randomPrefab, box, 25);
         }
-        var playerInstance =  SpawnPrefabWithoutCollision(PlayerPrefab,box, 150);
-        var destinationIntance =  SpawnPrefabWithoutCollision(DestinationPrefab,box, 150);
-        int enemiesToSpaw= Random.Range(MinEnemiesSpawned,MaxEnemiesSpawned);
+        var playerInstance = SpawnPrefabWithoutCollision(PlayerPrefab, box, 150);
+        var destinationIntance = SpawnPrefabWithoutCollision(DestinationPrefab, box, 150);
+        int enemiesToSpaw = Random.Range(MinEnemiesSpawned, MaxEnemiesSpawned);
         for (int i = 0; i < enemiesToSpaw; i++)
         {
             SpawnPrefabWithoutCollision(EnemyPrefab, box, 25);
         }
-        SetupRRT(playerInstance.GetComponent<CharacterController2D>(),destinationIntance);
+        SetupRRT(playerInstance.GetComponent<CharacterController2D>(), destinationIntance);
         Instantiate(LevelInitializer, this.transform);
-
     }
+
     public BoxCollider2D InitLevelBoundary()
     {
         Boundary = new GameObject("Boundary", new System.Type[] { typeof(BoxCollider2D) });
@@ -59,11 +61,12 @@ public class SpawnRandomStealthLevel : MonoBehaviour
         var boxCollider = Boundary.GetComponent<BoxCollider2D>();
         boxCollider.isTrigger = true;
         //Pick random sizes
-        boxCollider.size=  new Vector2(Random.Range(MinDimension,MaxDimension),Random.Range(MinDimension,MaxDimension));
+        boxCollider.size = new Vector2(Random.Range(MinDimension, MaxDimension), Random.Range(MinDimension, MaxDimension));
         PlaceBoundaryVisualPrefabs(boxCollider);
         return boxCollider;
     }
-        //Place viusal components and a composity collider for them
+
+    //Place viusal components and a composity collider for them
     public void PlaceBoundaryVisualPrefabs(BoxCollider2D collider2D)
     {
         CompositeVisualBoundary = new GameObject("CompositeViualBoundary", new System.Type[] { typeof(CompositeCollider2D) });
@@ -79,7 +82,6 @@ public class SpawnRandomStealthLevel : MonoBehaviour
         PlaceVertical(halfWidth, collider2D.size.y);
     }
 
-
     private void PlaceVertical(float x, float length)
     {
         var leftSide = Instantiate(BoundaryViualPrefab, CompositeVisualBoundary.transform);
@@ -87,35 +89,45 @@ public class SpawnRandomStealthLevel : MonoBehaviour
         leftSide.transform.localScale = new Vector3(VisualBoundWidth, length, 0);
     }
 
-    private void PlaceHorizontal(float y,float length)
+    private void PlaceHorizontal(float y, float length)
     {
         var topSide = Instantiate(BoundaryViualPrefab, CompositeVisualBoundary.transform);
         topSide.transform.position = new Vector3(0, y, 0);
         topSide.transform.localScale = new Vector3(length, VisualBoundWidth, 0);
     }
-    void SpawnRandomObject(BoxCollider2D spawnArea, GameObject obstaclesContainer)
+
+    private GameObject GetRandomPrefab()
     {
         if (ObstaclePrefabs.Count == 0)
         {
             Debug.LogError("Object list is empty. Please assign GameObjects to the ObstaclePrefabs array.");
-            return;
+            return null;
         }
-
-
-
-        GameObject randomObject = ObstaclePrefabs[Random.Range(0, ObstaclePrefabs.Count)];
-        Vector2 randomPosition = GetRandomPositionInsideCollider(spawnArea);
-
-        GameObject instantiatedObject = Instantiate(randomObject, randomPosition, Quaternion.identity,obstaclesContainer.transform);
+        GameObject randomPrefab = ObstaclePrefabs[Random.Range(0, ObstaclePrefabs.Count)];
         float scaleRandom = Random.Range(0.2f, 5.0f);
-        instantiatedObject.transform.localScale = new Vector3(scaleRandom,scaleRandom,0); ;
+        randomPrefab.transform.localScale = new Vector3(scaleRandom, scaleRandom, 0); ;
 
         int randomRotationIndex = Random.Range(0, 8);
         float angle = Mathf.Lerp(0f, 90f, randomRotationIndex / 7f); // 7 because there are 8 positions
-        instantiatedObject.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        randomPrefab.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        return randomPrefab;
     }
 
-    Vector2 GetRandomPositionInsideCollider(BoxCollider2D spawnArea)
+    //    void SpawnRandomObject(BoxCollider2D spawnArea, GameObject obstaclesContainer)
+    //    {
+    //        GameObject randomObject = ObstaclePrefabs[Random.Range(0, ObstaclePrefabs.Count)];
+    //        Vector2 randomPosition = GetRandomPositionInsideCollider(spawnArea);
+    //
+    //        GameObject instantiatedObject = Instantiate(randomObject, randomPosition, Quaternion.identity,obstaclesContainer.transform);
+    //        float scaleRandom = Random.Range(0.2f, 5.0f);
+    //        instantiatedObject.transform.localScale = new Vector3(scaleRandom,scaleRandom,0); ;
+    //
+    //        int randomRotationIndex = Random.Range(0, 8);
+    //        float angle = Mathf.Lerp(0f, 90f, randomRotationIndex / 7f); // 7 because there are 8 positions
+    //        instantiatedObject.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+    //    }
+
+    private Vector2 GetRandomPositionInsideCollider(BoxCollider2D spawnArea)
     {
         Vector2 colliderSize = spawnArea.size;
         Vector2 colliderCenter = spawnArea.bounds.center;
@@ -123,7 +135,8 @@ public class SpawnRandomStealthLevel : MonoBehaviour
         float randomY = Random.Range(colliderCenter.y - colliderSize.y / 2f, colliderCenter.y + colliderSize.y / 2f);
         return new Vector2(randomX, randomY);
     }
-    GameObject SpawnPrefabWithoutCollision(GameObject prefab,BoxCollider2D spawnArea, int tries)
+
+    private GameObject SpawnPrefabWithoutCollision(GameObject prefab, BoxCollider2D spawnArea, int tries)
     {
         Vector2 randomPosition = GetRandomPositionInsideCollider(spawnArea);
 
@@ -140,35 +153,31 @@ public class SpawnRandomStealthLevel : MonoBehaviour
             {
                 return instantiatedPrefab;
             }
-
         }
         return null;
     }
 
-    bool CheckCollisionWithObstacles(GameObject spawnedObject)
+    private bool CheckCollisionWithObstacles(GameObject spawnedObject)
     {
         // Check if the spawned object collides with any obstacles on the specified layer
         Collider2D[] colliders = Physics2D.OverlapBoxAll(spawnedObject.transform.position, spawnedObject.GetComponent<Collider2D>().bounds.size, 0f, ObstacleLayerMask);
         // If there are any colliders in the array, there is a collision
         return colliders.Length > 0;
     }
-    void SetupRRT(CharacterController2D characterController, GameObject destination) 
+
+    private void SetupRRT(CharacterController2D characterController, GameObject destination)
     {
-         RapidlyExploringRandomTreeVisualizer[] rrts= LevelInitializer.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
+        RapidlyExploringRandomTreeVisualizer[] rrts = LevelInitializer.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
         foreach (var rrt in rrts)
         {
             rrt.StartNode = characterController.transform;
             rrt.Controller = characterController;
             rrt.EndNode = destination.transform;
-
-       }
-
+        }
     }
 
-
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
     }
 }

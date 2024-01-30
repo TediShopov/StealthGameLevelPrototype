@@ -17,21 +17,25 @@ public class VoxelizedLevel : VoxelizedLevelBase
     public LayerMask BoundaryLayerMask;
     private Collider2D _boundary;
     public int LookAtGrid = 0;
-    public int LookAtRange =1;
+    public int LookAtRange = 1;
+
     //    [HideInInspector]  public List<PatrolPath> PatrolPaths;
     public List<DynamicObstacleDiscretizer> Discrtizers;
+
     private bool[,] _staticObstacleGrid;
+    public bool DebugDraw;
+
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         Init();
-        Helpers.LogExecutionTime(Init,"Voxelized level grid");
+        Helpers.LogExecutionTime(Init, "Voxelized level grid");
     }
 
     public override void Init()
     {
         this.Grid = GetComponent<Grid>();
-        _boundary =Physics2D.OverlapPoint(this.transform.position, BoundaryLayerMask);
+        _boundary = Physics2D.OverlapPoint(this.transform.position, BoundaryLayerMask);
         if (_boundary != null)
         {
             Bounds levelBounds = _boundary.GetComponent<Collider2D>().bounds;
@@ -48,23 +52,25 @@ public class VoxelizedLevel : VoxelizedLevelBase
         }
     }
 
-    public bool[,] GetStaticObstacleLevel() 
+    public bool[,] GetStaticObstacleLevel()
     {
-        var futureGrid = new bool[GetRows(),GetCols()];
+        var futureGrid = new bool[GetRows(), GetCols()];
         for (int row = 0; row < GetRows(); row++)
         {
             for (int col = 0; col < GetCols(); col++)
             {
-                Vector3 worldPosition = Grid.GetCellCenterWorld(GetVectorFromInternaclCoordinates(row,col));
+                Vector3 worldPosition = Grid.GetCellCenterWorld(GetVectorFromInternaclCoordinates(row, col));
                 if (IsStaticObstacleAtPosition(worldPosition))
                 {
-                    futureGrid[row,col] = true;
+                    futureGrid[row, col] = true;
                 }
             }
         }
         return futureGrid;
     }
+
     public int GetRows() => _gridMax.y - _gridMin.y;
+
     public int GetCols() => _gridMax.x - _gridMin.x;
 
     public static T[,] Copy<T>(T[,] array)
@@ -83,10 +89,11 @@ public class VoxelizedLevel : VoxelizedLevelBase
 
         return copy;
     }
+
     public override bool[,] GenerateFutureGrid(float future)
     {
         bool[,] futureGrid = Copy(_staticObstacleGrid);
-        List<Vector2Int> DynamicObstacle=new List<Vector2Int>();
+        List<Vector2Int> DynamicObstacle = new List<Vector2Int>();
         //Calculate enemny future position
         foreach (var discretizer in Discrtizers)
         {
@@ -97,17 +104,17 @@ public class VoxelizedLevel : VoxelizedLevelBase
 
             DynamicObstacle.AddRange(possiblyAffectedCells);
         }
-        foreach (var obs in DynamicObstacle) 
+        foreach (var obs in DynamicObstacle)
         {
             int row = obs.y - _gridMin.y;
             int col = obs.x - _gridMin.x;
-            futureGrid[row,col]=true;
+            futureGrid[row, col] = true;
         }
-        return futureGrid;  
+        return futureGrid;
     }
 
+    private Vector3Int GetVectorFromInternaclCoordinates(int row, int col) => new Vector3Int(col + _gridMin.x, row + _gridMin.y, 0);
 
-    private Vector3Int GetVectorFromInternaclCoordinates(int row, int col) => new Vector3Int(col + _gridMin.x, row + _gridMin.y, 0); 
     private bool IsStaticObstacleAtPosition(Vector3 worldPosition)
     {
         Vector2 position2D = new Vector2(worldPosition.x, worldPosition.y);
@@ -127,25 +134,25 @@ public class VoxelizedLevel : VoxelizedLevelBase
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-
-
     }
+
     private void OnDrawGizmosSelected()
     {
         if (FutureGrids == null) return;
-        LookAtGrid = Mathf.Clamp(LookAtGrid, 0, FutureGrids.Count-1);
-        
+        if (DebugDraw == false) return;
+        LookAtGrid = Mathf.Clamp(LookAtGrid, 0, FutureGrids.Count - 1);
+
         Gizmos.color = Color.blue;
-        for (int i = LookAtGrid-LookAtRange; i < LookAtGrid+LookAtRange; i++)
+        for (int i = LookAtGrid - LookAtRange; i < LookAtGrid + LookAtRange; i++)
         {
             if (i < 0 || i >= FutureGrids.Count) continue;
             var lookAtCurrent = i;
-            DebugDrawGridByIndex( lookAtCurrent);
-
+            DebugDrawGridByIndex(lookAtCurrent);
         }
     }
+
     public void DebugDrawGridByIndex(int lookAtCurrent)
     {
         int rows = _gridMax.y - _gridMin.y;
