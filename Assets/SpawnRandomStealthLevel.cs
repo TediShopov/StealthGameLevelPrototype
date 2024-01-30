@@ -32,15 +32,22 @@ public class SpawnRandomStealthLevel : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        //Assign this object to be root object of level by assignign tag
+        this.tag = "Level";
         Random.InitState(RandomSeed);
         BoxCollider2D box = InitLevelBoundary();
+        PlaceBoundaryVisualPrefabs(box);
 
         var Obstacles = new GameObject("Obstacles");
         Obstacles.transform.SetParent(this.transform);
+        Obstacles.transform.localPosition = new Vector3(0, 0, 0);
+        CompositeVisualBoundary.transform.SetParent(Obstacles.transform, false);
         for (int i = 0; i < RandomObjectSpawned; i++)
         {
             GameObject randomPrefab = GetRandomPrefab();
-            SpawnPrefabWithoutCollision(randomPrefab, box, 25);
+            var obstacle = SpawnPrefabWithoutCollision(randomPrefab, box, 25);
+            //Samples position is already inside box collider, keep its values
+            obstacle.transform.SetParent(Obstacles.transform, true);
         }
         var playerInstance = SpawnPrefabWithoutCollision(PlayerPrefab, box, 150);
         var destinationIntance = SpawnPrefabWithoutCollision(DestinationPrefab, box, 150);
@@ -50,24 +57,24 @@ public class SpawnRandomStealthLevel : MonoBehaviour
             SpawnPrefabWithoutCollision(EnemyPrefab, box, 25);
         }
         SetupRRT(playerInstance.GetComponent<CharacterController2D>(), destinationIntance);
-        Instantiate(LevelInitializer, this.transform);
+        Instantiate(LevelInitializer, this.transform, false);
     }
 
     public BoxCollider2D InitLevelBoundary()
     {
         Boundary = new GameObject("Boundary", new System.Type[] { typeof(BoxCollider2D) });
-        Boundary.transform.SetParent(this.transform, false);
+        Boundary.transform.SetParent(this.transform);
+        Boundary.transform.localPosition = new Vector3(0, 0, 0);
         Boundary.layer = LayerMask.NameToLayer("Boundary");
         var boxCollider = Boundary.GetComponent<BoxCollider2D>();
         boxCollider.isTrigger = true;
         //Pick random sizes
         boxCollider.size = new Vector2(Random.Range(MinDimension, MaxDimension), Random.Range(MinDimension, MaxDimension));
-        PlaceBoundaryVisualPrefabs(boxCollider);
         return boxCollider;
     }
 
     //Place viusal components and a composity collider for them
-    public void PlaceBoundaryVisualPrefabs(BoxCollider2D collider2D)
+    public GameObject PlaceBoundaryVisualPrefabs(BoxCollider2D collider2D)
     {
         CompositeVisualBoundary = new GameObject("CompositeViualBoundary", new System.Type[] { typeof(CompositeCollider2D) });
         CompositeVisualBoundary.layer = LayerMask.NameToLayer("Obstacle");
@@ -80,6 +87,7 @@ public class SpawnRandomStealthLevel : MonoBehaviour
         PlaceHorizontal(-halfHeight, collider2D.size.x);
         PlaceVertical(-halfWidth, collider2D.size.y);
         PlaceVertical(halfWidth, collider2D.size.y);
+        return CompositeVisualBoundary;
     }
 
     private void PlaceVertical(float x, float length)
@@ -144,6 +152,7 @@ public class SpawnRandomStealthLevel : MonoBehaviour
         {
             // Instantiate the prefab at the random position
             GameObject instantiatedPrefab = Instantiate(prefab, randomPosition, Quaternion.identity);
+            instantiatedPrefab.transform.SetParent(this.transform, true);
             // Check for collisions with obstacles on the specified layer
             if (CheckCollisionWithObstacles(instantiatedPrefab))
             {

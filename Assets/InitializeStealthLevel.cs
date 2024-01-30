@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Linq;
 
-//The purpose of the class is to setup all relevant classes/algorithms for initializing a single stealth 
+//The purpose of the class is to setup all relevant classes/algorithms for initializing a single stealth
 //level
 public class InitializeStealthLevel : MonoBehaviour
 {
@@ -17,6 +17,7 @@ public class InitializeStealthLevel : MonoBehaviour
     {
         if (RoadMapGenerator == null) return;
         //Initialize the roadmap
+        var generatorPosition = RoadMapGenerator.gameObject.transform.position;
         RoadMapGenerator.Init();
         //Use voronoi roadmap generator to produce culled roadmap graph
         Graph = RoadMapGenerator.RoadMap;
@@ -25,7 +26,7 @@ public class InitializeStealthLevel : MonoBehaviour
         if (PathGenerator != null)
         {
             PathGenerator.Roadmap = Graph;
-            PatrolPaths = FindObjectsOfType<PatrolPath>().Where(x => x.Randomized == true).ToArray();
+            PatrolPaths = GetPatrolPaths();
             var paths = PathGenerator.GeneratePaths(PatrolPaths.Length);
             for (int i = 0; i < PatrolPaths.Length; i++)
             {
@@ -33,5 +34,23 @@ public class InitializeStealthLevel : MonoBehaviour
                 PatrolPaths[i].SetInitialPositionToPath();
             }
         }
+    }
+
+    private PatrolPath[] GetPatrolPaths()
+    {
+        // The root object the stealth level
+        GameObject level = this.gameObject;
+        while (level != null)
+        {
+            if (level.CompareTag("Level"))
+                break;
+            if (level.transform.parent != null)
+                level = level.transform.parent.gameObject;
+            else
+                break;
+        }
+        if (level == null)
+            return new PatrolPath[0];
+        return level.GetComponentsInChildren<PatrolPath>();
     }
 }
