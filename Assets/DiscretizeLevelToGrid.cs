@@ -10,29 +10,35 @@ using UnityEngine;
 [RequireComponent(typeof(Grid))]
 public class VoxelizedLevelBase : MonoBehaviour
 {
-
     [HideInInspector] public Grid Grid;
     public float Step;
     public float Iterations;
     public List<bool[,]> FutureGrids;
     protected Vector3Int _gridMin;
     protected Vector3Int _gridMax;
-    virtual public void Init() { }
-    virtual public bool[,] GenerateFutureGrid(float future) { return new bool[1, 1]; }
-    public int GetFutureLevelIndex(float future) 
+
+    public virtual void Init()
+    { }
+
+    public virtual bool[,] GenerateFutureGrid(float future)
+    { return new bool[1, 1]; }
+
+    public int GetFutureLevelIndex(float future)
     {
-        return (int)Mathf.Clamp(Mathf.Ceil(future / this.Step), 0, this.Iterations-1);
+        return (int)Mathf.Clamp(Mathf.Ceil(future / this.Step), 0, this.Iterations - 1);
     }
-    public Vector2 GetMinimumBound()  => this.Grid.GetCellCenterWorld(_gridMin); 
-    public Vector2 GetMaximumBound()  => this.Grid.GetCellCenterWorld(_gridMax); 
-    public bool CheckCellsColliding(List<Vector2Int> cells, float futureStart, float futureEnd) 
+
+    public Vector2 GetMinimumBound() => this.Grid.GetCellCenterWorld(_gridMin);
+
+    public Vector2 GetMaximumBound() => this.Grid.GetCellCenterWorld(_gridMax);
+
+    public bool CheckCellsColliding(List<Vector2Int> cells, float futureStart, float futureEnd)
     {
-        
         int indexStart = GetFutureLevelIndex((float)futureStart);
         int indexEnd = GetFutureLevelIndex((float)futureEnd);
         int range = indexEnd - indexStart;
-        List<bool[,]> relevantFutureMaps; 
-        if(range == 0) 
+        List<bool[,]> relevantFutureMaps;
+        if (range == 0)
         {
             relevantFutureMaps = new List<bool[,]>() { this.FutureGrids[indexEnd] };
         }
@@ -41,26 +47,26 @@ public class VoxelizedLevelBase : MonoBehaviour
             relevantFutureMaps = this.FutureGrids.GetRange(indexStart, range);
         }
 
-        foreach (var map in relevantFutureMaps) 
+        foreach (var map in relevantFutureMaps)
         {
-            foreach (var cell in cells) 
+            foreach (var cell in cells)
             {
-                int col = cell.x- _gridMin.x;
-                int row = cell.y- _gridMin.y;
-                if ((col < 0 || col >= (_gridMax.x-_gridMin.x)) || (row < 0 || row >= (_gridMax.y-_gridMin.y)))
+                int col = cell.x - _gridMin.x;
+                int row = cell.y - _gridMin.y;
+                if ((col < 0 || col >= (_gridMax.x - _gridMin.x)) || (row < 0 || row >= (_gridMax.y - _gridMin.y)))
                 {
                     return true;
                 }
-                
-                if (map[row, col]) 
-                { 
+
+                if (map[row, col])
+                {
                     return true;
                 }
             }
-            
         }
         return false;
     }
+
     // Function to get cells in a 2D grid that lie in a line
     public static Vector2Int[] GetCellsInLine(Vector2Int start, Vector2Int end)
     {
@@ -102,28 +108,34 @@ public class VoxelizedLevelBase : MonoBehaviour
 
         return cells;
     }
-    public bool IsInBounds(Vector3Int cellCoordinate) 
+
+    public bool IsInBounds(Vector3Int cellCoordinate)
     {
-        if (cellCoordinate.x >= _gridMin.x && cellCoordinate.y >= _gridMin.y && cellCoordinate.x <= _gridMax.x && cellCoordinate.y <= _gridMax.y)
+        if (cellCoordinate.x >= _gridMin.x
+            && cellCoordinate.y >= _gridMin.y &&
+            cellCoordinate.x <= _gridMax.x
+            && cellCoordinate.y <= _gridMax.y)
             return true;
         return false;
     }
 }
+
 [RequireComponent(typeof(Grid))]
 public class DiscretizeLevelToGrid : VoxelizedLevelBase
 {
     public LayerMask ObstacleLayerMask;
-    [HideInInspector]  public List<PatrolPath> PatrolPaths;
-     public PolygonBoundary PolygonBoundary;
+    [HideInInspector] public List<PatrolPath> PatrolPaths;
+    public PolygonBoundary PolygonBoundary;
     public int LookAtGrid = 0;
-    public int LookAtRange ;
+    public int LookAtRange;
+
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         Helpers.LogExecutionTime(Init, "Discretize level to grid");
     }
 
-    public override void Init() 
+    public override void Init()
     {
         this.Grid = GetComponent<Grid>();
         if (PolygonBoundary != null)
@@ -141,38 +153,35 @@ public class DiscretizeLevelToGrid : VoxelizedLevelBase
         }
     }
 
-    
-    public override bool[,] GenerateFutureGrid(float future)  
+    public override bool[,] GenerateFutureGrid(float future)
     {
-
         int rows = _gridMax.y - _gridMin.y;
         int cols = _gridMax.x - _gridMin.x;
-        var futureGrid = new bool[rows,cols];
+        var futureGrid = new bool[rows, cols];
         for (int row = 0; row < rows; row++)
         {
             for (int col = 0; col < cols; col++)
             {
-                Vector3Int cellPosition = new Vector3Int(col+_gridMin.x, row+_gridMin.y, 0);
+                Vector3Int cellPosition = new Vector3Int(col + _gridMin.x, row + _gridMin.y, 0);
                 Vector3 worldPosition = Grid.GetCellCenterWorld(cellPosition);
-                if (IsObstacleAtPosition(worldPosition) || IsEnemiesVisionOnPosition(worldPosition,future ))
+                if (IsObstacleAtPosition(worldPosition) || IsEnemiesVisionOnPosition(worldPosition, future))
                 {
-                    futureGrid[row,col] = true;
+                    futureGrid[row, col] = true;
                 }
             }
         }
         return futureGrid;
     }
-    private bool IsEnemiesVisionOnPosition(Vector3 worldPosition,float future) 
-    {
 
+    private bool IsEnemiesVisionOnPosition(Vector3 worldPosition, float future)
+    {
         foreach (var patrolPath in PatrolPaths)
         {
             var positionAndDirection = patrolPath.CalculateFuturePosition(future);
-            if (patrolPath.FieldOfView.TestCollision(worldPosition,positionAndDirection.Item1,positionAndDirection.Item2)) 
+            if (patrolPath.FieldOfView.TestCollision(worldPosition, positionAndDirection.Item1, positionAndDirection.Item2))
             {
                 return true;
             }
-
         }
         return false;
     }
@@ -196,25 +205,22 @@ public class DiscretizeLevelToGrid : VoxelizedLevelBase
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-
-
     }
+
     private void OnDrawGizmosSelected()
     {
         if (FutureGrids == null) return;
-        LookAtGrid = Mathf.Clamp(LookAtGrid, 0, FutureGrids.Count-1);
-        
+        LookAtGrid = Mathf.Clamp(LookAtGrid, 0, FutureGrids.Count - 1);
+
         Gizmos.color = Color.blue;
-        for (int i = LookAtGrid-LookAtRange; i < LookAtGrid+LookAtRange; i++)
+        for (int i = LookAtGrid - LookAtRange; i < LookAtGrid + LookAtRange; i++)
         {
             var lookAtCurrent = i;
-            DebugDrawGridByIndex( lookAtCurrent);
-
+            DebugDrawGridByIndex(lookAtCurrent);
         }
     }
-
 
     public void DebugDrawGridByIndex(int lookAtCurrent)
     {

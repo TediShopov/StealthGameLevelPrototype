@@ -12,8 +12,7 @@ public class InitializeStealthLevel : MonoBehaviour
     private PatrolPath[] PatrolPaths;
     public PathGeneratorClass PathGenerator;
 
-    // Start is called before the first frame update
-    private void Start()
+    public void Init()
     {
         if (RoadMapGenerator == null) return;
         //Initialize the roadmap
@@ -34,6 +33,7 @@ public class InitializeStealthLevel : MonoBehaviour
                 PatrolPaths[i].SetInitialPositionToPath();
             }
         }
+        Debug.Log("Roamd and patrol paths initialized");
     }
 
     private PatrolPath[] GetPatrolPaths()

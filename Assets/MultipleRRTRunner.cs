@@ -9,41 +9,20 @@ public class MultipleRRTRunner : MonoBehaviour
     //    public Transform StartNode;
     //    public Transform EndNode;
     public int Runs = 1;
+
     //    public int maxIterations = 1000;
     //    public float GoalDistance = 1.0f;
     //    public float BiasDistance = 25.0f;
     public GameObject RRTPrefab;
+
     public List<List<Vector3>> FoundPaths;
 
-    private void Start()
+    public void Run()
     {
-        for (int i = 0; i < Runs; i++) 
+        for (int i = 0; i < Runs; i++)
         {
             Instantiate(RRTPrefab, this.transform);
             var rrtVisualizer = RRTPrefab.GetComponent<RapidlyExploringRandomTreeVisualizer>();
         }
-
     }
-    public void Update()
-    {
-        
-    }
-
-//    public void DebugDrawGraph( Func<Vector3,bool> condition,Color nodeColor , Color connectionColor ) 
-//    {
-//        if(RRTGraph == null) return;
-//        foreach (var node in RRTGraph.adjacencyList)
-//        {
-//            if (!condition(node.Key))
-//                continue;
-//            Gizmos.color = nodeColor;
-//            Gizmos.DrawSphere(node.Key, 0.1f);
-//            foreach (var connection in node.Value)
-//            {
-//                Gizmos.color = connectionColor;
-//                Gizmos.DrawLine(node.Key, connection);
-//            }
-//        }
-//    }
-
 }

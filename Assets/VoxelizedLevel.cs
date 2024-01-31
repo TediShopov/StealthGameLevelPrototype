@@ -26,10 +26,10 @@ public class VoxelizedLevel : VoxelizedLevelBase
     public bool DebugDraw;
 
     // Start is called before the first frame update
-    private void Start()
+    public List<DynamicObstacleDiscretizer> GetDiscretizersInLevel()
     {
-        Init();
-        Helpers.LogExecutionTime(Init, "Voxelized level grid");
+        var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
+        return level.GetComponentsInChildren<DynamicObstacleDiscretizer>().ToList();
     }
 
     public override void Init()
@@ -43,7 +43,7 @@ public class VoxelizedLevel : VoxelizedLevelBase
             _gridMax = Grid.WorldToCell(levelBounds.max);
         }
         FutureGrids = new List<bool[,]>();
-        Discrtizers = FindObjectsOfType<DynamicObstacleDiscretizer>().ToList();
+        Discrtizers = GetDiscretizersInLevel();
         _staticObstacleGrid = GetStaticObstacleLevel();
         for (int i = 0; i < Iterations; i++)
         {
@@ -69,9 +69,10 @@ public class VoxelizedLevel : VoxelizedLevelBase
         return futureGrid;
     }
 
-    public int GetRows() => _gridMax.y - _gridMin.y;
+    // given x -5 to 5 if inclusive, count is (5 + 5) +1
+    public int GetRows() => _gridMax.y - _gridMin.y + 1;
 
-    public int GetCols() => _gridMax.x - _gridMin.x;
+    public int GetCols() => _gridMax.x - _gridMin.x + 1;
 
     public static T[,] Copy<T>(T[,] array)
     {
@@ -108,6 +109,14 @@ public class VoxelizedLevel : VoxelizedLevelBase
         {
             int row = obs.y - _gridMin.y;
             int col = obs.x - _gridMin.x;
+            if (row < 0 || col < 0)
+            {
+                int a = 3;
+            }
+            if (row >= GetRows() || col >= GetCols())
+            {
+                int a = 3;
+            }
             futureGrid[row, col] = true;
         }
         return futureGrid;

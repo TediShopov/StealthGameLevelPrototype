@@ -1,58 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3558959308553349447
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3558959308553349444}
-  - component: {fileID: 3558959308553349446}
-  m_Layer: 0
-  m_Name: RRT
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3558959308553349444
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3558959308553349447}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.715712, y: -0.8296691, z: 0.17474703}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3558959309090012899}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3558959308553349446
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3558959308553349447}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d9bad1cd77a7a246a48d5e6516c70fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  VoxelizedLevel: {fileID: 3558959309090012897}
-  Controller: {fileID: 0}
-  StartNode: {fileID: 0}
-  EndNode: {fileID: 0}
-  maxIterations: 1500
-  GoalDistance: 1
-  BiasDistance: 6.32
-  Path: []
-  OutputDiscretized: 0
 --- !u!1 &3558959309090012902
 GameObject:
   m_ObjectHideFlags: 0
@@ -84,8 +31,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 3558959308553349444}
+  m_Children: []
   m_Father: {fileID: 3558959309750259786}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -114,7 +60,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Runs: 5
-  RRTPrefab: {fileID: 3558959308553349447}
+  RRTPrefab: {fileID: 3930090248339898022, guid: ec19519b0cc38344cbc65e077c36110f, type: 3}
 --- !u!114 &3558959309090012897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,6 +85,7 @@ MonoBehaviour:
   LookAtGrid: 1
   LookAtRange: 1
   Discrtizers: []
+  DebugDraw: 0
 --- !u!114 &3558959309090012896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,4 +179,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BiasPathDistance: 25
   AttemptsToMatchBiasedDistance: 3
-  RandomPathSeed: 10

@@ -62,6 +62,17 @@ public class SpawnRandomStealthLevel : MonoBehaviour
         }
         SetupRRT(playerInstance.GetComponent<CharacterController2D>(), destinationIntance);
         Instantiate(LevelInitializer, this.transform, false);
+
+        //Triggers scripts
+
+        var levelInitializer = gameObject.GetComponentInChildren<InitializeStealthLevel>();
+        var voxelizedLevel = gameObject.GetComponentInChildren<VoxelizedLevel>();
+        var multipleRRTSolvers = gameObject.GetComponentInChildren<MultipleRRTRunner>();
+        levelInitializer.Init();
+        voxelizedLevel.Init();
+        multipleRRTSolvers.Run();
+
+        Debug.Log("Random Level Initialziation Finished");
     }
 
     public BoxCollider2D InitLevelBoundary()
