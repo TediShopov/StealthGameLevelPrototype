@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,8 +23,18 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
 
     private void Start()
     {
+        Setup();
         Run();
         Debug.Log("Ran RRT");
+    }
+    public void Setup()
+    {
+        var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
+        if (level == null) return;
+        VoxelizedLevel = level.GetComponentInChildren<VoxelizedLevelBase>();
+        Controller = level.GetComponentInChildren<CharacterController2D>();
+        StartNode = Controller.transform;
+        EndNode = level.GetComponentInChildren<WinTrigger>().transform;
     }
 
     public void Run()

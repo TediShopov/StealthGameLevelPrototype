@@ -22,6 +22,10 @@ public class SpawnRandomStealthLevel : MonoBehaviour
     public int MinEnemiesSpawned = 1;
     public int MaxEnemiesSpawned = 3;
     public LayerMask ObstacleLayerMask;
+    [Range(0.0f,1.0f)]
+    public float MinObjectScale = 0.2f;
+    [Range(1.0f,5.0f)]
+    public float MaxObjectScale= 1.0f;
 
     //Size modificaiton
     [Range(10, 100)]
@@ -45,13 +49,7 @@ public class SpawnRandomStealthLevel : MonoBehaviour
         Obstacles.transform.SetParent(this.transform);
         Obstacles.transform.localPosition = new Vector3(0, 0, 0);
         CompositeVisualBoundary.transform.SetParent(Obstacles.transform, false);
-        for (int i = 0; i < RandomObjectSpawned; i++)
-        {
-            GameObject randomPrefab = GetRandomPrefab();
-            var obstacle = SpawnPrefabWithoutCollision(randomPrefab, box, 25);
-            //Samples position is already inside box collider, keep its values
-            obstacle.transform.SetParent(Obstacles.transform, true);
-        }
+        SpawnRandomObstacles(box, Obstacles);
         var playerInstance = SpawnPrefabWithoutCollision(PlayerPrefab, box, 150);
         var destinationIntance = SpawnPrefabWithoutCollision(DestinationPrefab, box, 150);
         //int enemiesToSpaw = Random.Range(MinEnemiesSpawned, MaxEnemiesSpawned);
@@ -73,6 +71,25 @@ public class SpawnRandomStealthLevel : MonoBehaviour
         multipleRRTSolvers.Run();
 
         Debug.Log("Random Level Initialziation Finished");
+    }
+
+    private void SpawnRandomObstacles(BoxCollider2D box, GameObject Obstacles)
+    {
+        for (int i = 0; i < RandomObjectSpawned; i++)
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                GameObject randomPrefab = GetRandomPrefab();
+                var obstacle = SpawnPrefabWithoutCollision(randomPrefab, box, 5);
+                if (obstacle != null) 
+                {
+                    //Samples position is already inside box collider, keep its values
+                    obstacle.transform.SetParent(Obstacles.transform, true);
+                    break;
+                }
+
+            }
+        }
     }
 
     public BoxCollider2D InitLevelBoundary()
@@ -130,7 +147,7 @@ public class SpawnRandomStealthLevel : MonoBehaviour
             return null;
         }
         GameObject randomPrefab = ObstaclePrefabs[LevelRandom.Next(0, ObstaclePrefabs.Count)];
-        float scaleRandom = Helpers.GetRandomFloat(LevelRandom, 0.2f, 5.0f);
+        float scaleRandom = Helpers.GetRandomFloat(LevelRandom, MinObjectScale, MaxObjectScale);
         randomPrefab.transform.localScale = new Vector3(scaleRandom, scaleRandom, 0); ;
 
         int randomRotationIndex = LevelRandom.Next(0, 8);
@@ -164,10 +181,10 @@ public class SpawnRandomStealthLevel : MonoBehaviour
 
     private GameObject SpawnPrefabWithoutCollision(GameObject prefab, BoxCollider2D spawnArea, int tries)
     {
-        Vector2 randomPosition = GetRandomPositionInsideCollider(spawnArea);
 
         for (int i = 0; i < tries; i++)
         {
+            Vector2 randomPosition = GetRandomPositionInsideCollider(spawnArea);
             // Instantiate the prefab at the random position
             GameObject instantiatedPrefab = Instantiate(prefab, randomPosition, Quaternion.identity);
             instantiatedPrefab.transform.SetParent(this.transform, true);
@@ -175,6 +192,7 @@ public class SpawnRandomStealthLevel : MonoBehaviour
             if (CheckCollisionWithObstacles(instantiatedPrefab))
             {
                 Destroy(instantiatedPrefab);
+                
             }
             else
             {
@@ -189,7 +207,7 @@ public class SpawnRandomStealthLevel : MonoBehaviour
         // Check if the spawned object collides with any obstacles on the specified layer
         Collider2D[] colliders = Physics2D.OverlapBoxAll(spawnedObject.transform.position, spawnedObject.GetComponent<Collider2D>().bounds.size, 0f, ObstacleLayerMask);
         // If there are any colliders in the array, there is a collision
-        return colliders.Length > 0;
+        return colliders.Length > 1;
     }
 
     private void SetupRRT(CharacterController2D characterController, GameObject destination)
