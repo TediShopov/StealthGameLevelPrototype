@@ -21,12 +21,6 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
     public bool OutputDiscretized = false;
     private IRapidlyEpxploringRandomTree<Vector3> RRT;
 
-    private void Start()
-    {
-        Setup();
-        Run();
-        Debug.Log("Ran RRT");
-    }
     public void Setup()
     {
         var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");

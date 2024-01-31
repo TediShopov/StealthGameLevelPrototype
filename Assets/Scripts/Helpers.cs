@@ -18,7 +18,7 @@ public class Helpers : MonoBehaviour
             if (level.transform.parent != null)
                 level = level.transform.parent.gameObject;
             else
-                break;
+                return null;
         }
 
         return level;

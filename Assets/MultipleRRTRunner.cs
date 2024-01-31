@@ -21,8 +21,10 @@ public class MultipleRRTRunner : MonoBehaviour
     {
         for (int i = 0; i < Runs; i++)
         {
-            Instantiate(RRTPrefab, this.transform);
-            var rrtVisualizer = RRTPrefab.GetComponent<RapidlyExploringRandomTreeVisualizer>();
+            var RRT = Instantiate(RRTPrefab, this.transform);
+            var rrtVisualizer = RRT.GetComponent<RapidlyExploringRandomTreeVisualizer>();
+            rrtVisualizer.Setup();
+            rrtVisualizer.Run();
         }
     }
 }

@@ -60,8 +60,8 @@ MonoBehaviour:
   MaxEnemiesSpawned: 3
   ObstacleLayerMask:
     serializedVersion: 2
-    m_Bits: 64
-  MinObjectScale: 0.2
+    m_Bits: 65
+  MinObjectScale: 0.567
   MaxObjectScale: 5
   MaxDimension: 20
   MinDimension: 20
