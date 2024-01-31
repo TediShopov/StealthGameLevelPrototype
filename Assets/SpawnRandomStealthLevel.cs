@@ -58,7 +58,7 @@ public class SpawnRandomStealthLevel : MonoBehaviour
         {
             SpawnPrefabWithoutCollision(EnemyPrefab, box, 25);
         }
-        SetupRRT(playerInstance.GetComponent<CharacterController2D>(), destinationIntance);
+        //SetupRRT(playerInstance.GetComponent<CharacterController2D>(), destinationIntance);
         Instantiate(LevelInitializer, this.transform, false);
 
         //Triggers scripts
@@ -210,16 +210,16 @@ public class SpawnRandomStealthLevel : MonoBehaviour
         return colliders.Length > 1;
     }
 
-    private void SetupRRT(CharacterController2D characterController, GameObject destination)
-    {
-        RapidlyExploringRandomTreeVisualizer[] rrts = LevelInitializer.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
-        foreach (var rrt in rrts)
-        {
-            rrt.StartNode = characterController.transform;
-            rrt.Controller = characterController;
-            rrt.EndNode = destination.transform;
-        }
-    }
+//    private void SetupRRT(CharacterController2D characterController, GameObject destination)
+//    {
+//        RapidlyExploringRandomTreeVisualizer[] rrts = LevelInitializer.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
+//        foreach (var rrt in rrts)
+//        {
+//            rrt.StartNode = characterController.transform;
+//            rrt.Controller = characterController;
+//            rrt.EndNode = destination.transform;
+//        }
+//    }
 
     // Update is called once per frame
     private void Update()

@@ -12,7 +12,7 @@ public class RandomLevelGridInitializer : MonoBehaviour
     public int Seed;
     public bool RandomizeSeed;
     public System.Random RandomSeedGenerator;
-    public GameObject LevelSpawnerPrefab;
+    public SpawnRandomStealthLevel LevelSpawnerPrefab;
 
 
     void Start()
@@ -39,18 +39,17 @@ public class RandomLevelGridInitializer : MonoBehaviour
             }
         }
     }
-    GameObject SpawnLevelRandomizer(int row, int col,Vector3 spawnPosition) 
+    SpawnRandomStealthLevel SpawnLevelRandomizer(int row, int col,Vector3 spawnPosition) 
     {
         int seed= RandomSeedGenerator.Next();
         //var level = new GameObject($"L_1_1_{seed}", typeof(SpawnRandomStealthLevel));
+        LevelSpawnerPrefab.RandomSeed = seed;
+        LevelSpawnerPrefab.MinDimension = LevelSize.x;
+        LevelSpawnerPrefab.MaxDimension = LevelSize.y;
         var level = Instantiate(LevelSpawnerPrefab, this.transform.position, Quaternion.identity, this.transform);
         level.name = $"L_{row}_{col}_{seed}";
         level.transform.localPosition = spawnPosition;
         level.transform.SetParent(this.transform,true);
-        var spawner =level.GetComponent<SpawnRandomStealthLevel>();
-        spawner.RandomSeed = seed;
-        spawner.MinDimension = LevelSize.x;
-        spawner.MaxDimension = LevelSize.y;
         return level;
     }
 }

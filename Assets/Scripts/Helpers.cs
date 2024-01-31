@@ -3,10 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 public class Helpers : MonoBehaviour
 {
+    public static T SafeGetComponentInChildren<T>(GameObject from) where T : MonoBehaviour
+    {
+        var components = from.GetComponentsInChildren<T>();
+        return components.FirstOrDefault(x => x.isActiveAndEnabled == true);
+    }
+
     public static GameObject SearchForTagUpHierarchy(GameObject startFrom, string tag)
     {
         // The root object the stealth level

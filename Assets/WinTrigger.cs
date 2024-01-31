@@ -22,7 +22,7 @@ public class WinTrigger : MonoBehaviour
         if (collision.gameObject.GetComponent<CharacterController2D>() != null) 
         {
             Debug.Log("Game is won");
-            SceneManager.LoadScene(0);
+            //SceneManager.LoadScene(0);
         }
     }
 }

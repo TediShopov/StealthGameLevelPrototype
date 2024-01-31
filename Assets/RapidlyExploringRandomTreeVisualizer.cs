@@ -12,35 +12,37 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
 {
     public VoxelizedLevelBase VoxelizedLevel;
     public CharacterController2D Controller;
-    public Transform StartNode;
-    public Transform EndNode;
+    public GameObject StartNode;
+    public GameObject EndNode;
     public int maxIterations = 1000;
     public float GoalDistance = 1.0f;
     public float BiasDistance = 25.0f;
     public List<Vector3> Path = new List<Vector3>();
     public bool OutputDiscretized = false;
     private IRapidlyEpxploringRandomTree<Vector3> RRT;
+    private GameObject level;
 
     public void Setup()
     {
-        var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
+        level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
         if (level == null) return;
-        VoxelizedLevel = level.GetComponentInChildren<VoxelizedLevelBase>();
-        Controller = level.GetComponentInChildren<CharacterController2D>();
-        StartNode = Controller.transform;
-        EndNode = level.GetComponentInChildren<WinTrigger>().transform;
+        EndNode = Helpers.SafeGetComponentInChildren<WinTrigger>(level).gameObject;
+        VoxelizedLevel = Helpers.SafeGetComponentInChildren<VoxelizedLevelBase>(level);
+        StartNode = Helpers.SafeGetComponentInChildren<CharacterController2D>(level).gameObject;
+        Controller = Helpers.SafeGetComponentInChildren<CharacterController2D>(level);
     }
 
     public void Run()
     {
         if (VoxelizedLevel == null) return;
         RRT = new DiscreteDistanceBasedRRTSolver(VoxelizedLevel, BiasDistance, GoalDistance, Controller.MaxSpeed);
-        RRT.Run(StartNode.position, EndNode.position, maxIterations);
+        RRT.Run(StartNode.transform.position, EndNode.transform.position, maxIterations);
         Path = RRT.ReconstructPathToSolution();
     }
 
     public void Update()
     {
+        //EndNode = level.GetComponentInChildren<WinTrigger>().gameObject;
     }
 
     private void OnDrawGizmosSelected()
@@ -52,7 +54,7 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
         DFSDraw(this.RRT.StartNode);
         //Draw correct path on top so it is visible
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(EndNode.position, BiasDistance);
+        Gizmos.DrawWireSphere(this.RRT.Goal, BiasDistance);
         for (int i = 0; i < Path.Count - 1; i++)
         {
             Gizmos.DrawSphere(Path[i], 0.1f);
