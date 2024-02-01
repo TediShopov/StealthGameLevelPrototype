@@ -21,7 +21,7 @@ public class PathGeneratorClass : MonoBehaviour, IPathGenerator
         //Random.InitState(seed: RandomPathSeed);
         var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
         if (level)
-            LevelRandom = level.GetComponent<SpawnRandomStealthLevel>().LevelRandom;
+            LevelRandom = level.GetComponent<LevelGeneratorBase>().LevelRandom;
         else
             LevelRandom = new System.Random();
     }

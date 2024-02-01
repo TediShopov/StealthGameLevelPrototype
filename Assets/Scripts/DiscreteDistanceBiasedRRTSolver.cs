@@ -32,8 +32,11 @@ public interface IRapidlyEpxploringRandomTree<TState>
     public TreeNode<TState> StartNode { get; set; }
     public TState Goal { get; set; }
     public int MaxIterations { get; set; }
+    public TreeNode<TState> GoalNodeFound { get; set; }
 
     public void Run(TState start, TState end, int maxIteration = 100);
+
+    public bool Succeeded();
 
     //Return boolean indicating if some state is close enough to be considered goal state
     public bool IsGoalState(TState state);
@@ -70,6 +73,12 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
     private VoxelizedLevelBase VoxelizedLevel;
     private Dictionary<Vector3, TreeNode<Vector3>> _stateToTreeNode;
     private TreeNode<Vector3> _lastAddedState;
+    public bool Succeeded() 
+    {
+        if (this.GoalNodeFound != null)
+            return this.IsGoalState(GoalNodeFound.Content);
+        return false;
+    }
 
     //If nodes distance to goal is closer than this bias distance, node will performed Biased Step next
     //iteration to steer it to goal

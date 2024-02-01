@@ -19,7 +19,7 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
     public float BiasDistance = 25.0f;
     public List<Vector3> Path = new List<Vector3>();
     public bool OutputDiscretized = false;
-    private IRapidlyEpxploringRandomTree<Vector3> RRT;
+    public IRapidlyEpxploringRandomTree<Vector3> RRT;
     private GameObject level;
 
     public void Setup()
@@ -36,6 +36,7 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
     {
         if (VoxelizedLevel == null) return;
         RRT = new DiscreteDistanceBasedRRTSolver(VoxelizedLevel, BiasDistance, GoalDistance, Controller.MaxSpeed);
+        
         RRT.Run(StartNode.transform.position, EndNode.transform.position, maxIterations);
         Path = RRT.ReconstructPathToSolution();
     }
