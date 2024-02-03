@@ -67,8 +67,6 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
             {
                 Vector3 worldPosition = Grid.GetCellCenterWorld(GetVectorFromCoordinates(row, col));
                 Collider2D colliderAtCell = GetStaticColliderAt(worldPosition);
-                if (colliderAtCell != null)
-                    Debug.Log($"Collider at {row} {col} {colliderAtCell.gameObject.name}");
                 //Return -1 if collider is null
                 futureGrid[row, col] = GetColliderIndex(colliderAtCell);
             }
@@ -103,14 +101,10 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
                         {
                             if (LevelGrid[neighborRow, neighborCol] != LevelGrid[currentCell.Item1, currentCell.Item2])
                             {
-                                Vector3 gridCenter = Grid.GetCellCenterWorld(new Vector3Int(neighborCol + _gridMin.x, neighborRow + _gridMin.y, 0));
-
-                                Vector3 lowerLeft = gridCenter + new Vector3(-Grid.cellSize.x / 2.0f, -Grid.cellSize.y / 2.0f, 0);
-                                lowerLeft = Snapping.Snap(lowerLeft, (Vector2)Grid.cellSize);
-                                Vector3 lowerRight = gridCenter + new Vector3(Grid.cellSize.x / 2.0f, -Grid.cellSize.y / 2.0f, 0);
-                                lowerRight = Snapping.Snap(lowerRight, (Vector2)Grid.cellSize);
-                                RoadMap.AddNode(lowerLeft);
+                                var lowerLeft = GetLowerLeft(neighborCol, neighborRow);
+                                var lowerRight = GetLowerLeft(neighborCol + 1, neighborRow);
                                 RoadMap.AddNode(lowerRight);
+                                RoadMap.AddNode(lowerLeft);
                                 RoadMap.AddEdge(lowerLeft, lowerRight);
                             }
                         }
@@ -118,11 +112,8 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
                         {
                             if (LevelGrid[neighborRow, neighborCol] != LevelGrid[currentCell.Item1, currentCell.Item2])
                             {
-                                Vector3 gridCenter = Grid.GetCellCenterWorld(new Vector3Int(neighborCol + _gridMin.x, neighborRow + _gridMin.y, 0));
-                                Vector3 upperLeft = gridCenter + new Vector3(-Grid.cellSize.x / 2.0f, +Grid.cellSize.y / 2.0f, 0);
-                                upperLeft = Snapping.Snap(upperLeft, (Vector2)Grid.cellSize);
-                                Vector3 lowerLeft = gridCenter + new Vector3(-Grid.cellSize.x / 2.0f, -Grid.cellSize.y / 2.0f, 0);
-                                lowerLeft = Snapping.Snap(lowerLeft, (Vector2)Grid.cellSize);
+                                var lowerLeft = GetLowerLeft(neighborCol, neighborRow);
+                                var upperLeft = GetLowerLeft(neighborCol, neighborRow + 1);
                                 RoadMap.AddNode(upperLeft);
                                 RoadMap.AddNode(lowerLeft);
                                 RoadMap.AddEdge(upperLeft, lowerLeft);
@@ -132,6 +123,12 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
                 }
             }
         }
+    }
+
+    public Vector3 GetLowerLeft(int col, int row)
+    {
+        Vector3 gridCenter = Grid.GetCellCenterWorld(GetVectorFromCoordinates(row, col));
+        return gridCenter + new Vector3(-Grid.cellSize.x / 2.0f, -Grid.cellSize.y / 2.0f, 0);
     }
 
     public void RemoveRedundantNodes(Vector2 start, ref int totalRecursions, List<Vector2> visited)

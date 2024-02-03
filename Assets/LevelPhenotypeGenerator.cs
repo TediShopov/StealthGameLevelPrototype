@@ -75,7 +75,7 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
     //    }
     public void Generate(LevelChromosome chromosome)
     {
-        LevelRandom = new System.Random();
+        LevelRandom = new System.Random(RandomSeed);
         LevelChromosome = chromosome;
         ManifestPhenotype();
     }
