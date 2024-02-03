@@ -25,7 +25,8 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         var selection = new TournamentSelection();
         var crossover = new TwoPointCrossover();
         var mutation = new ReverseSequenceMutation();
-        var chromosome = new FloatingPointChromosome(0,1,35,8);
+        //var chromosome = new FloatingPointChromosome(0,1,35,8);
+        var chromosome = new LevelChromosome(35);
         var population = new Population(Rows*Columns,Rows*Columns, chromosome);
 
         var ga = new GeneticAlgorithm(population, targetRRTSuccessEvaluation, selection, crossover, mutation);

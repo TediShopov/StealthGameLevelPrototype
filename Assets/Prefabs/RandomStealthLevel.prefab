@@ -49,19 +49,19 @@ MonoBehaviour:
   EnemyPrefab: {fileID: 3796764076782940127, guid: d583d41a5be5abf4794907a71ef64745, type: 3}
   BoundaryViualPrefab: {fileID: 7711139357044409656, guid: 08b6193f02d8f434d96468973b833db0, type: 3}
   LevelInitializer: {fileID: 3558959309750259788, guid: a2eaa082dc40878409f437c1305f4a5a, type: 3}
+  ObstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 65
   ObstaclePrefabs:
   - {fileID: 6228754912093341014, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
   - {fileID: 6228754912093341014, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
   - {fileID: 6228754912093341014, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
-  VisualBoundWidth: 1
-  RandomSeed: 100
-  RandomObjectSpawned: 10
   MinEnemiesSpawned: 1
   MaxEnemiesSpawned: 3
-  ObstacleLayerMask:
-    serializedVersion: 2
-    m_Bits: 65
+  ObstaclesSpawned: 5
   MinObjectScale: 0.567
   MaxObjectScale: 5
   MaxDimension: 20
   MinDimension: 20
+  VisualBoundWidth: 1
+  RandomSeed: 100

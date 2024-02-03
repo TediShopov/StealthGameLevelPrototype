@@ -27,8 +27,19 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
     private Queue<Tuple<int, int>> BoundaryCells = new Queue<Tuple<int, int>>();
     public List<Tuple<Vector2, Vector2>> _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
 
+    public bool DoFloodFill = false;
+
     //Transforms the unity grid to c# binary represenetaion of the level
     private int[,] LevelGrid;
+
+    public void Update()
+    {
+        if (DoFloodFill)
+        {
+            FloodRegions();
+            DoFloodFill = false;
+        }
+    }
 
     public static T[,] Copy<T>(T[,] array)
     {
@@ -56,6 +67,8 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
             {
                 Vector3 worldPosition = Grid.GetCellCenterWorld(GetVectorFromCoordinates(row, col));
                 Collider2D colliderAtCell = GetStaticColliderAt(worldPosition);
+                if (colliderAtCell != null)
+                    Debug.Log($"Collider at {row} {col} {colliderAtCell.gameObject.name}");
                 //Return -1 if collider is null
                 futureGrid[row, col] = GetColliderIndex(colliderAtCell);
             }

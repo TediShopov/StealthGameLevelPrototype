@@ -46,10 +46,10 @@ public class LevelGeneratorBase : MonoBehaviour
 
     private Vector2 GetRandomPositionInsideCollider(BoxCollider2D spawnArea)
     {
-        Vector2 colliderSize = spawnArea.size;
-        Vector2 colliderCenter = spawnArea.bounds.center;
-        float randomX = Helpers.GetRandomFloat(LevelRandom, colliderCenter.x - colliderSize.x / 2f, colliderCenter.x + colliderSize.x / 2f);
-        float randomY = Helpers.GetRandomFloat(LevelRandom, colliderCenter.y - colliderSize.y / 2f, colliderCenter.y + colliderSize.y / 2f);
+        float relRandomX = Helpers.GetRandomFloat(LevelRandom, 0f, 1f);
+        float relRandomY = Helpers.GetRandomFloat(LevelRandom, 0f, 1f);
+        float randomX = Mathf.Lerp(spawnArea.bounds.min.x, spawnArea.bounds.max.x, relRandomX);
+        float randomY = Mathf.Lerp(spawnArea.bounds.min.y, spawnArea.bounds.max.y, relRandomY);
         return new Vector2(randomX, randomY);
     }
 
@@ -97,10 +97,15 @@ public class LevelGeneratorBase : MonoBehaviour
     }
 
     //Place viusal components and a composity collider for them
-    public GameObject PlaceBoundaryVisualPrefabs(BoxCollider2D collider2D)
+    public GameObject PlaceBoundaryVisualPrefabs(BoxCollider2D collider2D, GameObject containedIn)
     {
         CompositeVisualBoundary = new GameObject("CompositeViualBoundary", new System.Type[] { typeof(CompositeCollider2D) });
+        CompositeVisualBoundary.transform.SetParent(containedIn.transform, false);
+        var compositeCollider = CompositeVisualBoundary.GetComponent<CompositeCollider2D>();
+        compositeCollider.geometryType = CompositeCollider2D.GeometryType.Polygons;
+        //compositeCollider.generationType = CompositeCollider2D.GenerationType.Manual;
         CompositeVisualBoundary.layer = LayerMask.NameToLayer("Obstacle");
+        //CompositeVisualBoundary.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
         CompositeVisualBoundary.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
 
         float halfHeight = collider2D.size.y / 2.0f;
@@ -110,20 +115,22 @@ public class LevelGeneratorBase : MonoBehaviour
         PlaceHorizontal(-halfHeight, collider2D.size.x);
         PlaceVertical(-halfWidth, collider2D.size.y);
         PlaceVertical(halfWidth, collider2D.size.y);
+
+        compositeCollider.GenerateGeometry();
         return CompositeVisualBoundary;
     }
 
     private void PlaceVertical(float x, float length)
     {
         var leftSide = Instantiate(BoundaryViualPrefab, CompositeVisualBoundary.transform);
-        leftSide.transform.position = new Vector3(x, 0, 0);
+        leftSide.transform.localPosition = new Vector3(x, 0, 0);
         leftSide.transform.localScale = new Vector3(VisualBoundWidth, length, 0);
     }
 
     private void PlaceHorizontal(float y, float length)
     {
         var topSide = Instantiate(BoundaryViualPrefab, CompositeVisualBoundary.transform);
-        topSide.transform.position = new Vector3(0, y, 0);
+        topSide.transform.localPosition = new Vector3(0, y, 0);
         topSide.transform.localScale = new Vector3(length, VisualBoundWidth, 0);
     }
 }
@@ -137,16 +144,15 @@ public class SpawnRandomStealthLevel : LevelGeneratorBase
     {
         //Assign this object to be root object of level by assignign tag
         this.tag = "Level";
+        var Obstacles = new GameObject("Obstacles");
+        Obstacles.transform.SetParent(this.transform);
+        Obstacles.transform.localPosition = new Vector3(0, 0, 0);
         this.LevelRandom = new System.Random(RandomSeed);
         BoxCollider2D box = InitLevelBoundary(
             Helpers.GetRandomFloat(LevelRandom, MinDimension, MaxDimension)
             , Helpers.GetRandomFloat(LevelRandom, MinDimension, MaxDimension));
-        PlaceBoundaryVisualPrefabs(box);
+        PlaceBoundaryVisualPrefabs(box, Obstacles);
 
-        var Obstacles = new GameObject("Obstacles");
-        Obstacles.transform.SetParent(this.transform);
-        Obstacles.transform.localPosition = new Vector3(0, 0, 0);
-        CompositeVisualBoundary.transform.SetParent(Obstacles.transform, false);
         SpawnRandomObstacles(box, Obstacles);
         var playerInstance = SpawnPrefabWithoutCollision(PlayerPrefab, box, 150);
         var destinationIntance = SpawnPrefabWithoutCollision(DestinationPrefab, box, 150);

@@ -5,14 +5,34 @@ using UnityEngine;
 
 public class LevelChromosome : ChromosomeBase
 {
+    private System.Random ChromosomeRandom = new System.Random();
 
-    public LevelChromosome(int length):base(length)
+    public Gene[] GetRandomGenes(int length)
     {
-        
+        Gene[] genes = new Gene[length];
+        for (int i = 0; i < length; i++)
+        {
+            genes[i] = new Gene(Helpers.GetRandomFloat(ChromosomeRandom, 0f, 1f));
+        }
+        return genes;
     }
+
+    public LevelChromosome(int length, System.Random random = null) : base(length)
+    {
+        if (random == null)
+        {
+            ChromosomeRandom = new System.Random();
+        }
+        else
+        {
+            ChromosomeRandom = random;
+        }
+        this.ReplaceGenes(0, GetRandomGenes(length));
+    }
+
     public override IChromosome CreateNew()
     {
-        throw new System.NotImplementedException();
+        return new LevelChromosome(Length);
     }
 
     public override Gene GenerateGene(int geneIndex)
@@ -20,6 +40,7 @@ public class LevelChromosome : ChromosomeBase
         throw new System.NotImplementedException();
     }
 }
+
 //GENOTYPE desciprtion:
 public class LevelPhenotypeGenerator : LevelGeneratorBase
 {
@@ -28,27 +49,38 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
     // [x%] [y%] :Destination
     // < many obstacles in form [type rounded down] [x%] [y%] [rotation] [scale]> :Obstacles
     // [%of possible enemies count rounded down] <4 float number to generate random path seed> :Enemis
-    private FloatingPointChromosome LevelChromosome;
+    private LevelChromosome LevelChromosome;
 
     public int RandomSeed;
     public bool isRandom;
+    public bool RunOnStart = false;
+
+    public void Start()
+    {
+        if (RunOnStart)
+        {
+            Generate(new LevelChromosome(35, new System.Random(RandomSeed)));
+        }
+    }
 
     // Start is called before the first frame update
-    private void Start()
+    //    private void Awake()
+    //    {
+    //       // LevelRandom = new System.Random(RandomSeed);
+    //       // int length = 6 + 1 + 4 + ObstaclesSpawned * 5;
+    //       // LevelChromosome = new LevelChromosome(0, 1, length,8);
+    //       // Debug.Log($"Level chromosome length: {LevelChromosome.Length}");
+    //       // LevelChromosome.ReplaceGenes(0, GetRandomGenes(length));
+    //       // ManifestPhenotype();
+    //    }
+    public void Generate(LevelChromosome chromosome)
     {
-       // LevelRandom = new System.Random(RandomSeed);
-       // int length = 6 + 1 + 4 + ObstaclesSpawned * 5;
-       // LevelChromosome = new FloatingPointChromosome(0, 1, length,8);
-       // Debug.Log($"Level chromosome length: {LevelChromosome.Length}");
-       // LevelChromosome.ReplaceGenes(0, GetRandomGenes(length));
-       // ManifestPhenotype();
-    }
-    public void Generate(FloatingPointChromosome chromosome)
-    {
+        LevelRandom = new System.Random();
         LevelChromosome = chromosome;
         ManifestPhenotype();
     }
-    public void Dispose() 
+
+    public void Dispose()
     {
         for (int i = 0; i < this.transform.childCount; i++)
         {
@@ -68,7 +100,9 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
             Mathf.Lerp(MinDimension, MaxDimension, GetGeneValue(geneIndex + 0)),
             Mathf.Lerp(MinDimension, MaxDimension, GetGeneValue(geneIndex + 1))
             );
-        PlaceBoundaryVisualPrefabs(box);
+        var Obstacles = new GameObject("Obstacles");
+        Obstacles.transform.SetParent(this.transform, false);
+        PlaceBoundaryVisualPrefabs(box, Obstacles);
         geneIndex += 2;
 
         //Player
@@ -77,10 +111,6 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         var destinationIntance = SpawnGameObject(ref geneIndex, box, DestinationPrefab);
 
         //obstacles
-        var Obstacles = new GameObject("Obstacles");
-        Obstacles.transform.SetParent(this.transform);
-        Obstacles.transform.localPosition = new Vector3(0, 0, 0);
-        CompositeVisualBoundary.transform.SetParent(Obstacles.transform, false);
 
         //Test for off by oen errors
         for (int i = 0; i < ObstaclesSpawned; i++)
@@ -95,11 +125,14 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
             Instantiate(EnemyPrefab, this.transform);
         }
 
+        Physics2D.SyncTransforms();
         //Solvers
         Instantiate(LevelInitializer, this.transform);
         var levelInitializer = gameObject.GetComponentInChildren<InitializeStealthLevel>();
         var voxelizedLevel = gameObject.GetComponentInChildren<VoxelizedLevel>();
         var multipleRRTSolvers = gameObject.GetComponentInChildren<MultipleRRTRunner>();
+        var pathGenerator = gameObject.GetComponentInChildren<PathGeneratorClass>();
+        pathGenerator.LevelRandom = LevelRandom;
         levelInitializer.Init();
         voxelizedLevel.Init();
         multipleRRTSolvers.Run();
