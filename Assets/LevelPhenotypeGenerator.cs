@@ -1,6 +1,7 @@
 using GeneticSharp.Domain.Chromosomes;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class LevelChromosome : ChromosomeBase
@@ -54,6 +55,7 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
     public int RandomSeed;
     public bool isRandom;
     public bool RunOnStart = false;
+    public bool DisposeNow = false;
 
     public void Start()
     {
@@ -78,14 +80,22 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         LevelRandom = new System.Random(RandomSeed);
         LevelChromosome = chromosome;
         ManifestPhenotype();
+        Debug.Log("Generation of phenotype finished");
     }
 
+    //!WARNING! uses destroy immediate as mulitple level can be geenrated an
+    //disposed in the same frame
     public void Dispose()
     {
-        for (int i = 0; i < this.transform.childCount; i++)
+        var tempList = transform.Cast<Transform>().ToList();
+        foreach (var child in tempList)
         {
-            Destroy(this.transform.GetChild(i).gameObject);
+            DestroyImmediate(child.gameObject);
         }
+        //for (int i = 0; i < this.transform.childCount; i++)
+        //{
+        //    Destroy(this.transform.GetChild(i).gameObject);
+        //}
     }
 
     public float GetGeneValue(int index) => (float)LevelChromosome.GetGene(index).Value;
@@ -185,5 +195,10 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
     // Update is called once per frame
     private void Update()
     {
+        if (DisposeNow)
+        {
+            Dispose();
+            DisposeNow = false;
+        }
     }
 }

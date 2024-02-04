@@ -20,6 +20,12 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
     public TargetRRTSuccessEvaluation targetRRTSuccessEvaluation;
     public Vector2 LevelSize = new Vector2(1.0f, 1.0f); // Size of each object
     public System.Random RandomSeedGenerator;
+    public int AimedGenerations = 10;
+    public GeneticAlgorithm GeneticAlgorithm;
+
+    //Flag to indicated occured termiantion to stop re-running on terminated algorithm
+    private bool _terminated = false;
+
     public void Start()
     {
         var selection = new TournamentSelection();
@@ -27,19 +33,31 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         var mutation = new ReverseSequenceMutation();
         //var chromosome = new FloatingPointChromosome(0,1,35,8);
         var chromosome = new LevelChromosome(35);
-        var population = new Population(Rows*Columns,Rows*Columns, chromosome);
+        var population = new Population(Rows * Columns, Rows * Columns, chromosome);
+        targetRRTSuccessEvaluation.SpawnGridOfEmptyGenerators(Rows * Columns);
 
-        var ga = new GeneticAlgorithm(population, targetRRTSuccessEvaluation, selection, crossover, mutation);
-        ga.Termination = new GenerationNumberTermination(2);
-        Debug.Log("GA running...");
-        ga.Start();
-        Debug.Log($"Best solution found has {ga.BestChromosome.Fitness} fitness.");
+        GeneticAlgorithm = new GeneticAlgorithm(population, targetRRTSuccessEvaluation, selection, crossover, mutation);
+        GeneticAlgorithm.Termination = new GenerationNumberTermination(AimedGenerations);
+        GeneticAlgorithm.GenerationRan += Ga_GenerationRan;
+        GeneticAlgorithm.TerminationReached += Ga_TerminationReached; ;
+        GeneticAlgorithm.Start();
+        //StartCoroutine(ResumeGAEveryNFrames());
     }
-    public void OnGenerationCompleted() 
+
+    private void Ga_TerminationReached(object sender, EventArgs e)
     {
-
+        Debug.Log($"Best solution found has {GeneticAlgorithm.BestChromosome.Fitness} fitness.");
+        _terminated = true;
     }
 
-    //public SpawnRandomStealthLevel LevelSpawnerPrefab;
-    // Start is called before the first frame update
+    private void Ga_GenerationRan(object sender, EventArgs e)
+    {
+        Debug.Log($"{GeneticAlgorithm.GenerationsNumber} Generation Ran");
+        //Do not discard the last generation before termination
+        if (GeneticAlgorithm.GenerationsNumber != AimedGenerations)
+        {
+            targetRRTSuccessEvaluation.PrepareForNewGeneration();
+        }
+        //GeneticAlgorithm.Stop();
+    }
 }
