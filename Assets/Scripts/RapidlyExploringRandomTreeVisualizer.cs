@@ -61,7 +61,7 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
             {
                 Vector2Int startCell = (Vector2Int)this.VoxelizedLevel.Grid.WorldToCell(Path[i + 1]);
                 Vector2Int endCell = (Vector2Int)this.VoxelizedLevel.Grid.WorldToCell(Path[i]);
-                var listOfRCells = DiscretizeLevelToGrid.GetCellsInLine(startCell, endCell);
+                var listOfRCells = VoxelizedLevelBase.GetCellsInLine(startCell, endCell);
                 bool collided = VoxelizedLevel.CheckCellsColliding(listOfRCells.ToList(), Path[i + 1].z, Path[i].z);
                 if (collided)
                     Gizmos.color = Color.red;

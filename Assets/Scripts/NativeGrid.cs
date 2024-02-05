@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 /// <summary>
@@ -15,10 +16,16 @@ public class NativeGrid<T>
     public Grid Grid;
 
     //Extents of the grids in cell count
-    Vector3Int _gridMin;
-    Vector3Int _gridMax;
+    public Vector3Int _gridMin { get; set; }
+    public Vector3Int _gridMax { get; set; }
+
+    public Vector3 WorldMin => this.Grid.GetCellCenterWorld(_gridMin);
+    public Vector3 WorldMax => this.Grid.GetCellCenterWorld(_gridMin);
     public int GetRows() => _gridMax.y - _gridMin.y;
     public int GetCols() => _gridMax.x - _gridMin.x;
+
+    public Vector2Int GetNativeCoord(Vector2Int unityCoord)
+        => new Vector2Int(unityCoord.y - _gridMin.y, unityCoord.x - _gridMin.x);
 
     //From native to unity grid coordinates
     public Vector3Int GetUnityCoord(int row, int col) 
@@ -32,6 +39,10 @@ public class NativeGrid<T>
         _gridMin = Grid.WorldToCell(bounds.min);
         _gridMax = Grid.WorldToCell(bounds.max);
         _nativeGrid = new T[GetRows(), GetCols()];
+    }
+    public NativeGrid(NativeGrid<T> other)
+    {
+        DeepCopy(other);
     }
     public void SetAll(Func<int,int,NativeGrid<T>,T> func) 
     {
@@ -57,6 +68,15 @@ public class NativeGrid<T>
     public T Set(int row, int col,T value)=> _nativeGrid[row,col] = value;
     public bool IsInGrid(int row, int col) => row >= 0 && col >= 0 
         && row < _nativeGrid.GetLength(0) && col < _nativeGrid.GetLength(1);
+
+    public void DeepCopy(NativeGrid<T> other) 
+    {
+        this.Grid= other.Grid;
+        this._gridMin = other._gridMin;
+        this._gridMax = other._gridMax;
+        //Perform deep copy of the other native grid
+        this._nativeGrid = Copy(other._nativeGrid);
+    }
     
     public static T[,] Copy<T>(T[,] array)
     {

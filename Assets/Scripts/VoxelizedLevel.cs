@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -14,7 +15,9 @@ public class VoxelizedLevel : VoxelizedLevelBase
     //    [HideInInspector]  public List<PatrolPath> PatrolPaths;
     public List<DynamicObstacleDiscretizer> Discrtizers;
 
-    private bool[,] _staticObstacleGrid;
+    //private bool[,] _staticObstacleGrid;
+    private NativeGrid<bool> _staticObstacleGrid;
+
     public bool DebugDraw;
 
     // Start is called before the first frame update
@@ -24,47 +27,39 @@ public class VoxelizedLevel : VoxelizedLevelBase
         return level.GetComponentsInChildren<DynamicObstacleDiscretizer>().ToList();
     }
 
+    public Bounds GetLevelBounds()
+    {
+        var _boundary = Physics2D.OverlapPoint(this.transform.position, BoundaryLayerMask);
+        if (_boundary != null)
+        {
+            return _boundary.gameObject.GetComponent<Collider2D>().bounds;
+        }
+        throw new NotImplementedException();
+    }
+
     public override void Init()
     {
         this.Grid = GetComponent<Grid>();
-        _boundary = Physics2D.OverlapPoint(this.transform.position, BoundaryLayerMask);
-        if (_boundary != null)
+
+        _staticObstacleGrid = new NativeGrid<bool>(this.Grid, GetLevelBounds());
+        _staticObstacleGrid.SetAll((row, col, ngrid) =>
         {
-            Bounds levelBounds = _boundary.GetComponent<Collider2D>().bounds;
-            _gridMin = Grid.WorldToCell(levelBounds.min);
-            _gridMax = Grid.WorldToCell(levelBounds.max);
-        }
-        FutureGrids = new List<bool[,]>();
+            if (IsStaticObstacleAtPosition(ngrid.GetWorldPosition(row, col)))
+                return true;
+            return false;
+        });
+
+        FutureGrids = new List<NativeGrid<bool>>();
         Discrtizers = GetDiscretizersInLevel();
-        _staticObstacleGrid = GetStaticObstacleLevel();
+        //_staticObstacleGrid = GetStaticObstacleLevel();
+        //Initialize intial grid from all static colliders. Assmed to be obstacles
+
         for (int i = 0; i < Iterations; i++)
         {
             var grid = GenerateFutureGrid(i * Step);
             FutureGrids.Add(grid);
         }
     }
-
-    public bool[,] GetStaticObstacleLevel()
-    {
-        var futureGrid = new bool[GetRows(), GetCols()];
-        for (int row = 0; row < GetRows(); row++)
-        {
-            for (int col = 0; col < GetCols(); col++)
-            {
-                Vector3 worldPosition = Grid.GetCellCenterWorld(GetVectorFromInternaclCoordinates(row, col));
-                if (IsStaticObstacleAtPosition(worldPosition))
-                {
-                    futureGrid[row, col] = true;
-                }
-            }
-        }
-        return futureGrid;
-    }
-
-    // given x -5 to 5 if inclusive, count is (5 + 5) +1
-    public int GetRows() => _gridMax.y - _gridMin.y + 1;
-
-    public int GetCols() => _gridMax.x - _gridMin.x + 1;
 
     public static T[,] Copy<T>(T[,] array)
     {
@@ -83,38 +78,29 @@ public class VoxelizedLevel : VoxelizedLevelBase
         return copy;
     }
 
-    public override bool[,] GenerateFutureGrid(float future)
+    public override NativeGrid<bool> GenerateFutureGrid(float future)
     {
-        bool[,] futureGrid = Copy(_staticObstacleGrid);
+        NativeGrid<bool> futureGrid = new NativeGrid<bool>(_staticObstacleGrid);
         List<Vector2Int> DynamicObstacle = new List<Vector2Int>();
         //Calculate enemny future position
         foreach (var discretizer in Discrtizers)
         {
             var possiblyAffectedCells = discretizer.GetPossibleAffectedCells(this.Grid, future)
-                .Where(x => IsInBounds(x))
+                //.Where(intCoord => futureGrid.IsInGrid(intCoord.y,intCoord.x))
                 .Where(x => discretizer.IsObstacle(Grid.GetCellCenterWorld(x), future))
                 .Select(x => (Vector2Int)x);
 
             DynamicObstacle.AddRange(possiblyAffectedCells);
         }
-        foreach (var obs in DynamicObstacle)
+
+        foreach (var obsIntCoord in DynamicObstacle)
         {
-            int row = obs.y - _gridMin.y;
-            int col = obs.x - _gridMin.x;
-            if (row < 0 || col < 0)
-            {
-                int a = 3;
-            }
-            if (row >= GetRows() || col >= GetCols())
-            {
-                int a = 3;
-            }
-            futureGrid[row, col] = true;
+            Vector2Int nativeCoord = futureGrid.GetNativeCoord(obsIntCoord);
+            if (futureGrid.IsInGrid(nativeCoord.x, nativeCoord.y))
+                futureGrid.Set(nativeCoord.x, nativeCoord.y, true);
         }
         return futureGrid;
     }
-
-    private Vector3Int GetVectorFromInternaclCoordinates(int row, int col) => new Vector3Int(col + _gridMin.x, row + _gridMin.y, 0);
 
     private bool IsStaticObstacleAtPosition(Vector3 worldPosition)
     {
@@ -156,23 +142,17 @@ public class VoxelizedLevel : VoxelizedLevelBase
 
     public void DebugDrawGridByIndex(int lookAtCurrent)
     {
-        int rows = _gridMax.y - _gridMin.y;
-        int cols = _gridMax.x - _gridMin.x;
-        for (int row = 0; row < rows; row++)
+        NativeGrid<bool> currentGrid = FutureGrids[lookAtCurrent];
+        currentGrid.ForEach((row, col) =>
         {
-            for (int col = 0; col < cols; col++)
+            if (currentGrid.Get(row, col) == true)
             {
-                if (FutureGrids[lookAtCurrent][row, col])
-                {
-                    Vector3Int cellPosition = new Vector3Int(col + _gridMin.x, row + _gridMin.y, 0);
-                    Vector3 worldPosition = Grid.GetCellCenterWorld(cellPosition);
-
-                    worldPosition.z = lookAtCurrent * Step;
-                    Vector3 cellsize = Grid.cellSize;
-                    cellsize.z = Step;
-                    Gizmos.DrawCube(worldPosition, Grid.cellSize);
-                }
+                Vector3 worldPosition = currentGrid.GetWorldPosition(row, col);
+                worldPosition.z = lookAtCurrent * Step;
+                Vector3 cellsize = Grid.cellSize;
+                cellsize.z = Step;
+                Gizmos.DrawCube(worldPosition, Grid.cellSize);
             }
-        }
+        });
     }
 }
