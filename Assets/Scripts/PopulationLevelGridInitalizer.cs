@@ -5,10 +5,7 @@ using GeneticSharp.Domain.Selections;
 using GeneticSharp.Domain.Terminations;
 using GeneticSharp.Domain;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using GeneticSharp.Domain.Chromosomes;
 
 public class PopulationLevelGridInitalizer : MonoBehaviour
 {

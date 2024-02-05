@@ -1,9 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 [RequireComponent(typeof(PatrolPath))]
-public class EnemyDiscretizer : DynamicObstacleDiscretizer
+public class EnemyDiscretizer : DynamicObstacleDiscretizer  
 {
     private PatrolPath _path;
 

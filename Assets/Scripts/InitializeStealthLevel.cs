@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Linq;
 
 //The purpose of the class is to setup all relevant classes/algorithms for initializing a single stealth
 //level
