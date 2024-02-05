@@ -13,13 +13,13 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
     public Grid Grid;
     public LayerMask ObstacleLayerMask;
     public LayerMask BoundaryLayerMask;
-    private Collider2D _boundary;
     public Graph<Vector2> RoadMap = new Graph<Vector2>();
+    public List<Tuple<Vector2, Vector2>> _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
 
+    private Collider2D _boundary;
     private Vector3Int _gridMax;
     private Vector3Int _gridMin;
     private Queue<Tuple<int, int>> BoundaryCells = new Queue<Tuple<int, int>>();
-    public List<Tuple<Vector2, Vector2>> _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
 
     public bool DoFloodFill = false;
 
@@ -252,6 +252,8 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
         }
         return cells;
     }
+
+    // Use the Assert class to test conditions
 
     public Tuple<int, int>[] GetNeighbours(int row, int col)
     {
