@@ -129,6 +129,40 @@ public class PatrolPath : MonoBehaviour
         Gizmos.color = Color.blue;
     }
 
+    public static Tuple<Vector2, Vector2> CalculateFuturePosition(List<Vector2> positions,float speed,float time)
+    {
+        if (positions == null) return new Tuple<Vector2, Vector2>(Vector2.zero, Vector2.zero);
+        if (positions.Count == 1) return new Tuple<Vector2, Vector2>(positions[0], Vector2.right);
+        // Calculate the character's future position based on time and
+        float distanceCovered = speed* time;
+        // Interpolate the character's position along the path
+        Vector3 newPosition = Vector3.zero;
+        Vector2 newDirection = Vector2.zero;
+        float distance = 0.0f;
+        int i = 0;
+        while (distance <= distanceCovered)
+        {
+            if (i >= positions.Count - 1)
+            {
+                positions.Reverse();
+                i = 0;
+            }
+            float segmentLength = Vector3.Distance(positions[i], positions[i + 1]);
+            if (distance + segmentLength >= distanceCovered)
+            {
+                float t = (distanceCovered - distance) / segmentLength;
+                newPosition = Vector3.Lerp(positions[i], positions[i + 1], t);
+                newDirection = (positions[i + 1] - positions[i]).normalized;
+                break;
+            }
+            distance += segmentLength;
+
+            i++;
+        }
+
+        newPosition.z = time;
+        return new Tuple<Vector2, Vector2>(newPosition, newDirection);
+    }
     public Tuple<Vector2, Vector2> CalculateFuturePosition(float time)
     {
         if (Positions == null) return new Tuple<Vector2, Vector2>(Vector2.zero, Vector2.zero);
