@@ -28,8 +28,9 @@ public class InitializeStealthLevel : MonoBehaviour
             var paths = PathGenerator.GeneratePaths(PatrolPaths.Length);
             for (int i = 0; i < PatrolPaths.Length; i++)
             {
-                PatrolPaths[i].Positions = paths[i];
-                PatrolPaths[i].SetInitialPositionToPath();
+                PatrolPaths[i].SetPatrolPath(paths[i]);
+                //                PatrolPaths[i].Positions = paths[i];
+                //                PatrolPaths[i].SetInitialPositionToPath();
             }
         }
         Debug.Log("Roamd and patrol paths initialized");

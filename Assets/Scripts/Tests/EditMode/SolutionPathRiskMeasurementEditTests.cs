@@ -71,8 +71,7 @@ public class SolutionPathRiskMeasurementEditTests
             new Vector3(2,0,2)
         };
         var standingPatrolPaths = new PatrolPath();
-
-        standingPatrolPaths.Positions = new List<Vector2>() { new Vector2(3, 0) };
+        standingPatrolPaths.transform.position = new Vector3(3, 0, 0);
         float actual = MeasureRisk(
             solutionPath, new List<PatrolPath>());
         Assert.AreEqual(2, actual, 0.001f);

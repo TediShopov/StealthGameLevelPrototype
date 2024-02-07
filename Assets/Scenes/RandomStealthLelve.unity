@@ -407,7 +407,7 @@ MonoBehaviour:
   - {fileID: 6228754912093341014, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
   - {fileID: 6228754912093341014, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
   MinEnemiesSpawned: 1
-  MaxEnemiesSpawned: 3
+  MaxEnemiesSpawned: 1
   ObstaclesSpawned: 5
   MinObjectScale: 0.2
   MaxObjectScale: 5
@@ -1003,7 +1003,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1556110797
 MonoBehaviour:
   m_ObjectHideFlags: 0

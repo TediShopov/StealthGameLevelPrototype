@@ -1,202 +1,259 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Xml.XPath;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UIElements;
+
+public class BacktrackPatrolPath
+{
+    //Operates as an index, but is continous
+    //E.g 1.6f would represent 60% of segments from element 1 to elements 2
+    private float relPathPostion = 0;
+
+    public bool traverseForward = true;
+    public List<Vector2> Path;
+
+    public BacktrackPatrolPath(List<Vector2> path, float startPos = 0)
+    {
+        if (path == null) throw new ArgumentNullException("Path cannot be null");
+        if (path.Count <= 1) throw new ArgumentException("Pats need to be defined by at least 2 points");
+        Path = path;
+        relPathPostion = startPos;
+    }
+
+    public BacktrackPatrolPath(BacktrackPatrolPath other)
+    {
+        this.Copy(other);
+    }
+
+    public void Copy(BacktrackPatrolPath other)
+    {
+        this.relPathPostion = other.relPathPostion;
+        this.traverseForward = other.traverseForward;
+        this.Path = new List<Vector2>(other.Path);
+    }
+
+    public int GetNextIndex(int current)
+    {
+        int next = traverseForward ? current + 1 : current - 1;
+        if (next >= Path.Count || next < 0)
+        {
+            next = traverseForward ? current - 1 : current + 1;
+        }
+        return next;
+    }
+
+    private int GetIndex(float rel)
+    {
+        return traverseForward ? Mathf.FloorToInt(rel) : Mathf.CeilToInt(rel);
+    }
+
+    private Tuple<int, int> GetSegmentIndices(float rel)
+    {
+        int from = -1;
+        int to = -1;
+        if (rel < 0 || rel >= Path.Count)
+        {
+            return null;
+        }
+
+        var tempTraverse = traverseForward;
+        if (rel % 1 == 0)
+        {
+            from = GetIndex(rel);
+            to = GetNextIndex(from);
+        }
+        else
+        {
+            from = traverseForward ? Mathf.FloorToInt(rel) : Mathf.CeilToInt(rel);
+            to = traverseForward ? Mathf.CeilToInt(rel) : Mathf.FloorToInt(rel);
+        }
+        traverseForward = tempTraverse;
+        return new Tuple<int, int>(from, to);
+    }
+
+    public Tuple<Vector2, Vector2> GetSegment(float rel)
+    {
+        Tuple<int, int> indices = GetSegmentIndices(rel);
+        if (indices != null)
+            return new Tuple<Vector2, Vector2>(Path[indices.Item1], Path[indices.Item2]);
+        else
+            return null;
+    }
+
+    public Tuple<Vector2, Vector2> GetSegment()
+    {
+        Tuple<int, int> indices = GetSegmentIndices(relPathPostion);
+        if (indices != null)
+            return new Tuple<Vector2, Vector2>(Path[indices.Item1], Path[indices.Item2]);
+        else
+            return null;
+    }
+
+    public float GetSegmentLength(float rel)
+    {
+        var seg = GetSegment(rel);
+        return Vector2.Distance(seg.Item1, seg.Item2);
+    }
+
+    public Vector2 GetCurrent()
+    {
+        Tuple<Vector2, Vector2> segment = GetSegment(relPathPostion);
+        // 0--0.2---0.8--1
+        // forward lerp(0,1,0.2)
+        //backward lerp(1,0,0.2) --> (0,1,0.2)
+        //backward lerp(1,0,1) --> (0,1,1)
+        float segmentCompletion = Math.Abs(relPathPostion - GetIndex(relPathPostion));
+
+        //        if (traverseForward == false)
+        //            return Vector2.Lerp(segment.Item2, segment.Item1, segmentCompletion);
+
+        return Vector2.Lerp(segment.Item1, segment.Item2, segmentCompletion);
+    }
+
+    public void MoveAlong(float displacement)
+    {
+        if (displacement < 0.0f)
+        {
+            return;
+        }
+
+        Tuple<int, int> currentSegment = GetSegmentIndices(relPathPostion);
+        float distanceToSegmentEnd = Vector2.Distance(GetCurrent(), Path[currentSegment.Item2]);
+        while (displacement >= distanceToSegmentEnd)
+        {
+            //Travel to the end of the segment
+            displacement -= distanceToSegmentEnd;
+            relPathPostion = currentSegment.Item2;
+            if (currentSegment.Item2 >= Path.Count - 1 || currentSegment.Item2 <= 0)
+                traverseForward = !traverseForward;
+            //Update current segment and distance to segmente end
+            currentSegment = GetSegmentIndices(relPathPostion);
+            distanceToSegmentEnd = Vector2.Distance(GetCurrent(), Path[currentSegment.Item2]);
+        }
+        float f = displacement / Vector2.Distance(Path[currentSegment.Item1], Path[currentSegment.Item2]);
+        relPathPostion += traverseForward ? f : -f;
+    }
+}
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PatrolPath : MonoBehaviour
 {
     public DefaultEnemyProperties EnemyProperties;
     public List<Transform> Transforms = new List<Transform>();
+    public BacktrackPatrolPath BacktrackPatrolPath;
     public bool Randomized = true;
-    [SerializeField] public List<Vector2> Positions = new List<Vector2>();
-    [HideInInspector] public List<Vector2> InitialPositions = new List<Vector2>();
     [HideInInspector] public Vector2 Velocity;
-    private int _wayPointIndex;
-    private Graph<Vector2> RoadmapGraph;
-    public Vector2 NextWP => Positions.ElementAtOrDefault(_wayPointIndex + 1);
-    public Vector2 CurrentWP => Positions.ElementAtOrDefault(_wayPointIndex);
     public FieldOfView FieldOfView;
     private Rigidbody2D _rigidBody2D;
-    private Vector2 CurrentPosition => new Vector2(this.transform.position.x, this.transform.position.y);
 
     // Start is called before the first frame update
     private void Start()
     {
         _rigidBody2D = this.GetComponent<Rigidbody2D>();
-        if (Positions.Count > 0 && _rigidBody2D != null)
-        {
-            _rigidBody2D.position = Positions.First();
-        }
-        else
-        {
-            Positions = new List<Vector2>() { this.gameObject.transform.position };
-        }
-        //        Positions = Transforms.Select(t => new Vector2(t.position.x, t.position.y)).ToList();
+        if (BacktrackPatrolPath == null)
+            if (Transforms.Count > 2)
+                SetPatrolPath(Transforms.Select(x => (Vector2)x.position).ToList());
     }
 
-    // Update is called once per frame
-    private void Update()
+    public void SetPatrolPath(List<Vector2> points)
     {
+        BacktrackPatrolPath = new BacktrackPatrolPath(points, 0);
     }
 
-    public void SetInitialPositionToPath()
-    {
-        InitialPositions = new List<Vector2>(Positions);
-        if (Positions.Count > 0 && _rigidBody2D != null)
-        {
-            _rigidBody2D.position = Positions.First();
-        }
-    }
+    //    public void SetInitialPositionToPath()
+    //    {
+    //        InitialPositions = new List<Vector2>(Positions);
+    //        if (Positions.Count > 0 && _rigidBody2D != null)
+    //        {
+    //            _rigidBody2D.position = Positions.First();
+    //        }
+    //    }
 
-    public Vector2 SeekNextWaypoint()
-    {
-        if (Positions.Count == 1) return Vector2.zero;
-        return (NextWP - CurrentPosition).normalized;
-    }
-
-    public bool ReachedNextWayPoint()
-    {
-        if (NextWP != null)
-            return Vector3.Distance(NextWP, CurrentPosition) < EnemyProperties.ReachRadius;
-        else
-            return false;
-    }
+    //    public Vector2 SeekNextWaypoint()
+    //    {
+    //        if (Positions.Count == 1) return Vector2.zero;
+    //        return (NextWP - CurrentPosition).normalized;
+    //    }
+    //
+    //    public bool ReachedNextWayPoint()
+    //    {
+    //        if (NextWP != null)
+    //            return Vector3.Distance(NextWP, CurrentPosition) < EnemyProperties.ReachRadius;
+    //        else
+    //            return false;
+    //    }
 
     private void FixedUpdate()
     {
-        if (ReachedNextWayPoint())
-        {
-            _wayPointIndex++;
-            if (_wayPointIndex + 1 >= Positions.Count)
-            {
-                Positions.Reverse();
-                _wayPointIndex = 0;
-            }
-        }
-        //Store user input as a movement vector
-        Velocity = SeekNextWaypoint();
-        LookAtPosition(Velocity);
+        float travelDistance = EnemyProperties.Speed * Time.fixedDeltaTime;
+        BacktrackPatrolPath.MoveAlong(travelDistance);
+        _rigidBody2D.position = BacktrackPatrolPath.GetCurrent();
+        var segment = BacktrackPatrolPath.GetSegment();
+        var direction = (segment.Item2 - segment.Item1).normalized;
+        LookAtPosition(direction);
 
-        if (!Helpers.CompareVectors(Velocity, new Vector3(0, 0, 0), 0.01f))
-        {
-            _rigidBody2D.MovePosition(_rigidBody2D.position + Velocity * EnemyProperties.Speed * Time.fixedDeltaTime);
-        }
-        else
-        {
-            Velocity = Vector3.zero;
-        }
+        //        if (ReachedNextWayPoint())
+        //        {
+        //            _wayPointIndex++;
+        //            if (_wayPointIndex + 1 >= Positions.Count)
+        //            {
+        //                Positions.Reverse();
+        //                _wayPointIndex = 0;
+        //            }
+        //        }
+        //        //Store user input as a movement vector
+        //        Velocity = SeekNextWaypoint();
+        //        LookAtPosition(Velocity);
+
+        //        if (!Helpers.CompareVectors(Velocity, new Vector3(0, 0, 0), 0.01f))
+        //        {
+        //            _rigidBody2D.MovePosition(_rigidBody2D.position + Velocity * EnemyProperties.Speed * Time.fixedDeltaTime);
+        //        }
+        //        else
+        //        {
+        //            Velocity = Vector3.zero;
+        //        }
     }
 
     public void LookAtPosition(Vector3 lookAt)
     {
         // the second argument, upwards, defaults to Vector3.up
-        if (Positions.Count == 1) return;
+        //if (Positions.Count == 1) return;
         Quaternion rotation = Quaternion.Euler(0, 0, Helpers.GetAngleFromVectorFloat(lookAt));
         transform.rotation = rotation;
+    }
+
+    public void DrawAllSegmentes()
+    {
+        if (BacktrackPatrolPath == null) return;
+        for (int i = 0; i <= BacktrackPatrolPath.Path.Count - 1; i++)
+        {
+            var seg = BacktrackPatrolPath.GetSegment(i);
+            Gizmos.DrawLine(seg.Item1, seg.Item2);
+        }
     }
 
     public void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        for (int i = 0; i < Positions.Count - 1; i++)
-        {
-            Vector2 t = Positions[i];
-            if (t.Equals(CurrentWP))
-                Gizmos.color = Color.blue;
-            else if (t.Equals(NextWP))
-                Gizmos.color = Color.red;
-            else
-                Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(t, EnemyProperties.DebugRadius);
-            //Draw path
-            Vector2 t1 = Positions[i + 1];
-            {
-            }
-
-            Gizmos.DrawLine(t1, t);
-        }
-        foreach (Vector2 t in Positions)
-        {
-            if (t.Equals(CurrentWP))
-                Gizmos.color = Color.blue;
-            else if (t.Equals(NextWP))
-                Gizmos.color = Color.red;
-            else
-                Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(t, EnemyProperties.DebugRadius);
-        }
-        Gizmos.color = Color.blue;
+        DrawAllSegmentes();
     }
 
-    public static Tuple<Vector2, Vector2> CalculateFuturePosition(List<Vector2> positions,float speed,float time)
-    {
-        if (positions == null) return new Tuple<Vector2, Vector2>(Vector2.zero, Vector2.zero);
-        if (positions.Count == 1) return new Tuple<Vector2, Vector2>(positions[0], Vector2.right);
-        // Calculate the character's future position based on time and
-        float distanceCovered = speed* time;
-        // Interpolate the character's position along the path
-        Vector3 newPosition = Vector3.zero;
-        Vector2 newDirection = Vector2.zero;
-        float distance = 0.0f;
-        int i = 0;
-        while (distance <= distanceCovered)
-        {
-            if (i >= positions.Count - 1)
-            {
-                positions.Reverse();
-                i = 0;
-            }
-            float segmentLength = Vector3.Distance(positions[i], positions[i + 1]);
-            if (distance + segmentLength >= distanceCovered)
-            {
-                float t = (distanceCovered - distance) / segmentLength;
-                newPosition = Vector3.Lerp(positions[i], positions[i + 1], t);
-                newDirection = (positions[i + 1] - positions[i]).normalized;
-                break;
-            }
-            distance += segmentLength;
-
-            i++;
-        }
-
-        newPosition.z = time;
-        return new Tuple<Vector2, Vector2>(newPosition, newDirection);
-    }
     public Tuple<Vector2, Vector2> CalculateFuturePosition(float time)
     {
-        if (Positions == null) return new Tuple<Vector2, Vector2>(Vector2.zero, Vector2.zero);
-        if (Positions.Count == 1) return new Tuple<Vector2, Vector2>(Positions[0], this.gameObject.transform.right);
-        // Calculate the character's future position based on time and
+        if (BacktrackPatrolPath == null) return new Tuple<Vector2, Vector2>(Vector2.zero, Vector2.zero);
         float distanceCovered = EnemyProperties.Speed * time;
+        BacktrackPatrolPath pathCopy = new BacktrackPatrolPath(BacktrackPatrolPath);
+        pathCopy.MoveAlong(distanceCovered);
 
         // Interpolate the character's position along the path
-        Vector3 newPosition = Vector3.zero;
-        Vector2 newDirection = Vector2.zero;
-        float distance = 0.0f;
-        var waypoints = new List<Vector2>(InitialPositions);
-        int i = 0;
-        while (distance <= distanceCovered)
-        {
-            if (i >= waypoints.Count - 1)
-            {
-                waypoints.Reverse();
-                i = 0;
-            }
-            float segmentLength = Vector3.Distance(waypoints[i], waypoints[i + 1]);
-            if (distance + segmentLength >= distanceCovered)
-            {
-                float t = (distanceCovered - distance) / segmentLength;
-                newPosition = Vector3.Lerp(waypoints[i], waypoints[i + 1], t);
-                newDirection = (waypoints[i + 1] - waypoints[i]).normalized;
-                break;
-            }
-            distance += segmentLength;
-
-            i++;
-        }
-
-        newPosition.z = time;
+        Vector3 newPosition = pathCopy.GetCurrent();
+        var seg = pathCopy.GetSegment();
+        Vector2 newDirection = (seg.Item2 - seg.Item1).normalized;
         return new Tuple<Vector2, Vector2>(newPosition, newDirection);
     }
 }

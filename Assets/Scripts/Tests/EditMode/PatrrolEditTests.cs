@@ -8,110 +8,13 @@ using UnityEditor.TextCore.Text;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-public struct PatrolSegment 
+public struct PatrolSegment
 {
-    
 }
-public class BacktrackPatrolPath 
-{
-    //Operates as an index, but is continous
-    //E.g 1.6f would represent 60% of segments from element 1 to elements 2 
-    public float relPathPostion = 0;
-    public bool traverseForward = true;
-    public List<Vector2> Path;
-    public BacktrackPatrolPath(List<Vector2> path, float startPos =0)
-    {
-        if(path == null) throw new ArgumentNullException("Path cannot be null");
-        if(path.Count <=1 ) throw new ArgumentException("Pats need to be defined by at least 2 points");
-        Path= path;
-        relPathPostion = startPos;
-    }
 
-    public int GetNextIndex(int current) 
-    {
-        int next = traverseForward ? current + 1 : current - 1;
-        if(next>=Path.Count || next<0) 
-        {
-            traverseForward = !traverseForward;
-            return GetNextIndex(current);
-        }
-        return next;
-    } 
-    private Tuple<int, int> GetSegmentIndices(float rel)
-    {
-        int from = -1;
-        int to = -1;
-        if (rel <0 || rel>Path.Count)
-        {
-            return null;
-        }
-
-        var tempTraverse = traverseForward;
-        if (rel % 1 == 0) 
-        {
-            int index = traverseForward ?  Mathf.FloorToInt(rel) : Mathf.CeilToInt(rel);
-            from = index;
-            to = GetNextIndex(index);
-        }
-        else
-        {
-            from = traverseForward ? Mathf.FloorToInt(rel) : Mathf.CeilToInt(rel);
-            to = traverseForward ? Mathf.CeilToInt(rel) : Mathf.FloorToInt(rel);
-
-        }
-        traverseForward = tempTraverse;
-        return new Tuple<int, int>(from, to);
-    }
-    public Tuple<Vector2, Vector2> GetSegment(float rel)
-    {
-        Tuple<int, int> indices = GetSegmentIndices(rel);
-        if (indices != null)
-            return new Tuple<Vector2, Vector2>(Path[indices.Item1], Path[indices.Item2]);
-        else
-            return null;
-    }
-
-    public float GetSegmentLength(float rel) 
-    {
-       var seg = GetSegment(rel);
-        return Vector2.Distance(seg.Item1, seg.Item2);
-    }
-    public Vector2 GetCurrent()
-    {
-        Tuple<Vector2,Vector2> segment= GetSegment(relPathPostion);
-        float segmentCompletion = relPathPostion % 1f;
-        return Vector2.Lerp(segment.Item1, segment.Item2, segmentCompletion);
-    }
-    public void MoveAlong(float displacement) 
-    {
-        if (displacement<0.0f)
-        {
-            return;
-            
-        }
-
-        Tuple<int, int> currentSegment = GetSegmentIndices(relPathPostion);
-        float distanceToSegmentEnd = Vector2.Distance(GetCurrent(), Path[currentSegment.Item2]);
-        while (displacement >= distanceToSegmentEnd)
-        {
-            //Travel to the end of the segment
-            displacement -= distanceToSegmentEnd;
-            relPathPostion = currentSegment.Item2;
-            if (currentSegment.Item2 >= Path.Count-1 || currentSegment.Item2 <= 0)
-                traverseForward = !traverseForward;
-            //Update current segment and distance to segmente end
-            currentSegment = GetSegmentIndices(relPathPostion);
-            distanceToSegmentEnd = Vector2.Distance(GetCurrent(), Path[currentSegment.Item2]);
-        }
-        float f = displacement / Vector2.Distance(Path[currentSegment.Item1], Path[currentSegment.Item2]);
-        relPathPostion += f;
-    }
-    
-
-}
 public class PatrrolEditTests
 {
-    //Indexing test 
+    //Indexing test
     [Test]
     public void PatrolPathGetSemgent_CannotChangeDirectionOfPatrol()
     {
@@ -123,17 +26,15 @@ public class PatrrolEditTests
                 new Vector2(2,0),
                 new Vector2(3,0),
             };
-        
+
         BacktrackPatrolPath backtrackPatrolPath = new BacktrackPatrolPath(path);
         backtrackPatrolPath.traverseForward = false;
         Tuple<Vector2, Vector2> segmentOnForwrd = backtrackPatrolPath.GetSegment(0);
         Assert.AreEqual(segmentOnForwrd.Item1, path[0]);
         Assert.AreEqual(segmentOnForwrd.Item2, path[1]);
         Assert.AreEqual(backtrackPatrolPath.traverseForward, false);
-
-        
-
     }
+
     [Test]
     public void PatrolPathGetSemgent_Correct()
     {
@@ -145,18 +46,15 @@ public class PatrrolEditTests
                 new Vector2(2,0),
                 new Vector2(3,0),
             };
-        
+
         BacktrackPatrolPath backtrackPatrolPath = new BacktrackPatrolPath(path);
         Tuple<Vector2, Vector2> segmentOnForwrd = backtrackPatrolPath.GetSegment(0);
         Assert.AreEqual(segmentOnForwrd.Item1, path[0]);
         Assert.AreEqual(segmentOnForwrd.Item2, path[1]);
-        
 
         Tuple<Vector2, Vector2> segmentOnForwrdDifferentIndex = backtrackPatrolPath.GetSegment(1);
         Assert.AreEqual(segmentOnForwrdDifferentIndex.Item1, path[1]);
         Assert.AreEqual(segmentOnForwrdDifferentIndex.Item2, path[2]);
-
-
 
         backtrackPatrolPath.traverseForward = false;
         Tuple<Vector2, Vector2> segmentOnBackwards = backtrackPatrolPath.GetSegment(1);
@@ -164,19 +62,23 @@ public class PatrrolEditTests
         Assert.AreEqual(segmentOnBackwards.Item2, path[0]);
         // Use the Assert class to test conditions
     }
+
     // A Test behaves as an ordinary method
     [Test]
     public void PatrolPathLessThanNeccesaryPoints_ThrowsExceptions()
     {
         Assert.Throws<ArgumentException>(
-            delegate {
+            delegate
+            {
                 new BacktrackPatrolPath(new List<Vector2>());
             });
         Assert.Throws<ArgumentException>(
-            delegate {
-                new BacktrackPatrolPath(new List<Vector2>() { new Vector2(0,0)});
+            delegate
+            {
+                new BacktrackPatrolPath(new List<Vector2>() { new Vector2(0, 0) });
             });
     }
+
     [Test]
     public void PatrolPathRegular_ReturnsCorrectNextPosition()
     {
@@ -189,13 +91,14 @@ public class PatrrolEditTests
                 new Vector2(2,0),
                 new Vector2(3,0),
             };
-        
+
         BacktrackPatrolPath backtrackPatrolPath = new BacktrackPatrolPath(path);
         backtrackPatrolPath.MoveAlong(1f);
         Assert.AreEqual(path[1], backtrackPatrolPath.GetCurrent());
         backtrackPatrolPath.MoveAlong(2f);
         Assert.AreEqual(path[3], backtrackPatrolPath.GetCurrent());
     }
+
     [Test]
     public void BacktrackingPatrolPath_WrapsAroundAtEnd()
     {
@@ -208,7 +111,7 @@ public class PatrrolEditTests
                 new Vector2(2,0),
                 new Vector2(3,0),
             };
-        
+
         BacktrackPatrolPath backtrackPatrolPath = new BacktrackPatrolPath(path);
         backtrackPatrolPath.MoveAlong(4f);
         Assert.AreEqual(backtrackPatrolPath.GetCurrent(), path[2]);
@@ -216,17 +119,101 @@ public class PatrrolEditTests
         Assert.AreEqual(backtrackPatrolPath.GetCurrent(), path[2]);
         backtrackPatrolPath.MoveAlong(4f);
         Assert.AreEqual(backtrackPatrolPath.GetCurrent(), path[0]);
+    }
 
-        // Segment A -0- B -1- C -2- D 
-        //Given path [0,1,2,3]
-        //Moving 3 indices then moving 1 should return elements 2
+    [Test]
+    public void BacktrackingUnevenPatrolPath_WrapsAroundAtEnd()
+    {
+        // Use the Assert class to test conditions
+        var path =
+            new List<Vector2>()
+            {
+                new Vector2(0,0),
+                new Vector2(12f,0),
+                new Vector2(15.5213f,0),
+                new Vector2(17.0f,0),
+            };
 
-        //Given path [0,1,2] current on 1 reversed true 
-        //Move along 2 return 1 Move along 2 return 1 againg
+        BacktrackPatrolPath backtrackPatrolPath = new BacktrackPatrolPath(path);
+        backtrackPatrolPath.MoveAlong(17f);
+        Assert.AreEqual(backtrackPatrolPath.GetCurrent(), path[3]);
+        backtrackPatrolPath.MoveAlong(17f);
+        Assert.AreEqual(backtrackPatrolPath.GetCurrent(), path[0]);
+        backtrackPatrolPath.MoveAlong(17f);
+        Assert.AreEqual(backtrackPatrolPath.GetCurrent(), path[3]);
+        backtrackPatrolPath.MoveAlong(17f);
+        backtrackPatrolPath.MoveAlong(17f);
+        Assert.AreEqual(backtrackPatrolPath.GetCurrent(), path[3]);
+        backtrackPatrolPath.MoveAlong(0.1f);
+        Assert.IsFalse(backtrackPatrolPath.traverseForward);
+    }
 
+    [Test]
+    public void BacktrackingManySmallAdditions_IsCorrect()
+    {
+        // Use the Assert class to test conditions
+        var path =
+            new List<Vector2>()
+            {
+                new Vector2(0,0),
+                new Vector2(12f,0),
+                new Vector2(15.5213f,0),
+                new Vector2(17.0f,0),
+            };
 
-        //Double Wrap
-        //Given path [0,1,2,3]
-        //Moving 8 indices then moving 1 should return elements 2
+        BacktrackPatrolPath backtrackPatrolPath = new BacktrackPatrolPath(path);
+        int iter = 0;
+        try
+        {
+            for (int i = 0; i < 200; i++)
+            {
+                iter = i;
+                backtrackPatrolPath.MoveAlong(0.1f);
+            }
+        }
+        catch (Exception)
+        {
+            Debug.Log($"Arguement out of range at {iter}");
+            throw;
+        }
+    }
+
+    [Test]
+    public void IndexingTes()
+    {
+        var path =
+            new List<Vector2>()
+            {
+                new Vector2(0,0),
+                new Vector2(1,0),
+            };
+
+        BacktrackPatrolPath backtrackPatrolPathInteger = new BacktrackPatrolPath(path, 1);
+        Assert.AreEqual(new Vector2(1.0f, 0), backtrackPatrolPathInteger.GetCurrent());
+        backtrackPatrolPathInteger.traverseForward = false;
+        Assert.AreEqual(new Vector2(1.0f, 0), backtrackPatrolPathInteger.GetCurrent());
+
+        BacktrackPatrolPath backtrackPatrolPath = new BacktrackPatrolPath(path, 0.8f);
+        Assert.AreEqual(new Vector2(0.8f, 0), backtrackPatrolPath.GetCurrent());
+        backtrackPatrolPath.traverseForward = false;
+        Assert.AreEqual(new Vector2(0.8f, 0), backtrackPatrolPath.GetCurrent());
+    }
+
+    [Test]
+    public void BacktrackingReverseFraction()
+    {
+        var path =
+            new List<Vector2>()
+            {
+                new Vector2(0,0),
+                new Vector2(1,0),
+            };
+
+        BacktrackPatrolPath backtrackPatrolPath = new BacktrackPatrolPath(path);
+        backtrackPatrolPath.MoveAlong(1.0f);
+        Assert.AreEqual(new Vector2(1.0f, 0), backtrackPatrolPath.GetCurrent());
+        Assert.IsFalse(backtrackPatrolPath.traverseForward);
+        backtrackPatrolPath.MoveAlong(0.2f);
+        Assert.AreEqual(new Vector2(0.8f, 0), backtrackPatrolPath.GetCurrent());
     }
 }
