@@ -162,7 +162,7 @@ public class PatrolPath : MonoBehaviour, IFutureTransform
     private Rigidbody2D _rigidBody2D;
 
     // Start is called before the first frame update
-    private void Start()
+    private void Awake()
     {
         _rigidBody2D = this.GetComponent<Rigidbody2D>();
         if (BacktrackPatrolPath == null)
@@ -208,10 +208,9 @@ public class PatrolPath : MonoBehaviour, IFutureTransform
         DrawAllSegmentes();
     }
 
-
-    //Given a patrol path return the position and the direction facing the direction 
+    //Given a patrol path return the position and the direction facing the direction
     // of the current traversed segment
-    public static FutureTransform GetPathOrientedTransform(BacktrackPatrolPath path) 
+    public static FutureTransform GetPathOrientedTransform(BacktrackPatrolPath path)
     {
         FutureTransform futureTransform = new FutureTransform();
         futureTransform.Position = path.GetCurrent();
@@ -231,7 +230,7 @@ public class PatrolPath : MonoBehaviour, IFutureTransform
         if (BacktrackPatrolPath == null)
             return new FutureTransform()
             {
-                Position = _rigidBody2D.transform.position,
+                Position = this.transform.position,
                 Direction = this.transform.forward
             };
         float distanceCovered = EnemyProperties.Speed * time;
