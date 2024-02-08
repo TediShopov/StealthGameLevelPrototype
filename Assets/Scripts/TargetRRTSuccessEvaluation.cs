@@ -52,6 +52,11 @@ public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
 
     public double Evaluate(IChromosome chromosome)
     {
+        return EvaluateDifficultyMeasureOfSuccesful(chromosome);
+    }
+
+    private double EvaluateRRTSuccesRate(IChromosome chromosome)
+    {
         var generator = GetCurrentGenerator();
         currentIndex++;
         if (generator == null) return 0;
@@ -62,6 +67,39 @@ public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
         Debug.Log($"Evaluated at {successRate}");
         //Generator.Dispose();
         return successRate;
+    }
+    private double EvaluateDifficultyMeasureOfSuccesful(IChromosome chromosome)
+    {
+        var generator = GetCurrentGenerator();
+        currentIndex++;
+        if (generator == null) return 0;
+        generator.Generate((LevelChromosome)chromosome);
+        var RRTVisualizers = generator.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
+        var enemyPatrolPaths = generator.GetComponentsInChildren<PatrolPath>();
+        var voxelizedLevel = generator.GetComponentInChildren<VoxelizedLevel>();
+        var minRiskFromPaths = float.MaxValue;
+        foreach ( var x in RRTVisualizers ) 
+        {
+            if (x.RRT.Succeeded()) 
+            {
+                var solutionPath =
+                    new SolutionPath(x.RRT.ReconstructPathToSolution());
+                var riskMeasure = new FieldOfViewRiskMeasure(
+                    solutionPath,
+                    enemyPatrolPaths.ToList(),
+                    enemyPatrolPaths[0].EnemyProperties,
+                    LayerMask.GetMask("Obstacles"));
+
+                float overallRisk = riskMeasure.OverallRisk(voxelizedLevel.Step);
+                if(overallRisk < minRiskFromPaths)
+                    minRiskFromPaths = overallRisk;
+            }
+        }
+        if (minRiskFromPaths == float.MaxValue)
+            minRiskFromPaths = 0;
+        Debug.Log($"Minimum overall risk is:  {minRiskFromPaths}");
+        //Generator.Dispose();
+        return minRiskFromPaths;
     }
 
     public void PrepareForNewGeneration()

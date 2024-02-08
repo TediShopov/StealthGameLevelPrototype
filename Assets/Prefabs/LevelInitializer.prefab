@@ -75,7 +75,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Grid: {fileID: 0}
   Step: 0.15
-  Iterations: 50
+  Iterations: 100
   ObstacleLayerMask:
     serializedVersion: 2
     m_Bits: 64

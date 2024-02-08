@@ -165,9 +165,9 @@ public class PatrolPath : MonoBehaviour, IFutureTransform
     private void Awake()
     {
         _rigidBody2D = this.GetComponent<Rigidbody2D>();
-        if (BacktrackPatrolPath == null)
-            if (Transforms.Count > 2)
-                SetPatrolPath(Transforms.Select(x => (Vector2)x.position).ToList());
+//        if (BacktrackPatrolPath == null)
+//            if (Transforms.Count > 2)
+//                SetPatrolPath(Transforms.Select(x => (Vector2)x.position).ToList());
     }
 
     public void SetPatrolPath(List<Vector2> points)
