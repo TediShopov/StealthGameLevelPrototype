@@ -416,7 +416,7 @@ MonoBehaviour:
   VisualBoundWidth: 1
   RandomSeed: 1
   isRandom: 1
-  RunOnStart: 1
+  RunOnStart: 0
   DisposeNow: 0
 --- !u!4 &580530819
 Transform:
@@ -899,7 +899,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1430829061
 Transform:
   m_ObjectHideFlags: 0
@@ -946,7 +946,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1474898338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -959,13 +959,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a59df0218d90434e9622a53774d6147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rows: 2
-  Columns: 2
+  Rows: 3
+  Columns: 3
   Seed: 0
   RandomizeSeed: 1
   targetRRTSuccessEvaluation: {fileID: 1430829062}
   LevelSize: {x: 20, y: 20}
-  AimedGenerations: 2
+  AimedGenerations: 5
 --- !u!4 &1474898339
 Transform:
   m_ObjectHideFlags: 0

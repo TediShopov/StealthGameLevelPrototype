@@ -139,8 +139,19 @@ public class BacktrackPatrolPath
     }
 }
 
+public struct FutureTransform
+{
+    public Vector2 Position;
+    public Vector2 Direction;
+}
+
+public interface IFutureTransform
+{
+    public FutureTransform GetFutureTransform(float time);
+}
+
 [RequireComponent(typeof(Rigidbody2D))]
-public class PatrolPath : MonoBehaviour
+public class PatrolPath : MonoBehaviour, IFutureTransform
 {
     public DefaultEnemyProperties EnemyProperties;
     public List<Transform> Transforms = new List<Transform>();
@@ -164,59 +175,13 @@ public class PatrolPath : MonoBehaviour
         BacktrackPatrolPath = new BacktrackPatrolPath(points, 0);
     }
 
-    //    public void SetInitialPositionToPath()
-    //    {
-    //        InitialPositions = new List<Vector2>(Positions);
-    //        if (Positions.Count > 0 && _rigidBody2D != null)
-    //        {
-    //            _rigidBody2D.position = Positions.First();
-    //        }
-    //    }
-
-    //    public Vector2 SeekNextWaypoint()
-    //    {
-    //        if (Positions.Count == 1) return Vector2.zero;
-    //        return (NextWP - CurrentPosition).normalized;
-    //    }
-    //
-    //    public bool ReachedNextWayPoint()
-    //    {
-    //        if (NextWP != null)
-    //            return Vector3.Distance(NextWP, CurrentPosition) < EnemyProperties.ReachRadius;
-    //        else
-    //            return false;
-    //    }
-
     private void FixedUpdate()
     {
         float travelDistance = EnemyProperties.Speed * Time.fixedDeltaTime;
         BacktrackPatrolPath.MoveAlong(travelDistance);
-        _rigidBody2D.position = BacktrackPatrolPath.GetCurrent();
-        var segment = BacktrackPatrolPath.GetSegment();
-        var direction = (segment.Item2 - segment.Item1).normalized;
-        LookAtPosition(direction);
-
-        //        if (ReachedNextWayPoint())
-        //        {
-        //            _wayPointIndex++;
-        //            if (_wayPointIndex + 1 >= Positions.Count)
-        //            {
-        //                Positions.Reverse();
-        //                _wayPointIndex = 0;
-        //            }
-        //        }
-        //        //Store user input as a movement vector
-        //        Velocity = SeekNextWaypoint();
-        //        LookAtPosition(Velocity);
-
-        //        if (!Helpers.CompareVectors(Velocity, new Vector3(0, 0, 0), 0.01f))
-        //        {
-        //            _rigidBody2D.MovePosition(_rigidBody2D.position + Velocity * EnemyProperties.Speed * Time.fixedDeltaTime);
-        //        }
-        //        else
-        //        {
-        //            Velocity = Vector3.zero;
-        //        }
+        FutureTransform futureTransform = GetPathOrientedTransform(BacktrackPatrolPath);
+        _rigidBody2D.position = futureTransform.Position;
+        LookAtPosition(futureTransform.Direction);
     }
 
     public void LookAtPosition(Vector3 lookAt)
@@ -243,17 +208,35 @@ public class PatrolPath : MonoBehaviour
         DrawAllSegmentes();
     }
 
+
+    //Given a patrol path return the position and the direction facing the direction 
+    // of the current traversed segment
+    public static FutureTransform GetPathOrientedTransform(BacktrackPatrolPath path) 
+    {
+        FutureTransform futureTransform = new FutureTransform();
+        futureTransform.Position = path.GetCurrent();
+        var seg = path.GetSegment();
+        futureTransform.Direction = (seg.Item2 - seg.Item1).normalized;
+        return futureTransform;
+    }
+
     public Tuple<Vector2, Vector2> CalculateFuturePosition(float time)
     {
-        if (BacktrackPatrolPath == null) return new Tuple<Vector2, Vector2>(Vector2.zero, Vector2.zero);
+        FutureTransform futureTransform = GetFutureTransform(time);
+        return new Tuple<Vector2, Vector2>(futureTransform.Position, futureTransform.Direction);
+    }
+
+    public FutureTransform GetFutureTransform(float time)
+    {
+        if (BacktrackPatrolPath == null)
+            return new FutureTransform()
+            {
+                Position = _rigidBody2D.transform.position,
+                Direction = this.transform.forward
+            };
         float distanceCovered = EnemyProperties.Speed * time;
         BacktrackPatrolPath pathCopy = new BacktrackPatrolPath(BacktrackPatrolPath);
         pathCopy.MoveAlong(distanceCovered);
-
-        // Interpolate the character's position along the path
-        Vector3 newPosition = pathCopy.GetCurrent();
-        var seg = pathCopy.GetSegment();
-        Vector2 newDirection = (seg.Item2 - seg.Item1).normalized;
-        return new Tuple<Vector2, Vector2>(newPosition, newDirection);
+        return GetPathOrientedTransform(pathCopy);
     }
 }
