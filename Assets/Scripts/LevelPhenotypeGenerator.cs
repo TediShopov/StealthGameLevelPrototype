@@ -36,7 +36,7 @@ public class LevelChromosome : ChromosomeBase
 
     public override Gene GenerateGene(int geneIndex)
     {
-        throw new System.NotImplementedException();
+        return new Gene(Helpers.GetRandomFloat(ChromosomeRandom, 0f, 1f));
     }
 }
 
@@ -112,6 +112,12 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         Obstacles.transform.SetParent(this.transform, false);
         PlaceBoundaryVisualPrefabs(box, Obstacles);
         geneIndex += 2;
+
+
+        box.size = new Vector2(
+            box.size.x - PlayerPrefab.GetComponent<Collider2D>().bounds.extents.x / 2.0f - VisualBoundWidth / 2.0f,
+            box.size.y - PlayerPrefab.GetComponent<Collider2D>().bounds.extents.y / 2.0f - VisualBoundWidth / 2.0f
+            );
 
         //Player
         var playerInstance = SpawnGameObject(ref geneIndex, box, PlayerPrefab);

@@ -20,7 +20,7 @@ public class NativeGrid<T>
     public Vector3Int _gridMax { get; set; }
 
     public Vector3 WorldMin => this.Grid.GetCellCenterWorld(_gridMin);
-    public Vector3 WorldMax => this.Grid.GetCellCenterWorld(_gridMin);
+    public Vector3 WorldMax => this.Grid.GetCellCenterWorld(_gridMax);
     public int GetRows() => _gridMax.y - _gridMin.y;
     public int GetCols() => _gridMax.x - _gridMin.x;
 

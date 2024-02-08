@@ -77,7 +77,8 @@ public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
         var RRTVisualizers = generator.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
         var enemyPatrolPaths = generator.GetComponentsInChildren<PatrolPath>();
         var voxelizedLevel = generator.GetComponentInChildren<VoxelizedLevel>();
-        var minRiskFromPaths = float.MaxValue;
+        float total = 0;
+        int succeeded = 0;
         foreach ( var x in RRTVisualizers ) 
         {
             if (x.RRT.Succeeded()) 
@@ -89,17 +90,15 @@ public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
                     enemyPatrolPaths.ToList(),
                     enemyPatrolPaths[0].EnemyProperties,
                     LayerMask.GetMask("Obstacles"));
-
                 float overallRisk = riskMeasure.OverallRisk(voxelizedLevel.Step);
-                if(overallRisk < minRiskFromPaths)
-                    minRiskFromPaths = overallRisk;
+                total += overallRisk;
+                succeeded++;
             }
         }
-        if (minRiskFromPaths == float.MaxValue)
-            minRiskFromPaths = 0;
-        Debug.Log($"Minimum overall risk is:  {minRiskFromPaths}");
+        float avg = total / (float)succeeded;
+        Debug.Log($"Minimum overall risk is:  {avg}");
         //Generator.Dispose();
-        return minRiskFromPaths;
+        return avg;
     }
 
     public void PrepareForNewGeneration()

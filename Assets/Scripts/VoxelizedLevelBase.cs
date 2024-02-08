@@ -1,5 +1,6 @@
 using Codice.Client.Common;
 using System.Collections.Generic;
+using System.IO.MemoryMappedFiles;
 using System.Linq;
 using UnityEngine;
 
@@ -44,9 +45,14 @@ public class VoxelizedLevelBase : MonoBehaviour
         {
             foreach (var cell in cells)
             {
-                if (map.IsInGrid(cell.y, cell.x) == false)
-                    return true;
-                if (map.Get(cell.y,cell.x))
+                var nativeCoord = map.GetNativeCoord(cell);
+//                if (map.IsInGrid(nativeCoord.y, nativeCoord.x) == false)
+//                    continue;
+//                if (map.Get(nativeCoord.y,nativeCoord.x))
+//                    return true;
+                if (map.IsInGrid(nativeCoord.x, nativeCoord.y) == false)
+                    continue;
+                if (map.Get(nativeCoord.x,nativeCoord.y))
                     return true;
             }
         }

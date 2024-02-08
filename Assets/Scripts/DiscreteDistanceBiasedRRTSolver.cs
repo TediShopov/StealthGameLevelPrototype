@@ -88,7 +88,7 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
     {
         this.VoxelizedLevel = discretizedLevel;
         _randomMin = discretizedLevel.FutureGrids[0].WorldMin;
-        //_randomMin.z =0 ;
+        _randomMin.z =0 ;
         //_randomMax = discretizedLevel.GetMaximumBound();
         _randomMax = discretizedLevel.FutureGrids[0].WorldMax;
         _randomMax.z = discretizedLevel.Iterations * discretizedLevel.Step;
@@ -182,6 +182,7 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
             path.Add(currentlyTraversedNode.Content);
             currentlyTraversedNode = currentlyTraversedNode.Parent;
         }
+        path.Reverse();
         return path;
     }
 

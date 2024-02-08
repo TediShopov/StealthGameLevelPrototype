@@ -25,15 +25,16 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
 
     public void Start()
     {
-        var selection = new TournamentSelection();
+        var selection = new TournamentSelection(3, true);
         var crossover = new TwoPointCrossover();
-        var mutation = new ReverseSequenceMutation();
+        var mutation = new UniformMutation(true);
         //var chromosome = new FloatingPointChromosome(0,1,35,8);
         var chromosome = new LevelChromosome(35);
         var population = new Population(Rows * Columns, Rows * Columns, chromosome);
         targetRRTSuccessEvaluation.SpawnGridOfEmptyGenerators(Rows * Columns);
 
         GeneticAlgorithm = new GeneticAlgorithm(population, targetRRTSuccessEvaluation, selection, crossover, mutation);
+        GeneticAlgorithm.MutationProbability = 0.2f;
         GeneticAlgorithm.Termination = new GenerationNumberTermination(AimedGenerations);
         GeneticAlgorithm.GenerationRan += Ga_GenerationRan;
         GeneticAlgorithm.TerminationReached += Ga_TerminationReached; ;
