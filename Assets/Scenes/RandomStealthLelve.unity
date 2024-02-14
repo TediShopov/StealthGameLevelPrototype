@@ -1077,15 +1077,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a59df0218d90434e9622a53774d6147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rows: 5
-  Columns: 5
+  Rows: 4
+  Columns: 4
   Seed: 2
   RandomizeSeed: 0
   targetRRTSuccessEvaluation: {fileID: 1430829062}
   LevelSize: {x: 15, y: 15}
   AimedGenerations: 1
-  LogExecutionAvg: 0
-  LogExecutionTimes: 0
+  LogExecutionAvg: 1
+  LogExecutionTimes: 10
 --- !u!4 &1474898339
 Transform:
   m_ObjectHideFlags: 0
