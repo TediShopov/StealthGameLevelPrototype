@@ -70,8 +70,9 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
                 time = Mathf.Clamp(time, timeFrom, timeTo);
                 float rel = Mathf.InverseLerp(timeFrom, timeTo, time);
                 Vector2 positionInTime = Vector2.Lerp(from, to, rel);
-                bool hitEnemyCone = FieldOfView.TestCollision(positionInTime, p.GetFutureTransform(time),
-                    p.EnemyProperties.FOV, p.EnemyProperties.ReachRadius, ObstacleLayerMask);
+                FutureTransform ft = p.GetFutureTransform(time);
+                bool hitEnemyCone = FieldOfView.TestCollision(positionInTime, ft,
+                    p.EnemyProperties.FOV, p.EnemyProperties.ViewDistance, ObstacleLayerMask);
                 if (hitEnemyCone)
                 {
                     Debug.Log("FTRLEVEL: ENEMY VISION");

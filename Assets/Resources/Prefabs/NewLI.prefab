@@ -110,8 +110,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   EnemyPatrolPaths: []
-  Step: 0.15
-  Iterations: 100
+  _step: 0.1
+  _iter: 50
 --- !u!1 &3558959309750259788
 GameObject:
   m_ObjectHideFlags: 0
