@@ -6,7 +6,7 @@ using UnityEngine.Profiling;
 
 public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
 {
-    public VoxelizedLevelBase VoxelizedLevel;
+    public IFutureLevel VoxelizedLevel;
     public CharacterController2D Controller;
     public GameObject StartNode;
     public GameObject EndNode;
@@ -23,7 +23,8 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
         level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
         if (level == null) return;
         EndNode = Helpers.SafeGetComponentInChildren<WinTrigger>(level).gameObject;
-        VoxelizedLevel = Helpers.SafeGetComponentInChildren<VoxelizedLevelBase>(level);
+        //VoxelizedLevel = Helpers.SafeGetComponentInChildren<VoxelizedLevelBase>(level);
+        VoxelizedLevel = level.GetComponentInChildren<IFutureLevel>(false);
         StartNode = Helpers.SafeGetComponentInChildren<CharacterController2D>(level).gameObject;
         Controller = Helpers.SafeGetComponentInChildren<CharacterController2D>(level);
     }
@@ -59,20 +60,26 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
             Gizmos.DrawSphere(Path[i], 0.1f);
             Gizmos.DrawLine(Path[i], Path[i + 1]);
             Handles.Label(Path[i], $"{Path[i].z.ToString("0.00")}");
-            Handles.Label(Path[i] + Vector3.down * 0.2f, $"{VoxelizedLevel.GetFutureLevelIndex(Path[i].z)}");
+            //Handles.Label(Path[i] + Vector3.down * 0.2f, $"{(Path[i].z)}");
             if (OutputDiscretized)
             {
-                Vector2Int startCell = (Vector2Int)this.VoxelizedLevel.Grid.WorldToCell(Path[i]);
-                Vector2Int endCell = (Vector2Int)this.VoxelizedLevel.Grid.WorldToCell(Path[i + 1]);
-                var listOfRCells = VoxelizedLevelBase.GetCellsInLine(startCell, endCell);
-                bool collided = VoxelizedLevel.CheckCellsColliding(listOfRCells.ToList(), Path[i].z, Path[i + 1].z);
+                bool collided = VoxelizedLevel.IsColliding(Path[i], Path[i + 1], Path[i].z, Path[i + 1].z);
                 if (collided)
                     Gizmos.color = Color.red;
                 else
                     Gizmos.color = Color.green;
-                foreach (var cell in listOfRCells)
+
+                if (VoxelizedLevel is VoxelizedLevel)
                 {
-                    Gizmos.DrawSphere(VoxelizedLevel.Grid.GetCellCenterWorld(new Vector3Int(cell.x, cell.y, 0)), 0.1f);
+                    VoxelizedLevel v = (VoxelizedLevel)VoxelizedLevel;
+                    Handles.Label(Path[i] + Vector3.down * 0.2f, $"{v.GetFutureLevelIndex(Path[i].z)}");
+                    Vector2Int startCell = (Vector2Int)v.Grid.WorldToCell(Path[i]);
+                    Vector2Int endCell = (Vector2Int)v.Grid.WorldToCell(Path[i + 1]);
+                    var listOfRCells = VoxelizedLevelBase.GetCellsInLine(startCell, endCell);
+                    foreach (var cell in listOfRCells)
+                    {
+                        Gizmos.DrawSphere(v.Grid.GetCellCenterWorld(new Vector3Int(cell.x, cell.y, 0)), 0.1f);
+                    }
                 }
             }
         }

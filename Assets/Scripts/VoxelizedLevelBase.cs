@@ -4,8 +4,17 @@ using System.IO.MemoryMappedFiles;
 using System.Linq;
 using UnityEngine;
 
+public interface IFutureLevel
+{
+    public void Init();
+
+    public Bounds GetBounds();
+
+    public bool IsColliding(Vector2 from, Vector2 to, float timeFrom, float timeTo);
+}
+
 [RequireComponent(typeof(Grid))]
-public class VoxelizedLevelBase : MonoBehaviour
+public class VoxelizedLevelBase : MonoBehaviour, IFutureLevel
 {
     [HideInInspector] public Grid Grid;
     public float Step;
@@ -98,6 +107,26 @@ public class VoxelizedLevelBase : MonoBehaviour
         }
 
         return cells;
+    }
+
+    public bool IsColliding(Vector2 from, Vector2 to, float timeFrom, float timeTo)
+    {
+        Vector2Int startCell = (Vector2Int)this.Grid.WorldToCell(from);
+        Vector2Int endCell = (Vector2Int)this.Grid.WorldToCell(to);
+        var listOfRCells = VoxelizedLevelBase.GetCellsInLine(startCell, endCell);
+        return this.CheckCellsColliding(listOfRCells.ToList(), timeFrom, timeTo);
+    }
+
+    public Bounds GetBounds()
+    {
+        Vector3 min = this.FutureGrids[0].WorldMin;
+        min.z = 0;
+        Vector3 max = this.FutureGrids[0].WorldMax;
+        min.z = this.Iterations * Step;
+        Bounds bounds = new Bounds();
+        bounds.min = min;
+        bounds.max = max;
+        return bounds;
     }
 }
 

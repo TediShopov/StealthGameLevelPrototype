@@ -67,10 +67,14 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
     private KDTree _kdTree;
     private Vector3 _randomMin;
     private Vector3 _randomMax;
-    private VoxelizedLevelBase VoxelizedLevel;
+
+    //..private VoxelizedLevelBase FutureLevel;
+    private IFutureLevel FutureLevel;
+
     private Dictionary<Vector3, TreeNode<Vector3>> _stateToTreeNode;
     private TreeNode<Vector3> _lastAddedState;
-    public bool Succeeded() 
+
+    public bool Succeeded()
     {
         if (this.GoalNodeFound != null)
             return this.IsGoalState(GoalNodeFound.Content);
@@ -84,14 +88,16 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
     //If distance between some state and and end state is below this distance the state is treated as a solution
     public float GoalDistance;
 
-    public DiscreteDistanceBasedRRTSolver(VoxelizedLevelBase discretizedLevel, float bias, float goalDist, float maxvel)
+    public DiscreteDistanceBasedRRTSolver(IFutureLevel discretizedLevel, float bias, float goalDist, float maxvel)
     {
-        this.VoxelizedLevel = discretizedLevel;
-        _randomMin = discretizedLevel.FutureGrids[0].WorldMin;
-        _randomMin.z =0 ;
-        //_randomMax = discretizedLevel.GetMaximumBound();
-        _randomMax = discretizedLevel.FutureGrids[0].WorldMax;
-        _randomMax.z = discretizedLevel.Iterations * discretizedLevel.Step;
+        this.FutureLevel = discretizedLevel;
+        _randomMin = discretizedLevel.GetBounds().min;
+        _randomMin = discretizedLevel.GetBounds().max;
+        //        _randomMin = discretizedLevel.FutureGrids[0].WorldMin;
+        //        _randomMin.z = 0;
+        //        //_randomMax = discretizedLevel.GetMaximumBound();
+        //        _randomMax = discretizedLevel.FutureGrids[0].WorldMax;
+        //        _randomMax.z = discretizedLevel.Iterations * discretizedLevel.Step;
         this.BiasDistance = bias;
         this.GoalDistance = goalDist;
         this.MaxVelocity = maxvel;
@@ -164,10 +170,11 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
     {
         if (from.z < 0 || to.z < 0) return true;
         if (from.z > to.z) return true;
-        Vector2Int startCell = (Vector2Int)this.VoxelizedLevel.Grid.WorldToCell(from);
-        Vector2Int endCell = (Vector2Int)this.VoxelizedLevel.Grid.WorldToCell(to);
-        var listOfRCells = VoxelizedLevelBase.GetCellsInLine(startCell, endCell);
-        return VoxelizedLevel.CheckCellsColliding(listOfRCells.ToList(), from.z, to.z);
+        //        Vector2Int startCell = (Vector2Int)this.FutureLevel.Grid.WorldToCell(from);
+        //        Vector2Int endCell = (Vector2Int)this.FutureLevel.Grid.WorldToCell(to);
+        //        var listOfRCells = VoxelizedLevelBase.GetCellsInLine(startCell, endCell);
+        //        return FutureLevel.CheckCellsColliding(listOfRCells.ToList(), from.z, to.z);
+        return FutureLevel.IsColliding(from, to, from.z, to.z);
     }
 
     public List<Vector3> ReconstructPathToSolution()
