@@ -64,18 +64,23 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
         int timeSteps = Mathf.FloorToInt((timeTo - timeFrom) / (float)Step);
         foreach (var p in EnemyPatrolPaths)
         {
+            BacktrackPatrolPath patrol = new BacktrackPatrolPath(p.BacktrackPatrolPath);
+            float time = timeFrom;
+            patrol.MoveAlong(timeFrom);
             for (int i = 0; i <= timeSteps; i++)
             {
-                float time = timeFrom + i * Step;
+                time += Step;
                 time = Mathf.Clamp(time, timeFrom, timeTo);
+                //Small Inaccuracy
+                patrol.MoveAlong(Step);
+
                 float rel = Mathf.InverseLerp(timeFrom, timeTo, time);
                 Vector2 positionInTime = Vector2.Lerp(from, to, rel);
-                FutureTransform ft = p.GetFutureTransform(time);
+                FutureTransform ft = PatrolPath.GetPathOrientedTransform(patrol);
                 bool hitEnemyCone = FieldOfView.TestCollision(positionInTime, ft,
                     p.EnemyProperties.FOV, p.EnemyProperties.ViewDistance, ObstacleLayerMask);
                 if (hitEnemyCone)
                 {
-                    Debug.Log("FTRLEVEL: ENEMY VISION");
                     return true;
                 }
             }
