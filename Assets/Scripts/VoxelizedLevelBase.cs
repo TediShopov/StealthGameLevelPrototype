@@ -6,6 +6,9 @@ using UnityEngine;
 
 public interface IFutureLevel
 {
+    public float Step { get; }
+    public float Iterations { get; }
+
     public void Init();
 
     public Bounds GetBounds();
@@ -17,9 +20,13 @@ public interface IFutureLevel
 public class VoxelizedLevelBase : MonoBehaviour, IFutureLevel
 {
     [HideInInspector] public Grid Grid;
-    public float Step;
-    public float Iterations;
+    [SerializeField] private float _step;
+    [SerializeField] private float _iter;
     public List<NativeGrid<bool>> FutureGrids;
+
+    public float Step => Step;
+
+    public float Iterations => Iterations;
 
     public virtual void Init()
     {

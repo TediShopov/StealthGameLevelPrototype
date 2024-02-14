@@ -134,6 +134,7 @@ public class VoxelizedLevel : VoxelizedLevelBase
         if (DebugDraw == false) return;
         LookAtGrid = Mathf.Clamp(LookAtGrid, 0, FutureGrids.Count - 1);
 
+        // Start is called before the first frame update
         Gizmos.color = Color.blue;
         for (int i = LookAtGrid - LookAtRange; i < LookAtGrid + LookAtRange; i++)
         {

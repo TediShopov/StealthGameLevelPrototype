@@ -80,7 +80,8 @@ public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
         generator.Generate((LevelChromosome)chromosome);
         var RRTVisualizers = generator.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
         var enemyPatrolPaths = generator.GetComponentsInChildren<PatrolPath>();
-        var voxelizedLevel = generator.GetComponentInChildren<VoxelizedLevel>();
+        //var voxelizedLevel = generator.GetComponentInChildren<VoxelizedLevel>();
+        var futureLevel = generator.GetComponentInChildren<IFutureLevel>();
         float total = 0;
         int succeeded = 0;
         foreach (var x in RRTVisualizers)
@@ -94,7 +95,7 @@ public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
                     enemyPatrolPaths.ToList(),
                     enemyPatrolPaths[0].EnemyProperties,
                     LayerMask.GetMask("Obstacles"));
-                float overallRisk = riskMeasure.OverallRisk(voxelizedLevel.Step);
+                float overallRisk = riskMeasure.OverallRisk(futureLevel.Step);
                 total += overallRisk;
                 succeeded++;
             }

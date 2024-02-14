@@ -142,12 +142,13 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         //Solvers
         Instantiate(LevelInitializer, this.transform);
         var levelInitializer = gameObject.GetComponentInChildren<InitializeStealthLevel>();
-        var voxelizedLevel = gameObject.GetComponentInChildren<VoxelizedLevel>();
+        //var voxelizedLevel = gameObject.GetComponentInChildren<>();
+        var voxelizedLevel = gameObject.GetComponentInChildren<IFutureLevel>();
         var multipleRRTSolvers = gameObject.GetComponentInChildren<MultipleRRTRunner>();
         var pathGenerator = gameObject.GetComponentInChildren<PathGeneratorClass>();
         pathGenerator.LevelRandom = LevelRandom;
         Helpers.LogExecutionTime(levelInitializer.Init, "Level Initializer Time");
-        Helpers.LogExecutionTime(voxelizedLevel.Init, "Voxelized Level");
+        Helpers.LogExecutionTime(voxelizedLevel.Init, "Future Level Logic Time");
         Helpers.LogExecutionTime(multipleRRTSolvers.Run, "Multiple RRT Runs Time");
     }
 
