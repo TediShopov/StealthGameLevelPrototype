@@ -1,6 +1,8 @@
 using GeneticSharp.Domain.Chromosomes;
 using GeneticSharp.Domain.Fitnesses;
 using System.Linq;
+using Unity.IO.LowLevel.Unsafe;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
@@ -22,11 +24,6 @@ public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
             return null;
 
         return levelGenerators[currentIndex / GridDimension, currentIndex % GridDimension];
-    }
-
-    public TargetRRTSuccessEvaluation(int populationCount)
-    {
-        SpawnGridOfEmptyGenerators(populationCount);
     }
 
     public void SpawnGridOfEmptyGenerators(int populationCount)
@@ -55,6 +52,7 @@ public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
 
     public double Evaluate(IChromosome chromosome)
     {
+        double evaluatedFitness = EvaluateDifficultyMeasureOfSuccesful(chromosome);
         return EvaluateDifficultyMeasureOfSuccesful(chromosome);
     }
 

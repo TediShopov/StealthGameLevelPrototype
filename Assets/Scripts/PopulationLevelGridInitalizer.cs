@@ -6,6 +6,9 @@ using GeneticSharp.Domain.Terminations;
 using GeneticSharp.Domain;
 using System;
 using UnityEngine;
+using System.Linq;
+using System.Collections.Generic;
+using GeneticSharp.Domain.Chromosomes;
 
 public class PopulationLevelGridInitalizer : MonoBehaviour
 {
@@ -21,6 +24,8 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
     public GeneticAlgorithm GeneticAlgorithm;
     public bool LogExecutionAvg = false;
     public int LogExecutionTimes = 0;
+    public int TopNLevels = 5;
+    //private List<LevelPhenotypeGenerator> _topFiveLevelPhenotypeGenerators;
 
     //Flag to indicated occured termiantion to stop re-running on terminated algorithm
     private bool _terminated = false;
@@ -36,6 +41,20 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         Run();
     }
 
+    private void ManifestTopLevels(List<IChromosome> chromosomes)
+    {
+        //Start with y down
+        Vector3 TopLevelsPos = this.transform.position - new Vector3(0, 30, 0);
+        for (int i = 0; i < chromosomes.Count; i++)
+        {
+            TopLevelsPos += new Vector3(25, 0, 0);
+            var level = Instantiate(targetRRTSuccessEvaluation.LevelGeneratorPrototype, TopLevelsPos,
+                Quaternion.identity, this.transform);
+            level.gameObject.name = $"Top {i} - {chromosomes[i].Fitness}";
+            level.Generate((LevelChromosome)chromosomes[i]);
+        }
+    }
+
     private void Run()
     {
         var selection = new TournamentSelection(3, true);
@@ -45,6 +64,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         var chromosome = new LevelChromosome(35);
         var population = new Population(Rows * Columns, Rows * Columns, chromosome);
         targetRRTSuccessEvaluation.SpawnGridOfEmptyGenerators(Rows * Columns);
+        targetRRTSuccessEvaluation.PrepareForNewGeneration();
 
         GeneticAlgorithm = new GeneticAlgorithm(population, targetRRTSuccessEvaluation, selection, crossover, mutation);
         GeneticAlgorithm.MutationProbability = 0.2f;
@@ -54,9 +74,37 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         GeneticAlgorithm.Start();
     }
 
+    private List<IChromosome> GetTopLevelsFitness()
+    {
+        foreach (var gen in GeneticAlgorithm.Population.Generations)
+        {
+            foreach (var c in gen.Chromosomes)
+            {
+                Debug.Log($"Generation {gen.Number} - Fitness {c.Fitness}");
+            }
+        }
+        List<IChromosome> top5 = GeneticAlgorithm.Population.Generations.SelectMany(x => x.Chromosomes)
+            .Distinct().
+            OrderByDescending(x => x.Fitness).Take(TopNLevels).ToList();
+        for (int i = 0; i < 5; i++)
+        {
+            Debug.Log($"Top {i} - Fitness {top5[i].Fitness}");
+        }
+        return top5;
+    }
+
     private void Ga_TerminationReached(object sender, EventArgs e)
     {
-        Debug.Log($"Best solution found has {GeneticAlgorithm.BestChromosome.Fitness} fitness.");
+        //Debug.Log($"Best solution found has {GeneticAlgorithm.BestChromosome.Fitness} fitness.");
+        //        int iter = 0;
+        //        foreach (var evaluatedChromosome in targetRRTSuccessEvaluation.TopLevels)
+        //        {
+        //            iter++;
+        //            Debug.Log($"Level soultion {iter} - {evaluatedChromosome.Fitness}");
+        //        }
+        //Debug.Log($"Best solution found has {GeneticAlgorithm.BestChromosome.Fitness} fitness.");
+        List<IChromosome> chromosomes = GetTopLevelsFitness();
+        ManifestTopLevels(chromosomes);
         _terminated = true;
     }
 
