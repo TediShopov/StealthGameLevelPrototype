@@ -36,7 +36,10 @@ public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
         //Setup Generator Prototype
         LevelGeneratorPrototype.isRandom = true;
         LevelGeneratorPrototype.RunOnStart = false;
-
+        if (levelGenerators != null)
+        {
+            this.PrepareForNewGeneration();
+        }
         levelGenerators = new LevelPhenotypeGenerator[GridDimension, GridDimension];
 
         for (int i = 0; i < GridDimension; i++)
@@ -68,6 +71,7 @@ public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
         //Generator.Dispose();
         return successRate;
     }
+
     private double EvaluateDifficultyMeasureOfSuccesful(IChromosome chromosome)
     {
         var generator = GetCurrentGenerator();
@@ -79,9 +83,9 @@ public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
         var voxelizedLevel = generator.GetComponentInChildren<VoxelizedLevel>();
         float total = 0;
         int succeeded = 0;
-        foreach ( var x in RRTVisualizers ) 
+        foreach (var x in RRTVisualizers)
         {
-            if (x.RRT.Succeeded()) 
+            if (x.RRT.Succeeded())
             {
                 var solutionPath =
                     new SolutionPath(x.RRT.ReconstructPathToSolution());

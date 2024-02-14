@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 [RequireComponent(typeof(Grid))]
 public class VoxelizedLevel : VoxelizedLevelBase
@@ -39,6 +40,7 @@ public class VoxelizedLevel : VoxelizedLevelBase
 
     public override void Init()
     {
+        Profiler.BeginSample("Voxelized Representation");
         this.Grid = GetComponent<Grid>();
 
         _staticObstacleGrid = new NativeGrid<bool>(this.Grid, GetLevelBounds());
@@ -59,6 +61,7 @@ public class VoxelizedLevel : VoxelizedLevelBase
             var grid = GenerateFutureGrid(i * Step);
             FutureGrids.Add(grid);
         }
+        Profiler.EndSample();
     }
 
     public static T[,] Copy<T>(T[,] array)

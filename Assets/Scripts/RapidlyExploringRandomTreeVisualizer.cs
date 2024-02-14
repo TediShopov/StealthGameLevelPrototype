@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
 {
@@ -29,11 +30,13 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
 
     public void Run()
     {
+        Profiler.BeginSample("RRT Run");
         if (VoxelizedLevel == null) return;
         RRT = new DiscreteDistanceBasedRRTSolver(VoxelizedLevel, BiasDistance, GoalDistance, Controller.MaxSpeed);
-        
+
         RRT.Run(StartNode.transform.position, EndNode.transform.position, maxIterations);
         Path = RRT.ReconstructPathToSolution();
+        Profiler.EndSample();
     }
 
     public void Update()
@@ -60,9 +63,9 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
             if (OutputDiscretized)
             {
                 Vector2Int startCell = (Vector2Int)this.VoxelizedLevel.Grid.WorldToCell(Path[i]);
-                Vector2Int endCell = (Vector2Int)this.VoxelizedLevel.Grid.WorldToCell(Path[i+1]);
+                Vector2Int endCell = (Vector2Int)this.VoxelizedLevel.Grid.WorldToCell(Path[i + 1]);
                 var listOfRCells = VoxelizedLevelBase.GetCellsInLine(startCell, endCell);
-                bool collided = VoxelizedLevel.CheckCellsColliding(listOfRCells.ToList(), Path[i].z, Path[i+1].z);
+                bool collided = VoxelizedLevel.CheckCellsColliding(listOfRCells.ToList(), Path[i].z, Path[i + 1].z);
                 if (collided)
                     Gizmos.color = Color.red;
                 else

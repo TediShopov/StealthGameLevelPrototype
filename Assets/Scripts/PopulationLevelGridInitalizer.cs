@@ -19,11 +19,24 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
     public System.Random RandomSeedGenerator;
     public int AimedGenerations = 10;
     public GeneticAlgorithm GeneticAlgorithm;
+    public bool LogExecutionAvg = false;
+    public int LogExecutionTimes = 0;
 
     //Flag to indicated occured termiantion to stop re-running on terminated algorithm
     private bool _terminated = false;
 
     public void Start()
+    {
+        if (LogExecutionAvg)
+        {
+            string algoName = $"GEN_{AimedGenerations}_POP{Rows * Columns}_SZ{LevelSize}";
+            float[] runs = Helpers.TrackExecutionTime(Run, LogExecutionTimes);
+            Helpers.SaveRunToCsv($"Tests/{algoName}.txt", runs);
+        }
+        Run();
+    }
+
+    private void Run()
     {
         var selection = new TournamentSelection(3, true);
         var crossover = new TwoPointCrossover();
@@ -39,7 +52,6 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         GeneticAlgorithm.GenerationRan += Ga_GenerationRan;
         GeneticAlgorithm.TerminationReached += Ga_TerminationReached; ;
         GeneticAlgorithm.Start();
-        //StartCoroutine(ResumeGAEveryNFrames());
     }
 
     private void Ga_TerminationReached(object sender, EventArgs e)

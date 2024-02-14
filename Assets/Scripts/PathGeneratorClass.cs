@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public interface IPathGenerator
 {
@@ -29,6 +30,7 @@ public class PathGeneratorClass : MonoBehaviour, IPathGenerator
 
     public virtual List<List<Vector2>> GeneratePaths(int pathsToGenerate)
     {
+        Profiler.BeginSample("Enemy path generation");
         var keyValueList = this.Roadmap.adjacencyList.Keys.ToArray();
 
         List<List<Vector2>> pathsToReturn = new List<List<Vector2>>();
@@ -49,6 +51,7 @@ public class PathGeneratorClass : MonoBehaviour, IPathGenerator
             }
             pathsToReturn.Add(bestFoundPath);
         }
+        Profiler.EndSample();
         return pathsToReturn;
     }
 

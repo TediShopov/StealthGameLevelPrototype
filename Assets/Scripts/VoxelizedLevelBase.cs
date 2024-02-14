@@ -15,7 +15,6 @@ public class VoxelizedLevelBase : MonoBehaviour
     public virtual void Init()
     {
         this.FutureGrids = new List<NativeGrid<bool>>();
-
     }
 
     public virtual NativeGrid<bool> GenerateFutureGrid(float future)
@@ -46,13 +45,13 @@ public class VoxelizedLevelBase : MonoBehaviour
             foreach (var cell in cells)
             {
                 var nativeCoord = map.GetNativeCoord(cell);
-//                if (map.IsInGrid(nativeCoord.y, nativeCoord.x) == false)
-//                    continue;
-//                if (map.Get(nativeCoord.y,nativeCoord.x))
-//                    return true;
+                //                if (map.IsInGrid(nativeCoord.y, nativeCoord.x) == false)
+                //                    continue;
+                //                if (map.Get(nativeCoord.y,nativeCoord.x))
+                //                    return true;
                 if (map.IsInGrid(nativeCoord.x, nativeCoord.y) == false)
                     continue;
-                if (map.Get(nativeCoord.x,nativeCoord.y))
+                if (map.Get(nativeCoord.x, nativeCoord.y))
                     return true;
             }
         }
@@ -100,7 +99,6 @@ public class VoxelizedLevelBase : MonoBehaviour
 
         return cells;
     }
-
 }
 
 //[RequireComponent(typeof(Grid))]

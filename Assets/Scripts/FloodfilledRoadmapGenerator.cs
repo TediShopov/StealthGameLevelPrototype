@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public class FloodfilledRoadmapGenerator : MonoBehaviour
 {
@@ -31,11 +32,13 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
             DoFloodFill = false;
         }
     }
+
     public void Init()
     {
+        Profiler.BeginSample("Enemy Roadmap Init");
         _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
         this.Grid = GetComponent<Grid>();
-        
+
         LevelGrid = new NativeGrid<int>(this.Grid, GetLevelBounds());
         LevelGrid.SetAll(SetCellColliderIndex);
 
@@ -50,27 +53,28 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
             }
         }
         int totalRecursion = 0;
+        Profiler.EndSample();
         RemoveRedundantNodes(superNode, ref totalRecursion, new List<Vector2>());
         Debug.Log($"Roadmap nodes: {RoadMap.adjacencyList.Count}");
         Debug.Log($"Simplified connection count : {_debugSimplifiedConnections.Count}");
         Debug.Log($"Recursion count is : {totalRecursion}");
     }
-    public Bounds GetLevelBounds() 
+
+    public Bounds GetLevelBounds()
     {
         var _boundary = Physics2D.OverlapPoint(this.transform.position, BoundaryLayerMask);
         if (_boundary != null)
         {
-            return  _boundary.gameObject.GetComponent<Collider2D>().bounds;
+            return _boundary.gameObject.GetComponent<Collider2D>().bounds;
         }
         throw new NotImplementedException();
     }
 
-    public int SetCellColliderIndex(int row, int col, NativeGrid<int> ngrid) 
+    public int SetCellColliderIndex(int row, int col, NativeGrid<int> ngrid)
     {
-        Collider2D colliderAtCell = GetStaticColliderAt(LevelGrid.GetWorldPosition(row,col));
+        Collider2D colliderAtCell = GetStaticColliderAt(LevelGrid.GetWorldPosition(row, col));
         return GetColliderIndex(colliderAtCell);
     }
-
 
     public void FloodRegions()
     {
@@ -87,7 +91,7 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
                 {
                     if (LevelGrid.Get(neighborRow, neighborCol) == -1)
                     {
-                        LevelGrid.Set(neighborRow, neighborCol,LevelGrid.Get(currentCell.Item1, currentCell.Item2));
+                        LevelGrid.Set(neighborRow, neighborCol, LevelGrid.Get(currentCell.Item1, currentCell.Item2));
                         BoundaryCells.Enqueue(neighbor);
                     }
                     else
@@ -125,7 +129,7 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
 
     public Vector3 GetLowerLeft(int col, int row)
     {
-        return LevelGrid.GetWorldPosition(row,col) 
+        return LevelGrid.GetWorldPosition(row, col)
             + new Vector3(-Grid.cellSize.x / 2.0f, -Grid.cellSize.y / 2.0f, 0);
     }
 
@@ -242,7 +246,7 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
         Queue<Tuple<int, int>> cells = new Queue<Tuple<int, int>>();
         LevelGrid.ForEach((x, y) =>
         {
-            if (IsBoundaryCell(x, y)) 
+            if (IsBoundaryCell(x, y))
             {
                 cells.Enqueue(Tuple.Create(x, y));
             }
@@ -274,19 +278,15 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
         return neighbors.Where(x => LevelGrid.IsInGrid(x.Item1, x.Item2)).ToArray();
     }
 
-
-
-
     public bool IsBoundaryCell(int row, int col)
     {
         var neighbours = GetNeighbours(row, col);
         //Bondary cells must be at the boundary of an obstacle so must be oocupied
-        if (LevelGrid.Get(row,col)== -1) return false;
+        if (LevelGrid.Get(row, col) == -1) return false;
         //Atleast one excited and one empty/unnocupied cell
-        return neighbours.Any(x => LevelGrid.Get(x.Item1, x.Item2) != -1) && neighbours.Any(x => 
+        return neighbours.Any(x => LevelGrid.Get(x.Item1, x.Item2) != -1) && neighbours.Any(x =>
             LevelGrid.Get(x.Item1, x.Item2) == -1);
     }
-
 
     public void Start()
     {
@@ -320,21 +320,21 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
             if (LevelGrid.Get(row, col) != -1)
             {
                 Gizmos.color = GetColorForValue(LevelGrid.Get(row, col));
-                Vector3 worldPosition = Grid.GetCellCenterWorld(LevelGrid.GetUnityCoord(row,col));
+                Vector3 worldPosition = Grid.GetCellCenterWorld(LevelGrid.GetUnityCoord(row, col));
                 worldPosition.z = 0;
                 Vector3 cellsize = Grid.cellSize;
                 cellsize.z = 1;
                 Gizmos.DrawCube(worldPosition, Grid.cellSize);
             }
         });
-//        int rows = _gridMax.y - _gridMin.y;
-//        int cols = _gridMax.x - _gridMin.x;
-//        for (int row = 0; row < rows; row++)
-//        {
-//            for (int col = 0; col < cols; col++)
-//            {
-//            }
-//        }
+        //        int rows = _gridMax.y - _gridMin.y;
+        //        int cols = _gridMax.x - _gridMin.x;
+        //        for (int row = 0; row < rows; row++)
+        //        {
+        //            for (int col = 0; col < cols; col++)
+        //            {
+        //            }
+        //        }
     }
 
     private void DebugSimplifiedConnections()

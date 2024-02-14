@@ -67,6 +67,18 @@ public class Helpers : MonoBehaviour
         return results;
     }
 
+    public static void SaveRunToCsv(string filepath, float[] results)
+    {
+        string s = "";
+        foreach (var run in results)
+        {
+            s += run.ToString() + ",";
+            s = s.Remove(s.Length - 1, 1);
+            s += "\n";
+        }
+        Helpers.SaveToCSV(filepath, s);
+    }
+
     public static void SaveToCSV(string filePath, string s)
     {
         try
