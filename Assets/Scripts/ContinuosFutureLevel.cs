@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.UIElements;
@@ -53,6 +54,37 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
         Profiler.BeginSample("Continuos Representation");
         EnemyPatrolPaths = GetEnemyPatrolPaths();
         Profiler.EndSample();
+    }
+
+    public List<Vector2> AreNotCollidingDynamicDiscrete(List<Vector2> positions, float timeFrom, float timeTo)
+    {
+        //        List<Vector2> _uncollidedPositions = new List<Vector2>(positions);
+        //        _uncollidedPositions = _uncollidedPositions.Where(x =>
+        //             !Physics2D.OverlapBox(x, area, ObstacleLayerMask)
+        //        ).ToList();
+
+        int timeSteps = Mathf.FloorToInt((timeTo - timeFrom) / (float)Step);
+        foreach (var p in EnemyPatrolPaths)
+        {
+            BacktrackPatrolPath patrol = new BacktrackPatrolPath(p.BacktrackPatrolPath);
+            float time = timeFrom;
+            patrol.MoveAlong(timeFrom);
+            for (int i = 0; i <= timeSteps; i++)
+            {
+                time += Step;
+                time = Mathf.Clamp(time, timeFrom, timeTo);
+                //Small Inaccuracy
+                patrol.MoveAlong(Step);
+
+                positions = positions.Where(x =>
+                {
+                    FutureTransform ft = PatrolPath.GetPathOrientedTransform(patrol);
+                    return !FieldOfView.TestCollision(x, ft,
+                        p.EnemyProperties.FOV, p.EnemyProperties.ViewDistance, ObstacleLayerMask);
+                }).ToList();
+            }
+        }
+        return positions;
     }
 
     public bool IsColliding(Vector2 from, Vector2 to, float timeFrom, float timeTo)

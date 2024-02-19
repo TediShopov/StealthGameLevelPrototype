@@ -137,6 +137,14 @@ public class BacktrackPatrolPath
         float f = displacement / Vector2.Distance(Path[currentSegment.Item1], Path[currentSegment.Item2]);
         relPathPostion += traverseForward ? f : -f;
     }
+
+    public float GetTotalLength()
+    {
+        float total = 0;
+        for (int i = 0; i < Path.Count - 1; i++)
+            total += Vector2.Distance(Path[i], Path[i + 1]);
+        return total;
+    }
 }
 
 public struct FutureTransform
@@ -165,9 +173,9 @@ public class PatrolPath : MonoBehaviour, IFutureTransform
     private void Awake()
     {
         _rigidBody2D = this.GetComponent<Rigidbody2D>();
-//        if (BacktrackPatrolPath == null)
-//            if (Transforms.Count > 2)
-//                SetPatrolPath(Transforms.Select(x => (Vector2)x.position).ToList());
+        //        if (BacktrackPatrolPath == null)
+        //            if (Transforms.Count > 2)
+        //                SetPatrolPath(Transforms.Select(x => (Vector2)x.position).ToList());
     }
 
     public void SetPatrolPath(List<Vector2> points)
@@ -206,6 +214,16 @@ public class PatrolPath : MonoBehaviour, IFutureTransform
     {
         Gizmos.color = Color.yellow;
         DrawAllSegmentes();
+    }
+
+    public float GetTimeToTraverse()
+    {
+        if (BacktrackPatrolPath is not null)
+        {
+            float length = BacktrackPatrolPath.GetTotalLength();
+            return length * EnemyProperties.Speed;
+        }
+        return 0;
     }
 
     //Given a patrol path return the position and the direction facing the direction
