@@ -5,6 +5,7 @@ using UnityEngine;
 public class LevelChromosome : ChromosomeBase
 {
     private System.Random ChromosomeRandom = new System.Random();
+    public FitnessInfo FitnessInfo { get; set; }
 
     public Gene[] GetRandomGenes(int length)
     {

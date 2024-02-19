@@ -5,6 +5,85 @@ using Unity.IO.LowLevel.Unsafe;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace StealthLevelEvaluation
+{
+    public abstract class PhenotypeFitnessEvaluation
+    {
+        private bool _evaluted;
+        public string Name { get; }
+        protected double _value;
+        protected GameObject Phenotype;
+
+        public PhenotypeFitnessEvaluation(GameObject phenotype, string name, double defValue)
+        {
+            Phenotype = phenotype;
+            Name = name;
+            _value = defValue;
+            _evaluted = false;
+        }
+
+        public double Value
+        {
+            get
+            {
+                if (!_evaluted)
+                {
+                    _evaluted = true;
+                    _value = Evaluate();
+                }
+                else
+                {
+                }
+                return _value;
+            }
+        }
+
+        //Accepts the phenotype of a generated level and assigns a fitness value
+        public abstract float Evaluate();
+
+        public override string ToString()
+        {
+            //Get the value getter so value is sure to be calculated
+            return $"{Name}: {Value}";
+        }
+    }
+
+    public class RiskMeasureOfSolutionEvaluation : PhenotypeFitnessEvaluation
+    {
+        public RiskMeasureOfSolutionEvaluation(GameObject level) : base(level, "Risk Measure of solutions", 0)
+        {
+        }
+
+        public override float Evaluate()
+        {
+            var RRTVisualizers = Phenotype.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
+            var enemyPatrolPaths = Phenotype.GetComponentsInChildren<PatrolPath>();
+            //var voxelizedLevel = generator.GetComponentInChildren<VoxelizedLevel>();
+            var futureLevel = Phenotype.GetComponentInChildren<IFutureLevel>();
+            float total = 0;
+            int succeeded = 0;
+            foreach (var x in RRTVisualizers)
+            {
+                if (x.RRT.Succeeded())
+                {
+                    var solutionPath =
+                        new SolutionPath(x.RRT.ReconstructPathToSolution());
+                    var riskMeasure = new FieldOfViewRiskMeasure(
+                        solutionPath,
+                        enemyPatrolPaths.ToList(),
+                        enemyPatrolPaths[0].EnemyProperties,
+                        LayerMask.GetMask("Obstacles"));
+                    float overallRisk = riskMeasure.OverallRisk(futureLevel.Step);
+                    total += overallRisk;
+                    succeeded++;
+                }
+            }
+            float avg = total / (float)succeeded;
+            return avg;
+        }
+    }
+}
+
 public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
 {
     public LevelPhenotypeGenerator LevelGeneratorPrototype;
@@ -52,56 +131,22 @@ public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
 
     public double Evaluate(IChromosome chromosome)
     {
-        double evaluatedFitness = EvaluateDifficultyMeasureOfSuccesful(chromosome);
-        return EvaluateDifficultyMeasureOfSuccesful(chromosome);
-    }
-
-    private double EvaluateRRTSuccesRate(IChromosome chromosome)
-    {
         var generator = GetCurrentGenerator();
         currentIndex++;
         if (generator == null) return 0;
-        generator.Generate((LevelChromosome)chromosome);
-        var RRTVisualizers = generator.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
-        int successful = RRTVisualizers.Count(x => x.RRT.Succeeded() == true);
-        double successRate = (double)successful / (double)RRTVisualizers.Count();
-        Debug.Log($"Evaluated at {successRate}");
-        //Generator.Dispose();
-        return successRate;
-    }
 
-    private double EvaluateDifficultyMeasureOfSuccesful(IChromosome chromosome)
-    {
-        var generator = GetCurrentGenerator();
-        currentIndex++;
-        if (generator == null) return 0;
-        generator.Generate((LevelChromosome)chromosome);
-        var RRTVisualizers = generator.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
-        var enemyPatrolPaths = generator.GetComponentsInChildren<PatrolPath>();
-        //var voxelizedLevel = generator.GetComponentInChildren<VoxelizedLevel>();
-        var futureLevel = generator.GetComponentInChildren<IFutureLevel>();
-        float total = 0;
-        int succeeded = 0;
-        foreach (var x in RRTVisualizers)
-        {
-            if (x.RRT.Succeeded())
-            {
-                var solutionPath =
-                    new SolutionPath(x.RRT.ReconstructPathToSolution());
-                var riskMeasure = new FieldOfViewRiskMeasure(
-                    solutionPath,
-                    enemyPatrolPaths.ToList(),
-                    enemyPatrolPaths[0].EnemyProperties,
-                    LayerMask.GetMask("Obstacles"));
-                float overallRisk = riskMeasure.OverallRisk(futureLevel.Step);
-                total += overallRisk;
-                succeeded++;
-            }
-        }
-        float avg = total / (float)succeeded;
-        Debug.Log($"Minimum overall risk is:  {avg}");
-        //Generator.Dispose();
-        return avg;
+        var levelChromose = (LevelChromosome)chromosome;
+
+        generator.Generate(levelChromose);
+        StealthLevelEvaluation.PhenotypeFitnessEvaluation eval =
+            new StealthLevelEvaluation.RiskMeasureOfSolutionEvaluation(generator.gameObject);
+        //double evaluatedFitness = EvaluateDifficultyMeasureOfSuccesful(chromosome);
+        var infoObj = FitnessInfoVisualizer.AttachInfo(generator.gameObject,
+            new FitnessInfo(eval));
+        levelChromose.FitnessInfo = infoObj;
+        //Attaching fitness evaluation information to the object itself
+
+        return eval.Value;
     }
 
     public void PrepareForNewGeneration()

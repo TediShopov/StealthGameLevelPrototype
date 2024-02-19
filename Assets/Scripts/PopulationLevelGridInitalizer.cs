@@ -51,7 +51,13 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
             var level = Instantiate(targetRRTSuccessEvaluation.LevelGeneratorPrototype, TopLevelsPos,
                 Quaternion.identity, this.transform);
             level.gameObject.name = $"Top {i} - {chromosomes[i].Fitness}";
-            level.Generate((LevelChromosome)chromosomes[i]);
+            var levelChromosome = (LevelChromosome)chromosomes[i];
+            level.Generate(levelChromosome);
+
+            //Assign fitness info object showing the exact values achieved
+            //without need to recalcuate (RRT may produce different resutls)
+            var infoObj = FitnessInfoVisualizer.AttachInfo(level.gameObject,
+                levelChromosome.FitnessInfo);
         }
     }
 
@@ -83,26 +89,18 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
                 Debug.Log($"Generation {gen.Number} - Fitness {c.Fitness}");
             }
         }
-        List<IChromosome> top5 = GeneticAlgorithm.Population.Generations.SelectMany(x => x.Chromosomes)
+        List<IChromosome> topN = GeneticAlgorithm.Population.Generations.SelectMany(x => x.Chromosomes)
             .Distinct().
             OrderByDescending(x => x.Fitness).Take(TopNLevels).ToList();
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < TopNLevels; i++)
         {
-            Debug.Log($"Top {i} - Fitness {top5[i].Fitness}");
+            Debug.Log($"Top {i} - Fitness {topN[i].Fitness}");
         }
-        return top5;
+        return topN;
     }
 
     private void Ga_TerminationReached(object sender, EventArgs e)
     {
-        //Debug.Log($"Best solution found has {GeneticAlgorithm.BestChromosome.Fitness} fitness.");
-        //        int iter = 0;
-        //        foreach (var evaluatedChromosome in targetRRTSuccessEvaluation.TopLevels)
-        //        {
-        //            iter++;
-        //            Debug.Log($"Level soultion {iter} - {evaluatedChromosome.Fitness}");
-        //        }
-        //Debug.Log($"Best solution found has {GeneticAlgorithm.BestChromosome.Fitness} fitness.");
         List<IChromosome> chromosomes = GetTopLevelsFitness();
         ManifestTopLevels(chromosomes);
         _terminated = true;
@@ -116,6 +114,5 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         {
             targetRRTSuccessEvaluation.PrepareForNewGeneration();
         }
-        //GeneticAlgorithm.Stop();
     }
 }
