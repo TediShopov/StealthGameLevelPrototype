@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(PatrolPath))]
-public class EnemyDiscretizer : DynamicObstacleDiscretizer  
+public class EnemyDiscretizer : DynamicObstacleDiscretizer
 {
     private PatrolPath _path;
 
@@ -34,6 +34,25 @@ public class EnemyDiscretizer : DynamicObstacleDiscretizer
                 toReturn.Add(new Vector3Int(col, row, 0));
             }
         }
+        return toReturn;
+    }
+
+    public static List<Vector3Int> GetPossibleAffectedCells(PatrolPath path, Grid grid, float future)
+    {
+        var toReturn = new List<Vector3Int>();
+
+        Bounds bounds = new Bounds();
+        FutureTransform ft = path.GetFutureTransform(future);
+        Vector2 minLeft = ft.Position + Vector2.Perpendicular(ft.Direction) * path.EnemyProperties.ViewDistance;
+        Vector2 maxRight = ft.Position + Vector2.Perpendicular(-ft.Direction) * path.EnemyProperties.ViewDistance;
+        maxRight += ft.Direction * path.EnemyProperties.ViewDistance;
+        bounds.Encapsulate(minLeft);
+        bounds.Encapsulate(maxRight);
+        Vector3Int min = grid.WorldToCell(bounds.min);
+        Vector3Int max = grid.WorldToCell(bounds.max);
+        for (int row = min.y; row < max.y; row++)
+            for (int col = min.x; col < max.x; col++)
+                toReturn.Add(new Vector3Int(col, row, 0));
         return toReturn;
     }
 

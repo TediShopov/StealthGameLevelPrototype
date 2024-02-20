@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 public class Helpers : MonoBehaviour
@@ -47,6 +48,34 @@ public class Helpers : MonoBehaviour
         // Log the execution time
         UnityEngine.Debug.Log($"{funName} executed in {ms} milliseconds");
         return ms;
+    }
+
+    public static bool IsColidingCell(Vector3 worldPosition, Vector2 size, LayerMask obstacle)
+    {
+        Vector2 position2D = new Vector2(worldPosition.x, worldPosition.y);
+        Vector2 halfBoxSize = size * 0.5f;
+
+        // Perform a BoxCast to check for obstacles in the area
+        RaycastHit2D hit = Physics2D.BoxCast(
+            origin: position2D,
+            size: halfBoxSize,
+            angle: 0f,
+            direction: Vector2.zero,
+            distance: 0.01f,
+            layerMask: obstacle
+        );
+
+        return hit.collider != null;
+    }
+
+    public static Bounds GetLevelBounds(GameObject obj)
+    {
+        var _boundary = Physics2D.OverlapPoint(obj.transform.position, LayerMask.GetMask("Boundary"));
+        if (_boundary != null)
+        {
+            return _boundary.gameObject.GetComponent<Collider2D>().bounds;
+        }
+        throw new NotImplementedException();
     }
 
     public static float TrackExecutionTime(System.Action function)

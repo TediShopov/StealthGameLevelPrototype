@@ -123,17 +123,19 @@ public class FieldOfView : MonoBehaviour
         }
         return false;
     }
+
     public static bool TestCollision(Vector2 testPosition, FutureTransform ft, float fovAngle, float distance, LayerMask layerMask)
     {
         //Gloabar direction vector
         Vector2 vectorToTarget = (testPosition - ft.Position).normalized;
+        if (Vector2.Distance(testPosition, ft.Position) > distance)
+            return false;
+        float angle = Vector2.Angle(ft.Direction, vectorToTarget);
+        if (angle >= fovAngle / 2.0f)
+            return false;
         if (!Physics2D.Linecast(testPosition, ft.Position, layerMask))
         {
-            float angle = Vector2.Angle(ft.Direction, vectorToTarget);
-            if (angle < fovAngle / 2.0f && Vector2.Distance(testPosition, ft.Position) <= distance)
-            {
-                return true;
-            }
+            return true;
         }
         return false;
     }

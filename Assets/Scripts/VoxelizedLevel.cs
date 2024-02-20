@@ -28,25 +28,15 @@ public class VoxelizedLevel : VoxelizedLevelBase
         return level.GetComponentsInChildren<DynamicObstacleDiscretizer>().ToList();
     }
 
-    public Bounds GetLevelBounds()
-    {
-        var _boundary = Physics2D.OverlapPoint(this.transform.position, BoundaryLayerMask);
-        if (_boundary != null)
-        {
-            return _boundary.gameObject.GetComponent<Collider2D>().bounds;
-        }
-        throw new NotImplementedException();
-    }
-
     public override void Init()
     {
         Profiler.BeginSample("Voxelized Representation");
         this.Grid = GetComponent<Grid>();
 
-        _staticObstacleGrid = new NativeGrid<bool>(this.Grid, GetLevelBounds());
+        _staticObstacleGrid = new NativeGrid<bool>(this.Grid, Helpers.GetLevelBounds(this.gameObject));
         _staticObstacleGrid.SetAll((row, col, ngrid) =>
         {
-            if (IsStaticObstacleAtPosition(ngrid.GetWorldPosition(row, col)))
+            if (Helpers.IsColidingCell(ngrid.GetWorldPosition(row, col), Grid.cellSize, ObstacleLayerMask))
                 return true;
             return false;
         });
@@ -103,24 +93,6 @@ public class VoxelizedLevel : VoxelizedLevelBase
                 futureGrid.Set(nativeCoord.x, nativeCoord.y, true);
         }
         return futureGrid;
-    }
-
-    private bool IsStaticObstacleAtPosition(Vector3 worldPosition)
-    {
-        Vector2 position2D = new Vector2(worldPosition.x, worldPosition.y);
-        Vector2 halfBoxSize = Grid.cellSize * 0.5f;
-
-        // Perform a BoxCast to check for obstacles in the area
-        RaycastHit2D hit = Physics2D.BoxCast(
-            origin: position2D,
-            size: halfBoxSize,
-            angle: 0f,
-            direction: Vector2.zero,
-            distance: 0.01f,
-            layerMask: ObstacleLayerMask
-        );
-
-        return hit.collider != null;
     }
 
     // Update is called once per frame

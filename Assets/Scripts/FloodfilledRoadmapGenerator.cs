@@ -39,7 +39,7 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
         _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
         this.Grid = GetComponent<Grid>();
 
-        LevelGrid = new NativeGrid<int>(this.Grid, GetLevelBounds());
+        LevelGrid = new NativeGrid<int>(this.Grid, Helpers.GetLevelBounds(this.gameObject));
         LevelGrid.SetAll(SetCellColliderIndex);
 
         FloodRegions();
@@ -58,16 +58,6 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
         Debug.Log($"Roadmap nodes: {RoadMap.adjacencyList.Count}");
         Debug.Log($"Simplified connection count : {_debugSimplifiedConnections.Count}");
         Debug.Log($"Recursion count is : {totalRecursion}");
-    }
-
-    public Bounds GetLevelBounds()
-    {
-        var _boundary = Physics2D.OverlapPoint(this.transform.position, BoundaryLayerMask);
-        if (_boundary != null)
-        {
-            return _boundary.gameObject.GetComponent<Collider2D>().bounds;
-        }
-        throw new NotImplementedException();
     }
 
     public int SetCellColliderIndex(int row, int col, NativeGrid<int> ngrid)

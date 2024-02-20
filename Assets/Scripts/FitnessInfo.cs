@@ -39,6 +39,10 @@ public class FitnessInfoVisualizer : MonoBehaviour
 
     public void OnDrawGizmosSelected()
     {
+        foreach (var eval in Info.FitnessEvaluations)
+        {
+            eval.OnSelected();
+        }
         string allEvals = "";
         foreach (var evaluation in Info.FitnessEvaluations)
         {

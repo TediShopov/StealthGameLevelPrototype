@@ -56,14 +56,15 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
         Profiler.EndSample();
     }
 
-    public List<Vector2> AreNotCollidingDynamicDiscrete(List<Vector2> positions, float timeFrom, float timeTo)
+    public List<Vector2> AreNotCollidingDynamicDiscrete(List<Vector2> positions, float timeFrom, float timeTo, float step = float.MaxValue)
     {
+        if (step == float.MaxValue) step = Step;
         //        List<Vector2> _uncollidedPositions = new List<Vector2>(positions);
         //        _uncollidedPositions = _uncollidedPositions.Where(x =>
         //             !Physics2D.OverlapBox(x, area, ObstacleLayerMask)
         //        ).ToList();
 
-        int timeSteps = Mathf.FloorToInt((timeTo - timeFrom) / (float)Step);
+        int timeSteps = Mathf.FloorToInt((timeTo - timeFrom) / (float)step);
         foreach (var p in EnemyPatrolPaths)
         {
             BacktrackPatrolPath patrol = new BacktrackPatrolPath(p.BacktrackPatrolPath);
