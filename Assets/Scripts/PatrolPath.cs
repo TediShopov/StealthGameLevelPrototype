@@ -180,11 +180,19 @@ public class PatrolPath : MonoBehaviour, IFutureTransform
 
     public void SetPatrolPath(List<Vector2> points)
     {
-        BacktrackPatrolPath = new BacktrackPatrolPath(points, 0);
+        if (points.Count >= 2)
+        {
+            BacktrackPatrolPath = new BacktrackPatrolPath(points, 0);
+        }
+        else if (points.Count == 1)
+        {
+            this.transform.position = points[0];
+        }
     }
 
     private void FixedUpdate()
     {
+        if (BacktrackPatrolPath == null) { return; }
         float travelDistance = EnemyProperties.Speed * Time.fixedDeltaTime;
         BacktrackPatrolPath.MoveAlong(travelDistance);
         FutureTransform futureTransform = GetPathOrientedTransform(BacktrackPatrolPath);

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.UIElements;
@@ -67,25 +68,79 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
         int timeSteps = Mathf.FloorToInt((timeTo - timeFrom) / (float)step);
         foreach (var p in EnemyPatrolPaths)
         {
-            BacktrackPatrolPath patrol = new BacktrackPatrolPath(p.BacktrackPatrolPath);
+            BacktrackPatrolPath patrol = null;
+            if (p.BacktrackPatrolPath != null)
+            {
+                patrol = new BacktrackPatrolPath(p.BacktrackPatrolPath);
+                patrol.MoveAlong(timeFrom * p.EnemyProperties.Speed);
+            }
             float time = timeFrom;
-            patrol.MoveAlong(timeFrom);
             for (int i = 0; i <= timeSteps; i++)
             {
                 time += Step;
                 time = Mathf.Clamp(time, timeFrom, timeTo);
                 //Small Inaccuracy
-                patrol.MoveAlong(Step);
-
+                if (patrol != null)
+                    patrol.MoveAlong(Step * p.EnemyProperties.Speed);
                 positions = positions.Where(x =>
                 {
-                    FutureTransform ft = PatrolPath.GetPathOrientedTransform(patrol);
+                    FutureTransform ft;
+                    if (patrol is not null)
+                        ft = PatrolPath.GetPathOrientedTransform(patrol);
+                    else
+                        ft = p.GetFutureTransform(0);
                     return !FieldOfView.TestCollision(x, ft,
                         p.EnemyProperties.FOV, p.EnemyProperties.ViewDistance, ObstacleLayerMask);
                 }).ToList();
             }
         }
         return positions;
+    }
+
+    private bool IsCollidingWithStationeryEnemy(Vector2 from, Vector2 to, float timeFrom, float timeTo, PatrolPath path)
+    {
+        if (path == null) return false;
+        if (path.BacktrackPatrolPath is not null) throw new ArgumentException();
+
+        FutureTransform ft = path.GetFutureTransform(0);
+        int timeSteps = Mathf.FloorToInt((timeTo - timeFrom) / (float)Step);
+        for (int i = 0; i <= timeSteps; i++)
+        {
+            float time = timeFrom;
+            time += Step;
+            time = Mathf.Clamp(time, timeFrom, timeTo);
+            float rel = Mathf.InverseLerp(timeFrom, timeTo, time);
+            Vector2 positionInTime = Vector2.Lerp(from, to, rel);
+            bool hitEnemyCone = FieldOfView.TestCollision(positionInTime, ft,
+                    path.EnemyProperties.FOV, path.EnemyProperties.ViewDistance, ObstacleLayerMask);
+            if (hitEnemyCone)
+                return true;
+        }
+        return false;
+    }
+
+    private bool IsCollidingWithPatrol(Vector2 from, Vector2 to, float timeFrom, float timeTo, PatrolPath path)
+    {
+        BacktrackPatrolPath patrol = new BacktrackPatrolPath(path.BacktrackPatrolPath);
+        float time = timeFrom;
+        int timeSteps = Mathf.FloorToInt((timeTo - timeFrom) / (float)Step);
+        patrol.MoveAlong(timeFrom * path.EnemyProperties.Speed);
+        for (int i = 0; i <= timeSteps; i++)
+        {
+            time += Step;
+            time = Mathf.Clamp(time, timeFrom, timeTo);
+            //Small Inaccuracy
+            patrol.MoveAlong(Step * path.EnemyProperties.Speed);
+
+            float rel = Mathf.InverseLerp(timeFrom, timeTo, time);
+            Vector2 positionInTime = Vector2.Lerp(from, to, rel);
+            FutureTransform ft = PatrolPath.GetPathOrientedTransform(patrol);
+            bool hitEnemyCone = FieldOfView.TestCollision(positionInTime, ft,
+                    path.EnemyProperties.FOV, path.EnemyProperties.ViewDistance, ObstacleLayerMask);
+            if (hitEnemyCone)
+                return true;
+        }
+        return false;
     }
 
     public bool IsColliding(Vector2 from, Vector2 to, float timeFrom, float timeTo)
@@ -97,25 +152,15 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
         int timeSteps = Mathf.FloorToInt((timeTo - timeFrom) / (float)Step);
         foreach (var p in EnemyPatrolPaths)
         {
-            BacktrackPatrolPath patrol = new BacktrackPatrolPath(p.BacktrackPatrolPath);
-            float time = timeFrom;
-            patrol.MoveAlong(timeFrom);
-            for (int i = 0; i <= timeSteps; i++)
+            if (p.BacktrackPatrolPath == null)
             {
-                time += Step;
-                time = Mathf.Clamp(time, timeFrom, timeTo);
-                //Small Inaccuracy
-                patrol.MoveAlong(Step);
-
-                float rel = Mathf.InverseLerp(timeFrom, timeTo, time);
-                Vector2 positionInTime = Vector2.Lerp(from, to, rel);
-                FutureTransform ft = PatrolPath.GetPathOrientedTransform(patrol);
-                bool hitEnemyCone = FieldOfView.TestCollision(positionInTime, ft,
-                    p.EnemyProperties.FOV, p.EnemyProperties.ViewDistance, ObstacleLayerMask);
-                if (hitEnemyCone)
-                {
+                if (IsCollidingWithStationeryEnemy(from, to, timeFrom, timeTo, p))
                     return true;
-                }
+            }
+            else
+            {
+                if (IsCollidingWithPatrol(from, to, timeFrom, timeTo, p))
+                    return true;
             }
         }
         return false;

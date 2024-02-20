@@ -5,6 +5,7 @@ using Unity.IO.LowLevel.Unsafe;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Codice.CM.WorkspaceServer;
 
 namespace StealthLevelEvaluation
 {
@@ -144,140 +145,126 @@ namespace StealthLevelEvaluation
     {
         private Grid Grid;
         private LayerMask ObstacleLayerMask;
-        private PatrolPath _debugEnenmy;
+        private PatrolPath[] _debugEnenmies;
 
-        public OverlappingGuardCoverage(GameObject level) : base(level, "Relative Level Coverage", 0)
+        public OverlappingGuardCoverage(GameObject level) : base(level, "Average realtive overlapping areas", 0)
         {
             Grid = Phenotype.GetComponentInChildren<Grid>(false);
-            ObstacleLayerMask = LayerMask.GetMask("Obstacles");
+            ObstacleLayerMask = LayerMask.GetMask("Obstacle");
         }
 
-        public static Vector2[] GetFovOBB(FieldOfView fieldOfView)
+        private void DebugDrawDiscreteBounds(Bounds bounds, Color color)
         {
-            float vd = fieldOfView.EnemyProperties.ViewDistance;
-            float fov = fieldOfView.EnemyProperties.FOV;
-
-            Vector2 minLeft = (Helpers.GetVectorFromAngle(fov / 2.0f) * vd);
-            Vector2 maxRight = (Helpers.GetVectorFromAngle(-fov / 2.0f) * vd);
-
-            Vector2[] localSpaceBox = new Vector2[]
+            Gizmos.color = color;
+            foreach (var cells in DiscretBoundsCells(bounds))
             {
-                new Vector2(0,0), new Vector2(vd,0),
-                minLeft, maxRight
+                Gizmos.DrawSphere(Grid.GetCellCenterWorld(cells), 0.1f);
             }
-            ;
-            return localSpaceBox;
         }
 
-        //public static Bounds GetFovBounds(FutureTransform ft, float vd)
-        //{
-        //    Bounds bounds = new Bounds(ft.Position, new Vector3(0, 0, 0));
-        //    Vector2 minLeft = ft.Position + Vector2.Perpendicular(ft.Direction) * vd;
-        //    Gizmos.DrawLine(ft.Position, minLeft);
-        //    Vector2 maxRight = ft.Position + Vector2.Perpendicular(-ft.Direction) * vd;
-        //    maxRight += ft.Direction * vd;
-
-        //    Gizmos.DrawLine(ft.Position, maxRight);
-
-        //    Vector2 actualMin = new Vector2(Mathf.Min(minLeft.x, maxRight.x), Mathf.Min(minLeft.y, maxRight.y));
-        //    Vector2 actualMax = new Vector2(Mathf.Max(minLeft.x, maxRight.x), Mathf.Max(minLeft.y, maxRight.y));
-
-        //    Gizmos.DrawSphere(actualMin, 0.1f);
-        //    Gizmos.DrawSphere(actualMax, 0.1f);
-
-        //    //            bounds.Encapsulate(minLeft);
-        //    //            bounds.Encapsulate(maxRight);
-        //    bounds.Encapsulate(actualMin);
-        //    bounds.Encapsulate(actualMax);
-        //    return bounds;
-        //}
-        public static Bounds GetFovBounds(FutureTransform ft, float vd, float fov)
+        private List<Vector3Int> DiscretBoundsCells(Bounds bounds)
         {
-            Vector2 boundsCenter = ft.Position + ft.Direction * vd / 2.0f;
-            Bounds bounds = new Bounds(boundsCenter, new Vector3(0, 0, 0));
-
-            Vector2 fovPeak = ft.Position + ft.Direction * vd;
-            Vector2 fovPos = ft.Position;
-            Vector2 fovBoundTwo = ft.Position + (Vector2)(Quaternion.AngleAxis(fov / 2.0f, Vector3.forward) * ft.Direction * vd);
-            Vector2 fovBoundOne = ft.Position + (Vector2)(Quaternion.AngleAxis(-fov / 2.0f, Vector3.forward) * ft.Direction * vd);
-            Gizmos.DrawSphere(fovPeak, 0.1f);
-            Gizmos.DrawSphere(fovPos, 0.1f);
-            Gizmos.DrawSphere(fovBoundOne, 0.1f);
-            Gizmos.DrawSphere(fovBoundTwo, 0.1f);
-
-            //            bounds.Encapsulate(minLeft);
-            //            bounds.Encapsulate(maxRight);
-            bounds.Encapsulate(fovPeak);
-            bounds.Encapsulate(fovPos);
-            bounds.Encapsulate(fovBoundOne);
-            bounds.Encapsulate(fovBoundTwo);
-            return bounds;
+            List<Vector3Int> worldPositions = new List<Vector3Int>();
+            Vector3Int gridMin = Grid.WorldToCell(bounds.min);
+            Vector3Int gridMax = Grid.WorldToCell(bounds.max);
+            for (int rows = gridMin.y; rows < gridMax.y; rows++)
+            {
+                for (int cols = gridMin.x; cols < gridMax.x; cols++)
+                {
+                    worldPositions.Add((new Vector3Int(cols, rows, 0)));
+                }
+            }
+            return worldPositions;
         }
 
         public override void OnSelected()
         {
-            if (_debugEnenmy is null) return;
-            //Get enemy bounding box at 0
-            Bounds bounds = GetFovBounds(
-                _debugEnenmy.GetFutureTransform(0),
-                _debugEnenmy.EnemyProperties.ViewDistance,
-                _debugEnenmy.EnemyProperties.FOV);
-            //Visualize bounding box
-            Gizmos.DrawWireCube(bounds.center, bounds.size);
-            //            Vector2[] points = GetFovOBB(_debugEnenmy.FieldOfView);
-            //            foreach (var p in points)
-            //            {
-            //                Gizmos.DrawSphere(p, 0.1f);
-            //            }
+            if (_debugEnenmies is null) return;
+            for (int i = 0; i < _debugEnenmies.Length - 1; i++)
+            {
+                for (int j = i + 1; j < _debugEnenmies.Length; j++)
+                {
+                    var e = _debugEnenmies[i];
+                    var othere = _debugEnenmies[j];
+                    float vd = e.EnemyProperties.ViewDistance;
+                    float fov = e.EnemyProperties.FOV;
+                    Bounds bounds = FieldOfView.GetFovBounds(
+                        e.GetFutureTransform(0),
+                    e.EnemyProperties.ViewDistance,
+                    e.EnemyProperties.FOV);
+                    Bounds otherBounds = FieldOfView.GetFovBounds(
+                        othere.GetFutureTransform(0),
+                        othere.EnemyProperties.ViewDistance,
+                        othere.EnemyProperties.FOV);
+                    if (bounds.Intersects(otherBounds))
+                    {
+                        var overlapp = Helpers.IntersectBounds(bounds, otherBounds);
+                        DebugDrawDiscreteBounds(overlapp, Color.magenta);
+                        List<Vector3Int> visibleCoordinates =
+                            DiscretBoundsCells(overlapp)
+                            .Where(x =>
+                            {
+                                var pos = Grid.GetCellCenterWorld(x);
+                                bool one = FieldOfView.TestCollision(pos, e.GetFutureTransform(0), fov, vd, ObstacleLayerMask);
+                                bool other = FieldOfView.TestCollision(pos, othere.GetFutureTransform(0), fov, vd, ObstacleLayerMask);
+                                if (one && other)
+                                {
+                                    Gizmos.color = Color.green;
+                                    Gizmos.DrawSphere(pos, 0.1f);
+                                }
+                                return one && other;
+                            }).ToList();
+                    }
+                }
+            }
         }
 
         public override float Evaluate()
         {
             //Get Future level instance
             var futureLevel = Phenotype.GetComponentInChildren<IFutureLevel>(false);
-            var enemiesInLevel = Phenotype.GetComponentsInChildren<PatrolPath>();
-            _debugEnenmy = enemiesInLevel.FirstOrDefault();
+            _debugEnenmies = Phenotype.GetComponentsInChildren<PatrolPath>();
             NativeGrid<bool> native = new NativeGrid<bool>(Grid, Helpers.GetLevelBounds(Phenotype));
             native.SetAll((x, y, n) => false);
-            float maxTime = ((ContinuosFutureLevel)futureLevel).EnemyPatrolPaths.Max(x => x.GetTimeToTraverse());
+            float maxTime = ((ContinuosFutureLevel)futureLevel)
+                .EnemyPatrolPaths.Max(x => x.GetTimeToTraverse());
 
-            //            for (float i = 0; i <= maxTime; i += futureLevel.Step)
-            //            {
-            //                foreach (var e in enemiesInLevel)
-            //                {
-            //                    foreach (var othere in enemiesInLevel)
-            //                    {
-            //                        if (e == othere) continue;
-            //                        FutureTransform fte = e.GetFutureTransform(i);
-            //                        FutureTransform ftothere = othere.GetFutureTransform(i);
-            //                        float distanceBetweenEnemies = Vector2.Distance(fte.Position, ftothere.Position);
-            //                        if (distanceBetweenEnemies > e.EnemyProperties.ViewDistance * 2)
-            //                            continue;
-            //
-            //                        List<Vector3Int> epossibleAffected = EnemyDiscretizer.GetPossibleAffectedCells
-            //                            (e, Grid, i);
-            //                        List<Vector3Int> eotherpossibleAffected = EnemyDiscretizer.GetPossibleAffectedCells
-            //                            (othere, Grid, i);
-            //                        var combinedSet = eotherpossibleAffected.Union<Vector3Int>(eotherpossibleAffected).ToList();
-            //
-            //                        foreach (var cell in combinedSet)
-            //                        {
-            //                            Vector3 worldPos = Grid.GetCellCenterWorld(cell);
-            //                            bool se = FieldOfView.TestCollision(worldPos, fte,
-            //                                e.EnemyProperties.FOV, e.EnemyProperties.ViewDistance, ObstacleLayerMask);
-            //                            bool sother = FieldOfView.TestCollision(worldPos, ftothere,
-            //                                othere.EnemyProperties.FOV, othere.EnemyProperties.ViewDistance, ObstacleLayerMask);
-            //                            if (e == true && sother == true)
-            //                            {
-            //                                Vector2Int natCoord = native.GetNativeCoord(new Vector2Int(cell.x, cell.y));
-            //                                native.Set(natCoord.x, natCoord.y, true);
-            //                            }
-            //                        }
-            //                    }
-            //                }
-            //            }
-
-            return 0;
+            float vd = _debugEnenmies[0].EnemyProperties.ViewDistance;
+            float fov = _debugEnenmies[0].EnemyProperties.FOV;
+            //Formula: angel in radians multipled by radius on the power of 2
+            float maxOverlappArea = Mathf.Deg2Rad * fov * vd * vd;
+            float accumulatedOverlapp = 0;
+            for (float time = 0; time <= maxTime; time += futureLevel.Step)
+            {
+                for (int i = 0; i < _debugEnenmies.Length - 1; i++)
+                {
+                    for (int j = i + 1; j < _debugEnenmies.Length; j++)
+                    {
+                        var e = _debugEnenmies[i];
+                        var othere = _debugEnenmies[j];
+                        Bounds bounds = FieldOfView.GetFovBounds(e.GetFutureTransform(time), vd, fov);
+                        Bounds otherBounds = FieldOfView.GetFovBounds(othere.GetFutureTransform(time), vd, fov);
+                        if (bounds.Intersects(otherBounds))
+                        {
+                            var overlapp = Helpers.IntersectBounds(bounds, otherBounds);
+                            List<Vector3Int> visibleCoordinates =
+                                DiscretBoundsCells(overlapp)
+                                .Where(x =>
+                                {
+                                    var pos = Grid.GetCellCenterWorld(x);
+                                    bool one = FieldOfView.TestCollision(pos, e.GetFutureTransform(time), fov, vd, ObstacleLayerMask);
+                                    bool other = FieldOfView.TestCollision(pos, othere.GetFutureTransform(time), fov, vd, ObstacleLayerMask);
+                                    return one && other;
+                                }).ToList();
+                            float estimatedOverlappArea = visibleCoordinates.Count * (Grid.cellSize.x * Grid.cellSize.y);
+                            float relativeOverlappArea = estimatedOverlappArea / maxOverlappArea;
+                            accumulatedOverlapp += relativeOverlappArea;
+                        }
+                    }
+                }
+            }
+            float avgRelOverlapp = accumulatedOverlapp / maxTime;
+            return -avgRelOverlapp * 100;
         }
     }
 }
@@ -347,8 +334,7 @@ public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
             new FitnessInfo(eval, relCovarageEval, overlappingCoveredArea));
         levelChromose.FitnessInfo = infoObj;
         //Attaching fitness evaluation information to the object itself
-
-        return relCovarageEval.Value;
+        return infoObj.FitnessEvaluations.Sum(x => x.Value);
     }
 
     public void PrepareForNewGeneration()

@@ -84,6 +84,37 @@ public class FieldOfView : MonoBehaviour
         }
     }
 
+    public static Bounds GetFovBounds(FutureTransform ft, float vd, float fov)
+    {
+        Vector2 boundsCenter = ft.Position + ft.Direction * vd / 2.0f;
+        Bounds bounds = new Bounds(boundsCenter, new Vector3(0, 0, 0));
+
+        Vector2 fovPeak = ft.Position + ft.Direction * vd;
+        Vector2 fovPos = ft.Position;
+        Vector2 fovBoundTwo = ft.Position + (Vector2)(Quaternion.AngleAxis(fov / 2.0f, Vector3.forward) * ft.Direction * vd);
+        Vector2 fovBoundOne = ft.Position + (Vector2)(Quaternion.AngleAxis(-fov / 2.0f, Vector3.forward) * ft.Direction * vd);
+
+        //            bounds.Encapsulate(minLeft);
+        //            bounds.Encapsulate(maxRight);
+        bounds.Encapsulate(fovPeak);
+        bounds.Encapsulate(fovPos);
+        bounds.Encapsulate(fovBoundOne);
+        bounds.Encapsulate(fovBoundTwo);
+        return bounds;
+    }
+
+    public Bounds GetBounds()
+    {
+        return GetFovBounds(
+            new FutureTransform()
+            {
+                Position = transform.position,
+                Direction = GetGlobalDirection()
+            },
+            EnemyProperties.ViewDistance,
+            EnemyProperties.FOV);
+    }
+
     public Vector3 GetGlobalDirection()
     {
         float modifer = Helpers.GetAngleFromVectorFloat(this.transform.right);

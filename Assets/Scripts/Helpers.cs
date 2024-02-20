@@ -156,4 +156,13 @@ public class Helpers : MonoBehaviour
         }
         return n;
     }
+
+    public static Bounds IntersectBounds(Bounds a, Bounds b)
+    {
+        Vector3 min = Vector3.Max(a.min, b.min);
+        Vector3 max = Vector3.Min(a.max, b.max);
+        var overlapp = new Bounds(min, new Vector3(0, 0, 0));
+        overlapp.SetMinMax(min, max);
+        return overlapp;
+    }
 }

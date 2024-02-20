@@ -8,31 +8,35 @@ using UnityEngine;
 /// <summary>
 /// Given a unity grid and bounds construct a native representation with a generic methods
 /// Used for discretisizing
-/// !WARNING! Grid is assumed to be a the center 
+/// !WARNING! Grid is assumed to be a the center
 /// </summary>
-public class NativeGrid<T>  
+public class NativeGrid<T>
 {
     private T[,] _nativeGrid;
     public Grid Grid;
 
     //Extents of the grids in cell count
     public Vector3Int _gridMin { get; set; }
+
     public Vector3Int _gridMax { get; set; }
 
     public Vector3 WorldMin => this.Grid.GetCellCenterWorld(_gridMin);
     public Vector3 WorldMax => this.Grid.GetCellCenterWorld(_gridMax);
+
     public int GetRows() => _gridMax.y - _gridMin.y;
+
     public int GetCols() => _gridMax.x - _gridMin.x;
 
     public Vector2Int GetNativeCoord(Vector2Int unityCoord)
         => new Vector2Int(unityCoord.y - _gridMin.y, unityCoord.x - _gridMin.x);
 
     //From native to unity grid coordinates
-    public Vector3Int GetUnityCoord(int row, int col) 
+    public Vector3Int GetUnityCoord(int row, int col)
         => new Vector3Int(col + _gridMin.x, row + _gridMin.y, 0);
-    public Vector3 GetWorldPosition(int row, int col) 
-     =>  Grid.GetCellCenterWorld(this.GetUnityCoord(row,col));
-    
+
+    public Vector3 GetWorldPosition(int row, int col)
+     => Grid.GetCellCenterWorld(this.GetUnityCoord(row, col));
+
     public NativeGrid(Grid unityGrid, Bounds bounds)
     {
         this.Grid = unityGrid;
@@ -40,21 +44,24 @@ public class NativeGrid<T>
         _gridMax = Grid.WorldToCell(bounds.max);
         _nativeGrid = new T[GetRows(), GetCols()];
     }
+
     public NativeGrid(NativeGrid<T> other)
     {
         DeepCopy(other);
     }
-    public void SetAll(Func<int,int,NativeGrid<T>,T> func) 
+
+    public void SetAll(Func<int, int, NativeGrid<T>, T> func)
     {
         for (int row = 0; row < GetRows(); row++)
         {
             for (int col = 0; col < GetCols(); col++)
             {
-                _nativeGrid[row,col] = func(row, col,this);
+                _nativeGrid[row, col] = func(row, col, this);
             }
         }
     }
-    public void ForEach(Action<int,int> action) 
+
+    public void ForEach(Action<int, int> action)
     {
         for (int row = 0; row < GetRows(); row++)
         {
@@ -64,20 +71,23 @@ public class NativeGrid<T>
             }
         }
     }
-    public T Get(int row, int col)=> _nativeGrid[row,col];
-    public T Set(int row, int col,T value)=> _nativeGrid[row,col] = value;
-    public bool IsInGrid(int row, int col) => row >= 0 && col >= 0 
+
+    public T Get(int row, int col) => _nativeGrid[row, col];
+
+    public T Set(int row, int col, T value) => _nativeGrid[row, col] = value;
+
+    public bool IsInGrid(int row, int col) => row >= 0 && col >= 0
         && row < _nativeGrid.GetLength(0) && col < _nativeGrid.GetLength(1);
 
-    public void DeepCopy(NativeGrid<T> other) 
+    public void DeepCopy(NativeGrid<T> other)
     {
-        this.Grid= other.Grid;
+        this.Grid = other.Grid;
         this._gridMin = other._gridMin;
         this._gridMax = other._gridMax;
         //Perform deep copy of the other native grid
         this._nativeGrid = Copy(other._nativeGrid);
     }
-    
+
     public static T[,] Copy<T>(T[,] array)
     {
         int width = array.GetLength(0);
@@ -94,6 +104,4 @@ public class NativeGrid<T>
 
         return copy;
     }
-
-
 }

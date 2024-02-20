@@ -43,6 +43,7 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
         LevelGrid.SetAll(SetCellColliderIndex);
 
         FloodRegions();
+        if (RoadMap.adjacencyList.Count <= 0) return;
         Vector2 superNode = RoadMap.adjacencyList.First().Key;
         foreach (var nodeInfoPair in RoadMap.adjacencyList)
         {

@@ -30,6 +30,13 @@ public class PathGeneratorClass : MonoBehaviour, IPathGenerator
 
     public virtual List<List<Vector2>> GeneratePaths(int pathsToGenerate)
     {
+        if (Roadmap == null || Roadmap.adjacencyList.Count <= 0) return
+                new List<List<Vector2>>()
+                {
+                    new List<Vector2>(),
+                    new List<Vector2>(),
+                    new List<Vector2>()
+                };
         Profiler.BeginSample("Enemy path generation");
         var keyValueList = this.Roadmap.adjacencyList.Keys.ToArray();
 

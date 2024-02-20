@@ -407,7 +407,7 @@ MonoBehaviour:
   - {fileID: 6228754912093341014, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
   - {fileID: 6228754912093341014, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
   MinEnemiesSpawned: 1
-  MaxEnemiesSpawned: 3
+  MaxEnemiesSpawned: 2
   ObstaclesSpawned: 3
   MinObjectScale: 0.2
   MaxObjectScale: 5
@@ -1077,8 +1077,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a59df0218d90434e9622a53774d6147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rows: 2
-  Columns: 2
+  Rows: 4
+  Columns: 4
   Seed: 2
   RandomizeSeed: 1
   targetRRTSuccessEvaluation: {fileID: 1430829062}
@@ -1086,7 +1086,7 @@ MonoBehaviour:
   AimedGenerations: 1
   LogExecutionAvg: 0
   LogExecutionTimes: 10
-  TopNLevels: 1
+  TopNLevels: 3
 --- !u!4 &1474898339
 Transform:
   m_ObjectHideFlags: 0
