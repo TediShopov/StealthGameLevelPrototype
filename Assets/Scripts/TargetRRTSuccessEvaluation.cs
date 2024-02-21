@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Codice.CM.WorkspaceServer;
+using UnityEngine.Profiling;
 
 namespace StealthLevelEvaluation
 {
@@ -32,7 +33,9 @@ namespace StealthLevelEvaluation
                 if (!_evaluted)
                 {
                     _evaluted = true;
+                    Profiler.BeginSample(Name);
                     _time = Helpers.TrackExecutionTime(() => _value = Evaluate());
+                    Profiler.EndSample();
                 }
                 else
                 {
@@ -246,7 +249,10 @@ namespace StealthLevelEvaluation
                         Bounds otherBounds = FieldOfView.GetFovBounds(othere.GetFutureTransform(time), vd, fov);
                         if (bounds.Intersects(otherBounds))
                         {
+                            Profiler.BeginSample("Bounds intersecting");
                             var overlapp = Helpers.IntersectBounds(bounds, otherBounds);
+                            Profiler.EndSample();
+                            Profiler.BeginSample("Cell visibility checking");
                             List<Vector3Int> visibleCoordinates =
                                 DiscretBoundsCells(overlapp)
                                 .Where(x =>
@@ -256,6 +262,7 @@ namespace StealthLevelEvaluation
                                     bool other = FieldOfView.TestCollision(pos, othere.GetFutureTransform(time), fov, vd, ObstacleLayerMask);
                                     return one && other;
                                 }).ToList();
+                            Profiler.EndSample();
                             float estimatedOverlappArea = visibleCoordinates.Count * (Grid.cellSize.x * Grid.cellSize.y);
                             float relativeOverlappArea = estimatedOverlappArea / maxOverlappArea;
                             accumulatedOverlapp += relativeOverlappArea;

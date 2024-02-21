@@ -32,7 +32,7 @@ public class LevelChromosome : ChromosomeBase
 
     public override IChromosome CreateNew()
     {
-        return new LevelChromosome(Length);
+        return new LevelChromosome(Length, ChromosomeRandom);
     }
 
     public override Gene GenerateGene(int geneIndex)

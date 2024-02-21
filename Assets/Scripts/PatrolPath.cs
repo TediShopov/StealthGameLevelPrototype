@@ -5,6 +5,7 @@ using System.Linq;
 using System.Xml.XPath;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Profiling;
 using UnityEngine.UIElements;
 
 public class BacktrackPatrolPath
@@ -253,6 +254,7 @@ public class PatrolPath : MonoBehaviour, IFutureTransform
 
     public FutureTransform GetFutureTransform(float time)
     {
+        Profiler.BeginSample("Future Transforms");
         if (BacktrackPatrolPath == null)
             return new FutureTransform()
             {
@@ -262,6 +264,7 @@ public class PatrolPath : MonoBehaviour, IFutureTransform
         float distanceCovered = EnemyProperties.Speed * time;
         BacktrackPatrolPath pathCopy = new BacktrackPatrolPath(BacktrackPatrolPath);
         pathCopy.MoveAlong(distanceCovered);
+        Profiler.EndSample();
         return GetPathOrientedTransform(pathCopy);
     }
 }

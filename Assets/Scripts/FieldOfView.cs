@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Profiling;
 
 [RequireComponent(typeof(MeshFilter))]
 public class FieldOfView : MonoBehaviour
@@ -86,6 +87,7 @@ public class FieldOfView : MonoBehaviour
 
     public static Bounds GetFovBounds(FutureTransform ft, float vd, float fov)
     {
+        Profiler.BeginSample("FOV Bound Calculation");
         Vector2 boundsCenter = ft.Position + ft.Direction * vd / 2.0f;
         Bounds bounds = new Bounds(boundsCenter, new Vector3(0, 0, 0));
 
@@ -100,6 +102,7 @@ public class FieldOfView : MonoBehaviour
         bounds.Encapsulate(fovPos);
         bounds.Encapsulate(fovBoundOne);
         bounds.Encapsulate(fovBoundTwo);
+        Profiler.EndSample();
         return bounds;
     }
 

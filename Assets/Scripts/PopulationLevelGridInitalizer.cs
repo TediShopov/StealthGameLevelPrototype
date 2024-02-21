@@ -32,6 +32,10 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
 
     public void Start()
     {
+        if (RandomizeSeed)
+            RandomSeedGenerator = new System.Random();
+        else
+            RandomSeedGenerator = new System.Random(Seed);
         if (LogExecutionAvg)
         {
             string algoName = $"GEN_{AimedGenerations}_POP{Rows * Columns}_SZ{LevelSize}";
@@ -67,7 +71,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         var crossover = new TwoPointCrossover();
         var mutation = new UniformMutation(true);
         //var chromosome = new FloatingPointChromosome(0,1,35,8);
-        var chromosome = new LevelChromosome(35);
+        var chromosome = new LevelChromosome(35, RandomSeedGenerator);
         var population = new Population(Rows * Columns, Rows * Columns, chromosome);
         targetRRTSuccessEvaluation.SpawnGridOfEmptyGenerators(Rows * Columns);
         targetRRTSuccessEvaluation.PrepareForNewGeneration();

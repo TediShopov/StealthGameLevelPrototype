@@ -416,7 +416,7 @@ MonoBehaviour:
   VisualBoundWidth: 1
   RandomSeed: 1
   isRandom: 1
-  RunOnStart: 0
+  RunOnStart: 1
   DisposeNow: 0
 --- !u!4 &580530819
 Transform:
@@ -1077,10 +1077,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a59df0218d90434e9622a53774d6147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rows: 4
-  Columns: 4
-  Seed: 2
-  RandomizeSeed: 1
+  Rows: 2
+  Columns: 2
+  Seed: 15
+  RandomizeSeed: 0
   targetRRTSuccessEvaluation: {fileID: 1430829062}
   LevelSize: {x: 15, y: 15}
   AimedGenerations: 1
