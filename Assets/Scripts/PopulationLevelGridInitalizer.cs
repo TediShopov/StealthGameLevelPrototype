@@ -23,6 +23,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
     public int AimedGenerations = 10;
     public GeneticAlgorithm GeneticAlgorithm;
     public bool LogExecutionAvg = false;
+    public bool LogIndividualExecutions = false;
     public int LogExecutionTimes = 0;
     public int TopNLevels = 5;
     //private List<LevelPhenotypeGenerator> _topFiveLevelPhenotypeGenerators;
@@ -103,10 +104,57 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         return topN;
     }
 
+    private void LogFinessFunctionInfo()
+    {
+        foreach (var gen in GeneticAlgorithm.Population.Generations)
+        {
+            foreach (var c in gen.Chromosomes)
+            {
+                FitnessInfo info = ((LevelChromosome)c).FitnessInfo;
+                string chromosomeInfo = $"Generation {gen.Number} - Fitness {c.Fitness}";
+                foreach (var e in info.FitnessEvaluations)
+                {
+                    chromosomeInfo += $" {e.Name} {e.Value} {e.Time}  ";
+                }
+                Debug.Log(chromosomeInfo);
+            }
+        }
+    }
+
+    private void OutputEvaluationTimesToCsv()
+    {
+        string header = string.Empty;
+        var bestInfo = (LevelChromosome)GeneticAlgorithm.BestChromosome;
+        foreach (var e in bestInfo.FitnessInfo.FitnessEvaluations)
+        {
+            header += $"{e.Name},";
+        }
+
+        string values = string.Empty;
+        foreach (var gen in GeneticAlgorithm.Population.Generations)
+        {
+            foreach (var c in gen.Chromosomes)
+            {
+                FitnessInfo info = ((LevelChromosome)c).FitnessInfo;
+                foreach (var e in info.FitnessEvaluations)
+                {
+                    values += $"{e.Time},";
+                }
+                values += "\n";
+            }
+        }
+        string algoName = $"GEN_{AimedGenerations}_POP{Rows * Columns}_SZ{LevelSize}_IndividualTimes";
+        Helpers.SaveToCSV($"Tests/{algoName}.txt", header + "\n" + values);
+    }
+
     private void Ga_TerminationReached(object sender, EventArgs e)
     {
         List<IChromosome> chromosomes = GetTopLevelsFitness();
         ManifestTopLevels(chromosomes);
+        if (LogIndividualExecutions)
+        {
+            OutputEvaluationTimesToCsv();
+        }
         _terminated = true;
     }
 

@@ -97,6 +97,61 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
         return positions;
     }
 
+    public HashSet<Vector2Int> UniqueVisibleCells(Grid grid, float timeFrom, float timeTo, float step = float.MaxValue)
+    {
+        if (step == float.MaxValue) step = Step;
+        //        List<Vector2> _uncollidedPositions = new List<Vector2>(positions);
+        //        _uncollidedPositions = _uncollidedPositions.Where(x =>
+        //             !Physics2D.OverlapBox(x, area, ObstacleLayerMask)
+        //        ).ToList();
+        HashSet<Vector2Int> cells = new HashSet<Vector2Int>();
+
+        int timeSteps = Mathf.FloorToInt((timeTo - timeFrom) / (float)step);
+        foreach (var p in EnemyPatrolPaths)
+        {
+            BacktrackPatrolPath patrol = null;
+            if (p.BacktrackPatrolPath != null)
+            {
+                patrol = new BacktrackPatrolPath(p.BacktrackPatrolPath);
+                patrol.MoveAlong(timeFrom * p.EnemyProperties.Speed);
+            }
+            float time = timeFrom;
+            for (int i = 0; i <= timeSteps; i++)
+            {
+                time += Step;
+                time = Mathf.Clamp(time, timeFrom, timeTo);
+                //Small Inaccuracy
+                if (patrol != null)
+                    patrol.MoveAlong(Step * p.EnemyProperties.Speed);
+
+                FutureTransform ft;
+                if (patrol is not null)
+                    ft = PatrolPath.GetPathOrientedTransform(patrol);
+                else
+                    ft = p.GetFutureTransform(0);
+                var fovBounds = FieldOfView.GetFovBounds(ft, p.EnemyProperties.ViewDistance, p.EnemyProperties.FOV);
+                var gridFovBounds = new BoundsInt();
+                gridFovBounds.min = grid.WorldToCell(fovBounds.min);
+                gridFovBounds.max = grid.WorldToCell(fovBounds.max);
+
+                for (int y = gridFovBounds.min.y; y < gridFovBounds.max.y; y++)
+                {
+                    for (int x = gridFovBounds.min.x; x < gridFovBounds.max.x; x++)
+                    {
+                        Vector2Int gridCoordinate = new Vector2Int(x, y);
+                        if (cells.Contains(gridCoordinate)) continue;
+                        Vector3 worldPos = grid.GetCellCenterWorld(new Vector3Int(x, y));
+                        bool colliding = FieldOfView.TestCollision(worldPos, ft,
+                            p.EnemyProperties.FOV, p.EnemyProperties.ViewDistance, ObstacleLayerMask);
+                        if (colliding)
+                            cells.Add(gridCoordinate);
+                    }
+                }
+            }
+        }
+        return cells;
+    }
+
     private bool IsCollidingWithStationeryEnemy(Vector2 from, Vector2 to, float timeFrom, float timeTo, PatrolPath path)
     {
         if (path == null) return false;

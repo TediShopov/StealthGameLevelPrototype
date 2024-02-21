@@ -411,12 +411,12 @@ MonoBehaviour:
   ObstaclesSpawned: 3
   MinObjectScale: 0.2
   MaxObjectScale: 5
-  MaxDimension: 15.9
-  MinDimension: 14
+  MaxDimension: 30
+  MinDimension: 30
   VisualBoundWidth: 1
   RandomSeed: 1
-  isRandom: 1
-  RunOnStart: 1
+  isRandom: 0
+  RunOnStart: 0
   DisposeNow: 0
 --- !u!4 &580530819
 Transform:
@@ -1046,7 +1046,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LevelGeneratorPrototype: {fileID: 580530818}
-  LevelSize: {x: 20, y: 20}
+  LevelSize: {x: 45, y: 45}
   GridDimension: 0
 --- !u!1 &1474898337
 GameObject:
@@ -1082,9 +1082,10 @@ MonoBehaviour:
   Seed: 15
   RandomizeSeed: 0
   targetRRTSuccessEvaluation: {fileID: 1430829062}
-  LevelSize: {x: 15, y: 15}
+  LevelSize: {x: 45, y: 45}
   AimedGenerations: 1
   LogExecutionAvg: 0
+  LogIndividualExecutions: 1
   LogExecutionTimes: 10
   TopNLevels: 3
 --- !u!4 &1474898339
