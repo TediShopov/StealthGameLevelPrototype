@@ -237,6 +237,59 @@ namespace StealthLevelEvaluation
             //Formula: angel in radians multipled by radius on the power of 2
             float maxOverlappArea = Mathf.Deg2Rad * fov * vd * vd;
             float accumulatedOverlapp = 0;
+            Helpers.LogExecutionTime(() => accumulatedOverlapp = NewAccumualtedOverlapp(futureLevel, maxTime, vd, fov, maxOverlappArea), "New Overlapp");
+            float avgRelOverlapp = accumulatedOverlapp / maxTime;
+            return -avgRelOverlapp * 100;
+        }
+
+        private float NewAccumualtedOverlapp(IFutureLevel futureLevel, float maxTime, float vd, float fov, float maxOverlappArea)
+        {
+            List<BacktrackPatrolPath> simulatedPaths = _debugEnenmies
+                .Select(x => new BacktrackPatrolPath(x.BacktrackPatrolPath)).ToList();
+
+            float accumulatedOverlapp = 0;
+            for (float time = 0; time <= maxTime; time += futureLevel.Step)
+            {
+                //Move all paths
+                simulatedPaths.ForEach(x => x.MoveAlong(futureLevel.Step * _debugEnenmies[0].EnemyProperties.Speed));
+                for (int i = 0; i < _debugEnenmies.Length - 1; i++)
+                {
+                    FutureTransform enemyFT = PatrolPath.GetPathOrientedTransform(simulatedPaths[i]);
+                    Bounds bounds = FieldOfView.GetFovBounds(enemyFT, vd, fov);
+                    for (int j = i + 1; j < _debugEnenmies.Length; j++)
+                    {
+                        FutureTransform otherEnemyFT = PatrolPath.GetPathOrientedTransform(simulatedPaths[j]);
+                        Bounds otherBounds = FieldOfView.GetFovBounds(otherEnemyFT, vd, fov);
+                        if (bounds.Intersects(otherBounds))
+                        {
+                            Profiler.BeginSample("Bounds intersecting");
+                            var overlapp = Helpers.IntersectBounds(bounds, otherBounds);
+                            Profiler.EndSample();
+                            Profiler.BeginSample("Cell visibility checking");
+                            List<Vector3Int> visibleCoordinates =
+                                DiscretBoundsCells(overlapp)
+                                .Where(x =>
+                                {
+                                    var pos = Grid.GetCellCenterWorld(x);
+                                    bool one = FieldOfView.TestCollision(pos, enemyFT, fov, vd, ObstacleLayerMask);
+                                    bool other = FieldOfView.TestCollision(pos, otherEnemyFT, fov, vd, ObstacleLayerMask);
+                                    return one && other;
+                                }).ToList();
+                            Profiler.EndSample();
+                            float estimatedOverlappArea = visibleCoordinates.Count * (Grid.cellSize.x * Grid.cellSize.y);
+                            float relativeOverlappArea = estimatedOverlappArea / maxOverlappArea;
+                            accumulatedOverlapp += relativeOverlappArea;
+                        }
+                    }
+                }
+            }
+
+            return accumulatedOverlapp;
+        }
+
+        private float OldEvaluation(IFutureLevel futureLevel, float maxTime, float vd, float fov, float maxOverlappArea)
+        {
+            float accumulatedOverlapp = 0;
             for (float time = 0; time <= maxTime; time += futureLevel.Step)
             {
                 for (int i = 0; i < _debugEnenmies.Length - 1; i++)
@@ -270,8 +323,8 @@ namespace StealthLevelEvaluation
                     }
                 }
             }
-            float avgRelOverlapp = accumulatedOverlapp / maxTime;
-            return -avgRelOverlapp * 100;
+
+            return accumulatedOverlapp;
         }
     }
 }
@@ -340,6 +393,7 @@ public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
         var infoObj = FitnessInfoVisualizer.AttachInfo(generator.gameObject,
             new FitnessInfo(eval, relCovarageEval, overlappingCoveredArea));
         levelChromose.FitnessInfo = infoObj;
+
         //Attaching fitness evaluation information to the object itself
         return infoObj.FitnessEvaluations.Sum(x => x.Value);
     }

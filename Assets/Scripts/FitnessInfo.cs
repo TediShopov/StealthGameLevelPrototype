@@ -5,6 +5,7 @@ using StealthLevelEvaluation;
 using UnityEditor;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 public class FitnessInfo
 {
