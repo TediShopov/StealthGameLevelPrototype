@@ -12,19 +12,31 @@ using GeneticSharp.Domain.Chromosomes;
 using Codice.CM.SEIDInfo;
 using StealthLevelEvaluation;
 
+internal class CustomMutators : IMutation
+{
+    public bool IsOrdered => throw new NotImplementedException();
+
+    public void Mutate(IChromosome chromosome, float probability)
+    {
+        throw new NotImplementedException();
+    }
+}
+
 //Given an level phenotype generator, population count and level size
 // spreads levels manifestations in a grid. Used by all phenotype evalutions
 // to trigger the level generations when needed
 public class GridPopulationManifestor
 {
-    public GridPopulationManifestor(LevelPhenotypeGenerator generator, LevelProperties levelProperties)
+    public GridPopulationManifestor(LevelPhenotypeGenerator generator, LevelProperties levelProperties, PopulationLevelGridInitalizer population)
     {
         this.LevelGeneratorPrototype = generator;
         this.LevelProperties = levelProperties;
+        GeneticAlgorithm = population;
     }
 
     private LevelPhenotypeGenerator LevelGeneratorPrototype;
     private LevelProperties LevelProperties;
+    private PopulationLevelGridInitalizer GeneticAlgorithm;
 
     //Levels must be physically spawned in a scene to be evaluated.
     private LevelPhenotypeGenerator[,] levelGenerators;
@@ -48,8 +60,9 @@ public class GridPopulationManifestor
         GridDimension = Mathf.CeilToInt(Mathf.Sqrt(populationCount));
 
         //Setup Generator Prototype
-        LevelGeneratorPrototype.isRandom = true;
+        LevelGeneratorPrototype.isRandom = false;
         LevelGeneratorPrototype.RunOnStart = false;
+        LevelGeneratorPrototype.RandomSeed = GeneticAlgorithm.RandomSeedGenerator.Next();
         if (levelGenerators != null)
         {
             this.PrepareForNewGeneration();
@@ -116,9 +129,8 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
     public void Start()
     {
         if (RandomizeSeed)
-            RandomSeedGenerator = new System.Random();
-        else
-            RandomSeedGenerator = new System.Random(Seed);
+            Seed = new System.Random().Next();
+        RandomSeedGenerator = new System.Random(Seed);
         if (LogExecutions)
         {
             string algoName = $"GEN_{AimedGenerations}_POP{PopulationCount}_SZ{LevelProperties.LevelSize}";
@@ -180,10 +192,10 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         var crossover = new TwoPointCrossover();
         var mutation = new UniformMutation(true);
         //var chromosome = new FloatingPointChromosome(0,1,35,8);
-        var chromosome = new LevelChromosome(35, RandomSeedGenerator);
+        var chromosome = new LevelChromosome(40, RandomSeedGenerator);
         var population = new Population(PopulationCount, PopulationCount, chromosome);
 
-        GridPopulation = new GridPopulationManifestor(Generator, LevelProperties);
+        GridPopulation = new GridPopulationManifestor(Generator, LevelProperties, this);
         GridPopulation.SpawnGridOfEmptyGenerators(PopulationCount, this.transform);
         PhenotypeEvaluator.GridPopulation = GridPopulation;
 

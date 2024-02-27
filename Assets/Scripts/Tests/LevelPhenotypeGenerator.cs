@@ -1,6 +1,7 @@
 using GeneticSharp.Domain.Chromosomes;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering.VirtualTexturing;
 
 public class LevelChromosome : ChromosomeBase
 {
@@ -17,7 +18,7 @@ public class LevelChromosome : ChromosomeBase
         return genes;
     }
 
-    public LevelChromosome(int length, System.Random random = null) : base(length)
+    public LevelChromosome(int length = 10, System.Random random = null) : base(length)
     {
         if (random == null)
         {
@@ -44,9 +45,6 @@ public class LevelChromosome : ChromosomeBase
 //GENOTYPE desciprtion:
 public class LevelPhenotypeGenerator : LevelGeneratorBase
 {
-    // [lenght%] [width%] :Bounds
-    // [x%] [y%] :Player
-    // [x%] [y%] :Destination
     // < many obstacles in form [type rounded down] [x%] [y%] [rotation] [scale]> :Obstacles
     // [%of possible enemies count rounded down] <4 float number to generate random path seed> :Enemis
     private LevelChromosome LevelChromosome;
@@ -56,13 +54,17 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
     public bool RunOnStart = false;
     public bool DisposeNow = false;
 
-    public void Start()
-    {
-        if (RunOnStart)
-        {
-            Generate(new LevelChromosome(35, new System.Random(RandomSeed)));
-        }
-    }
+    //    public void Start()
+    //    {
+    //        if (RunOnStart)
+    //        {
+    //            if (isRandom)
+    //            {
+    //                RandomSeed = new System.Random().Next();
+    //            }
+    //            Generate(new LevelChromosome(35, new System.Random(RandomSeed)));
+    //        }
+    //    }
 
     // Start is called before the first frame update
     //    private void Awake()
@@ -106,10 +108,10 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         this.tag = "Level";
         //Boundary constructed first 2 genes
         BoxCollider2D box = InitLevelBoundary(LevelProperties.LevelSize.x, LevelProperties.LevelSize.y);
+
         var Obstacles = new GameObject("Obstacles");
         Obstacles.transform.SetParent(this.transform, false);
         PlaceBoundaryVisualPrefabs(box, Obstacles);
-        geneIndex += 2;
 
         box.size = new Vector2(
             box.size.x - PlayerPrefab.GetComponent<Collider2D>().bounds.extents.x / 2.0f - VisualBoundWidth / 2.0f,
@@ -137,6 +139,7 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         {
             Instantiate(EnemyPrefab, this.transform);
         }
+        //for (int i = LevelChromosome.Length; )
 
         Physics2D.SyncTransforms();
         //Solvers
