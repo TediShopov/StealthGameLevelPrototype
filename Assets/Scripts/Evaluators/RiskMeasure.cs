@@ -7,8 +7,18 @@ namespace StealthLevelEvaluation
 {
     public class RiskMeasure : PhenotypeFitnessEvaluation
     {
-        public RiskMeasure(GameObject level) : base(level, "Risk Measure of solutions", 0)
+        //            public RiskMeasure(GameObject level) : base(level, "Risk Measure of solutions", 0)
+        //            {
+        //            }
+
+        public override void Init(GameObject phenotype, string name, double defValue)
         {
+            base.Init(phenotype, name, defValue);
+        }
+
+        public override void Init(GameObject phenotype)
+        {
+            Init(phenotype, "Risk Measure", 0);
         }
 
         public override float Evaluate()
@@ -35,6 +45,7 @@ namespace StealthLevelEvaluation
                     succeeded++;
                 }
             }
+            if (succeeded == 0) { return 0; }
             float avg = total / (float)succeeded;
             return avg;
         }

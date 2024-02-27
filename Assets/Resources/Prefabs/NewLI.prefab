@@ -134,6 +134,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   Grid: {fileID: 0}
+  boundsInt:
+    m_Position: {x: 0, y: 0, z: 0}
+    m_Size: {x: 0, y: 0, z: 0}
 --- !u!1 &3558959309750259788
 GameObject:
   m_ObjectHideFlags: 0

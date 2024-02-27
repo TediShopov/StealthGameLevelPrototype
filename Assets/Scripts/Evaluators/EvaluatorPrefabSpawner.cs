@@ -1,22 +1,16 @@
 using GeneticSharp.Domain.Chromosomes;
 using GeneticSharp.Domain.Fitnesses;
-using System.Linq;
-using Unity.IO.LowLevel.Unsafe;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
-using Codice.CM.WorkspaceServer;
-using UnityEngine.Profiling;
-using System.Net;
-using System.Runtime.InteropServices.WindowsRuntime;
 using StealthLevelEvaluation;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
-public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
+public class EvaluatorPrefabSpawner : MonoBehaviour, IFitness
 {
     public GridPopulationManifestor GridPopulation;
-
+    public GameObject EvaluatorHolder;
     //private List<PhenotypeFitnessEvaluation> Evaluators = new List<PhenotypeFitnessEvaluation>();
-    private PhenotypeFitnessEvaluation[] Evaluators;
 
     public double Evaluate(IChromosome chromosome)
     {
@@ -24,23 +18,19 @@ public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
         if (generator == null) return 0;
         var levelChromose = (LevelChromosome)chromosome;
         generator.Generate(levelChromose);
+        var evaluator = Instantiate(EvaluatorHolder, generator.transform);
 
         //Get all evaluators from  the prefab
-        Evaluators = this.GetComponents<PhenotypeFitnessEvaluation>();
-        FitnessInfo info = new FitnessInfo();
-        var infoObj = FitnessInfoVisualizer.AttachInfo(generator.gameObject, info);
-
+        PhenotypeFitnessEvaluation[] Evaluators = evaluator.GetComponents<PhenotypeFitnessEvaluation>();
+        var info = FitnessInfoVisualizer.AttachInfo(generator.gameObject, new FitnessInfo());
         foreach (var e in Evaluators)
         {
-            e.Phenotype = generator.gameObject;
-            info.FitnessEvaluations.Add(e);
+            e.Init(generator.gameObject);
             e.Evaluate();
+            info.FitnessEvaluations.Add(e);
         }
-
-        //double evaluatedFitness = EvaluateDifficultyMeasureOfSuccesful(chromosome);
         levelChromose.FitnessInfo = info;
-
         //Attaching fitness evaluation information to the object itself
-        return infoObj.FitnessEvaluations.Sum(x => x.Value);
+        return info.FitnessEvaluations.Sum(x => x.Value);
     }
 }

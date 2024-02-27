@@ -5,21 +5,42 @@ using UnityEngine.Profiling;
 
 namespace StealthLevelEvaluation
 {
-    public abstract class PhenotypeFitnessEvaluation
+    public abstract class PhenotypeFitnessEvaluation : MonoBehaviour
     {
         private bool _evaluted;
-        public string Name { get; }
-        protected double _value;
+        public string Name;
+        [SerializeField] protected double _value;
         protected double _time;
-        protected GameObject Phenotype;
+        public GameObject Phenotype;
 
-        public PhenotypeFitnessEvaluation(GameObject phenotype, string name, double defValue)
+        public bool RunNow = false;
+
+        public void Update()
+        {
+            if (RunNow)
+            {
+                RunNow = false;
+                Evaluate();
+            }
+        }
+
+        public abstract void Init(GameObject phenotype);
+
+        public virtual void Init(GameObject phenotype, string name, double defValue)
         {
             Phenotype = phenotype;
             Name = name;
             _value = defValue;
             _evaluted = false;
         }
+
+        //        public PhenotypeFitnessEvaluation(GameObject phenotype, string name, double defValue)
+        //        {
+        //            //Phenotype = phenotype;
+        //            Name = name;
+        //            _value = defValue;
+        //            _evaluted = false;
+        //        }
 
         public double Value
         {

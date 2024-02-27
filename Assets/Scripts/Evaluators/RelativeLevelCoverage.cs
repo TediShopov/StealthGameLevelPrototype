@@ -10,10 +10,21 @@ namespace StealthLevelEvaluation
         private Grid Grid;
         private LayerMask ObstacleLayerMask;
 
-        public RelativeLevelCoverage(GameObject level) : base(level, "Relative Level Coverage", 0)
+        //            public RelativeLevelCoverage(GameObject level) : base(level, "Relative Level Coverage", 0)
+        //            {
+        //                Grid = Phenotype.GetComponentInChildren<Grid>(false);
+        //                ObstacleLayerMask = LayerMask.GetMask("Obstacle");
+        //            }
+        public override void Init(GameObject phenotype, string name, double defValue)
         {
+            base.Init(phenotype, name, defValue);
             Grid = Phenotype.GetComponentInChildren<Grid>(false);
             ObstacleLayerMask = LayerMask.GetMask("Obstacle");
+        }
+
+        public override void Init(GameObject phenotype)
+        {
+            Init(phenotype, "Relative Coverage", 0);
         }
 
         private int DiscreteNotCollidingCells(ContinuosFutureLevel futureLevel, ref NativeGrid<bool> staticObstacle)

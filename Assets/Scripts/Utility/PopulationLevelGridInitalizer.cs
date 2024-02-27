@@ -9,6 +9,8 @@ using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 using GeneticSharp.Domain.Chromosomes;
+using Codice.CM.SEIDInfo;
+using StealthLevelEvaluation;
 
 //Given an level phenotype generator, population count and level size
 // spreads levels manifestations in a grid. Used by all phenotype evalutions
@@ -91,7 +93,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
 
     public int PopulationCount;
     public int AimedGenerations = 10;
-    public TargetRRTSuccessEvaluation PhenotypeEvaluator;
+    public EvaluatorPrefabSpawner PhenotypeEvaluator;
     public LevelPhenotypeGenerator Generator;
     public LevelProperties LevelProperties;
     private GridPopulationManifestor GridPopulation;
@@ -143,6 +145,32 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
             //without need to recalcuate (RRT may produce different resutls)
             var infoObj = FitnessInfoVisualizer.AttachInfo(level.gameObject,
                 levelChromosome.FitnessInfo);
+
+            //Try to recreate evaluators with given data
+            //            GameObject evaluator = new GameObject("Evaluator");
+            //            evaluator.transform.parent = level.transform;
+            //            foreach (var e in infoObj.FitnessEvaluations)
+            //            {
+            //                evaluator.AddComponent(e.GetType());
+            //            }
+        }
+    }
+
+    private void ChekcAvailabilitOfFitnessInfo()
+    {
+        List<IChromosome> chromosomes = this.GeneticAlgorithm.Population.Generations.SelectMany(x => x.Chromosomes).ToList();
+        //Start with y down
+        Vector3 TopLevelsPos = this.transform.position - new Vector3(0, 30, 0);
+        for (int i = 0; i < chromosomes.Count; i++)
+        {
+            var levelChromosome = (LevelChromosome)chromosomes[i];
+            foreach (var e in levelChromosome.FitnessInfo.FitnessEvaluations)
+            {
+                if (e.Phenotype == null)
+                {
+                    int a = 3;
+                }
+            }
         }
     }
 
@@ -233,6 +261,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
     {
         List<IChromosome> chromosomes = GetTopLevelsFitness();
         ManifestTopLevels(chromosomes);
+        ChekcAvailabilitOfFitnessInfo();
         if (LogIndividualExecutions)
         {
             OutputEvaluationTimesToCsv();
