@@ -15,6 +15,7 @@ public class LevelGeneratorBase : MonoBehaviour
     public GameObject LevelInitializer;
     public LayerMask ObstacleLayerMask;
     public List<GameObject> ObstaclePrefabs;
+    public LevelProperties LevelProperties;
 
     public int MinEnemiesSpawned = 1;
     public int MaxEnemiesSpawned = 3;
@@ -25,13 +26,6 @@ public class LevelGeneratorBase : MonoBehaviour
 
     [Range(1.0f, 5.0f)]
     public float MaxObjectScale = 1.0f;
-
-    //Size modificaiton
-    [Range(10, 100)]
-    public float MaxDimension = 50.0f;
-
-    [Range(10, 50)]
-    public float MinDimension = 50.0f;
 
     //Randomizer specific for the level
     public System.Random LevelRandom;
@@ -144,10 +138,11 @@ public class SpawnRandomStealthLevel : LevelGeneratorBase
         Obstacles.transform.SetParent(this.transform);
         Obstacles.transform.localPosition = new Vector3(0, 0, 0);
         this.LevelRandom = new System.Random(RandomSeed);
-        BoxCollider2D box = InitLevelBoundary(
-            Helpers.GetRandomFloat(LevelRandom, MinDimension, MaxDimension)
-            , Helpers.GetRandomFloat(LevelRandom, MinDimension, MaxDimension));
-        PlaceBoundaryVisualPrefabs(box, Obstacles);
+        //        BoxCollider2D box = InitLevelBoundary(
+        //            Helpers.GetRandomFloat(LevelRandom, LevelProperties.M, MaxDimension)
+        //            , Helpers.GetRandomFloat(LevelRandom, MinDimension, MaxDimension));
+
+        BoxCollider2D box = InitLevelBoundary(LevelProperties.LevelSize.x, LevelProperties.LevelSize.y);
 
         SpawnRandomObstacles(box, Obstacles);
         var playerInstance = SpawnPrefabWithoutCollision(PlayerPrefab, box, 150);

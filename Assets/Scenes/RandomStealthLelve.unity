@@ -406,13 +406,12 @@ MonoBehaviour:
   - {fileID: 6228754912093341014, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
   - {fileID: 6228754912093341014, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
   - {fileID: 6228754912093341014, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
-  MinEnemiesSpawned: 1
-  MaxEnemiesSpawned: 2
-  ObstaclesSpawned: 3
+  LevelProperties: {fileID: 11400000, guid: f34fefb300e5e294ba203619eff9b374, type: 2}
+  MinEnemiesSpawned: 3
+  MaxEnemiesSpawned: 3
+  ObstaclesSpawned: 5
   MinObjectScale: 0.2
   MaxObjectScale: 5
-  MaxDimension: 30
-  MinDimension: 30
   VisualBoundWidth: 1
   RandomSeed: 1
   isRandom: 0
@@ -1046,8 +1045,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LevelGeneratorPrototype: {fileID: 580530818}
-  LevelSize: {x: 45, y: 45}
-  GridDimension: 0
+  LevelProperties: {fileID: 0}
 --- !u!1 &1474898337
 GameObject:
   m_ObjectHideFlags: 0
@@ -1077,15 +1075,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a59df0218d90434e9622a53774d6147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rows: 5
-  Columns: 5
+  PopulationCount: 9
+  AimedGenerations: 5
+  PhenotypeEvaluator: {fileID: 1430829062}
+  LevelProperties: {fileID: 11400000, guid: f34fefb300e5e294ba203619eff9b374, type: 2}
+  RandomizeSeed: 1
   Seed: 15
-  RandomizeSeed: 0
-  targetRRTSuccessEvaluation: {fileID: 1430829062}
-  LevelSize: {x: 45, y: 45}
-  AimedGenerations: 1
-  LogExecutionAvg: 0
-  LogIndividualExecutions: 1
+  LogExecutions: 0
+  LogIndividualExecutions: 0
   LogExecutionTimes: 10
   TopNLevels: 3
 --- !u!4 &1474898339

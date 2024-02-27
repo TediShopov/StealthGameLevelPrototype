@@ -12,24 +12,28 @@ using GeneticSharp.Domain.Chromosomes;
 
 public class PopulationLevelGridInitalizer : MonoBehaviour
 {
-    public int Rows = 5; // Number of rows in the grid
-    public int Columns = 5; // Number of columns in the grid
-    public int Seed;
+    //public int Rows = 5; // Number of rows in the grid
+    //public int Columns = 5; // Number of columns in the grid
+
+    public int PopulationCount;
+    public int AimedGenerations = 10;
+    public TargetRRTSuccessEvaluation PhenotypeEvaluator;
+    public LevelProperties LevelProperties;
+
+    [Header("Seed")]
     public bool RandomizeSeed;
 
-    public TargetRRTSuccessEvaluation targetRRTSuccessEvaluation;
-    public Vector2 LevelSize = new Vector2(1.0f, 1.0f); // Size of each object
+    public int Seed;
     public System.Random RandomSeedGenerator;
-    public int AimedGenerations = 10;
-    public GeneticAlgorithm GeneticAlgorithm;
-    public bool LogExecutionAvg = false;
+
+    [Header("Logging")]
+    public bool LogExecutions = false;
+
     public bool LogIndividualExecutions = false;
     public int LogExecutionTimes = 0;
     public int TopNLevels = 5;
-    //private List<LevelPhenotypeGenerator> _topFiveLevelPhenotypeGenerators;
 
-    //Flag to indicated occured termiantion to stop re-running on terminated algorithm
-    private bool _terminated = false;
+    private GeneticAlgorithm GeneticAlgorithm;
 
     public void Start()
     {
@@ -37,9 +41,9 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
             RandomSeedGenerator = new System.Random();
         else
             RandomSeedGenerator = new System.Random(Seed);
-        if (LogExecutionAvg)
+        if (LogExecutions)
         {
-            string algoName = $"GEN_{AimedGenerations}_POP{Rows * Columns}_SZ{LevelSize}";
+            string algoName = $"GEN_{AimedGenerations}_POP{PopulationCount}_SZ{LevelProperties.LevelSize}";
             float[] runs = Helpers.TrackExecutionTime(Run, LogExecutionTimes);
             Helpers.SaveRunToCsv($"Tests/{algoName}.txt", runs);
         }
@@ -53,7 +57,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         for (int i = 0; i < chromosomes.Count; i++)
         {
             TopLevelsPos += new Vector3(25, 0, 0);
-            var level = Instantiate(targetRRTSuccessEvaluation.LevelGeneratorPrototype, TopLevelsPos,
+            var level = Instantiate(PhenotypeEvaluator.LevelGeneratorPrototype, TopLevelsPos,
                 Quaternion.identity, this.transform);
             level.gameObject.name = $"Top {i} - {chromosomes[i].Fitness}";
             var levelChromosome = (LevelChromosome)chromosomes[i];
@@ -73,11 +77,12 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         var mutation = new UniformMutation(true);
         //var chromosome = new FloatingPointChromosome(0,1,35,8);
         var chromosome = new LevelChromosome(35, RandomSeedGenerator);
-        var population = new Population(Rows * Columns, Rows * Columns, chromosome);
-        targetRRTSuccessEvaluation.SpawnGridOfEmptyGenerators(Rows * Columns);
-        targetRRTSuccessEvaluation.PrepareForNewGeneration();
+        var population = new Population(PopulationCount, PopulationCount, chromosome);
+        PhenotypeEvaluator.LevelProperties = LevelProperties;
+        PhenotypeEvaluator.SpawnGridOfEmptyGenerators(PopulationCount);
+        PhenotypeEvaluator.PrepareForNewGeneration();
 
-        GeneticAlgorithm = new GeneticAlgorithm(population, targetRRTSuccessEvaluation, selection, crossover, mutation);
+        GeneticAlgorithm = new GeneticAlgorithm(population, PhenotypeEvaluator, selection, crossover, mutation);
         GeneticAlgorithm.MutationProbability = 0.2f;
         GeneticAlgorithm.Termination = new GenerationNumberTermination(AimedGenerations);
         GeneticAlgorithm.GenerationRan += Ga_GenerationRan;
@@ -143,7 +148,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
                 values += "\n";
             }
         }
-        string algoName = $"GEN_{AimedGenerations}_POP{Rows * Columns}_SZ{LevelSize}_IndividualTimes";
+        string algoName = $"GEN_{AimedGenerations}_POP{PopulationCount}_SZ{LevelProperties.LevelSize}_IndividualTimes";
         Helpers.SaveToCSV($"Tests/{algoName}.txt", header + "\n" + values);
     }
 
@@ -155,7 +160,6 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         {
             OutputEvaluationTimesToCsv();
         }
-        _terminated = true;
     }
 
     private void Ga_GenerationRan(object sender, EventArgs e)
@@ -164,7 +168,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         //Do not discard the last generation before termination
         if (GeneticAlgorithm.GenerationsNumber != AimedGenerations)
         {
-            targetRRTSuccessEvaluation.PrepareForNewGeneration();
+            PhenotypeEvaluator.PrepareForNewGeneration();
         }
     }
 }

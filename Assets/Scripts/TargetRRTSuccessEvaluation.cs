@@ -309,7 +309,7 @@ namespace StealthLevelEvaluation
                 }
             }
 
-            return accumulatedOverlapp;
+            return accumulatedOverlapp; ;
         }
 
         private float OldEvaluation(IFutureLevel futureLevel, float maxTime, float vd, float fov, float maxOverlappArea)
@@ -357,7 +357,7 @@ namespace StealthLevelEvaluation
 public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
 {
     public LevelPhenotypeGenerator LevelGeneratorPrototype;
-    public Vector2 LevelSize;
+    [HideInInspector] public LevelProperties LevelProperties;
 
     //Levels must be physically spawned in a scene to be evaluated.
     private LevelPhenotypeGenerator[,] levelGenerators;
@@ -365,7 +365,7 @@ public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
     private int currentIndex = 0;
 
     //Only one as it is assumed it is a square
-    public int GridDimension;
+    private int GridDimension;
 
     private LevelPhenotypeGenerator GetCurrentGenerator()
     {
@@ -392,7 +392,7 @@ public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
         {
             for (int j = 0; j < GridDimension; j++)
             {
-                Vector3 pos = new Vector3(i * LevelSize.x, j * LevelSize.y, 0);
+                Vector3 pos = new Vector3(i * LevelProperties.LevelSize.x, j * LevelProperties.LevelSize.y, 0);
                 var g = Instantiate(this.LevelGeneratorPrototype, pos, Quaternion.identity, this.transform);
                 levelGenerators[i, j] = g;
             }

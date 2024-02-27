@@ -105,10 +105,7 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         //Boundary
         this.tag = "Level";
         //Boundary constructed first 2 genes
-        BoxCollider2D box = InitLevelBoundary(
-            Mathf.Lerp(MinDimension, MaxDimension, GetGeneValue(geneIndex + 0)),
-            Mathf.Lerp(MinDimension, MaxDimension, GetGeneValue(geneIndex + 1))
-            );
+        BoxCollider2D box = InitLevelBoundary(LevelProperties.LevelSize.x, LevelProperties.LevelSize.y);
         var Obstacles = new GameObject("Obstacles");
         Obstacles.transform.SetParent(this.transform, false);
         PlaceBoundaryVisualPrefabs(box, Obstacles);
@@ -120,9 +117,11 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
             );
 
         //Player
-        var playerInstance = SpawnGameObject(ref geneIndex, box, PlayerPrefab);
+        //var playerInstance = SpawnGameObject(ref geneIndex, box, PlayerPrefab);
+        var playerInstance = SpawnGameObjectAtRelative(LevelProperties.RelativeStartPosition, box, PlayerPrefab);
         //Destination
-        var destinationIntance = SpawnGameObject(ref geneIndex, box, DestinationPrefab);
+        //var destinationIntance = SpawnGameObject(ref geneIndex, box, DestinationPrefab);
+        var destinationIntance = SpawnGameObjectAtRelative(LevelProperties.RelativeEndPosiiton, box, DestinationPrefab);
 
         //obstacles
 
@@ -180,6 +179,17 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         float y = Mathf.Lerp(box.bounds.min.y, box.bounds.max.y, GetGeneValue(geneIndex + 1));
 
         geneIndex += 2;
+        var player = Instantiate(Prefab,
+            new Vector3(x, y, 0),
+            Quaternion.Euler(0, 0, 0),
+            this.transform);
+        return player;
+    }
+
+    private GameObject SpawnGameObjectAtRelative(Vector2 coord, BoxCollider2D box, GameObject Prefab)
+    {
+        float x = Mathf.Lerp(box.bounds.min.x, box.bounds.max.x, coord.x);
+        float y = Mathf.Lerp(box.bounds.min.y, box.bounds.max.y, coord.y);
         var player = Instantiate(Prefab,
             new Vector3(x, y, 0),
             Quaternion.Euler(0, 0, 0),
