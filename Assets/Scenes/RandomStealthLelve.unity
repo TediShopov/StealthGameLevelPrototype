@@ -164,7 +164,7 @@ MonoBehaviour:
   - {fileID: 6228754912093341014, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
   - {fileID: 6228754912093341014, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
   - {fileID: 6228754912093341014, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
-  LevelProperties: {fileID: 11400000, guid: f34fefb300e5e294ba203619eff9b374, type: 2}
+  LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   MinEnemiesSpawned: 3
   MaxEnemiesSpawned: 3
   ObstaclesSpawned: 5
@@ -381,11 +381,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a59df0218d90434e9622a53774d6147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PopulationCount: 9
-  AimedGenerations: 10
+  PopulationCount: 15
+  AimedGenerations: 5
   PhenotypeEvaluator: {fileID: 1430829062}
   Generator: {fileID: 580530818}
-  LevelProperties: {fileID: 11400000, guid: f34fefb300e5e294ba203619eff9b374, type: 2}
+  LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   RandomizeSeed: 1
   Seed: 15
   LogExecutions: 0

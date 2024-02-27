@@ -161,14 +161,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70fc91ac14ae75b4aa426a56077d2e24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyProperties: {fileID: 11400000, guid: af134477030a6c949bcb81be6fcaa1ff, type: 2}
+  EnemyProperties: {fileID: 11400000, guid: 27a67ad91ca35a34489dffb723d5bcae, type: 2}
   Transforms:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   Randomized: 1
-  Positions: []
-  InitialPositions: []
   Velocity: {x: 0, y: 0}
   FieldOfView: {fileID: 177592571048017179}
 --- !u!114 &6384073365885330042
@@ -229,10 +227,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8314863b123e4949b371382aff24f9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SearchedObject: {fileID: 0}
   RayCount: 30
   PointingAngle: 0
-  EnemyProperties: {fileID: 11400000, guid: af134477030a6c949bcb81be6fcaa1ff, type: 2}
+  SearchedObject: {fileID: 0}
+  EnemyProperties: {fileID: 11400000, guid: 27a67ad91ca35a34489dffb723d5bcae, type: 2}
   ObstacleLayerMask:
     serializedVersion: 2
     m_Bits: 64
