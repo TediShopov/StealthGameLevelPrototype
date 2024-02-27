@@ -356,57 +356,13 @@ namespace StealthLevelEvaluation
 
 public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
 {
-    public LevelPhenotypeGenerator LevelGeneratorPrototype;
-    [HideInInspector] public LevelProperties LevelProperties;
-
-    //Levels must be physically spawned in a scene to be evaluated.
-    private LevelPhenotypeGenerator[,] levelGenerators;
-
-    private int currentIndex = 0;
-
-    //Only one as it is assumed it is a square
-    private int GridDimension;
-
-    private LevelPhenotypeGenerator GetCurrentGenerator()
-    {
-        if (currentIndex >= GridDimension * GridDimension)
-            return null;
-
-        return levelGenerators[currentIndex / GridDimension, currentIndex % GridDimension];
-    }
-
-    public void SpawnGridOfEmptyGenerators(int populationCount)
-    {
-        GridDimension = Mathf.CeilToInt(Mathf.Sqrt(populationCount));
-
-        //Setup Generator Prototype
-        LevelGeneratorPrototype.isRandom = true;
-        LevelGeneratorPrototype.RunOnStart = false;
-        if (levelGenerators != null)
-        {
-            this.PrepareForNewGeneration();
-        }
-        levelGenerators = new LevelPhenotypeGenerator[GridDimension, GridDimension];
-
-        for (int i = 0; i < GridDimension; i++)
-        {
-            for (int j = 0; j < GridDimension; j++)
-            {
-                Vector3 pos = new Vector3(i * LevelProperties.LevelSize.x, j * LevelProperties.LevelSize.y, 0);
-                var g = Instantiate(this.LevelGeneratorPrototype, pos, Quaternion.identity, this.transform);
-                levelGenerators[i, j] = g;
-            }
-        }
-    }
+    public GridPopulationManifestor GridPopulation;
 
     public double Evaluate(IChromosome chromosome)
     {
-        var generator = GetCurrentGenerator();
-        currentIndex++;
+        var generator = GridPopulation.GetNextGenerator();
         if (generator == null) return 0;
-
         var levelChromose = (LevelChromosome)chromosome;
-
         generator.Generate(levelChromose);
         StealthLevelEvaluation.PhenotypeFitnessEvaluation eval =
             new StealthLevelEvaluation.RiskMeasureOfSolutionEvaluation(generator.gameObject);
@@ -421,23 +377,5 @@ public class TargetRRTSuccessEvaluation : MonoBehaviour, IFitness
 
         //Attaching fitness evaluation information to the object itself
         return infoObj.FitnessEvaluations.Sum(x => x.Value);
-    }
-
-    public void PrepareForNewGeneration()
-    {
-        //Clearing old data
-        DisposeOldPopulation();
-        //Resetting index
-        currentIndex = 0;
-    }
-
-    //Once a new population has been started the gameobject generated must be cleared
-    private void DisposeOldPopulation()
-    {
-        Debug.Log("Disposing previous population generators");
-        foreach (var generator in levelGenerators)
-        {
-            generator.Dispose();
-        }
     }
 }
