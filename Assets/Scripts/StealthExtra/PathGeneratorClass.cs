@@ -16,16 +16,6 @@ public class PathGeneratorClass : MonoBehaviour, IPathGenerator
     public int AttemptsToMatchBiasedDistance;
     public System.Random LevelRandom;
 
-    public void Awake()
-    {
-        //Random.InitState(seed: RandomPathSeed);
-        var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
-        if (level)
-            LevelRandom = level.GetComponent<LevelGeneratorBase>().LevelRandom;
-        else
-            LevelRandom = new System.Random();
-    }
-
     public Graph<Vector2> Roadmap { get; set; }
 
     public virtual List<List<Vector2>> GeneratePaths(int pathsToGenerate)

@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 3558959309090012898}
   - component: {fileID: 3558959309090012896}
   - component: {fileID: 5550602329461504337}
-  - component: {fileID: 1893731052257955207}
   m_Layer: 0
   m_Name: DiscretizeLevel
   m_TagString: Untagged
@@ -113,30 +112,6 @@ MonoBehaviour:
   EnemyPatrolPaths: []
   _step: 0.2
   _iter: 50
---- !u!114 &1893731052257955207
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3558959309090012902}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff434b18f6debcc4c9600b2e3a240dae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  RunOnStart: 1
-  DebugDraw: 1
-  BoundaryLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
-  ObstacleLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  Grid: {fileID: 0}
-  boundsInt:
-    m_Position: {x: 0, y: 0, z: 0}
-    m_Size: {x: 0, y: 0, z: 0}
 --- !u!1 &3558959309750259788
 GameObject:
   m_ObjectHideFlags: 0

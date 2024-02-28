@@ -72,10 +72,10 @@ public class LevelGeneratorBase : MonoBehaviour
         return colliders.Length > 1;
     }
 
-    public BoxCollider2D InitLevelBoundary(float length, float width)
+    public BoxCollider2D InitLevelBoundary(float length, float width, GameObject to)
     {
         Boundary = new GameObject("Boundary", new System.Type[] { typeof(BoxCollider2D) });
-        Boundary.transform.SetParent(this.transform);
+        Boundary.transform.SetParent(to.transform);
         Boundary.transform.localPosition = new Vector3(0, 0, 0);
         Boundary.layer = LayerMask.NameToLayer("Boundary");
         var boxCollider = Boundary.GetComponent<BoxCollider2D>();
@@ -142,7 +142,7 @@ public class SpawnRandomStealthLevel : LevelGeneratorBase
         //            Helpers.GetRandomFloat(LevelRandom, LevelProperties.M, MaxDimension)
         //            , Helpers.GetRandomFloat(LevelRandom, MinDimension, MaxDimension));
 
-        BoxCollider2D box = InitLevelBoundary(LevelProperties.LevelSize.x, LevelProperties.LevelSize.y);
+        BoxCollider2D box = InitLevelBoundary(LevelProperties.LevelSize.x, LevelProperties.LevelSize.y, this.gameObject);
 
         SpawnRandomObstacles(box, Obstacles);
         var playerInstance = SpawnPrefabWithoutCollision(PlayerPrefab, box, 150);

@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using GeneticSharp.Domain.Chromosomes;
 using Codice.CM.SEIDInfo;
 using StealthLevelEvaluation;
+using UnityEditor;
 
 internal class CustomMutators : IMutation
 {
@@ -25,57 +26,43 @@ internal class CustomMutators : IMutation
 //Given an level phenotype generator, population count and level size
 // spreads levels manifestations in a grid. Used by all phenotype evalutions
 // to trigger the level generations when needed
-public class GridPopulationManifestor
+public class GridObjectLayout
 {
-    public GridPopulationManifestor(LevelPhenotypeGenerator generator, LevelProperties levelProperties, PopulationLevelGridInitalizer population)
+    public GridObjectLayout(LevelProperties levelProperties)
     {
-        this.LevelGeneratorPrototype = generator;
         this.LevelProperties = levelProperties;
-        GeneticAlgorithm = population;
     }
 
-    private LevelPhenotypeGenerator LevelGeneratorPrototype;
     private LevelProperties LevelProperties;
-    private PopulationLevelGridInitalizer GeneticAlgorithm;
-
-    //Levels must be physically spawned in a scene to be evaluated.
-    private LevelPhenotypeGenerator[,] levelGenerators;
+    private GameObject[,] LevelObjects;
 
     private int currentIndex = -1;
-
-    //Only one as it is assumed it is a square
     private int GridDimension;
 
-    public LevelPhenotypeGenerator GetNextGenerator()
+    public GameObject GetNextLevelObject()
     {
         currentIndex++;
         if (currentIndex >= GridDimension * GridDimension)
             return null;
-
-        return levelGenerators[currentIndex / GridDimension, currentIndex % GridDimension];
+        return LevelObjects[currentIndex / GridDimension, currentIndex % GridDimension];
     }
 
-    public void SpawnGridOfEmptyGenerators(int populationCount, Transform transform)
+    public void SpawnGrid(int populationCount, Transform transform)
     {
         GridDimension = Mathf.CeilToInt(Mathf.Sqrt(populationCount));
 
         //Setup Generator Prototype
-        LevelGeneratorPrototype.isRandom = false;
-        LevelGeneratorPrototype.RunOnStart = false;
-        LevelGeneratorPrototype.RandomSeed = GeneticAlgorithm.RandomSeedGenerator.Next();
-        if (levelGenerators != null)
-        {
-            this.PrepareForNewGeneration();
-        }
-        levelGenerators = new LevelPhenotypeGenerator[GridDimension, GridDimension];
+        LevelObjects = new GameObject[GridDimension, GridDimension];
 
         for (int i = 0; i < GridDimension; i++)
         {
             for (int j = 0; j < GridDimension; j++)
             {
-                Vector3 pos = new Vector3(i * LevelProperties.LevelSize.x, j * LevelProperties.LevelSize.y, 0);
-                var g = GameObject.Instantiate(this.LevelGeneratorPrototype, pos, Quaternion.identity, transform);
-                levelGenerators[i, j] = g;
+                Vector3 levelGridPosition = new Vector3(i * LevelProperties.LevelSize.x, j * LevelProperties.LevelSize.y, 0);
+                var g = new GameObject($"{i * GridDimension + j}");
+                g.transform.position = levelGridPosition;
+                g.transform.parent = transform;
+                LevelObjects[i, j] = g;
             }
         }
     }
@@ -91,10 +78,14 @@ public class GridPopulationManifestor
     //Once a new population has been started the gameobject generated must be cleared
     private void DisposeOldPopulation()
     {
-        Debug.Log("Disposing previous population generators");
-        foreach (var generator in levelGenerators)
+        Debug.Log("Disposing generated artefacts of previous levels");
+        foreach (var item in LevelObjects)
         {
-            generator.Dispose();
+            var tempList = item.transform.Cast<Transform>().ToList();
+            foreach (var child in tempList)
+            {
+                GameObject.DestroyImmediate(child.gameObject);
+            }
         }
     }
 }
@@ -109,7 +100,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
     public EvaluatorPrefabSpawner PhenotypeEvaluator;
     public LevelPhenotypeGenerator Generator;
     public LevelProperties LevelProperties;
-    private GridPopulationManifestor GridPopulation;
+    private GridObjectLayout GridPopulation;
 
     [Header("Seed")]
     public bool RandomizeSeed;
@@ -151,7 +142,8 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
                 Quaternion.identity, this.transform);
             level.gameObject.name = $"Top {i} - {chromosomes[i].Fitness}";
             var levelChromosome = (LevelChromosome)chromosomes[i];
-            level.Generate(levelChromosome);
+            levelChromosome.PhenotypeGenerator.Generate(levelChromosome, level.gameObject);
+            //level.Generate(levelChromosome);
 
             //Assign fitness info object showing the exact values achieved
             //without need to recalcuate (RRT may produce different resutls)
@@ -192,12 +184,12 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         var crossover = new TwoPointCrossover();
         var mutation = new UniformMutation(true);
         //var chromosome = new FloatingPointChromosome(0,1,35,8);
-        var chromosome = new LevelChromosome(40, RandomSeedGenerator);
+        var chromosome = new LevelChromosome(40, Generator, RandomSeedGenerator);
         var population = new Population(PopulationCount, PopulationCount, chromosome);
 
-        GridPopulation = new GridPopulationManifestor(Generator, LevelProperties, this);
-        GridPopulation.SpawnGridOfEmptyGenerators(PopulationCount, this.transform);
-        PhenotypeEvaluator.GridPopulation = GridPopulation;
+        GridPopulation = new GridObjectLayout(LevelProperties);
+        GridPopulation.SpawnGrid(PopulationCount, this.transform);
+        PhenotypeEvaluator.GridLevelObjects = GridPopulation;
 
         GeneticAlgorithm = new GeneticAlgorithm(population, PhenotypeEvaluator, selection, crossover, mutation);
         GeneticAlgorithm.MutationProbability = 0.2f;
