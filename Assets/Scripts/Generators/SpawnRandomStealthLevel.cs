@@ -19,7 +19,6 @@ public class LevelGeneratorBase : MonoBehaviour
 
     public int MinEnemiesSpawned = 1;
     public int MaxEnemiesSpawned = 3;
-    public int ObstaclesSpawned;
 
     [Range(0.0f, 1.0f)]
     public float MinObjectScale = 0.2f;
@@ -144,7 +143,7 @@ public class SpawnRandomStealthLevel : LevelGeneratorBase
 
         BoxCollider2D box = InitLevelBoundary(LevelProperties.LevelSize.x, LevelProperties.LevelSize.y, this.gameObject);
 
-        SpawnRandomObstacles(box, Obstacles);
+        //SpawnRandomObstacles(box, Obstacles);
         var playerInstance = SpawnPrefabWithoutCollision(PlayerPrefab, box, 150);
         var destinationIntance = SpawnPrefabWithoutCollision(DestinationPrefab, box, 150);
         //int enemiesToSpaw = Random.Range(MinEnemiesSpawned, MaxEnemiesSpawned);
@@ -168,23 +167,23 @@ public class SpawnRandomStealthLevel : LevelGeneratorBase
         Debug.Log("Random Level Initialziation Finished");
     }
 
-    private void SpawnRandomObstacles(BoxCollider2D box, GameObject Obstacles)
-    {
-        for (int i = 0; i < ObstaclesSpawned; i++)
-        {
-            for (int j = 0; j < 5; j++)
-            {
-                GameObject randomPrefab = GetRandomPrefab();
-                var obstacle = SpawnPrefabWithoutCollision(randomPrefab, box, 5);
-                if (obstacle != null)
-                {
-                    //Samples position is already inside box collider, keep its values
-                    obstacle.transform.SetParent(Obstacles.transform, true);
-                    break;
-                }
-            }
-        }
-    }
+    //    private void SpawnRandomObstacles(BoxCollider2D box, GameObject Obstacles)
+    //    {
+    //        for (int i = 0; i < ObstaclesSpawned; i++)
+    //        {
+    //            for (int j = 0; j < 5; j++)
+    //            {
+    //                GameObject randomPrefab = GetRandomPrefab();
+    //                var obstacle = SpawnPrefabWithoutCollision(randomPrefab, box, 5);
+    //                if (obstacle != null)
+    //                {
+    //                    //Samples position is already inside box collider, keep its values
+    //                    obstacle.transform.SetParent(Obstacles.transform, true);
+    //                    break;
+    //                }
+    //            }
+    //        }
+    //    }
 
     private GameObject GetRandomPrefab()
     {

@@ -12,14 +12,65 @@ using GeneticSharp.Domain.Chromosomes;
 using Codice.CM.SEIDInfo;
 using StealthLevelEvaluation;
 using UnityEditor;
+using GeneticSharp.Domain.Randomizations;
 
-internal class CustomMutators : IMutation
+internal class CustomMutators : MutationBase
 {
-    public bool IsOrdered => throw new NotImplementedException();
+    public bool IsOrdered => true;
+    private UniformMutation WholeGeneUniformMutation = new UniformMutation(true);
+    private float[] Probabilities = new float[3];
 
-    public void Mutate(IChromosome chromosome, float probability)
+    public CustomMutators(float weightAdd, float weightRemove, float weightRandom)
     {
-        throw new NotImplementedException();
+        float total = weightAdd + weightRemove + weightRandom;
+        Probabilities[0] = weightAdd / total;
+        Probabilities[1] = weightRemove / total;
+        Probabilities[2] = weightRandom / total;
+    }
+
+    protected override void PerformMutate(IChromosome chromosome, float probability)
+    {
+        double isMutating = RandomizationProvider.Current.GetDouble(0, 1); // Random number between 0 and 1
+        if (isMutating >= probability) return;
+        //Uniform chance to pick one of 4 mutation strategiesweightAdd
+        double randomNumber = RandomizationProvider.Current.GetDouble(0, 1); // Random number between 0 and 1
+        double cumulativeProbability = 0;
+        int chosenOutcome = 0;
+
+        for (int i = 0; i < Probabilities.Length; i++)
+        {
+            cumulativeProbability += Probabilities[i];
+
+            if (randomNumber < cumulativeProbability)
+            {
+                chosenOutcome = i;
+                break;
+            }
+        }
+        if (chosenOutcome == 0)
+        {
+            int oldLength = chromosome.Length;
+            //Add obstacle
+            chromosome.Resize(chromosome.Length + 5);
+            chromosome.ReplaceGene(oldLength, chromosome.GenerateGene(oldLength));
+            chromosome.ReplaceGene(oldLength + 1, chromosome.GenerateGene(oldLength + 1));
+            chromosome.ReplaceGene(oldLength + 2, chromosome.GenerateGene(oldLength + 2));
+            chromosome.ReplaceGene(oldLength + 3, chromosome.GenerateGene(oldLength + 3));
+            chromosome.ReplaceGene(oldLength + 4, chromosome.GenerateGene(oldLength + 4));
+            Debug.Log("Added Obstacles Mutation");
+        }
+        if (chosenOutcome == 1)
+        {
+            //Remove obstacle
+            chromosome.Resize(chromosome.Length - 5);
+            Debug.Log("Removed Obstacles Mutation");
+        }
+        if (chosenOutcome == 2)
+        {
+            //Randomize obstacle
+            WholeGeneUniformMutation.Mutate(chromosome, probability);
+            Debug.Log("Changed Obstacles Mutation");
+        }
     }
 }
 
@@ -97,6 +148,13 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
 
     public int PopulationCount;
     public int AimedGenerations = 10;
+
+    [Range(0, 1)]
+    public float MutationProb = 10;
+
+    [Range(0, 1)]
+    public float CrossoverProb = 10;
+
     public EvaluatorPrefabSpawner PhenotypeEvaluator;
     public LevelPhenotypeGenerator Generator;
     public LevelProperties LevelProperties;
@@ -182,9 +240,9 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
     {
         var selection = new TournamentSelection(3, true);
         var crossover = new TwoPointCrossover();
-        var mutation = new UniformMutation(true);
+        var mutation = new CustomMutators(1, 1, 1);
         //var chromosome = new FloatingPointChromosome(0,1,35,8);
-        var chromosome = new LevelChromosome(Generator, RandomSeedGenerator);
+        var chromosome = new LevelChromosome(Generator.StartingObstacleCount * 5 + 4, Generator, RandomSeedGenerator);
         var population = new Population(PopulationCount, PopulationCount, chromosome);
 
         GridPopulation = new GridObjectLayout(LevelProperties);
@@ -192,7 +250,8 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         PhenotypeEvaluator.GridLevelObjects = GridPopulation;
 
         GeneticAlgorithm = new GeneticAlgorithm(population, PhenotypeEvaluator, selection, crossover, mutation);
-        GeneticAlgorithm.MutationProbability = 0.2f;
+        GeneticAlgorithm.MutationProbability = MutationProb;
+        GeneticAlgorithm.CrossoverProbability = CrossoverProb;
         GeneticAlgorithm.Termination = new GenerationNumberTermination(AimedGenerations);
         GeneticAlgorithm.GenerationRan += Ga_GenerationRan;
         GeneticAlgorithm.TerminationReached += Ga_TerminationReached; ;

@@ -17,7 +17,7 @@ public class LevelChromosome : LevelChromosomeBase
         return genes;
     }
 
-    public LevelChromosome(LevelPhenotypeGenerator generatorBase = null, System.Random random = null) : base(generatorBase.ObstaclesSpawned * 5 + 4, generatorBase)
+    public LevelChromosome(int length, LevelPhenotypeGenerator generatorBase = null, System.Random random = null) : base(length, generatorBase)
     {
         if (random == null)
         {
@@ -32,7 +32,7 @@ public class LevelChromosome : LevelChromosomeBase
 
     public override IChromosome CreateNew()
     {
-        return new LevelChromosome(PhenotypeGenerator, ChromosomeRandom);
+        return new LevelChromosome(Length, PhenotypeGenerator, ChromosomeRandom);
     }
 
     public override Gene GenerateGene(int geneIndex)

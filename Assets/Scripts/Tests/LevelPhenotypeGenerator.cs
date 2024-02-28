@@ -1,4 +1,5 @@
 using GeneticSharp.Domain.Chromosomes;
+using JetBrains.Annotations;
 using Mono.Cecil;
 using System.Linq;
 using UnityEngine;
@@ -14,13 +15,16 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
     private LevelChromosomeBase LevelChromosome;
     private GameObject To;
 
+    public int StartingObstacleCount = 3;
+    private int ObstaclesSpawned;
+
     public void Awake()
     {
         if (RunOnStart)
         {
             if (IsRandom)
                 RandomChromosomeSeed = new System.Random().Next();
-            LevelChromosome = new LevelChromosome(this, new System.Random(RandomChromosomeSeed));
+            LevelChromosome = new LevelChromosome(StartingObstacleCount * 5 + 4, this, new System.Random(RandomChromosomeSeed));
             Generate(LevelChromosome, this.gameObject);
         }
     }
@@ -32,6 +36,7 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         int geneIndex = 0;
         //Boundary
         To.tag = "Level";
+        ObstaclesSpawned = (chromosome.Length - 4) / 5;
         //Boundary constructed first 2 genes
         BoxCollider2D box = InitLevelBoundary(LevelProperties.LevelSize.x, LevelProperties.LevelSize.y, to);
 

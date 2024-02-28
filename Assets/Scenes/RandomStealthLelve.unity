@@ -866,6 +866,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PopulationCount: 5
   AimedGenerations: 1
+  MutationProb: 10
+  CrossoverProb: 10
   PhenotypeEvaluator: {fileID: 1136908432}
   Generator: {fileID: 580530818}
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
@@ -1305,7 +1307,6 @@ MonoBehaviour:
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   MinEnemiesSpawned: 3
   MaxEnemiesSpawned: 3
-  ObstaclesSpawned: 5
   MinObjectScale: 0.2
   MaxObjectScale: 5
   VisualBoundWidth: 1
@@ -1313,6 +1314,7 @@ MonoBehaviour:
   IsRandom: 0
   RandomChromosomeSeed: 0
   DisposeNow: 0
+  StartingObstacleCount: 3
 --- !u!1 &72641078
 GameObject:
   m_ObjectHideFlags: 0
@@ -1381,7 +1383,6 @@ MonoBehaviour:
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   MinEnemiesSpawned: 3
   MaxEnemiesSpawned: 3
-  ObstaclesSpawned: 5
   MinObjectScale: 0.2
   MaxObjectScale: 5
   VisualBoundWidth: 1
@@ -1389,6 +1390,7 @@ MonoBehaviour:
   IsRandom: 0
   RandomChromosomeSeed: 0
   DisposeNow: 0
+  StartingObstacleCount: 3
 --- !u!1 &75470567
 GameObject:
   m_ObjectHideFlags: 0
@@ -4019,7 +4021,6 @@ MonoBehaviour:
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   MinEnemiesSpawned: 3
   MaxEnemiesSpawned: 3
-  ObstaclesSpawned: 5
   MinObjectScale: 0.2
   MaxObjectScale: 5
   VisualBoundWidth: 1
@@ -4027,6 +4028,7 @@ MonoBehaviour:
   IsRandom: 0
   RandomChromosomeSeed: 0
   DisposeNow: 0
+  StartingObstacleCount: 3
 --- !u!1 &266965678
 GameObject:
   m_ObjectHideFlags: 0
@@ -5748,7 +5750,6 @@ MonoBehaviour:
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   MinEnemiesSpawned: 3
   MaxEnemiesSpawned: 3
-  ObstaclesSpawned: 5
   MinObjectScale: 0.2
   MaxObjectScale: 5
   VisualBoundWidth: 1
@@ -5756,6 +5757,7 @@ MonoBehaviour:
   IsRandom: 0
   RandomChromosomeSeed: 0
   DisposeNow: 0
+  StartingObstacleCount: 3
 --- !u!1 &370511555
 GameObject:
   m_ObjectHideFlags: 0
@@ -6770,7 +6772,6 @@ MonoBehaviour:
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   MinEnemiesSpawned: 3
   MaxEnemiesSpawned: 3
-  ObstaclesSpawned: 5
   MinObjectScale: 0.2
   MaxObjectScale: 5
   VisualBoundWidth: 1
@@ -6778,6 +6779,7 @@ MonoBehaviour:
   IsRandom: 0
   RandomChromosomeSeed: 0
   DisposeNow: 0
+  StartingObstacleCount: 3
 --- !u!1 &426918019
 GameObject:
   m_ObjectHideFlags: 0
@@ -9007,7 +9009,7 @@ GameObject:
   - component: {fileID: 580530819}
   - component: {fileID: 580530818}
   m_Layer: 0
-  m_Name: SpawnLevelFromChromomes (1)
+  m_Name: PhenotypeGenerator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9040,7 +9042,6 @@ MonoBehaviour:
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   MinEnemiesSpawned: 3
   MaxEnemiesSpawned: 3
-  ObstaclesSpawned: 5
   MinObjectScale: 0.2
   MaxObjectScale: 5
   VisualBoundWidth: 1
@@ -9048,6 +9049,7 @@ MonoBehaviour:
   IsRandom: 0
   RandomChromosomeSeed: 2
   DisposeNow: 0
+  StartingObstacleCount: 3
 --- !u!4 &580530819
 Transform:
   m_ObjectHideFlags: 0
@@ -9806,7 +9808,6 @@ MonoBehaviour:
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   MinEnemiesSpawned: 3
   MaxEnemiesSpawned: 3
-  ObstaclesSpawned: 5
   MinObjectScale: 0.2
   MaxObjectScale: 5
   VisualBoundWidth: 1
@@ -9814,6 +9815,7 @@ MonoBehaviour:
   IsRandom: 0
   RandomChromosomeSeed: 0
   DisposeNow: 0
+  StartingObstacleCount: 3
 --- !u!1 &617071847
 GameObject:
   m_ObjectHideFlags: 0
@@ -11259,7 +11261,6 @@ MonoBehaviour:
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   MinEnemiesSpawned: 3
   MaxEnemiesSpawned: 3
-  ObstaclesSpawned: 5
   MinObjectScale: 0.2
   MaxObjectScale: 5
   VisualBoundWidth: 1
@@ -11267,6 +11268,7 @@ MonoBehaviour:
   IsRandom: 0
   RandomChromosomeSeed: 0
   DisposeNow: 0
+  StartingObstacleCount: 3
 --- !u!1 &694835599
 GameObject:
   m_ObjectHideFlags: 0
@@ -17765,7 +17767,6 @@ MonoBehaviour:
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   MinEnemiesSpawned: 3
   MaxEnemiesSpawned: 3
-  ObstaclesSpawned: 5
   MinObjectScale: 0.2
   MaxObjectScale: 5
   VisualBoundWidth: 1
@@ -17773,6 +17774,7 @@ MonoBehaviour:
   IsRandom: 0
   RandomChromosomeSeed: 0
   DisposeNow: 0
+  StartingObstacleCount: 3
 --- !u!1 &1114975132
 GameObject:
   m_ObjectHideFlags: 0
@@ -23255,7 +23257,6 @@ MonoBehaviour:
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   MinEnemiesSpawned: 3
   MaxEnemiesSpawned: 3
-  ObstaclesSpawned: 5
   MinObjectScale: 0.2
   MaxObjectScale: 5
   VisualBoundWidth: 1
@@ -23263,6 +23264,7 @@ MonoBehaviour:
   IsRandom: 0
   RandomChromosomeSeed: 0
   DisposeNow: 0
+  StartingObstacleCount: 3
 --- !u!1 &1407686257
 GameObject:
   m_ObjectHideFlags: 0
@@ -23755,7 +23757,6 @@ MonoBehaviour:
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   MinEnemiesSpawned: 3
   MaxEnemiesSpawned: 3
-  ObstaclesSpawned: 5
   MinObjectScale: 0.2
   MaxObjectScale: 5
   VisualBoundWidth: 1
@@ -23763,6 +23764,7 @@ MonoBehaviour:
   IsRandom: 0
   RandomChromosomeSeed: 0
   DisposeNow: 0
+  StartingObstacleCount: 3
 --- !u!1 &1419608146
 GameObject:
   m_ObjectHideFlags: 0
@@ -24754,6 +24756,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PopulationCount: 10
   AimedGenerations: 5
+  MutationProb: 0.8
+  CrossoverProb: 1
   PhenotypeEvaluator: {fileID: 1136908432}
   Generator: {fileID: 580530818}
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
@@ -27515,7 +27519,6 @@ MonoBehaviour:
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   MinEnemiesSpawned: 3
   MaxEnemiesSpawned: 3
-  ObstaclesSpawned: 5
   MinObjectScale: 0.2
   MaxObjectScale: 5
   VisualBoundWidth: 1
@@ -27523,6 +27526,7 @@ MonoBehaviour:
   IsRandom: 0
   RandomChromosomeSeed: 0
   DisposeNow: 0
+  StartingObstacleCount: 3
 --- !u!1 &1644421344
 GameObject:
   m_ObjectHideFlags: 0
@@ -31837,7 +31841,6 @@ MonoBehaviour:
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   MinEnemiesSpawned: 3
   MaxEnemiesSpawned: 3
-  ObstaclesSpawned: 5
   MinObjectScale: 0.2
   MaxObjectScale: 5
   VisualBoundWidth: 1
@@ -31845,6 +31848,7 @@ MonoBehaviour:
   IsRandom: 0
   RandomChromosomeSeed: 0
   DisposeNow: 0
+  StartingObstacleCount: 3
 --- !u!1 &1885899573
 GameObject:
   m_ObjectHideFlags: 0
@@ -33475,7 +33479,6 @@ MonoBehaviour:
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   MinEnemiesSpawned: 3
   MaxEnemiesSpawned: 3
-  ObstaclesSpawned: 5
   MinObjectScale: 0.2
   MaxObjectScale: 5
   VisualBoundWidth: 1
@@ -33483,6 +33486,7 @@ MonoBehaviour:
   IsRandom: 0
   RandomChromosomeSeed: 0
   DisposeNow: 0
+  StartingObstacleCount: 3
 --- !u!1 &1985638606
 GameObject:
   m_ObjectHideFlags: 0
@@ -33999,7 +34003,6 @@ MonoBehaviour:
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   MinEnemiesSpawned: 3
   MaxEnemiesSpawned: 3
-  ObstaclesSpawned: 5
   MinObjectScale: 0.2
   MaxObjectScale: 5
   VisualBoundWidth: 1
@@ -34007,6 +34010,7 @@ MonoBehaviour:
   IsRandom: 0
   RandomChromosomeSeed: 0
   DisposeNow: 0
+  StartingObstacleCount: 3
 --- !u!1 &2021530577
 GameObject:
   m_ObjectHideFlags: 0
