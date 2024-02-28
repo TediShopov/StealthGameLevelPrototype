@@ -57,6 +57,7 @@ internal class CustomMutators : MutationBase
             chromosome.ReplaceGene(oldLength + 2, chromosome.GenerateGene(oldLength + 2));
             chromosome.ReplaceGene(oldLength + 3, chromosome.GenerateGene(oldLength + 3));
             chromosome.ReplaceGene(oldLength + 4, chromosome.GenerateGene(oldLength + 4));
+            chromosome.ValidateGenes();
             Debug.Log("Added Obstacles Mutation");
         }
         if (chosenOutcome == 1)

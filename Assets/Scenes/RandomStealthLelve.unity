@@ -24754,8 +24754,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a59df0218d90434e9622a53774d6147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PopulationCount: 10
-  AimedGenerations: 5
+  PopulationCount: 15
+  AimedGenerations: 1
   MutationProb: 0.8
   CrossoverProb: 1
   PhenotypeEvaluator: {fileID: 1136908432}

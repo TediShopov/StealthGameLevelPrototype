@@ -1,3 +1,4 @@
+using PlasticPipe.PlasticProtocol.Messages;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,8 +80,8 @@ namespace StealthLevelEvaluation
                 {
                     var e = Data._debugEnenmies[i];
                     var othere = Data._debugEnenmies[j];
-                    float vd = e.EnemyProperties.ViewDistance;
-                    float fov = e.EnemyProperties.FOV;
+                    float VD = e.EnemyProperties.ViewDistance;
+                    float FOV = e.EnemyProperties.FOV;
                     Bounds bounds = FieldOfView.GetFovBounds(
                         e.GetFutureTransform(0),
                     e.EnemyProperties.ViewDistance,
@@ -98,8 +99,8 @@ namespace StealthLevelEvaluation
                             .Where(x =>
                             {
                                 var pos = Data.Grid.GetCellCenterWorld(x);
-                                bool one = FieldOfView.TestCollision(pos, e.GetFutureTransform(0), fov, vd, Data.ObstacleLayerMask);
-                                bool other = FieldOfView.TestCollision(pos, othere.GetFutureTransform(0), fov, vd, Data.ObstacleLayerMask);
+                                bool one = FieldOfView.TestCollision(pos, e.GetFutureTransform(0), FOV, VD, Data.ObstacleLayerMask);
+                                bool other = FieldOfView.TestCollision(pos, othere.GetFutureTransform(0), FOV, VD, Data.ObstacleLayerMask);
                                 if (one && other)
                                 {
                                     Gizmos.color = Color.green;
@@ -112,6 +113,9 @@ namespace StealthLevelEvaluation
             }
         }
 
+        private float VD;
+        private float FOV;
+
         public override float Evaluate()
         {
             //Get Future level instance
@@ -122,17 +126,80 @@ namespace StealthLevelEvaluation
             float maxTime = ((ContinuosFutureLevel)futureLevel)
                 .EnemyPatrolPaths.Max(x => x.GetTimeToTraverse());
 
-            float vd = Data._debugEnenmies[0].EnemyProperties.ViewDistance;
-            float fov = Data._debugEnenmies[0].EnemyProperties.FOV;
+            VD = Data._debugEnenmies[0].EnemyProperties.ViewDistance;
+            FOV = Data._debugEnenmies[0].EnemyProperties.FOV;
             //Formula: angel in radians multipled by radius on the power of 2
-            float maxOverlappArea = Mathf.Deg2Rad * fov * vd * vd;
+            float maxOverlappArea = Mathf.Deg2Rad * FOV * VD * VD;
             float accumulatedOverlapp = 0;
-            Helpers.LogExecutionTime(() => accumulatedOverlapp = NewAccumualtedOverlapp(futureLevel, maxTime, vd, fov, maxOverlappArea), "New Overlapp");
+            Helpers.LogExecutionTime(() => accumulatedOverlapp = OverlapRelativeToDiscreteMaxFOV(futureLevel, maxTime, maxOverlappArea), "New Overlapp");
+
+            //            float newAccumulatedValue = OverlapRelativeToDiscreteMaxFOV(futureLevel, maxTime, maxOverlappArea);
+            //            if (accumulatedOverlapp != newAccumulatedValue)
+            //                Debug.Log($"{accumulatedOverlapp} != {newAccumulatedValue}");
+            //
             float avgRelOverlapp = accumulatedOverlapp / maxTime;
             return -avgRelOverlapp * 100;
         }
 
-        private float NewAccumualtedOverlapp(IFutureLevel futureLevel, float maxTime, float vd, float fov, float maxOverlappArea)
+        private HashSet<Vector3Int> VisibleCells(Bounds bounds, FutureTransform ft)
+        {
+            HashSet<Vector3Int> enemyOneVisibleCoordinates = DiscretBoundsCells(bounds)
+                .Where(x =>
+                {
+                    var pos = Data.Grid.GetCellCenterWorld(x);
+                    return FieldOfView.TestCollision(pos, ft, FOV, VD, Data.ObstacleLayerMask);
+                }).ToHashSet();
+            return enemyOneVisibleCoordinates;
+        }
+
+        private float OverlapRelativeToDiscreteMaxFOV(IFutureLevel futureLevel, float maxTime, float maxOverlappArea)
+        {
+            List<BacktrackPatrolPath> simulatedPaths = Data._debugEnenmies
+                .Select(x => new BacktrackPatrolPath(x.BacktrackPatrolPath)).ToList();
+            float accumulatedOverlapp = 0;
+            for (float time = 0; time <= maxTime; time += futureLevel.Step)
+            {
+                //Move all paths
+                simulatedPaths.ForEach(x => x.MoveAlong(futureLevel.Step * Data._debugEnenmies[0].EnemyProperties.Speed));
+                for (int i = 0; i < Data._debugEnenmies.Length - 1; i++)
+                {
+                    FutureTransform enemyFT = PatrolPath.GetPathOrientedTransform(simulatedPaths[i]);
+                    Bounds bounds = FieldOfView.GetFovBounds(enemyFT, VD, FOV);
+                    HashSet<Vector3Int> enemyOneVisibleCoordinates = VisibleCells(bounds, enemyFT);
+
+                    for (int j = i + 1; j < Data._debugEnenmies.Length; j++)
+                    {
+                        FutureTransform otherEnemyFT = PatrolPath.GetPathOrientedTransform(simulatedPaths[j]);
+                        Bounds otherBounds = FieldOfView.GetFovBounds(otherEnemyFT, VD, FOV);
+                        if (bounds.Intersects(otherBounds))
+                        {
+                            Profiler.BeginSample("Bounds intersecting");
+                            var overlapp = Helpers.IntersectBounds(bounds, otherBounds);
+                            Profiler.EndSample();
+                            Profiler.BeginSample("Cell visibility checking");
+
+                            HashSet<Vector3Int> enemyTwoVisibleCoordinates = VisibleCells(otherBounds, otherEnemyFT);
+
+                            HashSet<Vector3Int> visibleCoordinates = new HashSet<Vector3Int>(enemyOneVisibleCoordinates);
+                            visibleCoordinates.IntersectWith(enemyTwoVisibleCoordinates);
+
+                            Profiler.EndSample();
+                            float cellArea = (Data.Grid.cellSize.x * Data.Grid.cellSize.y);
+                            maxOverlappArea = Mathf.Max(enemyOneVisibleCoordinates.Count * cellArea, enemyTwoVisibleCoordinates.Count * cellArea);
+                            if (maxOverlappArea != 0)
+                            {
+                                float estimatedOverlappArea = visibleCoordinates.Count * cellArea;
+                                float relativeOverlappArea = estimatedOverlappArea / maxOverlappArea;
+                                accumulatedOverlapp += relativeOverlappArea;
+                            }
+                        }
+                    }
+                }
+            }
+            return accumulatedOverlapp; ;
+        }
+
+        private float OveralpRealtiveToSectionArea(IFutureLevel futureLevel, float maxTime, float maxOverlappArea)
         {
             List<BacktrackPatrolPath> simulatedPaths = Data._debugEnenmies
                 .Select(x => new BacktrackPatrolPath(x.BacktrackPatrolPath)).ToList();
@@ -145,11 +212,11 @@ namespace StealthLevelEvaluation
                 for (int i = 0; i < Data._debugEnenmies.Length - 1; i++)
                 {
                     FutureTransform enemyFT = PatrolPath.GetPathOrientedTransform(simulatedPaths[i]);
-                    Bounds bounds = FieldOfView.GetFovBounds(enemyFT, vd, fov);
+                    Bounds bounds = FieldOfView.GetFovBounds(enemyFT, VD, FOV);
                     for (int j = i + 1; j < Data._debugEnenmies.Length; j++)
                     {
                         FutureTransform otherEnemyFT = PatrolPath.GetPathOrientedTransform(simulatedPaths[j]);
-                        Bounds otherBounds = FieldOfView.GetFovBounds(otherEnemyFT, vd, fov);
+                        Bounds otherBounds = FieldOfView.GetFovBounds(otherEnemyFT, VD, FOV);
                         if (bounds.Intersects(otherBounds))
                         {
                             Profiler.BeginSample("Bounds intersecting");
@@ -161,8 +228,8 @@ namespace StealthLevelEvaluation
                                 .Where(x =>
                                 {
                                     var pos = Data.Grid.GetCellCenterWorld(x);
-                                    bool one = FieldOfView.TestCollision(pos, enemyFT, fov, vd, Data.ObstacleLayerMask);
-                                    bool other = FieldOfView.TestCollision(pos, otherEnemyFT, fov, vd, Data.ObstacleLayerMask);
+                                    bool one = FieldOfView.TestCollision(pos, enemyFT, FOV, VD, Data.ObstacleLayerMask);
+                                    bool other = FieldOfView.TestCollision(pos, otherEnemyFT, FOV, VD, Data.ObstacleLayerMask);
                                     return one && other;
                                 }).ToList();
                             Profiler.EndSample();
@@ -173,7 +240,6 @@ namespace StealthLevelEvaluation
                     }
                 }
             }
-
             return accumulatedOverlapp; ;
         }
     }
