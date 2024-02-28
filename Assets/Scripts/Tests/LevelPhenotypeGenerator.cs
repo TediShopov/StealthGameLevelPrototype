@@ -1,4 +1,5 @@
 using GeneticSharp.Domain.Chromosomes;
+using Mono.Cecil;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering.VirtualTexturing;
@@ -7,6 +8,8 @@ using UnityEngine.Rendering.VirtualTexturing;
 public class LevelPhenotypeGenerator : LevelGeneratorBase
 {
     public bool RunOnStart = false;
+    public bool IsRandom = false;
+    public int RandomChromosomeSeed;
     public bool DisposeNow = false;
     private LevelChromosomeBase LevelChromosome;
     private GameObject To;
@@ -15,7 +18,9 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
     {
         if (RunOnStart)
         {
-            LevelChromosome = new LevelChromosome(40, this, new System.Random());
+            if (IsRandom)
+                RandomChromosomeSeed = new System.Random().Next();
+            LevelChromosome = new LevelChromosome(this, new System.Random(RandomChromosomeSeed));
             Generate(LevelChromosome, this.gameObject);
         }
     }
@@ -60,7 +65,6 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         {
             Instantiate(EnemyPrefab, To.transform);
         }
-        //for (int i = LevelChromosome.Length; )
 
         Physics2D.SyncTransforms();
         //Solvers
@@ -70,11 +74,22 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         var voxelizedLevel = To.gameObject.GetComponentInChildren<IFutureLevel>();
         var multipleRRTSolvers = To.gameObject.GetComponentInChildren<MultipleRRTRunner>();
         var pathGenerator = To.gameObject.GetComponentInChildren<PathGeneratorClass>();
-        pathGenerator.LevelRandom = new System.Random();
+
+        //Enemy path geenerator seed
+        int pathSeed = Mathf.CeilToInt(
+            GetGeneValue(geneIndex)
+            * GetGeneValue(geneIndex + 1)
+            * GetGeneValue(geneIndex + 2)
+            * GetGeneValue(geneIndex + 3));
+        geneIndex += 4;
+
+        pathGenerator.LevelRandom = new System.Random(pathSeed);
         Helpers.LogExecutionTime(levelInitializer.Init, "Level Initializer Time");
         Helpers.LogExecutionTime(voxelizedLevel.Init, "Future Level Logic Time");
         Helpers.LogExecutionTime(multipleRRTSolvers.Run, "Multiple RRT Runs Time");
         Debug.Log("Generation of phenotype finished");
+
+        Debug.Log($"Genotype length is:{LevelChromosome.Length}, Read genes are: {geneIndex}");
     }
 
     //!WARNING! uses destroy immediate as mulitple level can be geenrated an

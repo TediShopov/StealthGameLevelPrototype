@@ -184,7 +184,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         var crossover = new TwoPointCrossover();
         var mutation = new UniformMutation(true);
         //var chromosome = new FloatingPointChromosome(0,1,35,8);
-        var chromosome = new LevelChromosome(40, Generator, RandomSeedGenerator);
+        var chromosome = new LevelChromosome(Generator, RandomSeedGenerator);
         var population = new Population(PopulationCount, PopulationCount, chromosome);
 
         GridPopulation = new GridObjectLayout(LevelProperties);
