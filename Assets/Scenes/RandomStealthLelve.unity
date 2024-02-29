@@ -7525,6 +7525,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb3c4b8eee8b8049a69ee526af03aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsValidator: 0
+  IsTerminating: 0
   Name: Relative Coverage
   _value: 31.7750186920166
   Phenotype: {fileID: 1885642088}
@@ -7541,6 +7543,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14ea9b3965f3c294fa0143e2a9b6ea7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsValidator: 0
+  IsTerminating: 0
   Name: Risk Measure
   _value: 0
   Phenotype: {fileID: 1885642088}
@@ -7557,6 +7561,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a72bf110fab13344bdcea70a88b0922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsValidator: 0
+  IsTerminating: 0
   Name: Relative FOV Overla
   _value: -179.5938262939453
   Phenotype: {fileID: 1885642088}
@@ -11220,6 +11226,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb3c4b8eee8b8049a69ee526af03aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsValidator: 0
+  IsTerminating: 0
   Name: Relative Coverage
   _value: 25.56610679626465
   Phenotype: {fileID: 2010848117}
@@ -11236,6 +11244,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14ea9b3965f3c294fa0143e2a9b6ea7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsValidator: 0
+  IsTerminating: 0
   Name: Risk Measure
   _value: 0
   Phenotype: {fileID: 2010848117}
@@ -11252,6 +11262,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a72bf110fab13344bdcea70a88b0922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsValidator: 0
+  IsTerminating: 0
   Name: Relative FOV Overla
   _value: -176.563232421875
   Phenotype: {fileID: 2010848117}
@@ -16825,6 +16837,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb3c4b8eee8b8049a69ee526af03aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsValidator: 0
+  IsTerminating: 0
   Name: Relative Coverage
   _value: 43.82761001586914
   Phenotype: {fileID: 1114020434}
@@ -16841,6 +16855,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14ea9b3965f3c294fa0143e2a9b6ea7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsValidator: 0
+  IsTerminating: 0
   Name: Risk Measure
   _value: 0.583519458770752
   Phenotype: {fileID: 1114020434}
@@ -16857,6 +16873,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a72bf110fab13344bdcea70a88b0922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsValidator: 0
+  IsTerminating: 0
   Name: Relative FOV Overla
   _value: -25.32248878479004
   Phenotype: {fileID: 1114020434}
@@ -26015,7 +26033,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a59df0218d90434e9622a53774d6147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PopulationCount: 9
+  PopulationCount: 4
   AimedGenerations: 1
   MutationProb: 0.2
   CrossoverProb: 1
@@ -33512,6 +33530,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb3c4b8eee8b8049a69ee526af03aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsValidator: 0
+  IsTerminating: 0
   Name: Relative Coverage
   _value: 34.69685745239258
   Phenotype: {fileID: 363065591}
@@ -33528,6 +33548,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14ea9b3965f3c294fa0143e2a9b6ea7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsValidator: 0
+  IsTerminating: 0
   Name: Risk Measure
   _value: 0.00964316911995411
   Phenotype: {fileID: 363065591}
@@ -33544,6 +33566,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a72bf110fab13344bdcea70a88b0922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsValidator: 0
+  IsTerminating: 0
   Name: Relative FOV Overla
   _value: -86.51742553710938
   Phenotype: {fileID: 363065591}
@@ -36654,6 +36678,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb3c4b8eee8b8049a69ee526af03aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsValidator: 0
+  IsTerminating: 0
   Name: Relative Coverage
   _value: 34.03944396972656
   Phenotype: {fileID: 612568502}
@@ -36670,6 +36696,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14ea9b3965f3c294fa0143e2a9b6ea7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsValidator: 0
+  IsTerminating: 0
   Name: Risk Measure
   _value: 0
   Phenotype: {fileID: 612568502}
@@ -36686,6 +36714,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a72bf110fab13344bdcea70a88b0922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsValidator: 0
+  IsTerminating: 0
   Name: Relative FOV Overla
   _value: -40.04073715209961
   Phenotype: {fileID: 612568502}

@@ -40,7 +40,7 @@ public class EvaluatorPrefabSpawner : MonoBehaviour, IFitness
                 e.Evaluate();
                 info.FitnessEvaluations.Add(e);
                 if (e.IsTerminating)
-                    return e.Value;
+                    break;
             }
 
             levelChromosome.FitnessInfo = info;

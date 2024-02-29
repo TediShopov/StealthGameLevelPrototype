@@ -343,7 +343,7 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
             size: halfBoxSize,
             angle: 0f,
             direction: Vector2.zero,
-            distance: 0.01f,
+            distance: 1.0f,
             layerMask: ObstacleLayerMask
         );
 

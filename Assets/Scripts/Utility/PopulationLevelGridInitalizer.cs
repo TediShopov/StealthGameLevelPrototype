@@ -271,9 +271,11 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         List<IChromosome> topN = GeneticAlgorithm.Population.Generations.SelectMany(x => x.Chromosomes)
             .Distinct().
             OrderByDescending(x => x.Fitness).Take(TopNLevels).ToList();
-        for (int i = 0; i < TopNLevels; i++)
+        int n = 0;
+        foreach (var top in topN)
         {
-            Debug.Log($"Top {i} - Fitness {topN[i].Fitness}");
+            n++;
+            Debug.Log($"Top {n} - Fitness {top.Fitness}");
         }
         return topN;
     }
