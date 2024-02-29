@@ -31,12 +31,18 @@ public class EvaluatorPrefabSpawner : MonoBehaviour, IFitness
             //Get all evaluators from  the prefab
             PhenotypeFitnessEvaluation[] Evaluators = evaluator.GetComponents<PhenotypeFitnessEvaluation>();
             var info = FitnessInfoVisualizer.AttachInfo(levelObject.gameObject, new FitnessInfo());
+
+            //Run Validators
+            Evaluators = Evaluators.OrderByDescending(x => x.IsValidator).ToArray();
             foreach (var e in Evaluators)
             {
                 e.Init(levelObject.gameObject);
                 e.Evaluate();
                 info.FitnessEvaluations.Add(e);
+                if (e.IsTerminating)
+                    return e.Value;
             }
+
             levelChromosome.FitnessInfo = info;
             //Attaching fitness evaluation information to the object itself
             return info.FitnessEvaluations.Sum(x => x.Value);

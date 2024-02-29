@@ -8,6 +8,13 @@ namespace StealthLevelEvaluation
     public abstract class PhenotypeFitnessEvaluation : MonoBehaviour
     {
         private bool _evaluted;
+
+        //Validators are always run first.
+        public bool IsValidator = false;
+
+        //If a validator is terminating, the no other validation and/or evaluation should be carried out.
+        public bool IsTerminating = false;
+
         public string Name;
         [SerializeField] protected double _value;
         protected double _time;

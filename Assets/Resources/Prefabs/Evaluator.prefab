@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -4649050335418208319}
   - component: {fileID: 152763269579241241}
   - component: {fileID: 3359944139125092206}
+  - component: {fileID: 2851684532165398080}
   m_Layer: 0
   m_Name: Evaluator
   m_TagString: Untagged
@@ -47,6 +48,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a72bf110fab13344bdcea70a88b0922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsValidator: 0
+  IsTerminating: 0
   Name: RelateFOVOverlap
   _value: 0
   Phenotype: {fileID: 0}
@@ -69,6 +72,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14ea9b3965f3c294fa0143e2a9b6ea7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsValidator: 0
+  IsTerminating: 0
   Name: RiskMeasure
   _value: 0
   Phenotype: {fileID: 0}
@@ -85,6 +90,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb3c4b8eee8b8049a69ee526af03aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsValidator: 0
+  IsTerminating: 0
   Name: Relative Level Coverage
   _value: 0
   Phenotype: {fileID: 0}
@@ -101,6 +108,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b99d154cd3d2744837f7cdde14cfc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsValidator: 0
+  IsTerminating: 0
   Name: StartEndObservedEvaluation
   _value: 0
   Phenotype: {fileID: 0}
@@ -139,3 +148,21 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   WorstFitnessPenalty: 100
+--- !u!114 &2851684532165398080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4520497855799095119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cf685eec975fd74682a8a0f5caf8b06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsValidator: 1
+  IsTerminating: 0
+  Name: StartEndValidator
+  _value: 0
+  Phenotype: {fileID: 0}
+  RunNow: 0

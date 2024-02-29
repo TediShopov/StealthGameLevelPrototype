@@ -246,13 +246,6 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
         }
 
         RoadMap.AddEdge(start, end);
-        string debugRedundantConnection = "FA RED: ";
-        foreach (var v in visitedInConnection)
-        {
-            debugRedundantConnection += $" [{v.x},{v.y}]";
-        }
-        Debug.Log($"FA start {start}, end {end}, {debugRedundantConnection}");
-
         _debugSimplifiedConnections.Add(Tuple.Create(start, end));
 
         return end;
