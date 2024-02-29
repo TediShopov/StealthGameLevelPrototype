@@ -41,7 +41,7 @@ public class NativeGrid<T>
     {
         this.Grid = unityGrid;
         _gridMin = Grid.WorldToCell(bounds.min);
-        _gridMax = Grid.WorldToCell(bounds.max);
+        _gridMax = Grid.WorldToCell(bounds.max) + new Vector3Int(1, 1, 0);
         _nativeGrid = new T[GetRows(), GetCols()];
     }
 

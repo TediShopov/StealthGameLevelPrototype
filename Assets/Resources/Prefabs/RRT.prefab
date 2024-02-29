@@ -44,12 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d9bad1cd77a7a246a48d5e6516c70fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VoxelizedLevel: {fileID: 0}
   Controller: {fileID: 0}
   StartNode: {fileID: 0}
   EndNode: {fileID: 0}
-  maxIterations: 1500
+  maxIterations: 3000
   GoalDistance: 1
-  BiasDistance: 6.32
+  BiasDistance: 10
   Path: []
   OutputDiscretized: 0

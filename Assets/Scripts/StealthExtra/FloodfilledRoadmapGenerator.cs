@@ -28,6 +28,7 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
     {
         if (DoFloodFill)
         {
+            Init();
             FloodRegions();
             DoFloodFill = false;
         }
@@ -43,22 +44,69 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
         LevelGrid.SetAll(SetCellColliderIndex);
 
         FloodRegions();
-        if (RoadMap.adjacencyList.Count <= 0) return;
-        Vector2 superNode = RoadMap.adjacencyList.First().Key;
-        foreach (var nodeInfoPair in RoadMap.adjacencyList)
-        {
-            if (nodeInfoPair.Value.Count > 2)
-            {
-                superNode = nodeInfoPair.Key;
-                break;
-            }
-        }
-        int totalRecursion = 0;
         Profiler.EndSample();
-        RemoveRedundantNodes(superNode, ref totalRecursion, new List<Vector2>());
+
+        if (RoadMap.adjacencyList.Count <= 0) return;
+        int totalRecursion = 0;
+
+        List<List<Vector2>> subgraphs = FindSubgraphsDFS();
+        foreach (var subgraph in subgraphs)
+        {
+            Vector2 superNode = PickUnvistiedSuperNode(subgraph);
+            RemoveRedundantNodes(superNode, ref totalRecursion, new List<Vector2>());
+        }
+
         Debug.Log($"Roadmap nodes: {RoadMap.adjacencyList.Count}");
         Debug.Log($"Simplified connection count : {_debugSimplifiedConnections.Count}");
         Debug.Log($"Recursion count is : {totalRecursion}");
+        Debug.Log($"Graph count is : {subgraphs.Count}");
+    }
+
+    private List<List<Vector2>> FindSubgraphsDFS()
+    {
+        HashSet<Vector2> visited = new HashSet<Vector2>();
+        List<List<Vector2>> subgraphs = new List<List<Vector2>>();
+
+        foreach (Vector2 node in RoadMap.adjacencyList.Keys)
+        {
+            if (!visited.Contains(node))
+            {
+                List<Vector2> subgraph = new List<Vector2>();
+                DFS(node, visited, subgraph);
+                subgraphs.Add(subgraph);
+            }
+        }
+
+        return subgraphs;
+    }
+
+    private void DFS(Vector2 node, HashSet<Vector2> visited, List<Vector2> subgraph)
+    {
+        visited.Add(node);
+        subgraph.Add(node);
+
+        foreach (Vector2 neighbor in RoadMap.adjacencyList[node])
+        {
+            if (!visited.Contains(neighbor))
+            {
+                DFS(neighbor, visited, subgraph);
+            }
+        }
+    }
+
+    private Vector2 PickUnvistiedSuperNode(IEnumerable<Vector2> nodeGroup)
+    {
+        if (RoadMap.adjacencyList.Count <= 0) return Vector2.zero;
+        Vector2 superNode = nodeGroup.First();
+        foreach (var node in nodeGroup)
+        {
+            if (RoadMap.GetNeighbors(node).Count != 2)
+            {
+                superNode = node;
+                break;
+            }
+        }
+        return superNode;
     }
 
     public int SetCellColliderIndex(int row, int col, NativeGrid<int> ngrid)
@@ -133,7 +181,7 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
         //Mark all immediate negihbours as visited and removed redundant ones
         for (int i = 0; i < neighbors.Count; i++)
         {
-            Vector2 reachedEnd = RemoveRedundantNodesInConnection(start, neighbors[i], ref totalRecursions);
+            Vector2 reachedEnd = RemoveRedundantNodesInConnection(start, neighbors[i], ref totalRecursions, visited);
             if (reachedEnd.Equals(start) == false)
                 visitedFromStart.Add(reachedEnd);
         }
@@ -144,18 +192,18 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
         }
     }
 
-    public Vector2 RemoveRedundantNodesInConnection(Vector2 start, Vector2 end, ref int recursionCount)
+    public Vector2 RemoveRedundantNodesInConnection(Vector2 start, Vector2 end, ref int recursionCount, List<Vector2> visited)
     {
         recursionCount++;
         if (recursionCount >= 200) return start;
-        List<Vector2> visited = new List<Vector2>();
+        List<Vector2> visitedInConnection = new List<Vector2>();
         //Should be changed to a while
         for (int i = 0; i < 1000; i++)
         {
             //Expand end
             var endNeghbors = RoadMap.GetNeighbors(end);
             //Possibly redundant - it has exactly one connection to unvisted node
-            var unvisited = endNeghbors.Where(x => !visited.Contains(x) && !x.Equals(start)).ToList();
+            var unvisited = endNeghbors.Where(x => !visitedInConnection.Contains(x) && !visited.Contains(x) && !x.Equals(start)).ToList();
             if (unvisited.Count > 1)
             {
                 //Node is Super node -> break as endj
@@ -174,30 +222,37 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
                 else
                 {
                     //Can continue simplifyiund
-                    visited.Add(end);
+                    visitedInConnection.Add(end);
 
                     end = endCandidate;
                 }
             }
         }
 
-        if (visited.Count >= 1)
+        if (visitedInConnection.Count >= 1)
         {
             //Remove redundant edges
-            RoadMap.RemoveEdge(start, visited[0]);
-            for (int j = 0; j < visited.Count - 1; j++)
+            RoadMap.RemoveEdge(start, visitedInConnection[0]);
+            for (int j = 0; j < visitedInConnection.Count - 1; j++)
             {
-                RoadMap.RemoveEdge(visited[j], visited[j + 1]);
+                RoadMap.RemoveEdge(visitedInConnection[j], visitedInConnection[j + 1]);
             }
-            RoadMap.RemoveEdge(visited[visited.Count - 1], end);
+            RoadMap.RemoveEdge(visitedInConnection[visitedInConnection.Count - 1], end);
             //Remove redundant nodes
-            for (int j = 0; j < visited.Count; j++)
+            for (int j = 0; j < visitedInConnection.Count; j++)
             {
-                RoadMap.RemoveNode(visited[j]);
+                RoadMap.RemoveNode(visitedInConnection[j]);
             }
         }
 
         RoadMap.AddEdge(start, end);
+        string debugRedundantConnection = "FA RED: ";
+        foreach (var v in visitedInConnection)
+        {
+            debugRedundantConnection += $" [{v.x},{v.y}]";
+        }
+        Debug.Log($"FA start {start}, end {end}, {debugRedundantConnection}");
+
         _debugSimplifiedConnections.Add(Tuple.Create(start, end));
 
         return end;
@@ -343,6 +398,7 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
     {
         if (DebugDraw)
         {
+            if (LevelGrid == null) return;
             Gizmos.color = Color.blue;
             DebugDrawGridByIndex();
             Graph<Vector2>.DebugDrawGraph(RoadMap, Color.red, Color.green, 0.01f);
