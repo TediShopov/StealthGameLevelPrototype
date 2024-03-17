@@ -43,7 +43,7 @@ Grid:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3558959309090012902}
   m_Enabled: 1
-  m_CellSize: {x: 0.4, y: 0.4, z: 0.4}
+  m_CellSize: {x: 0.7, y: 0.7, z: 0.4}
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
@@ -74,8 +74,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Grid: {fileID: 0}
-  Step: 0.15
-  Iterations: 100
+  _step: 0
+  _iter: 0
   ObstacleLayerMask:
     serializedVersion: 2
     m_Bits: 64

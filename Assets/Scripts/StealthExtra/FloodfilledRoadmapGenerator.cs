@@ -34,6 +34,9 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
         }
     }
 
+    public NativeGrid<int> GetFloodGrid()
+    { return LevelGrid; }
+
     public void Init()
     {
         Profiler.BeginSample("Enemy Roadmap Init");
