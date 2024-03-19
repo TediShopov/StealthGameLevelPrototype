@@ -6,10 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
-using UnityEngine.UI;
 using CGALDotNetGeometry.Shapes;
-using CGALDotNet.Meshing;
+using Unity.Plastic.Newtonsoft.Json;
 
 public class RRTWeightedDelaunay : MonoBehaviour
 {
@@ -142,7 +140,32 @@ public class RRTWeightedDelaunay : MonoBehaviour
         var triangles = new Triangle2d[CDT.TriangleCount];
         CDT.GetTriangles(triangles, triangles.Length);
 
+        triangles = triangles.Where(tri =>
+        {
+            for (int i = 0; i < level.HoleCount; i++)
+            {
+                var hole = level.GetHole(i);
+                if (hole.ContainsPoint(tri.Center))
+                    return false;
+            }
+            return true;
+        }).ToArray();
+
         return triangles;
+    }
+
+    public void DrawPolygonSegments(Polygon2<EEK> poly)
+    {
+        Segment2d[] segments = new Segment2d[poly.Count];
+        poly.GetSegments(segments, poly.Count);
+        foreach (var seg in segments)
+        {
+            Vector3 pointA = new Vector3((float)seg.A.x, (float)seg.A.y, 0);
+            Vector3 pointB = new Vector3((float)seg.B.x, (float)seg.B.y, 0);
+            Gizmos.DrawSphere(pointA, 0.1f);
+            Gizmos.DrawLine(pointA, pointB);
+            Gizmos.DrawSphere(pointB, 0.1f);
+        }
     }
 
     public Triangle2d[] Delaynau(PolygonWithHoles2<EEK> level)
@@ -162,8 +185,6 @@ public class RRTWeightedDelaunay : MonoBehaviour
 
     public void OnDrawGizmos()
     {
-        //
-        DrawLevelPolygon();
         if (DelaynayTriangles != null)
             DrawTriangles(DelaynayTriangles, Color.magenta);
     }
