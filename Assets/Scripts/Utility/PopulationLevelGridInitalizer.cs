@@ -13,6 +13,7 @@ using Codice.CM.SEIDInfo;
 using StealthLevelEvaluation;
 using UnityEditor;
 using GeneticSharp.Domain.Randomizations;
+using System.Text;
 
 internal class CustomMutators : MutationBase
 {
@@ -187,7 +188,10 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
             float[] runs = Helpers.TrackExecutionTime(Run, LogExecutionTimes);
             Helpers.SaveRunToCsv($"Tests/{algoName}.txt", runs);
         }
-        Run();
+        else
+        {
+            Run();
+        }
     }
 
     private void ManifestTopLevels(List<IChromosome> chromosomes)
@@ -246,8 +250,15 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         var chromosome = new LevelChromosome(Generator.StartingObstacleCount * 5 + 4, Generator, RandomSeedGenerator);
         var population = new Population(PopulationCount, PopulationCount, chromosome);
 
-        GridPopulation = new GridObjectLayout(LevelProperties);
-        GridPopulation.SpawnGrid(PopulationCount, this.transform);
+        if (GridPopulation != null)
+        {
+            GridPopulation.PrepareForNewGeneration();
+        }
+        else
+        {
+            GridPopulation = new GridObjectLayout(LevelProperties);
+            GridPopulation.SpawnGrid(PopulationCount, this.transform);
+        }
         PhenotypeEvaluator.GridLevelObjects = GridPopulation;
 
         GeneticAlgorithm = new GeneticAlgorithm(population, PhenotypeEvaluator, selection, crossover, mutation);
@@ -299,12 +310,14 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
 
     private void OutputEvaluationTimesToCsv()
     {
-        string header = string.Empty;
+        StringBuilder header = new StringBuilder();
         var bestInfo = (LevelChromosome)GeneticAlgorithm.BestChromosome;
         foreach (var e in bestInfo.FitnessInfo.FitnessEvaluations)
         {
-            header += $"{e.Name},";
+            header.Append($"{e.Name} Evaluation,");
+            header.Append($"{e.Name} Time,");
         }
+        header.Remove(header.Length - 1, 0);
 
         string values = string.Empty;
         foreach (var gen in GeneticAlgorithm.Population.Generations)
@@ -314,6 +327,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
                 FitnessInfo info = ((LevelChromosome)c).FitnessInfo;
                 foreach (var e in info.FitnessEvaluations)
                 {
+                    values += $"{e.Value},";
                     values += $"{e.Time},";
                 }
                 values += "\n";

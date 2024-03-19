@@ -78,6 +78,16 @@ public class Helpers : MonoBehaviour
         throw new NotImplementedException();
     }
 
+    public static Collider2D GetLevelBoundaryCollider(GameObject obj)
+    {
+        var _boundary = Physics2D.OverlapPoint(obj.transform.position, LayerMask.GetMask("Boundary"));
+        if (_boundary != null)
+        {
+            return _boundary.gameObject.GetComponent<Collider2D>();
+        }
+        throw new NotImplementedException();
+    }
+
     public static float TrackExecutionTime(System.Action function)
     {
         Stopwatch stopwatch = Stopwatch.StartNew();

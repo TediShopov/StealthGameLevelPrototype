@@ -45,6 +45,7 @@ namespace StealthLevelEvaluation
 
         public override void Init(GameObject phenotype)
         {
+            Name = "StartEndObstructionValidator";
             IsValidator = true;
             Phenotype = phenotype;
         }

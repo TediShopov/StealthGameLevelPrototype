@@ -182,6 +182,7 @@ namespace StealthLevelEvaluation
 
         public override void Init(GameObject phenotype)
         {
+            Name = "AStartPathEvalution";
             IsValidator = true;
             var floodFillGenerator = phenotype.GetComponentInChildren<FloodfilledRoadmapGenerator>();
             Grid grid = phenotype.GetComponentInChildren<Grid>();
