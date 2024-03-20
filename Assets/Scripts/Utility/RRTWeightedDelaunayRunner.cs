@@ -152,6 +152,11 @@ public class RRTWeightedDelaunayRunner : RapidlyExploringRandomTreeVisualizer
                     if (polygonHole.IsClockWise)
                         polygonHole.Reverse();
 
+                    if (polygonHole.IsSimple == false)
+                    {
+                        int b = 3;
+                    }
+
                     if (instance.Op(POLYGON_BOOLEAN.INTERSECT, levelPolygon.GetBoundary(),
                         polygonHole, results))
                     {

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4520497855799095118}
   - component: {fileID: -4210704363272680589}
+  - component: {fileID: 8045961546162824098}
   - component: {fileID: 5684448429466627126}
   m_Layer: 0
   m_Name: DynamicRRTSolvers
@@ -47,11 +48,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsValidator: 0
   IsTerminating: 0
-  Name: RRTDynamicDifficulty
+  Name: DD-RRTWD
   _value: 0
   Phenotype: {fileID: 0}
   RunNow: 0
   RRTPrefab: {fileID: 7030242558019223737, guid: 7f0457cd415130a49905aa062fe61a4f, type: 3}
+  DeisredSuccesses: 5
+  MaxRRTAttempts: 50
+--- !u!114 &8045961546162824098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4520497855799095119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bdeb445d89d9d94894b927932bac752, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsValidator: 0
+  IsTerminating: 0
+  Name: DD-RRT
+  _value: 0
+  Phenotype: {fileID: 0}
+  RunNow: 0
+  RRTPrefab: {fileID: 3930090248339898022, guid: ec19519b0cc38344cbc65e077c36110f, type: 3}
   DeisredSuccesses: 5
   MaxRRTAttempts: 50
 --- !u!114 &5684448429466627126
