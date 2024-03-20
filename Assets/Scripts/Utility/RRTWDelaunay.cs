@@ -58,7 +58,7 @@ public class RRTWDelaunay : DiscreteDistanceBasedRRTSolver
         // Pick a random triangle based on weighted area
         float currentArea = 0.0f;
         int selectedIndex = 0;
-        while (currentArea < randomValue)
+        while (currentArea < randomValue && selectedIndex < freeSpaceTriangles.Length + 1)
         {
             currentArea += (float)freeSpaceTriangles[selectedIndex].Area;
             selectedIndex++;

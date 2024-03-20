@@ -51,7 +51,7 @@ MonoBehaviour:
   _value: 0
   Phenotype: {fileID: 0}
   RunNow: 0
-  RRTPrefab: {fileID: 3930090248339898022, guid: ec19519b0cc38344cbc65e077c36110f, type: 3}
+  RRTPrefab: {fileID: 7030242558019223737, guid: 7f0457cd415130a49905aa062fe61a4f, type: 3}
   DeisredSuccesses: 5
   MaxRRTAttempts: 50
 --- !u!114 &5684448429466627126

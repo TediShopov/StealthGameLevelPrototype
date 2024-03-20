@@ -59028,9 +59028,9 @@ MonoBehaviour:
   Generator: {fileID: 580530818}
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   RandomizeSeed: 0
-  Seed: 15
+  Seed: 22
   LogExecutions: 0
-  LogIndividualExecutions: 1
+  LogIndividualExecutions: 0
   LogExecutionTimes: 1
   TopNLevels: 0
   ExtraSpacing: {x: 10, y: 10}

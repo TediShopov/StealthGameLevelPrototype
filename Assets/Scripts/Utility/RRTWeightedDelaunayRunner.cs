@@ -10,10 +10,15 @@ using CGALDotNetGeometry.Shapes;
 using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine.Profiling;
 
+public class DelunayTriangulatedLevelData : MonoBehaviour
+{
+    public PolygonWithHoles2<EEK> LevelFree;
+    public Triangle2d[] DelaynayTriangles;
+}
+
 public class RRTWeightedDelaunayRunner : RapidlyExploringRandomTreeVisualizer
 {
-    private PolygonWithHoles2<EEK> LevelFree;
-    private Triangle2d[] DelaynayTriangles;
+    private DelunayTriangulatedLevelData TringulationData;
 
     public override void Run()
     {
@@ -26,7 +31,7 @@ public class RRTWeightedDelaunayRunner : RapidlyExploringRandomTreeVisualizer
             GoalDistance,
             Controller.MaxSpeed);
 
-        rRTWDelaunay.SetTrianglesInFreeSpace(DelaynayTriangles);
+        rRTWDelaunay.SetTrianglesInFreeSpace(TringulationData.DelaynayTriangles);
         RRT = rRTWDelaunay;
         RRT.Run(
             StartNode.transform.position,
@@ -210,15 +215,15 @@ public class RRTWeightedDelaunayRunner : RapidlyExploringRandomTreeVisualizer
 
     public void OnDrawGizmosSelected()
     {
-        if (DelaynayTriangles != null)
-            DrawTriangles(DelaynayTriangles, Color.magenta);
+        if (TringulationData.DelaynayTriangles != null)
+            DrawTriangles(TringulationData.DelaynayTriangles, Color.magenta);
         base.OnDrawGizmosSelected();
     }
 
     private void DrawLevelPolygon()
     {
-        if (LevelFree == null) return;
-        var boundaryPoints = LevelFree.GetBoundary()
+        if (TringulationData.LevelFree == null) return;
+        var boundaryPoints = TringulationData.LevelFree.GetBoundary()
             .Select(x => new Vector2((float)x.x, (float)x.y))
             .ToArray();
 
@@ -231,9 +236,9 @@ public class RRTWeightedDelaunayRunner : RapidlyExploringRandomTreeVisualizer
         }
         Gizmos.DrawLine(boundaryPoints[boundaryPoints.Count() - 1], boundaryPoints[0]);
 
-        for (int i = 0; i < LevelFree.HoleCount; i++)
+        for (int i = 0; i < TringulationData.LevelFree.HoleCount; i++)
         {
-            var hole = LevelFree.GetHole(i)
+            var hole = TringulationData.LevelFree.GetHole(i)
             .Select(x => new Vector2((float)x.x, (float)x.y))
             .ToArray();
 
@@ -251,16 +256,29 @@ public class RRTWeightedDelaunayRunner : RapidlyExploringRandomTreeVisualizer
     public override void Setup()
     {
         base.Setup();
-        LevelFree = GetCGALPolygonLevel(level);
-        //LevelFree.Triangulate(new List<int>() { 0, 1, 2, 3 });
-        DelaynayTriangles = ConstrainedDelaunay(LevelFree);
+
+        //Attempt To Retrieve Level Data if prvious runs are run
+
+        TringulationData = level.GetComponent<DelunayTriangulatedLevelData>();
+        if (TringulationData == null)
+        {
+            //Create new data
+            TringulationData = level.AddComponent<DelunayTriangulatedLevelData>();
+            TringulationData.LevelFree = GetCGALPolygonLevel(level);
+            //LevelFree.Triangulate(new List<int>() { 0, 1, 2, 3 });
+            TringulationData.DelaynayTriangles = ConstrainedDelaunay(TringulationData.LevelFree);
+        }
+        else
+        {
+            Debug.Log("Retrieved traingulation data");
+        }
     }
 
     // Start is called before the first frame update
     private void Start()
     {
-        Setup();
-        Run();
+        //        Setup();
+        //        Run();
     }
 
     // Update is called once per frame
