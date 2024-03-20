@@ -15,7 +15,7 @@ public class AStar
         public Vector2Int NativeCoord;
 
         public float F = Mathf.Infinity;
-        public float G = 0;
+        public float G = Mathf.Infinity;
         public float H;
 
         public Node parent;
@@ -65,6 +65,7 @@ public class AStar
         PositionToNode.Add(new Vector2Int { x = goal.Rows, y = goal.Cols }, goal);
 
         openSet.Add(start);
+        start.G = 0;
 
         int maxIterCount = 15000;
         int iter = 0;
@@ -87,7 +88,8 @@ public class AStar
                 if (closedSet.Contains(neighbor)) continue;
 
                 float tentativeGScore = current.G + MovementCost(current, neighbor);
-                bool newPath = !openSet.Contains(neighbor) || tentativeGScore < neighbor.G;
+                //bool newPath = !openSet.Contains(neighbor) || tentativeGScore < neighbor.G;
+                bool newPath = tentativeGScore < neighbor.G;
 
                 if (newPath)
                 {
@@ -143,7 +145,7 @@ public class AStar
     private float MovementCost(Node a, Node b)
     {
         // Check if the neighbor is outside the grid or unwalkable (replace 1 with your unwalkable value)
-        if (!IsWalkable(b.Rows, b.Cols) || LevelGrid.Get(b.Rows, b.Cols) == false)
+        if (!IsWalkable(b.Rows, b.Cols))
         {
             return Mathf.Infinity; // Set a high cost for unwalkable or out-of-bounds nodes
         }
@@ -172,6 +174,7 @@ namespace StealthLevelEvaluation
 
         public bool SetObstacleGrid(int row, int col, NativeGrid<bool> ngrid)
         {
+            //Return true if box cast did not collide with any obstacle
             return !Physics2D.BoxCast(
                 ngrid.GetWorldPosition(row, col),
                 PlayerCollider.bounds.size,
@@ -227,7 +230,7 @@ namespace StealthLevelEvaluation
 
         private void OnDrawGizmosSelected()
         {
-            //DrawLevelGrid();
+            DrawLevelGrid();
             if (Path != null)
             {
                 foreach (var node in Path)

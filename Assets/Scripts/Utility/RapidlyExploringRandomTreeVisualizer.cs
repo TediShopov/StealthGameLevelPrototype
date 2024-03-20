@@ -16,9 +16,9 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
     public List<Vector3> Path = new List<Vector3>();
     public bool OutputDiscretized = false;
     public IRapidlyEpxploringRandomTree<Vector3> RRT;
-    private GameObject level;
+    protected GameObject level;
 
-    public void Setup()
+    public virtual void Setup()
     {
         level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
         if (level == null) return;
@@ -29,7 +29,7 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
         Controller = Helpers.SafeGetComponentInChildren<CharacterController2D>(level);
     }
 
-    public void Run()
+    public virtual void Run()
     {
         Profiler.BeginSample("RRT Run");
         if (VoxelizedLevel == null) return;
@@ -45,7 +45,7 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
         //EndNode = level.GetComponentInChildren<WinTrigger>().gameObject;
     }
 
-    private void OnDrawGizmosSelected()
+    public void OnDrawGizmosSelected()
     {
         //Do not draw anything as algorithm has not been stared
         if (RRT == null) return;

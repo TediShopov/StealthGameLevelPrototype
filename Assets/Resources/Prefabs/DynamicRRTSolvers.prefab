@@ -77,4 +77,4 @@ MonoBehaviour:
   PlayerCollider: {fileID: 0}
   ObstacleLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64

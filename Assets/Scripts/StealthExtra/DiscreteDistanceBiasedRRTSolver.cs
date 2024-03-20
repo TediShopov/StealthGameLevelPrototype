@@ -92,7 +92,7 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
     {
         this.FutureLevel = discretizedLevel;
         _randomMin = discretizedLevel.GetBounds().min;
-        _randomMin = discretizedLevel.GetBounds().max;
+        _randomMax = discretizedLevel.GetBounds().max;
         //        _randomMin = discretizedLevel.FutureGrids[0].WorldMin;
         //        _randomMin.z = 0;
         //        //_randomMax = discretizedLevel.GetMaximumBound();
@@ -157,13 +157,22 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
         return Vector2.Distance(state, goal) < BiasDistance;
     }
 
-    public Vector3 GetRandomState()
+    public virtual Vector3 GetRandomState()
     {
         Vector2 goalSubState = new Vector2(UnityEngine.Random.Range(_randomMin.x, _randomMax.x), UnityEngine.Random.Range(_randomMin.y, _randomMax.y));
         float d = Vector2.Distance(StartNode.Content, goalSubState);
         float minimumTimeToReach = d / MaxVelocity;
         float z = UnityEngine.Random.Range(minimumTimeToReach, _randomMax.z);
         return new Vector3(goalSubState.x, goalSubState.y, z);
+    }
+
+    public float GetRandomReachableTime(Vector2 point)
+    {
+        float d = Vector2.Distance(StartNode.Content, point);
+        float minimumTimeToReach = d / MaxVelocity;
+        return
+           UnityEngine.
+           Random.Range(minimumTimeToReach, _randomMax.z);
     }
 
     public bool IsColliding(Vector3 from, Vector3 to)

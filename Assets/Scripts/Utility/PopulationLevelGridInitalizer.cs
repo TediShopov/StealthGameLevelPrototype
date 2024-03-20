@@ -14,6 +14,7 @@ using StealthLevelEvaluation;
 using UnityEditor;
 using GeneticSharp.Domain.Randomizations;
 using System.Text;
+using System.Runtime.CompilerServices;
 
 internal class CustomMutators : MutationBase
 {
@@ -100,6 +101,8 @@ public class GridObjectLayout
         return LevelObjects[currentIndex / GridDimension, currentIndex % GridDimension];
     }
 
+    public Vector2 ExtraSpacing = Vector2.zero;
+
     public void SpawnGrid(int populationCount, Transform transform)
     {
         GridDimension = Mathf.CeilToInt(Mathf.Sqrt(populationCount));
@@ -111,7 +114,11 @@ public class GridObjectLayout
         {
             for (int j = 0; j < GridDimension; j++)
             {
-                Vector3 levelGridPosition = new Vector3(i * LevelProperties.LevelSize.x, j * LevelProperties.LevelSize.y, 0);
+                Vector3 levelGridPosition =
+                    new Vector3(
+                        i * (LevelProperties.LevelSize.x + ExtraSpacing.x),
+                        j * (LevelProperties.LevelSize.y + ExtraSpacing.y),
+                        0);
                 var g = new GameObject($"{i * GridDimension + j}");
                 g.transform.position = levelGridPosition;
                 g.transform.parent = transform;
@@ -176,6 +183,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
     public int TopNLevels = 5;
 
     private GeneticAlgorithm GeneticAlgorithm;
+    public Vector2 ExtraSpacing;
 
     public void Start()
     {
@@ -257,6 +265,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         else
         {
             GridPopulation = new GridObjectLayout(LevelProperties);
+            GridPopulation.ExtraSpacing = ExtraSpacing;
             GridPopulation.SpawnGrid(PopulationCount, this.transform);
         }
         PhenotypeEvaluator.GridLevelObjects = GridPopulation;

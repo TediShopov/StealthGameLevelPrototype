@@ -77,7 +77,7 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         var levelInitializer = To.gameObject.GetComponentInChildren<InitializeStealthLevel>();
         //var voxelizedLevel = gameObject.GetComponentInChildren<>();
         var voxelizedLevel = To.gameObject.GetComponentInChildren<IFutureLevel>();
-        var multipleRRTSolvers = To.gameObject.GetComponentInChildren<MultipleRRTRunner>();
+        //var multipleRRTSolvers = To.gameObject.GetComponentInChildren<MultipleRRTRunner>();
         var pathGenerator = To.gameObject.GetComponentInChildren<PathGeneratorClass>();
 
         //Enemy path geenerator seed
@@ -91,7 +91,6 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         pathGenerator.LevelRandom = new System.Random(pathSeed);
         Helpers.LogExecutionTime(levelInitializer.Init, "Level Initializer Time");
         Helpers.LogExecutionTime(voxelizedLevel.Init, "Future Level Logic Time");
-        Helpers.LogExecutionTime(multipleRRTSolvers.Run, "Multiple RRT Runs Time");
         Debug.Log("Generation of phenotype finished");
 
         Debug.Log($"Genotype length is:{LevelChromosome.Length}, Read genes are: {geneIndex}");

@@ -8,11 +8,34 @@ using System.Linq;
 using UnityEngine;
 using CGALDotNetGeometry.Shapes;
 using Unity.Plastic.Newtonsoft.Json;
+using UnityEngine.Profiling;
 
-public class RRTWeightedDelaunay : MonoBehaviour
+public class RRTWeightedDelaunayRunner : RapidlyExploringRandomTreeVisualizer
 {
     private PolygonWithHoles2<EEK> LevelFree;
     private Triangle2d[] DelaynayTriangles;
+
+    public override void Run()
+    {
+        Profiler.BeginSample("RRT Weighted Run");
+        if (VoxelizedLevel == null) return;
+        //RRT = new DiscreteDistanceBasedRRTSolver(VoxelizedLevel, BiasDistance, GoalDistance, Controller.MaxSpeed);
+        var rRTWDelaunay = new RRTWDelaunay(
+            VoxelizedLevel,
+            BiasDistance,
+            GoalDistance,
+            Controller.MaxSpeed);
+
+        rRTWDelaunay.SetTrianglesInFreeSpace(DelaynayTriangles);
+        RRT = rRTWDelaunay;
+        RRT.Run(
+            StartNode.transform.position,
+            EndNode.transform.position,
+            maxIterations);
+        Path = RRT.ReconstructPathToSolution();
+
+        Profiler.EndSample();
+    }
 
     public List<Vector2> GetSquareColliderVertices(BoxCollider2D collider)
     {
@@ -39,7 +62,9 @@ public class RRTWeightedDelaunay : MonoBehaviour
     new Vector2(center.x + halfWidth, center.y - halfHeight)   // Bottom right
         };
 
-        return new List<Vector2>(vertices);
+        return new List<Vector2>(vertices)
+            .Select(x => (Vector2)collider.gameObject.transform.TransformPoint(x))
+            .ToList();
     }
 
     public LayerMask ObstacleLayer;
@@ -183,10 +208,11 @@ public class RRTWeightedDelaunay : MonoBehaviour
         return triangles;
     }
 
-    public void OnDrawGizmos()
+    public void OnDrawGizmosSelected()
     {
         if (DelaynayTriangles != null)
             DrawTriangles(DelaynayTriangles, Color.magenta);
+        base.OnDrawGizmosSelected();
     }
 
     private void DrawLevelPolygon()
@@ -222,14 +248,19 @@ public class RRTWeightedDelaunay : MonoBehaviour
         }
     }
 
+    public override void Setup()
+    {
+        base.Setup();
+        LevelFree = GetCGALPolygonLevel(level);
+        //LevelFree.Triangulate(new List<int>() { 0, 1, 2, 3 });
+        DelaynayTriangles = ConstrainedDelaunay(LevelFree);
+    }
+
     // Start is called before the first frame update
     private void Start()
     {
-        var levelGameObject =
-            Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
-        LevelFree = GetCGALPolygonLevel(levelGameObject);
-        //LevelFree.Triangulate(new List<int>() { 0, 1, 2, 3 });
-        DelaynayTriangles = ConstrainedDelaunay(LevelFree);
+        Setup();
+        Run();
     }
 
     // Update is called once per frame
