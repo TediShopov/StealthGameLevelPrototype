@@ -9,6 +9,7 @@ using UnityEngine;
 using CGALDotNetGeometry.Shapes;
 using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine.Profiling;
+using Codice.CM.SEIDInfo;
 
 public class DelunayTriangulatedLevelData : MonoBehaviour
 {
@@ -99,6 +100,8 @@ public class RRTWeightedDelaunayRunner : RapidlyExploringRandomTreeVisualizer
         Collider2D[] obstacleColliders =
         phenotype.GetComponentsInChildren<Collider2D>()
             .Where(x => (ObstacleLayer & (1 << x.gameObject.layer)) != 0)
+            .Where(x => x.composite == null)
+            .Where(x => x is not CompositeCollider2D)
             .ToArray();
 
         foreach (var obstacle in obstacleColliders)
@@ -123,12 +126,66 @@ public class RRTWeightedDelaunayRunner : RapidlyExploringRandomTreeVisualizer
             {
                 //Ensure the boundary polygon is in CW orientation
                 var polygonHole = new Polygon2<EEK>(points);
-                if (!polygonHole.IsClockWise)
-                    polygonHole.Reverse();
-                levelPolygon.AddHole(polygonHole);
+
+                //If hole is fully contained
+                if (IsFullyContained(polygonHole, levelPolygon.GetBoundary()))
+                {
+                    if (!polygonHole.IsClockWise)
+                        polygonHole.Reverse();
+                    levelPolygon.AddHole(polygonHole);
+                }
+                else
+                {
+                    //Get the instance object.
+                    var instance = PolygonBoolean2<EEK>.Instance;
+
+                    //If you know the input is good then checking
+                    //can be disabled which can increase perform.
+                    //instance.CheckInput = false;
+
+                    //Create  list to hold the results.
+                    //The result is always a list of PolygonWithHoles2.
+                    var results = new List<PolygonWithHoles2<EEK>>();
+
+                    //Perform what op you wish.
+                    //Could be JOIN, INTERSECT, DIFFERENCE, SYMMETRIC_DIFFERENCE.
+                    if (polygonHole.IsClockWise)
+                        polygonHole.Reverse();
+
+                    if (instance.Op(POLYGON_BOOLEAN.INTERSECT, levelPolygon.GetBoundary(),
+                        polygonHole, results))
+                    {
+                        //If the op was successful the results
+                        //list will  contain the polygons.
+                        foreach (var poly in results)
+                        {
+                            if (IsFullyContained(
+                                poly.GetBoundary(), levelPolygon.GetBoundary()))
+                                poly.Print();
+                            {
+                                if (!poly.IsClockWise)
+                                    poly.Reverse();
+                                levelPolygon.AddHole(poly.GetBoundary());
+                            }
+                        }
+                    }
+
+                    int a = 3;
+                }
             }
         }
         return levelPolygon;
+    }
+
+    public bool IsFullyContained(Polygon2<EEK> p, Polygon2<EEK> b)
+    {
+        foreach (var point in p)
+        {
+            if (b.ContainsPoint(point) == false)
+                return false;
+        }
+        //Contained if all of the points lie inside the boundary polygon
+        return true;
     }
 
     public void DrawTriangles(Triangle2d[] triangles, Color color)
@@ -277,8 +334,8 @@ public class RRTWeightedDelaunayRunner : RapidlyExploringRandomTreeVisualizer
     // Start is called before the first frame update
     private void Start()
     {
-        //        Setup();
-        //        Run();
+        Setup();
+        Run();
     }
 
     // Update is called once per frame

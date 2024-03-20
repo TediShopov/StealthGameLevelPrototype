@@ -85,6 +85,8 @@ public class LevelGeneratorBase : MonoBehaviour
         return boxCollider;
     }
 
+    public float HalfBoundWidth => VisualBoundWidth / 2.0f;
+
     //Place viusal components and a composity collider for them
     public GameObject PlaceBoundaryVisualPrefabs(BoxCollider2D collider2D, GameObject containedIn)
     {
@@ -100,10 +102,10 @@ public class LevelGeneratorBase : MonoBehaviour
         float halfHeight = collider2D.size.y / 2.0f;
         float halfWidth = collider2D.size.x / 2.0f;
 
-        PlaceHorizontal(halfHeight, collider2D.size.x);
-        PlaceHorizontal(-halfHeight, collider2D.size.x);
-        PlaceVertical(-halfWidth, collider2D.size.y);
-        PlaceVertical(halfWidth, collider2D.size.y);
+        PlaceHorizontal(halfHeight + HalfBoundWidth, collider2D.size.x);
+        PlaceHorizontal(-halfHeight - HalfBoundWidth, collider2D.size.x);
+        PlaceVertical(-halfWidth - HalfBoundWidth, collider2D.size.y);
+        PlaceVertical(halfWidth + HalfBoundWidth, collider2D.size.y);
 
         compositeCollider.GenerateGeometry();
         return CompositeVisualBoundary;
@@ -113,14 +115,14 @@ public class LevelGeneratorBase : MonoBehaviour
     {
         var leftSide = Instantiate(BoundaryViualPrefab, CompositeVisualBoundary.transform);
         leftSide.transform.localPosition = new Vector3(x, 0, 0);
-        leftSide.transform.localScale = new Vector3(VisualBoundWidth, length, 0);
+        leftSide.transform.localScale = new Vector3(VisualBoundWidth, length + HalfBoundWidth, 0);
     }
 
     private void PlaceHorizontal(float y, float length)
     {
         var topSide = Instantiate(BoundaryViualPrefab, CompositeVisualBoundary.transform);
         topSide.transform.localPosition = new Vector3(0, y, 0);
-        topSide.transform.localScale = new Vector3(length, VisualBoundWidth, 0);
+        topSide.transform.localScale = new Vector3(length + HalfBoundWidth, VisualBoundWidth, 0);
     }
 }
 

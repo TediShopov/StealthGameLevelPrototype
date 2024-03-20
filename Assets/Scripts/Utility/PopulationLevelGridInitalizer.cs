@@ -321,6 +321,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
     {
         StringBuilder header = new StringBuilder();
         var bestInfo = (LevelChromosome)GeneticAlgorithm.BestChromosome;
+        header.Append($"Chromosome Hash,");
         foreach (var e in bestInfo.FitnessInfo.FitnessEvaluations)
         {
             header.Append($"{e.Name} Evaluation,");
@@ -333,7 +334,9 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         {
             foreach (var c in gen.Chromosomes)
             {
+                values += $"{c.GetHashCode()},";
                 FitnessInfo info = ((LevelChromosome)c).FitnessInfo;
+
                 foreach (var e in info.FitnessEvaluations)
                 {
                     values += $"{e.Value},";

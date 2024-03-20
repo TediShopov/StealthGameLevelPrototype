@@ -39,4 +39,17 @@ public class LevelChromosome : LevelChromosomeBase
     {
         return new Gene(Helpers.GetRandomFloat(ChromosomeRandom, 0f, 1f));
     }
+
+    public override int GetHashCode()
+    {
+        int hash = 0;
+        Gene[] genes = GetGenes();
+        foreach (Gene gene in genes)
+        {
+            float number = (float)gene.Value;
+            int scaledNumber = Mathf.RoundToInt(number / 0.0001f);
+            hash ^= (hash << 5) ^ (hash >> 3) ^ scaledNumber;
+        }
+        return hash;
+    }
 }

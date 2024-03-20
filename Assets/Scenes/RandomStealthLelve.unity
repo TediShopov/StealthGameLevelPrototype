@@ -22529,7 +22529,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 65
   ObstaclePrefabs:
-  - {fileID: 6228754912093341014, guid: 4e7df6b79d9330445a128d90d46cf3b3, type: 3}
   - {fileID: 6228754912093341014, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
   - {fileID: 6228754912093341014, guid: b6381710a36f67e43902d4ed3ef11681, type: 3}
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
@@ -59020,7 +59019,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a59df0218d90434e9622a53774d6147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PopulationCount: 150
+  PopulationCount: 2
   AimedGenerations: 1
   MutationProb: 0.2
   CrossoverProb: 1
@@ -71780,8 +71779,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1793341635}
   m_LocalRotation: {x: -0, y: -0, z: 0.69014823, w: 0.72366804}
-  m_LocalPosition: {x: 3.59, y: 3.96, z: 0}
-  m_LocalScale: {x: -2.168319, y: 1.5794377, z: 0}
+  m_LocalPosition: {x: 8.561, y: 1.5739, z: 0}
+  m_LocalScale: {x: -6.463976, y: 11.736328, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 548460674}
@@ -85154,7 +85153,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2081483319}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 97e1dd767a6885b4b8b67b6435c40899, type: 3}
   m_Name: 
