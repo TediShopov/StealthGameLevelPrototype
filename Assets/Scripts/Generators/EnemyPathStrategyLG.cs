@@ -8,7 +8,8 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
     public const int ObstaccleGeneLength = 5;
     public const int EnemyGeneLength = 5;
     public int NecessaryObstacles = 3;
-    private int EntityCount => LevelChromosome.Length / 5;
+    public int EnemyCount;
+    private int EntityCount => (LevelChromosome.Length - 1) / 5;
 
     public int GetObstaclesToSpawn(ref int geneIndex)
     {
@@ -34,11 +35,59 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         return obstacleCount;
     }
 
+    public override void Generate(LevelChromosomeBase chromosome, GameObject to = null)
+    {
+        To = to;
+        LevelChromosome = chromosome;
+        //Boundary
+        To.tag = "Level";
+
+        //Add chromosome information to the gameobejct itself
+        LevelChromosomeMono chromosomeMono = To.AddComponent<LevelChromosomeMono>();
+        chromosomeMono.Chromosome = (LevelChromosome)chromosome;
+
+        var Obstacles = new GameObject("Obstacles");
+        BoxCollider2D box =
+            SetupLevelInitials(chromosome, to,
+            new GameObject("VisBound"));
+        Instantiate(LevelInitializer, To.transform);
+        int geneIndex = GenerateLevelContent(chromosome, box);
+        //Solvers
+        var levelInitializer = To.gameObject.GetComponentInChildren<InitializeStealthLevel>();
+        //var voxelizedLevel = gameObject.GetComponentInChildren<>();
+        var voxelizedLevel = To.gameObject.GetComponentInChildren<IFutureLevel>();
+        //var multipleRRTSolvers = To.gameObject.GetComponentInChildren<MultipleRRTRunner>();
+        Helpers.LogExecutionTime(voxelizedLevel.Init, "Future Level Logic Time");
+        AssignPaths(geneIndex);
+
+        Debug.Log("Generation of phenotype finished");
+    }
+
+    public void AssignPaths(int geneIndex)
+    {
+        LevelRandom = new System.Random();
+        var pathGenerator =
+            To.GetComponentInChildren<DiscretePathGenerator>();
+        pathGenerator.geneIndex = geneIndex;
+        FloodfilledRoadmapGenerator floodfilledRoadmapGenerator = To.GetComponentInChildren<FloodfilledRoadmapGenerator>();
+        floodfilledRoadmapGenerator.Init();
+        floodfilledRoadmapGenerator.FloodRegions();
+        pathGenerator.Roadmap = floodfilledRoadmapGenerator.RoadMap;
+        pathGenerator.LevelRandom = LevelRandom;
+        PatrolPath[] enemyPaths = To.GetComponentsInChildren<PatrolPath>();
+        List<List<Vector2>> paths = pathGenerator.GeneratePaths(EnemyCount);
+        for (int i = 0; i < EnemyCount; i++)
+        {
+            enemyPaths[i].BacktrackPatrolPath = new BacktrackPatrolPath(paths[i]);
+        }
+        geneIndex = pathGenerator.geneIndex;
+    }
+
     protected override int GenerateLevelContent(LevelChromosomeBase chromosome, BoxCollider2D box)
     {
         int geneIndex = 0;
         int ObstacleCount = GetObstaclesToSpawn(ref geneIndex);
-        int EnemyCount = EntityCount - ObstacleCount;
+        EnemyCount = EntityCount - ObstacleCount;
         var Obstacles = new GameObject("Obstacles");
 
         //Test for off by oen errors
@@ -56,18 +105,6 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
 
         //Enemy Behaviour
 
-        var pathGenerator =
-            To.GetComponentInChildren<PathGeneratorClass>();
-
-        //Initialize path generator with enemy count * 5 genes
-        float seedf = 0;
-        for (int i = 0; i < EnemyCount; i++)
-        {
-            seedf *= GetGeneValue(geneIndex + i);
-        }
-        pathGenerator.LevelRandom =
-            new System.Random(Mathf.CeilToInt(seedf));
-        geneIndex += EnemyCount;
         Physics2D.SyncTransforms();
         return geneIndex;
     }

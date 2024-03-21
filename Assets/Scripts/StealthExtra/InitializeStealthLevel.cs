@@ -9,7 +9,7 @@ public class InitializeStealthLevel : MonoBehaviour
     public float BiasPathDistance = 15.0f;
     public int AttempsToGetCorrectBiasPathDistance = 3;
     private PatrolPath[] PatrolPaths;
-    public PathGeneratorClass PathGenerator;
+    public DiscretePathGenerator PathGenerator;
 
     public void Init()
     {
@@ -20,19 +20,19 @@ public class InitializeStealthLevel : MonoBehaviour
         //Use voronoi roadmap generator to produce culled roadmap graph
         Graph = RoadMapGenerator.RoadMap;
 
-        //Generate Patrol Paths
-        if (PathGenerator != null)
-        {
-            PathGenerator.Roadmap = Graph;
-            PatrolPaths = GetPatrolPaths();
-            var paths = PathGenerator.GeneratePaths(PatrolPaths.Length);
-            for (int i = 0; i < PatrolPaths.Length; i++)
-            {
-                PatrolPaths[i].SetPatrolPath(paths[i]);
-                //                PatrolPaths[i].Positions = paths[i];
-                //                PatrolPaths[i].SetInitialPositionToPath();
-            }
-        }
+        //        //Generate Patrol Paths
+        //        if (PathGenerator != null)
+        //        {
+        //            PathGenerator.Roadmap = Graph;
+        //            PatrolPaths = GetPatrolPaths();
+        //            var paths = PathGenerator.GeneratePaths(PatrolPaths.Length);
+        //            for (int i = 0; i < PatrolPaths.Length; i++)
+        //            {
+        //                PatrolPaths[i].SetPatrolPath(paths[i]);
+        //                //                PatrolPaths[i].Positions = paths[i];
+        //                //                PatrolPaths[i].SetInitialPositionToPath();
+        //            }
+        //        }
         Debug.Log("Roamd and patrol paths initialized");
     }
 

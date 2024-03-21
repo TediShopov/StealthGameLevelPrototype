@@ -32,7 +32,7 @@ public class LevelChromosome : LevelChromosomeBase
     }
 
     public LevelChromosome(int entityLength, LevelPhenotypeGenerator generatorBase = null, System.Random random = null) :
-        base(entityLength * 5, generatorBase)
+        base(entityLength * 5 + 1, generatorBase)
     {
         if (random == null)
         {

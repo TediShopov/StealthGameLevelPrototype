@@ -6288,7 +6288,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 553397207}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 112764943}
+  PathGenerator: {fileID: 0}
 --- !u!1 &113197327
 GameObject:
   m_ObjectHideFlags: 0
@@ -9179,7 +9179,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 1132724367}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 195771057}
+  PathGenerator: {fileID: 0}
 --- !u!1 &201996892
 GameObject:
   m_ObjectHideFlags: 0
@@ -9903,7 +9903,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 204313699}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 219256835}
+  PathGenerator: {fileID: 0}
 --- !u!1 &228206502
 GameObject:
   m_ObjectHideFlags: 0
@@ -13146,160 +13146,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  DelaynayTriangles:
-  - A:
-      x: -0.9432013859799846
-      y: 20.5558123899333
-    B:
-      x: -1.753513216972351
-      y: 20.122875213623047
-    C:
-      x: 4.3153977394104
-      y: 18.738014221191406
-  - A:
-      x: 2.60878586769104
-      y: 22.453584671020508
-    B:
-      x: 7.25
-      y: 32.25
-    C:
-      x: 0.27807748317718506
-      y: 26.81588363647461
-  - A:
-      x: 7.25
-      y: 17.75
-    B:
-      x: 7.25
-      y: 32.25
-    C:
-      x: 2.60878586769104
-      y: 22.453584671020508
-  - A:
-      x: 7.25
-      y: 17.75
-    B:
-      x: 4.3153977394104
-      y: 18.738014221191406
-    C:
-      x: -7.25
-      y: 17.75
-  - A:
-      x: 4.3153977394104
-      y: 18.738014221191406
-    B:
-      x: 2.60878586769104
-      y: 22.453584671020508
-    C:
-      x: 2.5293806257037765
-      y: 22.411159668774033
-  - A:
-      x: -5.223732948303223
-      y: 29.057235717773438
-    B:
-      x: -4.084221839904785
-      y: 24.48517417907715
-    C:
-      x: 0.27807748317718506
-      y: 26.81588363647461
-  - A:
-      x: -7.25
-      y: 17.75
-    B:
-      x: -4.133002758026123
-      y: 21.658466339111328
-    C:
-      x: -4.084221839904785
-      y: 24.48517417907715
-  - A:
-      x: -7.25
-      y: 17.75
-    B:
-      x: -1.753513216972351
-      y: 20.122875213623047
-    C:
-      x: -4.133002758026123
-      y: 21.658466339111328
-  - A:
-      x: -4.133002758026123
-      y: 21.658466339111328
-    B:
-      x: -2.8954560268687857
-      y: 22.260206276461517
-    C:
-      x: -4.084221839904785
-      y: 24.48517417907715
-  - A:
-      x: -4.133002758026123
-      y: 21.658466339111328
-    B:
-      x: -1.753513216972351
-      y: 20.122875213623047
-    C:
-      x: -2.220784191017068
-      y: 20.997448580111637
-  - A:
-      x: -7.25
-      y: 17.75
-    B:
-      x: 4.3153977394104
-      y: 18.738014221191406
-    C:
-      x: -1.753513216972351
-      y: 20.122875213623047
-  - A:
-      x: 7.25
-      y: 17.75
-    B:
-      x: 2.60878586769104
-      y: 22.453584671020508
-    C:
-      x: 4.3153977394104
-      y: 18.738014221191406
-  - A:
-      x: -7.25
-      y: 17.75
-    B:
-      x: -4.084221839904785
-      y: 24.48517417907715
-    C:
-      x: -7.25
-      y: 30.86325732186171
-  - A:
-      x: 7.25
-      y: 32.25
-    B:
-      x: -2.6788623332977295
-      y: 31.91245460510254
-    C:
-      x: 0.27807748317718506
-      y: 26.81588363647461
-  - A:
-      x: -7.25
-      y: 30.86325732186171
-    B:
-      x: -4.084221839904785
-      y: 24.48517417907715
-    C:
-      x: -5.223732948303223
-      y: 29.057235717773438
-  - A:
-      x: -5.223732948303223
-      y: 29.057235717773438
-    B:
-      x: 0.27807748317718506
-      y: 26.81588363647461
-    C:
-      x: -2.6788623332977295
-      y: 31.91245460510254
-  - A:
-      x: -2.6788623332977295
-      y: 31.91245460510254
-    B:
-      x: 7.25
-      y: 32.25
-    C:
-      x: -3.057571628743988
-      y: 32.25
 --- !u!4 &297360197
 Transform:
   m_ObjectHideFlags: 0
@@ -21985,7 +21831,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 1453834231}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 479295260}
+  PathGenerator: {fileID: 0}
 --- !u!1 &481958950
 GameObject:
   m_ObjectHideFlags: 0
@@ -29939,7 +29785,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 1906433876}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 610535009}
+  PathGenerator: {fileID: 0}
 --- !u!1 &611647758
 GameObject:
   m_ObjectHideFlags: 0
@@ -40433,7 +40279,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 537142191}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 802938518}
+  PathGenerator: {fileID: 0}
 --- !u!1 &804537007
 GameObject:
   m_ObjectHideFlags: 0
@@ -51350,7 +51196,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 2009039636}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 1060687807}
+  PathGenerator: {fileID: 0}
 --- !u!1 &1061411963
 GameObject:
   m_ObjectHideFlags: 0
@@ -56607,7 +56453,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 1361014507}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 1165960155}
+  PathGenerator: {fileID: 0}
 --- !u!1 &1167390082
 GameObject:
   m_ObjectHideFlags: 0
@@ -62831,7 +62677,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 400735140}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 1290697086}
+  PathGenerator: {fileID: 0}
 --- !u!1 &1290790638
 GameObject:
   m_ObjectHideFlags: 0
@@ -63254,7 +63100,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 2084489138}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 1310680539}
+  PathGenerator: {fileID: 0}
 --- !u!1 &1312342915
 GameObject:
   m_ObjectHideFlags: 0
@@ -71393,8 +71239,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a59df0218d90434e9622a53774d6147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PopulationCount: 50
-  AimedGenerations: 1
+  PopulationCount: 15
+  AimedGenerations: 5
   MutationProb: 0.232
   CrossoverProb: 1
   PhenotypeEvaluator: {fileID: 1136908432}
@@ -72085,7 +71931,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 1700045616}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 1486452328}
+  PathGenerator: {fileID: 0}
 --- !u!1 &1488248193
 GameObject:
   m_ObjectHideFlags: 0
@@ -73062,7 +72908,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 1221474436}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 1512876706}
+  PathGenerator: {fileID: 0}
 --- !u!1 &1513753133
 GameObject:
   m_ObjectHideFlags: 0
@@ -73130,6 +72976,7 @@ MonoBehaviour:
   DisposeNow: 0
   StartingObstacleCount: 3
   NecessaryObstacles: 3
+  EnemyCount: 0
 --- !u!1 &1514961235
 GameObject:
   m_ObjectHideFlags: 0
@@ -75576,7 +75423,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 585856836}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 1581326746}
+  PathGenerator: {fileID: 0}
 --- !u!1 &1581482733
 GameObject:
   m_ObjectHideFlags: 0
@@ -76829,7 +76676,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 1383276946}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 1610744686}
+  PathGenerator: {fileID: 0}
 --- !u!1 &1610750511
 GameObject:
   m_ObjectHideFlags: 0
@@ -81857,7 +81704,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 629026633}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 1699621751}
+  PathGenerator: {fileID: 0}
 --- !u!1 &1700045612
 GameObject:
   m_ObjectHideFlags: 0
@@ -83502,7 +83349,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 24762153}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 1721362363}
+  PathGenerator: {fileID: 0}
 --- !u!1 &1721577448
 GameObject:
   m_ObjectHideFlags: 0
@@ -85901,7 +85748,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 721043078}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 1767110147}
+  PathGenerator: {fileID: 0}
 --- !u!1 &1774167810
 GameObject:
   m_ObjectHideFlags: 0
@@ -87177,7 +87024,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 1174613137}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 1796346957}
+  PathGenerator: {fileID: 0}
 --- !u!1 &1796591126
 GameObject:
   m_ObjectHideFlags: 0
@@ -97123,7 +96970,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 12652590}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 1993474757}
+  PathGenerator: {fileID: 0}
 --- !u!1 &1993603613
 GameObject:
   m_ObjectHideFlags: 0
@@ -97431,7 +97278,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 1171173794}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 1996444725}
+  PathGenerator: {fileID: 0}
 --- !u!1 &1996455450
 GameObject:
   m_ObjectHideFlags: 0
@@ -98542,7 +98389,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 1319571394}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 2021783989}
+  PathGenerator: {fileID: 0}
 --- !u!1 &2026021071
 GameObject:
   m_ObjectHideFlags: 0

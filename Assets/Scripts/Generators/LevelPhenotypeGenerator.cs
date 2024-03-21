@@ -6,6 +6,12 @@ using UnityEngine;
 using UnityEngine.Rendering.VirtualTexturing;
 
 //GENOTYPE desciprtion:
+
+internal class LevelChromosomeMono : MonoBehaviour
+{
+    public LevelChromosome Chromosome;
+}
+
 public class LevelPhenotypeGenerator : LevelGeneratorBase
 {
     public bool RunOnStart = false;
@@ -34,6 +40,11 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         LevelChromosome = chromosome;
         //Boundary
         To.tag = "Level";
+
+        //Add chromosome information to the gameobejct itself
+        LevelChromosomeMono chromosomeMono = To.AddComponent<LevelChromosomeMono>();
+        chromosomeMono.Chromosome = (LevelChromosome)chromosome;
+
         var Obstacles = new GameObject("Obstacles");
         BoxCollider2D box =
             SetupLevelInitials(chromosome, to,
@@ -42,6 +53,7 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         GenerateLevelContent(chromosome, box);
         //Solvers
         InitializeAdditionalLevelData();
+
         Debug.Log("Generation of phenotype finished");
     }
 
@@ -87,7 +99,7 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         return geneIndex;
     }
 
-    private void InitializeAdditionalLevelData()
+    protected void InitializeAdditionalLevelData()
     {
         var levelInitializer = To.gameObject.GetComponentInChildren<InitializeStealthLevel>();
         //var voxelizedLevel = gameObject.GetComponentInChildren<>();
@@ -97,7 +109,7 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         Helpers.LogExecutionTime(voxelizedLevel.Init, "Future Level Logic Time");
     }
 
-    private BoxCollider2D SetupLevelInitials(LevelChromosomeBase chromosome, GameObject to, GameObject Obstacles)
+    protected BoxCollider2D SetupLevelInitials(LevelChromosomeBase chromosome, GameObject to, GameObject Obstacles)
     {
         //Boundary constructed first 2 genes
         BoxCollider2D box = InitLevelBoundary(LevelProperties.LevelSize.x, LevelProperties.LevelSize.y, to);

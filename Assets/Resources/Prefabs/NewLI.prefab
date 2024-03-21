@@ -42,7 +42,7 @@ Grid:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3558959309090012902}
   m_Enabled: 1
-  m_CellSize: {x: 0.7, y: 0.7, z: 1}
+  m_CellSize: {x: 0.4, y: 0.4, z: 0.4}
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
@@ -67,7 +67,7 @@ MonoBehaviour:
   - {r: 0, g: 0.41886997, b: 1, a: 0.6117647}
   - {r: 0.9726496, g: 0, b: 1, a: 0.5686275}
   - {r: 0, g: 0.08543253, b: 1, a: 0.6117647}
-  DebugDraw: 0
+  DebugDraw: 1
   Grid: {fileID: 3558959309090012900}
   ObstacleLayerMask:
     serializedVersion: 2
@@ -108,6 +108,7 @@ GameObject:
   - component: {fileID: 3558959309750259786}
   - component: {fileID: 3558959309750259787}
   - component: {fileID: 3558959309750259785}
+  - component: {fileID: -2856594718441994140}
   m_Layer: 0
   m_Name: NewLI
   m_TagString: Untagged
@@ -146,7 +147,7 @@ MonoBehaviour:
   RoadMapGenerator: {fileID: 3558959309090012896}
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
-  PathGenerator: {fileID: 3558959309750259785}
+  PathGenerator: {fileID: -2856594718441994140}
 --- !u!114 &3558959309750259785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,3 +162,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BiasPathDistance: 25
   AttemptsToMatchBiasedDistance: 3
+--- !u!114 &-2856594718441994140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3558959309750259788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03cdefe7d50e1f44495c882f2424a4b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  geneIndex: 0
