@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68fcdd47dd2bb6d40b87e139b9d66fdc, type: 3}
   m_Name: LevelProperties
   m_EditorClassIdentifier: 
-  LevelSize: {x: 15, y: 15}
+  LevelSize: {x: 25, y: 25}
   RelativeStartPosition: {x: 0.1, y: 0.1}
   RelativeEndPosiiton: {x: 0.9, y: 0.9}

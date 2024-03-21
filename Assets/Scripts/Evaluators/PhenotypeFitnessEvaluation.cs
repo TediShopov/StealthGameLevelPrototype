@@ -21,6 +21,17 @@ namespace StealthLevelEvaluation
         public GameObject Phenotype;
 
         public bool RunNow = false;
+        public bool RunOnStart = false;
+
+        public void Start()
+        {
+            Phenotype = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
+            if (Phenotype != null)
+            {
+                Init(Phenotype);
+                Evaluate();
+            }
+        }
 
         public void Update()
         {
