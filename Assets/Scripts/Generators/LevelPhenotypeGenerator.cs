@@ -12,11 +12,10 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
     public bool IsRandom = false;
     public int RandomChromosomeSeed;
     public bool DisposeNow = false;
-    private LevelChromosomeBase LevelChromosome;
-    private GameObject To;
+    protected LevelChromosomeBase LevelChromosome;
+    protected GameObject To;
 
     public int StartingObstacleCount = 3;
-    private int ObstaclesSpawned;
 
     public void Awake()
     {
@@ -29,18 +28,80 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         }
     }
 
-    public void Generate(LevelChromosomeBase chromosome, GameObject to = null)
+    public virtual void Generate(LevelChromosomeBase chromosome, GameObject to = null)
     {
         To = to;
         LevelChromosome = chromosome;
-        int geneIndex = 0;
         //Boundary
         To.tag = "Level";
-        ObstaclesSpawned = (chromosome.Length - 4) / 5;
+        var Obstacles = new GameObject("Obstacles");
+        BoxCollider2D box =
+            SetupLevelInitials(chromosome, to,
+            new GameObject("VisBound"));
+        Instantiate(LevelInitializer, To.transform);
+        GenerateLevelContent(chromosome, box);
+        //Solvers
+        InitializeAdditionalLevelData();
+        Debug.Log("Generation of phenotype finished");
+    }
+
+    protected virtual int GenerateLevelContent(LevelChromosomeBase chromosome, BoxCollider2D box)
+    {
+        int geneIndex = 0;
+        int ObstaclesSpawned = (chromosome.Length - 4) / 5;
+        var Obstacles = new GameObject("Obstacles");
+
+        //Test for off by oen errors
+        for (int i = 0; i < ObstaclesSpawned; i++)
+        {
+            SpawnObstacle(ref geneIndex, box, Obstacles);
+        }
+
+        //Read enemy counts and spawn enemies
+        int enemyCount = Mathf.CeilToInt(
+            Mathf.Lerp(
+                MinEnemiesSpawned,
+                MaxEnemiesSpawned,
+                geneIndex));
+
+        for (int i = 0; i < enemyCount; i++)
+        {
+            Instantiate(EnemyPrefab, To.transform);
+        }
+
+        //Enemy Behaviour
+
+        var pathGenerator =
+            To.GetComponentInChildren<PathGeneratorClass>();
+
+        //Enemy path geenerator seed
+        int pathSeed = Mathf.CeilToInt(
+            GetGeneValue(geneIndex)
+            * GetGeneValue(geneIndex + 1)
+            * GetGeneValue(geneIndex + 2)
+            * GetGeneValue(geneIndex + 3));
+        geneIndex += 4;
+        pathGenerator.LevelRandom = new System.Random(pathSeed);
+
+        Physics2D.SyncTransforms();
+        return geneIndex;
+    }
+
+    private void InitializeAdditionalLevelData()
+    {
+        var levelInitializer = To.gameObject.GetComponentInChildren<InitializeStealthLevel>();
+        //var voxelizedLevel = gameObject.GetComponentInChildren<>();
+        var voxelizedLevel = To.gameObject.GetComponentInChildren<IFutureLevel>();
+        //var multipleRRTSolvers = To.gameObject.GetComponentInChildren<MultipleRRTRunner>();
+        Helpers.LogExecutionTime(levelInitializer.Init, "Level Initializer Time");
+        Helpers.LogExecutionTime(voxelizedLevel.Init, "Future Level Logic Time");
+    }
+
+    private BoxCollider2D SetupLevelInitials(LevelChromosomeBase chromosome, GameObject to, GameObject Obstacles)
+    {
         //Boundary constructed first 2 genes
         BoxCollider2D box = InitLevelBoundary(LevelProperties.LevelSize.x, LevelProperties.LevelSize.y, to);
 
-        var Obstacles = new GameObject("Obstacles");
         Obstacles.transform.SetParent(To.transform, false);
         PlaceBoundaryVisualPrefabs(box, Obstacles);
 
@@ -55,45 +116,7 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         //Destination
         //var destinationIntance = SpawnGameObject(ref geneIndex, box, DestinationPrefab);
         var destinationIntance = SpawnGameObjectAtRelative(LevelProperties.RelativeEndPosiiton, box, DestinationPrefab);
-
-        //obstacles
-
-        //Test for off by oen errors
-        for (int i = 0; i < ObstaclesSpawned; i++)
-        {
-            SpawnObstacle(ref geneIndex, box, Obstacles);
-        }
-
-        //Read enemy counts and spawn enemies
-        int enemyCount = Mathf.CeilToInt(Mathf.Lerp(MinEnemiesSpawned, MaxEnemiesSpawned, geneIndex));
-        for (int i = 0; i < enemyCount; i++)
-        {
-            Instantiate(EnemyPrefab, To.transform);
-        }
-
-        Physics2D.SyncTransforms();
-        //Solvers
-        Instantiate(LevelInitializer, To.transform);
-        var levelInitializer = To.gameObject.GetComponentInChildren<InitializeStealthLevel>();
-        //var voxelizedLevel = gameObject.GetComponentInChildren<>();
-        var voxelizedLevel = To.gameObject.GetComponentInChildren<IFutureLevel>();
-        //var multipleRRTSolvers = To.gameObject.GetComponentInChildren<MultipleRRTRunner>();
-        var pathGenerator = To.gameObject.GetComponentInChildren<PathGeneratorClass>();
-
-        //Enemy path geenerator seed
-        int pathSeed = Mathf.CeilToInt(
-            GetGeneValue(geneIndex)
-            * GetGeneValue(geneIndex + 1)
-            * GetGeneValue(geneIndex + 2)
-            * GetGeneValue(geneIndex + 3));
-        geneIndex += 4;
-
-        pathGenerator.LevelRandom = new System.Random(pathSeed);
-        Helpers.LogExecutionTime(levelInitializer.Init, "Level Initializer Time");
-        Helpers.LogExecutionTime(voxelizedLevel.Init, "Future Level Logic Time");
-        Debug.Log("Generation of phenotype finished");
-
-        Debug.Log($"Genotype length is:{LevelChromosome.Length}, Read genes are: {geneIndex}");
+        return box;
     }
 
     //!WARNING! uses destroy immediate as mulitple level can be geenrated an
@@ -109,7 +132,7 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
 
     public float GetGeneValue(int index) => (float)LevelChromosome.GetGene(index).Value;
 
-    private GameObject SpawnObstacle(ref int geneIndex, BoxCollider2D box, GameObject Obstacles)
+    protected GameObject SpawnObstacle(ref int geneIndex, BoxCollider2D box, GameObject Obstacles)
     {
         //Get Obstacle Variant
         int prefabIndex = (int)(GetGeneValue(geneIndex) * ObstaclePrefabs.Count + 1);
@@ -130,7 +153,7 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         return obs;
     }
 
-    private GameObject SpawnGameObject(ref int geneIndex, BoxCollider2D box, GameObject Prefab)
+    protected GameObject SpawnGameObject(ref int geneIndex, BoxCollider2D box, GameObject Prefab)
     {
         float x = Mathf.Lerp(box.bounds.min.x, box.bounds.max.x, GetGeneValue(geneIndex));
         float y = Mathf.Lerp(box.bounds.min.y, box.bounds.max.y, GetGeneValue(geneIndex + 1));
@@ -143,7 +166,7 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         return player;
     }
 
-    private GameObject SpawnGameObjectAtRelative(Vector2 coord, BoxCollider2D box, GameObject Prefab)
+    protected GameObject SpawnGameObjectAtRelative(Vector2 coord, BoxCollider2D box, GameObject Prefab)
     {
         float x = Mathf.Lerp(box.bounds.min.x, box.bounds.max.x, coord.x);
         float y = Mathf.Lerp(box.bounds.min.y, box.bounds.max.y, coord.y);

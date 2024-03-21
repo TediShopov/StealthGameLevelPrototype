@@ -71393,12 +71393,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a59df0218d90434e9622a53774d6147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PopulationCount: 65
+  PopulationCount: 50
   AimedGenerations: 1
-  MutationProb: 0.2
+  MutationProb: 0.232
   CrossoverProb: 1
   PhenotypeEvaluator: {fileID: 1136908432}
-  Generator: {fileID: 580530818}
+  Generator: {fileID: 1513753136}
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   RandomizeSeed: 1
   Seed: 22
@@ -73063,6 +73063,73 @@ MonoBehaviour:
   BiasPathDistance: 25
   AttempsToGetCorrectBiasPathDistance: 3
   PathGenerator: {fileID: 1512876706}
+--- !u!1 &1513753133
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1513753135}
+  - component: {fileID: 1513753136}
+  m_Layer: 0
+  m_Name: EnemyPathTestLG
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1513753135
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1513753133}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 20, y: 0, z: 0.22615625}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1513753136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1513753133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd29b2afb69f975439526297aa3d58ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerPrefab: {fileID: 6410257650287846966, guid: 3e5537301517ee44a9291e89e4a23a2a, type: 3}
+  DestinationPrefab: {fileID: 6213345698534562546, guid: 9b977143c0ed4574092c33d8e8923adb, type: 3}
+  EnemyPrefab: {fileID: 3796764076782940127, guid: d583d41a5be5abf4794907a71ef64745, type: 3}
+  BoundaryViualPrefab: {fileID: 7711139357044409656, guid: 08b6193f02d8f434d96468973b833db0, type: 3}
+  LevelInitializer: {fileID: 3558959309750259788, guid: 69cb3862483af4348bb1455a8c0d3594, type: 3}
+  ObstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  ObstaclePrefabs:
+  - {fileID: 6228754912093341014, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
+  - {fileID: 6228754912093341014, guid: b6381710a36f67e43902d4ed3ef11681, type: 3}
+  LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
+  MinEnemiesSpawned: 0
+  MaxEnemiesSpawned: 0
+  MinObjectScale: 0.2
+  MaxObjectScale: 1
+  VisualBoundWidth: 0.5
+  RunOnStart: 0
+  IsRandom: 0
+  RandomChromosomeSeed: 0
+  DisposeNow: 0
+  StartingObstacleCount: 3
+  NecessaryObstacles: 3
 --- !u!1 &1514961235
 GameObject:
   m_ObjectHideFlags: 0
