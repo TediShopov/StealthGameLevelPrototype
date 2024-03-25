@@ -56,7 +56,7 @@ public class PatrrolEditTests
         Assert.AreEqual(segmentOnForwrdDifferentIndex.Item1, path[1]);
         Assert.AreEqual(segmentOnForwrdDifferentIndex.Item2, path[2]);
 
-        backtrackPatrolPath.IsMovingForward = false;
+        backtrackPatrolPath.TraverseForward = false;
         Tuple<Vector2, Vector2> segmentOnBackwards = backtrackPatrolPath.GetSegment(1);
         Assert.AreEqual(segmentOnBackwards.Item1, path[1]);
         Assert.AreEqual(segmentOnBackwards.Item2, path[0]);
