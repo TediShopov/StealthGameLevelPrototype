@@ -55092,7 +55092,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92e810e9c429cca439e1ade5fa65a8ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EvaluatorHolder: {fileID: 4520497855799095119, guid: 4167d7fb67f413848aa456f8a464fd8a, type: 3}
+  EvaluatorHolder: {fileID: 4520497855799095119, guid: 26d868a179738e64c9eb06fa25f7d6fd, type: 3}
 --- !u!4 &1136908433
 Transform:
   m_ObjectHideFlags: 0
@@ -71239,15 +71239,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a59df0218d90434e9622a53774d6147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PopulationCount: 15
+  PopulationCount: 150
   AimedGenerations: 5
-  MutationProb: 0.232
+  MutationProb: 0.152
   CrossoverProb: 1
   PhenotypeEvaluator: {fileID: 1136908432}
   Generator: {fileID: 1513753136}
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
-  RandomizeSeed: 1
-  Seed: 22
+  RandomizeSeed: 0
+  Seed: 15
   LogExecutions: 0
   LogIndividualExecutions: 0
   LogExecutionTimes: 1

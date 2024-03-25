@@ -28,11 +28,11 @@ public class PatrrolEditTests
             };
 
         BacktrackPatrolPath backtrackPatrolPath = new BacktrackPatrolPath(path);
-        backtrackPatrolPath.traverseForward = false;
+        backtrackPatrolPath.TraverseForward = false;
         Tuple<Vector2, Vector2> segmentOnForwrd = backtrackPatrolPath.GetSegment(0);
         Assert.AreEqual(segmentOnForwrd.Item1, path[0]);
         Assert.AreEqual(segmentOnForwrd.Item2, path[1]);
-        Assert.AreEqual(backtrackPatrolPath.traverseForward, false);
+        Assert.AreEqual(backtrackPatrolPath.TraverseForward, false);
     }
 
     [Test]
@@ -56,7 +56,7 @@ public class PatrrolEditTests
         Assert.AreEqual(segmentOnForwrdDifferentIndex.Item1, path[1]);
         Assert.AreEqual(segmentOnForwrdDifferentIndex.Item2, path[2]);
 
-        backtrackPatrolPath.traverseForward = false;
+        backtrackPatrolPath.IsMovingForward = false;
         Tuple<Vector2, Vector2> segmentOnBackwards = backtrackPatrolPath.GetSegment(1);
         Assert.AreEqual(segmentOnBackwards.Item1, path[1]);
         Assert.AreEqual(segmentOnBackwards.Item2, path[0]);
@@ -145,7 +145,7 @@ public class PatrrolEditTests
         backtrackPatrolPath.MoveAlong(17f);
         Assert.AreEqual(backtrackPatrolPath.GetCurrent(), path[3]);
         backtrackPatrolPath.MoveAlong(0.1f);
-        Assert.IsFalse(backtrackPatrolPath.traverseForward);
+        Assert.IsFalse(backtrackPatrolPath.TraverseForward);
     }
 
     [Test]
@@ -190,12 +190,12 @@ public class PatrrolEditTests
 
         BacktrackPatrolPath backtrackPatrolPathInteger = new BacktrackPatrolPath(path, 1);
         Assert.AreEqual(new Vector2(1.0f, 0), backtrackPatrolPathInteger.GetCurrent());
-        backtrackPatrolPathInteger.traverseForward = false;
+        backtrackPatrolPathInteger.TraverseForward = false;
         Assert.AreEqual(new Vector2(1.0f, 0), backtrackPatrolPathInteger.GetCurrent());
 
         BacktrackPatrolPath backtrackPatrolPath = new BacktrackPatrolPath(path, 0.8f);
         Assert.AreEqual(new Vector2(0.8f, 0), backtrackPatrolPath.GetCurrent());
-        backtrackPatrolPath.traverseForward = false;
+        backtrackPatrolPath.TraverseForward = false;
         Assert.AreEqual(new Vector2(0.8f, 0), backtrackPatrolPath.GetCurrent());
     }
 
@@ -212,7 +212,7 @@ public class PatrrolEditTests
         BacktrackPatrolPath backtrackPatrolPath = new BacktrackPatrolPath(path);
         backtrackPatrolPath.MoveAlong(1.0f);
         Assert.AreEqual(new Vector2(1.0f, 0), backtrackPatrolPath.GetCurrent());
-        Assert.IsFalse(backtrackPatrolPath.traverseForward);
+        Assert.IsFalse(backtrackPatrolPath.TraverseForward);
         backtrackPatrolPath.MoveAlong(0.2f);
         Assert.AreEqual(new Vector2(0.8f, 0), backtrackPatrolPath.GetCurrent());
     }

@@ -14,8 +14,11 @@ public class BacktrackPatrolPath
     //E.g 1.6f would represent 60% of segments from element 1 to elements 2
     private float relPathPostion = 0;
 
-    public bool traverseForward = true;
-    public List<Vector2> Path;
+    public bool TraverseForward = true;
+    private List<Vector2> Path;
+
+    public List<Vector2> GetPath()
+    { return new List<Vector2>(Path); }
 
     public BacktrackPatrolPath(List<Vector2> path, float startPos = 0)
     {
@@ -33,23 +36,23 @@ public class BacktrackPatrolPath
     public void Copy(BacktrackPatrolPath other)
     {
         this.relPathPostion = other.relPathPostion;
-        this.traverseForward = other.traverseForward;
+        this.TraverseForward = other.TraverseForward;
         this.Path = new List<Vector2>(other.Path);
     }
 
     public int GetNextIndex(int current)
     {
-        int next = traverseForward ? current + 1 : current - 1;
+        int next = TraverseForward ? current + 1 : current - 1;
         if (next >= Path.Count || next < 0)
         {
-            next = traverseForward ? current - 1 : current + 1;
+            next = TraverseForward ? current - 1 : current + 1;
         }
         return next;
     }
 
     private int GetIndex(float rel)
     {
-        return traverseForward ? Mathf.FloorToInt(rel) : Mathf.CeilToInt(rel);
+        return TraverseForward ? Mathf.FloorToInt(rel) : Mathf.CeilToInt(rel);
     }
 
     private Tuple<int, int> GetSegmentIndices(float rel)
@@ -61,7 +64,7 @@ public class BacktrackPatrolPath
             return null;
         }
 
-        var tempTraverse = traverseForward;
+        var tempTraverse = TraverseForward;
         if (rel % 1 == 0)
         {
             from = GetIndex(rel);
@@ -69,10 +72,10 @@ public class BacktrackPatrolPath
         }
         else
         {
-            from = traverseForward ? Mathf.FloorToInt(rel) : Mathf.CeilToInt(rel);
-            to = traverseForward ? Mathf.CeilToInt(rel) : Mathf.FloorToInt(rel);
+            from = TraverseForward ? Mathf.FloorToInt(rel) : Mathf.CeilToInt(rel);
+            to = TraverseForward ? Mathf.CeilToInt(rel) : Mathf.FloorToInt(rel);
         }
-        traverseForward = tempTraverse;
+        TraverseForward = tempTraverse;
         return new Tuple<int, int>(from, to);
     }
 
@@ -103,15 +106,7 @@ public class BacktrackPatrolPath
     public Vector2 GetCurrent()
     {
         Tuple<Vector2, Vector2> segment = GetSegment(relPathPostion);
-        // 0--0.2---0.8--1
-        // forward lerp(0,1,0.2)
-        //backward lerp(1,0,0.2) --> (0,1,0.2)
-        //backward lerp(1,0,1) --> (0,1,1)
         float segmentCompletion = Math.Abs(relPathPostion - GetIndex(relPathPostion));
-
-        //        if (traverseForward == false)
-        //            return Vector2.Lerp(segment.Item2, segment.Item1, segmentCompletion);
-
         return Vector2.Lerp(segment.Item1, segment.Item2, segmentCompletion);
     }
 
@@ -130,13 +125,13 @@ public class BacktrackPatrolPath
             displacement -= distanceToSegmentEnd;
             relPathPostion = currentSegment.Item2;
             if (currentSegment.Item2 >= Path.Count - 1 || currentSegment.Item2 <= 0)
-                traverseForward = !traverseForward;
+                TraverseForward = !TraverseForward;
             //Update current segment and distance to segmente end
             currentSegment = GetSegmentIndices(relPathPostion);
             distanceToSegmentEnd = Vector2.Distance(GetCurrent(), Path[currentSegment.Item2]);
         }
         float f = displacement / Vector2.Distance(Path[currentSegment.Item1], Path[currentSegment.Item2]);
-        relPathPostion += traverseForward ? f : -f;
+        relPathPostion += TraverseForward ? f : -f;
     }
 
     public float GetTotalLength()
@@ -212,7 +207,8 @@ public class PatrolPath : MonoBehaviour, IFutureTransform
     public void DrawAllSegmentes()
     {
         if (BacktrackPatrolPath == null) return;
-        for (int i = 0; i <= BacktrackPatrolPath.Path.Count - 1; i++)
+        var pathCount = BacktrackPatrolPath.GetPath().Count;
+        for (int i = 0; i <= pathCount - 1; i++)
         {
             var seg = BacktrackPatrolPath.GetSegment(i);
             Gizmos.DrawLine(seg.Item1, seg.Item2);

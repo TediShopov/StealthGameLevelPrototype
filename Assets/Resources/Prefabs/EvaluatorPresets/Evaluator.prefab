@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 3359944139125092206}
   - component: {fileID: 2851684532165398080}
   - component: {fileID: 8610214142821393071}
+  - component: {fileID: -71676436421272087}
+  - component: {fileID: -8123811208766297384}
   m_Layer: 0
   m_Name: Evaluator
   m_TagString: Untagged
@@ -55,6 +57,7 @@ MonoBehaviour:
   _value: 0
   Phenotype: {fileID: 0}
   RunNow: 0
+  RunOnStart: 0
   Data:
     Grid: {fileID: 0}
     ObstacleLayerMask:
@@ -79,6 +82,7 @@ MonoBehaviour:
   _value: 0
   Phenotype: {fileID: 0}
   RunNow: 0
+  RunOnStart: 0
 --- !u!114 &152763269579241241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,6 +101,7 @@ MonoBehaviour:
   _value: 0
   Phenotype: {fileID: 0}
   RunNow: 0
+  RunOnStart: 0
 --- !u!114 &3359944139125092206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,6 +120,7 @@ MonoBehaviour:
   _value: 0
   Phenotype: {fileID: 0}
   RunNow: 0
+  RunOnStart: 0
   PenalizationCurve:
     serializedVersion: 2
     m_Curve:
@@ -167,6 +173,7 @@ MonoBehaviour:
   _value: 0
   Phenotype: {fileID: 0}
   RunNow: 0
+  RunOnStart: 0
 --- !u!114 &8610214142821393071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,15 +186,61 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24e0fc32056cffc46b0d750bc5c7e935, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsValidator: 0
+  IsValidator: 1
   IsTerminating: 0
   Name: AStarToEnd
   _value: 0
   Phenotype: {fileID: 0}
   RunNow: 0
+  RunOnStart: 0
   StartCoord: {x: 0, y: 0}
   GoalCoord: {x: 0, y: 0}
   PlayerCollider: {fileID: 0}
   ObstacleLayerMask:
     serializedVersion: 2
     m_Bits: 64
+--- !u!114 &-71676436421272087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4520497855799095119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad1973ff3d699f449b4aff28915382ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsValidator: 1
+  IsTerminating: 0
+  Name: AStarSafePathToEnd
+  _value: 0
+  Phenotype: {fileID: 0}
+  RunNow: 0
+  RunOnStart: 0
+  ObstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  FutureLevel: {fileID: 0}
+--- !u!114 &-8123811208766297384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4520497855799095119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bdeb445d89d9d94894b927932bac752, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsValidator: 0
+  IsTerminating: 0
+  Name: RRTDD
+  _value: 0
+  Phenotype: {fileID: 0}
+  RunNow: 0
+  RunOnStart: 0
+  RRTPrefab: {fileID: 7030242558019223737, guid: 7f0457cd415130a49905aa062fe61a4f, type: 3}
+  DeisredSuccesses: 3
+  MaxRRTAttempts: 15
