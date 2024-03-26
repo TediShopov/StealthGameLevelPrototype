@@ -63,6 +63,26 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         Debug.Log("Generation of phenotype finished");
     }
 
+    //    public void AssignPaths(int geneIndex)
+    //    {
+    //        LevelRandom = new System.Random();
+    //        var pathGenerator =
+    //            To.GetComponentInChildren<DiscretePathGenerator>();
+    //        pathGenerator.geneIndex = geneIndex;
+    //        FloodfilledRoadmapGenerator floodfilledRoadmapGenerator = To.GetComponentInChildren<FloodfilledRoadmapGenerator>();
+    //        floodfilledRoadmapGenerator.Init();
+    //        floodfilledRoadmapGenerator.FloodRegions();
+    //        pathGenerator.Roadmap = floodfilledRoadmapGenerator.RoadMap;
+    //        pathGenerator.LevelRandom = LevelRandom;
+    //        PatrolPath[] enemyPaths = To.GetComponentsInChildren<PatrolPath>();
+    //        List<List<Vector2>> paths = pathGenerator.GeneratePaths(EnemyCount);
+    //        for (int i = 0; i < EnemyCount; i++)
+    //        {
+    //            enemyPaths[i].BacktrackPatrolPath = new BacktrackPatrolPath(paths[i]);
+    //        }
+    //        geneIndex = pathGenerator.geneIndex;
+    //    }
+
     public void AssignPaths(int geneIndex)
     {
         LevelRandom = new System.Random();
@@ -74,11 +94,11 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         floodfilledRoadmapGenerator.FloodRegions();
         pathGenerator.Roadmap = floodfilledRoadmapGenerator.RoadMap;
         pathGenerator.LevelRandom = LevelRandom;
-        PatrolPath[] enemyPaths = To.GetComponentsInChildren<PatrolPath>();
+        PatrolEnemyMono[] enemyPaths = To.GetComponentsInChildren<PatrolEnemyMono>();
         List<List<Vector2>> paths = pathGenerator.GeneratePaths(EnemyCount);
         for (int i = 0; i < EnemyCount; i++)
         {
-            enemyPaths[i].BacktrackPatrolPath = new BacktrackPatrolPath(paths[i]);
+            enemyPaths[i].InitPatrol(paths[i]);
         }
         geneIndex = pathGenerator.geneIndex;
     }

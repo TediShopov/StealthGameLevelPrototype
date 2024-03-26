@@ -123,20 +123,15 @@ namespace StealthLevelEvaluation
             Data._debugEnenmies = Phenotype.GetComponentsInChildren<PatrolPath>();
             NativeGrid<bool> native = new NativeGrid<bool>(Data.Grid, Helpers.GetLevelBounds(Phenotype));
             native.SetAll((x, y, n) => false);
-            float maxTime = ((ContinuosFutureLevel)futureLevel)
-                .EnemyPatrolPaths.Max(x => x.GetTimeToTraverse());
 
             VD = Data._debugEnenmies[0].EnemyProperties.ViewDistance;
             FOV = Data._debugEnenmies[0].EnemyProperties.FOV;
             //Formula: angel in radians multipled by radius on the power of 2
             float maxOverlappArea = Mathf.Deg2Rad * FOV * VD * VD;
             float accumulatedOverlapp = 0;
+            float maxTime = futureLevel.GetMaxSimulationTime();
             Helpers.LogExecutionTime(() => accumulatedOverlapp = OverlapRelativeToDiscreteMaxFOV(futureLevel, maxTime, maxOverlappArea), "New Overlapp");
 
-            //            float newAccumulatedValue = OverlapRelativeToDiscreteMaxFOV(futureLevel, maxTime, maxOverlappArea);
-            //            if (accumulatedOverlapp != newAccumulatedValue)
-            //                Debug.Log($"{accumulatedOverlapp} != {newAccumulatedValue}");
-            //
             float avgRelOverlapp = accumulatedOverlapp / maxTime;
             return -avgRelOverlapp * 100;
         }

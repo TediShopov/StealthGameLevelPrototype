@@ -13,4 +13,6 @@ public interface IPredictableThreat
     public FutureTransform GetTransform();
 
     public bool TestThreat(Vector2 collision);
+
+    public Bounds GetBounds();
 }

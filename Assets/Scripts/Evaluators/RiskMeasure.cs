@@ -24,7 +24,8 @@ namespace StealthLevelEvaluation
         public override float Evaluate()
         {
             var RRTVisualizers = Phenotype.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
-            var enemyPatrolPaths = Phenotype.GetComponentsInChildren<PatrolPath>();
+            var patrols = Phenotype.GetComponentsInChildren<PatrolEnemyMono>()
+                .Select(x => x.GetPatrol());
             //var voxelizedLevel = generator.GetComponentInChildren<VoxelizedLevel>();
             var futureLevel = Phenotype.GetComponentInChildren<IFutureLevel>();
             float total = 0;
@@ -37,9 +38,8 @@ namespace StealthLevelEvaluation
                         new SolutionPath(x.RRT.ReconstructPathToSolution());
                     var riskMeasure = new FieldOfViewRiskMeasure(
                         solutionPath,
-                        enemyPatrolPaths.ToList(),
-                        enemyPatrolPaths[0].EnemyProperties,
-                        LayerMask.GetMask("Obstacles"));
+                        patrols);
+
                     float overallRisk = riskMeasure.OverallRisk(futureLevel.Step);
                     total += overallRisk;
                     succeeded++;

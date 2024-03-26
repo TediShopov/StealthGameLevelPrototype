@@ -51,32 +51,28 @@ public class SolutionPath : IFutureTransform
         return futureTransform;
     }
 }
+
 public interface ISolutionPathRiskMeasurement
 {
     public float RiskInTime(float time);
 
     public float OverallRisk(float step);
 }
+
 public class FieldOfViewRiskMeasure : ISolutionPathRiskMeasurement
 {
     public FieldOfViewRiskMeasure(
         SolutionPath solutionPath,
-        List<PatrolPath> enemyPatrols,
-        DefaultEnemyProperties enemyProperties,
-LayerMask mask
+        IEnumerable<Patrol> enemyPatrols
         )
 
     {
         SolutionPath = solutionPath;
         EnemyPatrols = enemyPatrols;
-        DefaultEnemyProperties = enemyProperties;
-        ObstacleLayerMask = mask;
     }
 
-    public LayerMask ObstacleLayerMask { get; }
     public SolutionPath SolutionPath { get; set; }
-    public DefaultEnemyProperties DefaultEnemyProperties { get; }
-    public List<PatrolPath> EnemyPatrols { get; set; }
+    public IEnumerable<Patrol> EnemyPatrols { get; set; }
 
     public float OverallRisk(float step)
     {
@@ -95,18 +91,19 @@ LayerMask mask
     public float RiskInTime(float time)
     {
         float accumulatedRisk = 0;
+
         foreach (var e in EnemyPatrols)
         {
-            accumulatedRisk += RiskOfEnemy(SolutionPath.GetFutureTransform(time), e.GetFutureTransform(time));
+            e.TimeMove(time);
+            accumulatedRisk += RiskOfEnemy(SolutionPath.GetFutureTransform(time), e);
         }
         return accumulatedRisk;
     }
 
-    public float RiskOfEnemy(FutureTransform player, FutureTransform enemy)
+    public float RiskOfEnemy(FutureTransform player, Patrol enemy)
     {
-        if (!Physics2D.Linecast(enemy.Position, player.Position, ObstacleLayerMask))
-            return RiskFromAngle(player, enemy) / DistanceCubed(player, enemy);
-        return 0;
+        if (enemy.TestThreat(player.Position)) return 0;
+        return RiskFromAngle(player, enemy) / DistanceCubed(player, enemy.GetTransform());
     }
 
     public float DistanceCubed(FutureTransform player, FutureTransform enemy)
@@ -114,16 +111,16 @@ LayerMask mask
         return Mathf.Pow(Vector2.Distance(enemy.Position, player.Position), 3);
     }
 
-    public float RiskFromAngle(FutureTransform player, FutureTransform enemy)
+    public float RiskFromAngle(FutureTransform player, Patrol enemy)
     {
-        Vector2 directionToPlayer = (player.Position - enemy.Position).normalized;
-        float angle = Vector2.Angle(enemy.Direction, directionToPlayer);
+        Vector2 directionToPlayer = (player.Position - enemy.GetTransform().Position).normalized;
+        float angle = Vector2.Angle(enemy.GetTransform().Direction, directionToPlayer);
         //Is in view range
-        if (angle < DefaultEnemyProperties.FOV / 2.0f)
+        if (angle < enemy.Properties.FOV / 2.0f)
         {
             return 1;
         }
-        float relAngularCost = Mathf.InverseLerp(180, DefaultEnemyProperties.FOV / 2.0f, angle);
+        float relAngularCost = Mathf.InverseLerp(180, enemy.Properties.FOV / 2.0f, angle);
         return Mathf.Lerp(0.5f, 1, relAngularCost);
     }
 }

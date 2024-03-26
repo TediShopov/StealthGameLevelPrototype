@@ -1001,10 +1001,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths:
-  - {fileID: 357497532}
-  - {fileID: 330797985}
-  - {fileID: 1132336302}
   _step: 0.2
   _iter: 50
 --- !u!114 &12652590
@@ -1582,18 +1578,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff434b18f6debcc4c9600b2e3a240dae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RunOnStart: 1
-  DebugDraw: 1
-  BoundaryLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
-  ObstacleLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  Grid: {fileID: 24762155}
-  boundsInt:
-    m_Position: {x: -19, y: -19, z: 0}
-    m_Size: {x: 37, y: 37, z: 0}
 --- !u!114 &24762152
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1612,10 +1596,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths:
-  - {fileID: 672086553}
-  - {fileID: 1921758388}
-  - {fileID: 1665586125}
   _step: 0.2
   _iter: 50
 --- !u!114 &24762153
@@ -9322,18 +9302,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff434b18f6debcc4c9600b2e3a240dae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RunOnStart: 1
-  DebugDraw: 1
-  BoundaryLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
-  ObstacleLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  Grid: {fileID: 204313701}
-  boundsInt:
-    m_Position: {x: -19, y: -19, z: 0}
-    m_Size: {x: 37, y: 37, z: 0}
 --- !u!114 &204313698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9352,10 +9320,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths:
-  - {fileID: 1661434835}
-  - {fileID: 1867010684}
-  - {fileID: 60689771}
   _step: 0.2
   _iter: 50
 --- !u!114 &204313699
@@ -18562,10 +18526,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths:
-  - {fileID: 509546191}
-  - {fileID: 291006319}
-  - {fileID: 544154340}
   _step: 0.2
   _iter: 50
 --- !u!114 &400735140
@@ -25107,18 +25067,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff434b18f6debcc4c9600b2e3a240dae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RunOnStart: 1
-  DebugDraw: 1
-  BoundaryLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
-  ObstacleLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  Grid: {fileID: 537142188}
-  boundsInt:
-    m_Position: {x: -19, y: -19, z: 0}
-    m_Size: {x: 37, y: 37, z: 0}
 --- !u!114 &537142190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25137,10 +25085,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths:
-  - {fileID: 1021639329}
-  - {fileID: 1411979942}
-  - {fileID: 512906374}
   _step: 0.2
   _iter: 50
 --- !u!114 &537142191
@@ -25995,10 +25939,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths:
-  - {fileID: 697108687}
-  - {fileID: 54737249}
-  - {fileID: 2031725190}
   _step: 0.2
   _iter: 50
 --- !u!114 &553397207
@@ -27728,7 +27668,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &580530818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27743,7 +27683,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerPrefab: {fileID: 6410257650287846966, guid: 3e5537301517ee44a9291e89e4a23a2a, type: 3}
   DestinationPrefab: {fileID: 6213345698534562546, guid: 9b977143c0ed4574092c33d8e8923adb, type: 3}
-  EnemyPrefab: {fileID: 3796764076782940127, guid: d583d41a5be5abf4794907a71ef64745, type: 3}
+  EnemyPrefab: {fileID: 5922416480227771763, guid: 82b50f82814ebcc4783fedd7e8edaffd, type: 3}
   BoundaryViualPrefab: {fileID: 7711139357044409656, guid: 08b6193f02d8f434d96468973b833db0, type: 3}
   LevelInitializer: {fileID: 3558959309750259788, guid: 69cb3862483af4348bb1455a8c0d3594, type: 3}
   ObstacleLayerMask:
@@ -28122,10 +28062,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths:
-  - {fileID: 700996691}
-  - {fileID: 1490340224}
-  - {fileID: 282059846}
   _step: 0.2
   _iter: 50
 --- !u!114 &585856836
@@ -30473,10 +30409,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths:
-  - {fileID: 435862313}
-  - {fileID: 1025292708}
-  - {fileID: 113197328}
   _step: 0.2
   _iter: 50
 --- !u!114 &629026633
@@ -35469,18 +35401,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff434b18f6debcc4c9600b2e3a240dae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RunOnStart: 1
-  DebugDraw: 1
-  BoundaryLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
-  ObstacleLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  Grid: {fileID: 721043080}
-  boundsInt:
-    m_Position: {x: -19, y: -19, z: 0}
-    m_Size: {x: 37, y: 37, z: 0}
 --- !u!114 &721043077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35499,10 +35419,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths:
-  - {fileID: 2123340922}
-  - {fileID: 894789906}
-  - {fileID: 1467659737}
   _step: 0.2
   _iter: 50
 --- !u!114 &721043078
@@ -54906,18 +54822,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff434b18f6debcc4c9600b2e3a240dae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RunOnStart: 1
-  DebugDraw: 1
-  BoundaryLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
-  ObstacleLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  Grid: {fileID: 1132724364}
-  boundsInt:
-    m_Position: {x: -19, y: -19, z: 0}
-    m_Size: {x: 37, y: 37, z: 0}
 --- !u!114 &1132724366
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54936,10 +54840,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths:
-  - {fileID: 205673166}
-  - {fileID: 14281221}
-  - {fileID: 1723925369}
   _step: 0.2
   _iter: 50
 --- !u!114 &1132724367
@@ -56818,10 +56718,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths:
-  - {fileID: 768654913}
-  - {fileID: 1056633804}
-  - {fileID: 271385237}
   _step: 0.2
   _iter: 50
 --- !u!114 &1171173794
@@ -56974,10 +56870,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths:
-  - {fileID: 184452887}
-  - {fileID: 2060167456}
-  - {fileID: 1068304036}
   _step: 0.2
   _iter: 50
 --- !u!114 &1174613137
@@ -59425,18 +59317,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff434b18f6debcc4c9600b2e3a240dae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RunOnStart: 1
-  DebugDraw: 1
-  BoundaryLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
-  ObstacleLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  Grid: {fileID: 1221474438}
-  boundsInt:
-    m_Position: {x: -19, y: -19, z: 0}
-    m_Size: {x: 37, y: 37, z: 0}
 --- !u!114 &1221474435
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59455,10 +59335,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths:
-  - {fileID: 695889053}
-  - {fileID: 2058189742}
-  - {fileID: 676404727}
   _step: 0.2
   _iter: 50
 --- !u!114 &1221474436
@@ -63506,10 +63382,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths:
-  - {fileID: 608666374}
-  - {fileID: 1680856971}
-  - {fileID: 10999039}
   _step: 0.2
   _iter: 50
 --- !u!114 &1319571394
@@ -65604,18 +65476,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff434b18f6debcc4c9600b2e3a240dae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RunOnStart: 1
-  DebugDraw: 1
-  BoundaryLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
-  ObstacleLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  Grid: {fileID: 1361014504}
-  boundsInt:
-    m_Position: {x: -19, y: -19, z: 0}
-    m_Size: {x: 37, y: 37, z: 0}
 --- !u!114 &1361014506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65634,10 +65494,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths:
-  - {fileID: 304149232}
-  - {fileID: 266965679}
-  - {fileID: 15399994}
   _step: 0.2
   _iter: 50
 --- !u!114 &1361014507
@@ -66757,18 +66613,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff434b18f6debcc4c9600b2e3a240dae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RunOnStart: 1
-  DebugDraw: 1
-  BoundaryLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
-  ObstacleLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  Grid: {fileID: 1383276943}
-  boundsInt:
-    m_Position: {x: -19, y: -19, z: 0}
-    m_Size: {x: 37, y: 37, z: 0}
 --- !u!114 &1383276945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66787,10 +66631,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths:
-  - {fileID: 1562777206}
-  - {fileID: 1378594362}
-  - {fileID: 110178208}
   _step: 0.2
   _iter: 50
 --- !u!114 &1383276946
@@ -69878,10 +69718,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths:
-  - {fileID: 404443236}
-  - {fileID: 1571016130}
-  - {fileID: 392836767}
   _step: 0.2
   _iter: 50
 --- !u!114 &1453834231
@@ -71239,8 +71075,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a59df0218d90434e9622a53774d6147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PopulationCount: 150
-  AimedGenerations: 5
+  PopulationCount: 15
+  AimedGenerations: 1
   MutationProb: 0.152
   CrossoverProb: 1
   PhenotypeEvaluator: {fileID: 1136908432}
@@ -72955,7 +72791,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerPrefab: {fileID: 6410257650287846966, guid: 3e5537301517ee44a9291e89e4a23a2a, type: 3}
   DestinationPrefab: {fileID: 6213345698534562546, guid: 9b977143c0ed4574092c33d8e8923adb, type: 3}
-  EnemyPrefab: {fileID: 3796764076782940127, guid: d583d41a5be5abf4794907a71ef64745, type: 3}
+  EnemyPrefab: {fileID: 5922416480227771763, guid: 82b50f82814ebcc4783fedd7e8edaffd, type: 3}
   BoundaryViualPrefab: {fileID: 7711139357044409656, guid: 08b6193f02d8f434d96468973b833db0, type: 3}
   LevelInitializer: {fileID: 3558959309750259788, guid: 69cb3862483af4348bb1455a8c0d3594, type: 3}
   ObstacleLayerMask:
@@ -72968,7 +72804,7 @@ MonoBehaviour:
   MinEnemiesSpawned: 0
   MaxEnemiesSpawned: 0
   MinObjectScale: 0.2
-  MaxObjectScale: 1
+  MaxObjectScale: 5
   VisualBoundWidth: 0.5
   RunOnStart: 0
   IsRandom: 0
@@ -81750,18 +81586,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff434b18f6debcc4c9600b2e3a240dae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RunOnStart: 1
-  DebugDraw: 1
-  BoundaryLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
-  ObstacleLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  Grid: {fileID: 1700045613}
-  boundsInt:
-    m_Position: {x: -19, y: -19, z: 0}
-    m_Size: {x: 37, y: 37, z: 0}
 --- !u!114 &1700045615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81780,10 +81604,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths:
-  - {fileID: 1791178983}
-  - {fileID: 1760358045}
-  - {fileID: 1381216203}
   _step: 0.2
   _iter: 50
 --- !u!114 &1700045616
@@ -92129,10 +91949,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths:
-  - {fileID: 1886173703}
-  - {fileID: 422162091}
-  - {fileID: 1614962341}
   _step: 0.2
   _iter: 50
 --- !u!114 &1906433876
@@ -97833,10 +97649,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths:
-  - {fileID: 338169990}
-  - {fileID: 485420947}
-  - {fileID: 287852678}
   _step: 0.2
   _iter: 50
 --- !u!114 &2009039636
@@ -102208,18 +102020,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff434b18f6debcc4c9600b2e3a240dae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RunOnStart: 1
-  DebugDraw: 1
-  BoundaryLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
-  ObstacleLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  Grid: {fileID: 2084489140}
-  boundsInt:
-    m_Position: {x: -19, y: -19, z: 0}
-    m_Size: {x: 37, y: 37, z: 0}
 --- !u!114 &2084489137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102238,10 +102038,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths:
-  - {fileID: 1116766549}
-  - {fileID: 2119862800}
-  - {fileID: 2040991389}
   _step: 0.2
   _iter: 50
 --- !u!114 &2084489138
@@ -105102,3 +104898,64 @@ MonoBehaviour:
   - {x: 26.219893, y: 7.560956, z: 4.7225876}
   - {x: 34.63338, y: 9.756518, z: 6.496076}
   OutputDiscretized: 0
+--- !u!1001 &5922416481761259104
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5922416480227771763, guid: 82b50f82814ebcc4783fedd7e8edaffd, type: 3}
+      propertyPath: m_Name
+      value: Enemy(Clone)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5922416480227771763, guid: 82b50f82814ebcc4783fedd7e8edaffd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5922416480227771767, guid: 82b50f82814ebcc4783fedd7e8edaffd, type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5922416480227771767, guid: 82b50f82814ebcc4783fedd7e8edaffd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5922416480227771767, guid: 82b50f82814ebcc4783fedd7e8edaffd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5922416480227771767, guid: 82b50f82814ebcc4783fedd7e8edaffd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5922416480227771767, guid: 82b50f82814ebcc4783fedd7e8edaffd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.00000004371139
+      objectReference: {fileID: 0}
+    - target: {fileID: 5922416480227771767, guid: 82b50f82814ebcc4783fedd7e8edaffd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5922416480227771767, guid: 82b50f82814ebcc4783fedd7e8edaffd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5922416480227771767, guid: 82b50f82814ebcc4783fedd7e8edaffd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5922416480227771767, guid: 82b50f82814ebcc4783fedd7e8edaffd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5922416480227771767, guid: 82b50f82814ebcc4783fedd7e8edaffd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5922416480227771767, guid: 82b50f82814ebcc4783fedd7e8edaffd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 82b50f82814ebcc4783fedd7e8edaffd, type: 3}

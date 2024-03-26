@@ -11,9 +11,6 @@ using UnityEngine;
 using UnityEngine.Experimental.AI;
 using UnityEngine.TestTools;
 
-
-
-
 public class SolutionPathRiskMeasurementEditTests
 {
     public DefaultEnemyProperties EnemyProperties = new DefaultEnemyProperties()
@@ -36,9 +33,7 @@ public class SolutionPathRiskMeasurementEditTests
         ISolutionPathRiskMeasurement solutionPathRiskMeasurement =
             new FieldOfViewRiskMeasure(
                 new SolutionPath(solutionPathRaw),
-                new List<PatrolPath>(),
-               EnemyProperties,
-                LayerMask.GetMask("Obstacles"));
+                new List<Patrol>());
         Assert.AreEqual(0, solutionPathRiskMeasurement.OverallRisk(1), 0.001f);
     }
 
@@ -76,17 +71,19 @@ public class SolutionPathRiskMeasurementEditTests
             new Vector3(-2,0,1),
             new Vector3(-1,0,2)
         };
-        var enemyPath = new GameObject("", new Type[] { typeof(Rigidbody2D), typeof(PatrolPath) }).GetComponent<PatrolPath>();
-        enemyPath.transform.position = new Vector3(0.5f, 0, 0);
-        enemyPath.transform.forward = new Vector3(-1.0f, 0, 0);
-        yield return null;
+
+        var patrol = new Patrol(EnemyProperties,
+            new List<Vector2>(), new FutureTransform()
+            {
+                Position = new Vector3(0.5f, 0, 0),
+                Direction = new Vector3(-1.0f, 0, 0)
+            });
         yield return null;
         ISolutionPathRiskMeasurement solutionPathRiskMeasurement =
             new FieldOfViewRiskMeasure(
                 new SolutionPath(solutionPathRaw),
-                new List<PatrolPath>() { enemyPath },
-               EnemyProperties,
-                LayerMask.GetMask("Obstacles"));
+                new List<Patrol>() { patrol });
+
         Assert.AreNotEqual(0, solutionPathRiskMeasurement.OverallRisk(1));
         yield return null;
     }
@@ -101,30 +98,30 @@ public class SolutionPathRiskMeasurementEditTests
         FutureTransform enemy = new FutureTransform();
         enemy.Position = new Vector2(0, 0);
         enemy.Direction = Vector2.right;
+        Patrol patrol = new Patrol(EnemyProperties, new List<Vector2>(), enemy);
 
         ///
         FieldOfViewRiskMeasure solutionPathRiskMeasurement =
             new FieldOfViewRiskMeasure(
                 new SolutionPath(new List<Vector3>()),
-                new List<PatrolPath>(),
-               EnemyProperties,
-                LayerMask.GetMask("Obstacles"));
+                new List<Patrol>() { patrol });
 
         player.Position = new Vector2(0, 0);
+
         //Directly on top should return 1
-        Assert.AreEqual(1.0f, solutionPathRiskMeasurement.RiskFromAngle(player, enemy));
+        Assert.AreEqual(1.0f, solutionPathRiskMeasurement.RiskFromAngle(player, patrol));
         //Anywhere in visibility should return 1
         player.Position = Quaternion.AngleAxis(15, Vector3.forward) * Vector2.right;
-        Assert.AreEqual(1.0f, solutionPathRiskMeasurement.RiskFromAngle(player, enemy));
+        Assert.AreEqual(1.0f, solutionPathRiskMeasurement.RiskFromAngle(player, patrol));
         player.Position = Quaternion.AngleAxis(-15, Vector3.forward) * Vector2.right;
-        Assert.AreEqual(1.0f, solutionPathRiskMeasurement.RiskFromAngle(player, enemy));
+        Assert.AreEqual(1.0f, solutionPathRiskMeasurement.RiskFromAngle(player, patrol));
         //Directly opposite return minimum of function 0,5
         player.Position = Quaternion.AngleAxis(180, Vector3.forward) * Vector2.right;
-        Assert.AreEqual(0.5f, solutionPathRiskMeasurement.RiskFromAngle(player, enemy));
+        Assert.AreEqual(0.5f, solutionPathRiskMeasurement.RiskFromAngle(player, patrol));
         //At center of (180 - angleFov)/2.0f return 0.75
-        //float n = (180 - EnemyProperties.FOV / 2.0f) / 2.0f;
+        //float n = (180 - patrolProperties.FOV / 2.0f) / 2.0f;
         float n = (EnemyProperties.FOV / 2.0f) + (180 - EnemyProperties.FOV / 2.0f) * 0.5f;
         player.Position = Quaternion.AngleAxis(n, Vector3.forward) * Vector2.right;
-        Assert.AreEqual(0.75f, solutionPathRiskMeasurement.RiskFromAngle(player, enemy));
+        Assert.AreEqual(0.75f, solutionPathRiskMeasurement.RiskFromAngle(player, patrol));
     }
 }

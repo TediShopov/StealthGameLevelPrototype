@@ -27,29 +27,29 @@ namespace StealthLevelEvaluation
             Init(phenotype, "Relative Coverage", 0);
         }
 
-        private int DiscreteNotCollidingCells(ContinuosFutureLevel futureLevel, ref NativeGrid<bool> staticObstacle)
-        {
-            List<Vector2> allCells = new List<Vector2>();
-            for (int i = 0; i < staticObstacle.GetRows(); i++)
-            {
-                for (int j = 0; j < staticObstacle.GetCols(); j++)
-                {
-                    if (staticObstacle.Get(i, j) == false)
-                        allCells.Add(staticObstacle.GetWorldPosition(i, j));
-                }
-            }
-
-            float maxTime = futureLevel.EnemyPatrolPaths.Max(x => x.GetTimeToTraverse());
-            var notcolliding = futureLevel.AreNotCollidingDynamicDiscrete(allCells, 0, maxTime);
-            var _visibilityCountGrid = new NativeGrid<bool>(staticObstacle);
-            _visibilityCountGrid.SetAll((x, y, _visibilityCountGrid) => false);
-            foreach (var worldPos in notcolliding)
-            {
-                Vector2Int nativeCoord = _visibilityCountGrid.GetNativeCoord((Vector2Int)Grid.WorldToCell(new Vector3(worldPos.x, worldPos.y)));
-                _visibilityCountGrid.Set(nativeCoord.x, nativeCoord.y, true);
-            }
-            return notcolliding.Count;
-        }
+        //        private int DiscreteNotCollidingCells(ContinuosFutureLevel futureLevel, ref NativeGrid<bool> staticObstacle)
+        //        {
+        //            List<Vector2> allCells = new List<Vector2>();
+        //            for (int i = 0; i < staticObstacle.GetRows(); i++)
+        //            {
+        //                for (int j = 0; j < staticObstacle.GetCols(); j++)
+        //                {
+        //                    if (staticObstacle.Get(i, j) == false)
+        //                        allCells.Add(staticObstacle.GetWorldPosition(i, j));
+        //                }
+        //            }
+        //
+        //            float maxTime = futureLevel.EnemyPatrolPaths.Max(x => x.GetTimeToTraverse());
+        //            var notcolliding = futureLevel.AreNotCollidingDynamicDiscrete(allCells, 0, maxTime);
+        //            var _visibilityCountGrid = new NativeGrid<bool>(staticObstacle);
+        //            _visibilityCountGrid.SetAll((x, y, _visibilityCountGrid) => false);
+        //            foreach (var worldPos in notcolliding)
+        //            {
+        //                Vector2Int nativeCoord = _visibilityCountGrid.GetNativeCoord((Vector2Int)Grid.WorldToCell(new Vector3(worldPos.x, worldPos.y)));
+        //                _visibilityCountGrid.Set(nativeCoord.x, nativeCoord.y, true);
+        //            }
+        //            return notcolliding.Count;
+        //        }
 
         private int DiscreteCollidingCells(ContinuosFutureLevel futureLevel, Bounds levelBounds)
         {
@@ -59,7 +59,7 @@ namespace StealthLevelEvaluation
 
             int maxCells = (boundsInt.max.x - boundsInt.min.x) * (boundsInt.max.y - boundsInt.min.y);
 
-            float maxTime = futureLevel.EnemyPatrolPaths.Max(x => x.GetTimeToTraverse());
+            float maxTime = futureLevel.GetMaxSimulationTime();
             var UniqueVisibleCells = futureLevel.UniqueVisibleCells(Grid, 0, maxTime);
 
             return UniqueVisibleCells.Count;

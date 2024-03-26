@@ -93,6 +93,7 @@ public class FieldOfView : MonoBehaviour
 
         Vector2 fovPeak = ft.Position + ft.Direction * vd;
         Vector2 fovPos = ft.Position;
+
         Vector2 fovBoundTwo = ft.Position + (Vector2)(Quaternion.AngleAxis(fov / 2.0f, Vector3.forward) * ft.Direction * vd);
         Vector2 fovBoundOne = ft.Position + (Vector2)(Quaternion.AngleAxis(-fov / 2.0f, Vector3.forward) * ft.Direction * vd);
 

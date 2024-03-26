@@ -53,10 +53,11 @@ namespace StealthLevelEvaluation
             Grid = phenotype.GetComponentInChildren<Grid>();
             if (FutureLevel != null)
             {
-                float maxTime = FutureLevel.EnemyPatrolPaths.Max(x => x.GetTimeToTraverse());
-                UniqueVisibleCells = FutureLevel.UniqueVisibleCells(Grid, 0, maxTime);
+                UniqueVisibleCells = FutureLevel.UniqueVisibleCells(
+                    Grid,
+                    0,
+                    FutureLevel.GetMaxSimulationTime());
             }
-
             LevelGrid = new NativeGrid<bool>(grid, Helpers.GetLevelBounds(phenotype));
             LevelGrid.SetAll(SetSafeGridCells);
         }

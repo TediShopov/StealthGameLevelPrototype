@@ -9,9 +9,13 @@ public interface IFutureLevel
     public float Step { get; }
     public float Iterations { get; }
 
+    public float GetMaxSimulationTime();
+
     public void Init();
 
     public Bounds GetBounds();
+
+    public bool IsColliding(Vector3 from, Vector3 to);
 
     public bool IsColliding(Vector2 from, Vector2 to, float timeFrom, float timeTo);
 }
@@ -27,6 +31,8 @@ public class VoxelizedLevelBase : MonoBehaviour, IFutureLevel
     public float Step => Step;
 
     public float Iterations => Iterations;
+
+    public float GetMaxSimulationTime() => Step * Iterations;
 
     public virtual void Init()
     {
@@ -134,6 +140,11 @@ public class VoxelizedLevelBase : MonoBehaviour, IFutureLevel
         bounds.min = min;
         bounds.max = max;
         return bounds;
+    }
+
+    public bool IsColliding(Vector3 from, Vector3 to)
+    {
+        return IsColliding(from, to, from.z, to.z);
     }
 }
 

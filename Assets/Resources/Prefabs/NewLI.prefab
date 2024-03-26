@@ -67,7 +67,7 @@ MonoBehaviour:
   - {r: 0, g: 0.41886997, b: 1, a: 0.6117647}
   - {r: 0.9726496, g: 0, b: 1, a: 0.5686275}
   - {r: 0, g: 0.08543253, b: 1, a: 0.6117647}
-  DebugDraw: 1
+  DebugDraw: 0
   Grid: {fileID: 3558959309090012900}
   ObstacleLayerMask:
     serializedVersion: 2
@@ -94,7 +94,6 @@ MonoBehaviour:
   BoundaryLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  EnemyPatrolPaths: []
   _step: 0.2
   _iter: 50
 --- !u!1 &3558959309750259788
