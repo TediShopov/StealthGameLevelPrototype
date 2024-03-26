@@ -42,7 +42,9 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         To.tag = "Level";
 
         //Add chromosome information to the gameobejct itself
-        LevelChromosomeMono chromosomeMono = To.AddComponent<LevelChromosomeMono>();
+        var data = new GameObject("Data");
+        data.transform.SetParent(To.transform);
+        LevelChromosomeMono chromosomeMono = data.AddComponent<LevelChromosomeMono>();
         chromosomeMono.Chromosome = (LevelChromosome)chromosome;
 
         var Obstacles = new GameObject("Obstacles");

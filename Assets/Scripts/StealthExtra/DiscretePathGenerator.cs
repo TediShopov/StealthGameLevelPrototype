@@ -207,7 +207,7 @@ public class DiscretePathGenerator : MonoBehaviour, IPathGenerator
     public void Awake()
     {
         var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
-        Chromosome = level.GetComponent<LevelChromosomeMono>().Chromosome;
+        Chromosome = level.GetComponentInChildren<LevelChromosomeMono>().Chromosome;
     }
 
     // Update is called once per frame

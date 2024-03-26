@@ -101,6 +101,10 @@ public class BacktrackPatrolPath
     public Vector2 GetCurrent()
     {
         Tuple<Vector2, Vector2> segment = GetSegment(relPathPostion);
+        if (segment == null)
+        {
+            int b = 3;
+        }
         float segmentCompletion = Math.Abs(relPathPostion - GetIndex(relPathPostion));
         return Vector2.Lerp(segment.Item1, segment.Item2, segmentCompletion);
     }

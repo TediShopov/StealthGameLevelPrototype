@@ -42,8 +42,9 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         //Boundary
         To.tag = "Level";
 
-        //Add chromosome information to the gameobejct itself
-        LevelChromosomeMono chromosomeMono = To.AddComponent<LevelChromosomeMono>();
+        var data = new GameObject("Data");
+        data.transform.SetParent(To.transform);
+        LevelChromosomeMono chromosomeMono = data.AddComponent<LevelChromosomeMono>();
         chromosomeMono.Chromosome = (LevelChromosome)chromosome;
 
         var Obstacles = new GameObject("Obstacles");
@@ -109,6 +110,14 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         int ObstacleCount = GetObstaclesToSpawn(ref geneIndex);
         EnemyCount = EntityCount - ObstacleCount;
         var Obstacles = new GameObject("Obstacles");
+        if (EnemyCount + ObstacleCount > EntityCount)
+        {
+            int b = 3;
+        }
+        if ((EnemyCount + ObstacleCount) * 5 + 1 >= chromosome.Length)
+        {
+            int a = 3;
+        }
 
         //Test for off by oen errors
         for (int i = 0; i < ObstacleCount; i++)

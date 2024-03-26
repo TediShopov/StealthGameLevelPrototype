@@ -71,8 +71,18 @@ internal class CustomMutators : MutationBase
         if (chosenOutcome == 2)
         {
             //Randomize obstacle
-            WholeGeneUniformMutation.Mutate(chromosome, probability);
-            Debug.Log("Changed Obstacles Mutation");
+            try
+            {
+                ;
+                WholeGeneUniformMutation = new UniformMutation(
+                    Enumerable.Range(0, chromosome.Length).ToArray());
+                WholeGeneUniformMutation.Mutate(chromosome, probability);
+                Debug.Log("Changed Obstacles Mutation");
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

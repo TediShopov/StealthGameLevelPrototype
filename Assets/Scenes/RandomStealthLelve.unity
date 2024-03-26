@@ -71075,14 +71075,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a59df0218d90434e9622a53774d6147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PopulationCount: 15
-  AimedGenerations: 1
+  PopulationCount: 150
+  AimedGenerations: 5
   MutationProb: 0.152
   CrossoverProb: 1
   PhenotypeEvaluator: {fileID: 1136908432}
   Generator: {fileID: 1513753136}
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
-  RandomizeSeed: 0
+  RandomizeSeed: 1
   Seed: 15
   LogExecutions: 0
   LogIndividualExecutions: 0
@@ -72804,7 +72804,7 @@ MonoBehaviour:
   MinEnemiesSpawned: 0
   MaxEnemiesSpawned: 0
   MinObjectScale: 0.2
-  MaxObjectScale: 5
+  MaxObjectScale: 2.41
   VisualBoundWidth: 0.5
   RunOnStart: 0
   IsRandom: 0
