@@ -1,5 +1,3 @@
-using GeneticSharp.Domain.Chromosomes;
-using GeneticSharp.Domain.Fitnesses;
 using System.Linq;
 using Unity.IO.LowLevel.Unsafe;
 using System.Collections.Generic;

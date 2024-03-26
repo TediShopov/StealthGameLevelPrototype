@@ -1,4 +1,3 @@
-using GeneticSharp.Domain.Chromosomes;
 using JetBrains.Annotations;
 using Mono.Cecil;
 using System.Linq;

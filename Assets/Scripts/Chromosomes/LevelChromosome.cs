@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using GeneticSharp.Domain.Chromosomes;
+using GeneticSharp;
 
 public class LevelChromosome : LevelChromosomeBase
 {
