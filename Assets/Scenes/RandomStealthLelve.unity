@@ -1865,6 +1865,8 @@ MonoBehaviour:
   LogExecutionTimes: 10
   TopNLevels: 5
   ExtraSpacing: {x: 0, y: 0}
+  GenetationStep: 1
+  InteractiveStep: 0
 --- !u!4 &29713734
 Transform:
   m_ObjectHideFlags: 0
@@ -68274,6 +68276,8 @@ MonoBehaviour:
   LogExecutionTimes: 5
   TopNLevels: 5
   ExtraSpacing: {x: 0, y: 0}
+  GenetationStep: 1
+  InteractiveStep: 0
 --- !u!4 &1414507313
 Transform:
   m_ObjectHideFlags: 0
@@ -71075,7 +71079,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a59df0218d90434e9622a53774d6147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PopulationCount: 150
+  PopulationCount: 10
   AimedGenerations: 5
   MutationProb: 0.152
   CrossoverProb: 1
@@ -71089,6 +71093,8 @@ MonoBehaviour:
   LogExecutionTimes: 1
   TopNLevels: 5
   ExtraSpacing: {x: 10, y: 10}
+  GenetationStep: 0
+  InteractiveStep: 0
 --- !u!4 &1474898339
 Transform:
   m_ObjectHideFlags: 0

@@ -1,5 +1,8 @@
+using CGALDotNet;
 using GeneticSharp;
+using GeneticSharp.Domain;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -181,7 +184,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
     public int LogExecutionTimes = 0;
     public int TopNLevels = 5;
 
-    private GeneticAlgorithm GeneticAlgorithm;
+    private InteractiveGeneticAlgorithm GeneticAlgorithm;
     public Vector2 ExtraSpacing;
 
     public void Start()
@@ -269,13 +272,42 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         }
         PhenotypeEvaluator.GridLevelObjects = GridPopulation;
 
-        GeneticAlgorithm = new GeneticAlgorithm(population, PhenotypeEvaluator, selection, crossover, mutation);
+        GeneticAlgorithm = new
+            InteractiveGeneticAlgorithm(population, PhenotypeEvaluator, selection, crossover, mutation);
         GeneticAlgorithm.MutationProbability = MutationProb;
         GeneticAlgorithm.CrossoverProbability = CrossoverProb;
         GeneticAlgorithm.Termination = new GenerationNumberTermination(AimedGenerations);
         GeneticAlgorithm.GenerationRan += Ga_GenerationRan;
         GeneticAlgorithm.TerminationReached += Ga_TerminationReached; ;
-        GeneticAlgorithm.Start();
+        ProgressIEAlgo = StartCoroutine(WaitForInteractiveEvaluation());
+        GeneticAlgorithm.Population.CreateInitialGeneration();
+        //GeneticAlgorithm.Start();
+    }
+
+    public bool GenetationStep = true;
+    public bool InteractiveStep = false;
+
+    private Coroutine ProgressIEAlgo;
+
+    private IEnumerator WaitForInteractiveEvaluation()
+    {
+        while (true)
+        {
+            if (InteractiveStep)
+            {
+                InteractiveStep = !InteractiveStep;
+                GeneticAlgorithm.EvaluateFitness();
+                GeneticAlgorithm.IntectiveEvalutionStep();
+            }
+
+            if (GenetationStep)
+            {
+                GenetationStep = !GenetationStep;
+                GeneticAlgorithm.EndCurrentGeneration();
+                GeneticAlgorithm.EvolveOneGeneration();
+            }
+            yield return new WaitForEndOfFrame();
+        }
     }
 
     private List<IChromosome> GetTopLevelsFitness()

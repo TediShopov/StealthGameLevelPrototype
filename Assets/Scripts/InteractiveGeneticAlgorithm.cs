@@ -7,93 +7,52 @@ namespace GeneticSharp.Domain
 {
     public sealed class InteractiveGeneticAlgorithm : IGeneticAlgorithm
     {
+        #region Constants
+
+        /// <summary>
+        /// The default crossover probability.
+        /// </summary>
         public const float DefaultCrossoverProbability = 0.75f;
 
+        /// <summary>
+        /// The default mutation probability.
+        /// </summary>
         public const float DefaultMutationProbability = 0.1f;
 
+        #endregion Constants
+
+        #region Fields
+
         private bool m_stopRequested;
-
         private readonly object m_lock = new object();
-
         private GeneticAlgorithmState m_state;
+        private readonly Stopwatch m_stopwatch = new Stopwatch();
 
-        private Stopwatch m_stopwatch;
+        #endregion Fields
 
-        public IOperatorsStrategy OperatorsStrategy { get; set; }
+        #region Constructors
 
-        public IPopulation Population { get; private set; }
-
-        public IFitness Fitness { get; private set; }
-
-        public ISelection Selection { get; set; }
-
-        public ICrossover Crossover { get; set; }
-
-        public float CrossoverProbability { get; set; }
-
-        public IMutation Mutation { get; set; }
-
-        public float MutationProbability { get; set; }
-
-        public IReinsertion Reinsertion { get; set; }
-
-        public ITermination Termination { get; set; }
-
-        public int GenerationsNumber => Population.GenerationsNumber;
-
-        public IChromosome BestChromosome => Population.BestChromosome;
-
-        public TimeSpan TimeEvolving { get; private set; }
-
-        public GeneticAlgorithmState State
-        {
-            get
-            {
-                return m_state;
-            }
-            private set
-            {
-                bool num = this.Stopped != null && m_state != value && value == GeneticAlgorithmState.Stopped;
-                m_state = value;
-                if (num)
-                {
-                    this.Stopped?.Invoke(this, EventArgs.Empty);
-                }
-            }
-        }
-
-        public bool IsRunning
-        {
-            get
-            {
-                if (State != GeneticAlgorithmState.Started)
-                {
-                    return State == GeneticAlgorithmState.Resumed;
-                }
-
-                return true;
-            }
-        }
-
-        public ITaskExecutor TaskExecutor { get; set; }
-
-        public event EventHandler GenerationRan;
-
-        public event EventHandler TerminationReached;
-
-        public event EventHandler Stopped;
-
-        public InteractiveGeneticAlgorithm(IPopulation population,
-            IFitness fitness,
-            ISelection selection,
-            ICrossover crossover,
-            IMutation mutation)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GeneticSharp.GeneticAlgorithm"/> class.
+        /// </summary>
+        /// <param name="population">The chromosomes population.</param>
+        /// <param name="fitness">The fitness evaluation function.</param>
+        /// <param name="selection">The selection operator.</param>
+        /// <param name="crossover">The crossover operator.</param>
+        /// <param name="mutation">The mutation operator.</param>
+        public InteractiveGeneticAlgorithm(
+                          IPopulation population,
+                          IFitness fitness,
+                          ISelection selection,
+                          ICrossover crossover,
+                          IMutation mutation)
         {
             ExceptionHelper.ThrowIfNull("population", population);
             ExceptionHelper.ThrowIfNull("fitness", fitness);
             ExceptionHelper.ThrowIfNull("selection", selection);
             ExceptionHelper.ThrowIfNull("crossover", crossover);
             ExceptionHelper.ThrowIfNull("mutation", mutation);
+
             Population = population;
             Fitness = fitness;
             Selection = selection;
@@ -101,109 +60,307 @@ namespace GeneticSharp.Domain
             Mutation = mutation;
             Reinsertion = new ElitistReinsertion();
             Termination = new GenerationNumberTermination(1);
-            CrossoverProbability = 0.75f;
-            MutationProbability = 0.1f;
+
+            CrossoverProbability = DefaultCrossoverProbability;
+            MutationProbability = DefaultMutationProbability;
             TimeEvolving = TimeSpan.Zero;
             State = GeneticAlgorithmState.NotStarted;
             TaskExecutor = new LinearTaskExecutor();
             OperatorsStrategy = new DefaultOperatorsStrategy();
         }
 
-        public void Start()
-        {
-            lock (m_lock)
-            {
-                State = GeneticAlgorithmState.Started;
-                m_stopwatch = Stopwatch.StartNew();
-                Population.CreateInitialGeneration();
-                m_stopwatch.Stop();
-                TimeEvolving = m_stopwatch.Elapsed;
-            }
+        #endregion Constructors
 
-            Resume();
+        #region Events
+
+        public event EventHandler InteractiveStepReached;
+
+        /// <summary>
+        /// Occurs when generation ran.
+        /// </summary>
+        public event EventHandler GenerationRan;
+
+        /// <summary>
+        /// Occurs when termination reached.
+        /// </summary>
+        public event EventHandler TerminationReached;
+
+        /// <summary>
+        /// Occurs when stopped.
+        /// </summary>
+        public event EventHandler Stopped;
+
+        #endregion Events
+
+        #region Properties
+
+        /// <summary>
+        /// </summary>
+        public List<IChromosome> UserSelectedChromose { get; set; }
+
+        /// <summary>
+        /// Gets the operators strategy
+        /// </summary>
+        public IOperatorsStrategy OperatorsStrategy { get; set; }
+
+        /// <summary>
+        /// Gets the population.
+        /// </summary>
+        /// <value>The population.</value>
+        public IPopulation Population { get; private set; }
+
+        /// <summary>
+        /// Gets the fitness function.
+        /// </summary>
+        public IFitness Fitness { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the selection operator.
+        /// </summary>
+        public ISelection Selection { get; set; }
+
+        /// <summary>
+        /// Gets or sets the crossover operator.
+        /// </summary>
+        /// <value>The crossover.</value>
+        public ICrossover Crossover { get; set; }
+
+        /// <summary>
+        /// Gets or sets the crossover probability.
+        /// </summary>
+        public float CrossoverProbability { get; set; }
+
+        /// <summary>
+        /// Gets or sets the mutation operator.
+        /// </summary>
+        public IMutation Mutation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the mutation probability.
+        /// </summary>
+        public float MutationProbability { get; set; }
+
+        /// <summary>
+        /// Gets or sets the reinsertion operator.
+        /// </summary>
+        public IReinsertion Reinsertion { get; set; }
+
+        /// <summary>
+        /// Gets or sets the termination condition.
+        /// </summary>
+        public ITermination Termination { get; set; }
+
+        /// <summary>
+        /// Gets the generations number.
+        /// </summary>
+        /// <value>The generations number.</value>
+        public int GenerationsNumber
+        {
+            get
+            {
+                return Population.GenerationsNumber;
+            }
         }
 
-        public void Resume()
+        /// <summary>
+        /// Gets the best chromosome.
+        /// </summary>
+        /// <value>The best chromosome.</value>
+        public IChromosome BestChromosome
         {
-            try
+            get
             {
-                lock (m_lock)
-                {
-                    m_stopRequested = false;
-                }
-
-                if (Population.GenerationsNumber == 0)
-                {
-                    throw new InvalidOperationException("Attempt to resume a genetic algorithm which was not yet started.");
-                }
-
-                if (Population.GenerationsNumber > 1)
-                {
-                    if (Termination.HasReached(this))
-                    {
-                        throw new InvalidOperationException("Attempt to resume a genetic algorithm with a termination ({0}) already reached. Please, specify a new termination or extend the current one.".With(Termination));
-                    }
-
-                    State = GeneticAlgorithmState.Resumed;
-                }
-
-                if (EndCurrentGeneration())
-                {
-                    return;
-                }
-
-                bool flag = false;
-                while (!m_stopRequested)
-                {
-                    m_stopwatch.Restart();
-                    flag = EvolveOneGeneration();
-                    m_stopwatch.Stop();
-                    TimeEvolving += m_stopwatch.Elapsed;
-                    if (flag)
-                    {
-                        break;
-                    }
-                }
-            }
-            catch
-            {
-                State = GeneticAlgorithmState.Stopped;
-                throw;
+                return Population.BestChromosome;
             }
         }
 
-        public void Stop()
+        /// <summary>
+        /// Gets the time evolving.
+        /// </summary>
+        public TimeSpan TimeEvolving { get; private set; }
+
+        /// <summary>
+        /// Gets the state.
+        /// </summary>
+        public GeneticAlgorithmState State
         {
-            if (Population.GenerationsNumber == 0)
+            get
             {
-                throw new InvalidOperationException("Attempt to stop a genetic algorithm which was not yet started.");
+                return m_state;
             }
 
-            lock (m_lock)
+            private set
             {
-                m_stopRequested = true;
+                var shouldStop = Stopped != null && m_state != value && value == GeneticAlgorithmState.Stopped;
+
+                m_state = value;
+
+                if (shouldStop)
+                    Stopped.Invoke(this, EventArgs.Empty);
             }
         }
 
-        private bool EvolveOneGeneration()
+        /// <summary>
+        /// Gets a value indicating whether this instance is running.
+        /// </summary>
+        /// <value><c>true</c> if this instance is running; otherwise, <c>false</c>.</value>
+        public bool IsRunning
         {
-            IList<IChromosome> parents = SelectParents();
-            IList<IChromosome> list = Cross(parents);
-            Mutate(list);
-            IList<IChromosome> chromosomes = Reinsert(list, parents);
-            Population.CreateNewGeneration(chromosomes);
-            return EndCurrentGeneration();
+            get
+            {
+                return State == GeneticAlgorithmState.Started || State == GeneticAlgorithmState.Resumed;
+            }
         }
 
-        private bool EndCurrentGeneration()
+        /// <summary>
+        /// Gets or sets the task executor which will be used to execute fitness evaluation.
+        /// </summary>
+        public ITaskExecutor TaskExecutor { get; set; }
+
+        #endregion Properties
+
+        #region Methods
+
+        /// <summary>
+        /// Starts the genetic algorithm using population, fitness, selection, crossover, mutation and termination configured.
+        /// </summary>
+        //        public void Start()
+        //        {
+        //            lock (m_lock)
+        //            {
+        //                State = GeneticAlgorithmState.Started;
+        //                m_stopwatch.Restart();
+        //                Population.CreateInitialGeneration();
+        //                m_stopwatch.Stop();
+        //                TimeEvolving = m_stopwatch.Elapsed;
+        //            }
+        //
+        //            Resume();
+        //        }
+
+        /// <summary>
+        /// Resumes the last evolution of the genetic algorithm.
+        /// <remarks>
+        /// If genetic algorithm was not explicit Stop (calling Stop method), you will need provide a new extended Termination.
+        /// </remarks>
+        /// </summary>
+        //        public void Resume()
+        //        {
+        //            try
+        //            {
+        //                lock (m_lock)
+        //                {
+        //                    m_stopRequested = false;
+        //                }
+        //
+        //                if (Population.GenerationsNumber == 0)
+        //                {
+        //                    throw new InvalidOperationException("Attempt to resume a genetic algorithm which was not yet started.");
+        //                }
+        //
+        //                if (Population.GenerationsNumber > 1)
+        //                {
+        //                    if (Termination.HasReached(this))
+        //                    {
+        //                        throw new InvalidOperationException("Attempt to resume a genetic algorithm with a termination ({0}) already reached. Please, specify a new termination or extend the current one.".With(Termination));
+        //                    }
+        //
+        //                    State = GeneticAlgorithmState.Resumed;
+        //                }
+        //
+        //                //                if (EndCurrentGeneration())
+        //                //                {
+        //                //                    return;
+        //                //                }
+        //                EvaluateFitness();
+        //                if (EndCurrentGeneration())
+        //                {
+        //                    return;
+        //                }
+        //
+        //
+        //                bool terminationConditionReached = false;
+        //
+        //                do
+        //                {
+        //                    if (m_stopRequested)
+        //                    {
+        //                        break;
+        //                    }
+        //
+        //                    m_stopwatch.Restart();
+        //                    //terminationConditionReached = EvolveOneGeneration();
+        //
+        //                    //Evolve all the levels first
+        //                    EvolveOneGeneration();
+        //                    //Evaluate their initial fitness, also manifest the levels
+        //                    EvaluateFitness();
+        //                    //Allow user to interactive select a level
+        //                    IntectiveEvalutionStep();
+        //                    //
+        //                    terminationConditionReached = EndCurrentGeneration();
+        //
+        //                    m_stopwatch.Stop();
+        //                    TimeEvolving += m_stopwatch.Elapsed;
+        //                }
+        //                while (!terminationConditionReached);
+        //            }
+        //            catch
+        //            {
+        //                State = GeneticAlgorithmState.Stopped;
+        //                throw;
+        //            }
+        //        }
+        //
+        //        /// <summary>
+        //        /// Stops the genetic algorithm..
+        //        /// </summary>
+        //        public void Stop()
+        //        {
+        //            if (Population.GenerationsNumber == 0)
+        //            {
+        //                throw new InvalidOperationException("Attempt to stop a genetic algorithm which was not yet started.");
+        //            }
+        //
+        //            lock (m_lock)
+        //            {
+        //                m_stopRequested = true;
+        //            }
+        //        }
+
+        /// <summary>
+        /// Evolve one generation.
+        /// </summary>
+        /// <returns>True if termination has been reached, otherwise false.</returns>
+        public void EvolveOneGeneration()
         {
-            EvaluateFitness();
+            var parents = SelectParents();
+            var offspring = Cross(parents);
+            Mutate(offspring);
+            var newGenerationChromosomes = Reinsert(offspring, parents);
+            Population.CreateNewGeneration(newGenerationChromosomes);
+            //return EndCurrentGeneration();
+        }
+
+        /// <summary>
+        /// Ends the current generation.
+        /// </summary>
+        /// <returns><c>true</c>, if current generation was ended, <c>false</c> otherwise.</returns>
+        public bool EndCurrentGeneration()
+        {
+            //EvaluateFitness();
             Population.EndCurrentGeneration();
-            this.GenerationRan?.Invoke(this, EventArgs.Empty);
+
+            var handler = GenerationRan;
+            handler?.Invoke(this, EventArgs.Empty);
+
             if (Termination.HasReached(this))
             {
                 State = GeneticAlgorithmState.TerminationReached;
-                this.TerminationReached?.Invoke(this, EventArgs.Empty);
+
+                handler = TerminationReached;
+                handler?.Invoke(this, EventArgs.Empty);
+
                 return true;
             }
 
@@ -216,17 +373,26 @@ namespace GeneticSharp.Domain
             return false;
         }
 
-        private void EvaluateFitness()
+        public void IntectiveEvalutionStep()
+        {
+        }
+
+        /// <summary>
+        /// Evaluates the fitness.
+        /// </summary>
+        public void EvaluateFitness()
         {
             try
             {
-                List<IChromosome> list = Population.CurrentGeneration.Chromosomes.Where((IChromosome c) => !c.Fitness.HasValue).ToList();
-                for (int i = 0; i < list.Count; i++)
+                var chromosomesWithoutFitness = Population.CurrentGeneration.Chromosomes.Where(c => !c.Fitness.HasValue).ToList();
+
+                for (int i = 0; i < chromosomesWithoutFitness.Count; i++)
                 {
-                    IChromosome c2 = list[i];
-                    TaskExecutor.Add(delegate
+                    var c = chromosomesWithoutFitness[i];
+
+                    TaskExecutor.Add(() =>
                     {
-                        RunEvaluateFitness(c2);
+                        RunEvaluateFitness(c);
                     });
                 }
 
@@ -241,15 +407,21 @@ namespace GeneticSharp.Domain
                 TaskExecutor.Clear();
             }
 
-            Population.CurrentGeneration.Chromosomes = Population.CurrentGeneration.Chromosomes.OrderByDescending((IChromosome c) => c.Fitness.Value).ToList();
+            Population.CurrentGeneration.Chromosomes
+                = Population.CurrentGeneration.Chromosomes.OrderByDescending(c => c.Fitness.Value).ToList();
         }
 
+        /// <summary>
+        /// Runs the evaluate fitness.
+        /// </summary>
+        /// <param name="chromosome">The chromosome.</param>
         private void RunEvaluateFitness(object chromosome)
         {
-            IChromosome chromosome2 = chromosome as IChromosome;
+            var c = chromosome as IChromosome;
+
             try
             {
-                chromosome2.Fitness = Fitness.Evaluate(chromosome2);
+                c.Fitness = Fitness.Evaluate(c);
             }
             catch (Exception ex)
             {
@@ -257,24 +429,47 @@ namespace GeneticSharp.Domain
             }
         }
 
+        /// <summary>
+        /// Selects the parents.
+        /// </summary>
+        /// <returns>The parents.</returns>
         private IList<IChromosome> SelectParents()
         {
             return Selection.SelectChromosomes(Population.MinSize, Population.CurrentGeneration);
         }
 
+        /// <summary>
+        /// Crosses the specified parents.
+        /// </summary>
+        /// <param name="parents">The parents.</param>
+        /// <returns>The result chromosomes.</returns>
         private IList<IChromosome> Cross(IList<IChromosome> parents)
         {
             return OperatorsStrategy.Cross(Population, Crossover, CrossoverProbability, parents);
         }
 
+        /// <summary>
+        /// Mutate the specified chromosomes.
+        /// </summary>
+        /// <param name="chromosomes">The chromosomes.</param>
         private void Mutate(IList<IChromosome> chromosomes)
         {
             OperatorsStrategy.Mutate(Mutation, MutationProbability, chromosomes);
         }
 
+        /// <summary>
+        /// Reinsert the specified offspring and parents.
+        /// </summary>
+        /// <param name="offspring">The offspring chromosomes.</param>
+        /// <param name="parents">The parents chromosomes.</param>
+        /// <returns>
+        /// The reinserted chromosomes.
+        /// </returns>
         private IList<IChromosome> Reinsert(IList<IChromosome> offspring, IList<IChromosome> parents)
         {
             return Reinsertion.SelectChromosomes(Population, offspring, parents);
         }
+
+        #endregion Methods
     }
 }
