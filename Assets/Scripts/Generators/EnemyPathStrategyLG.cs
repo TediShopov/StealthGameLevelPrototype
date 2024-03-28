@@ -47,7 +47,6 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         LevelChromosomeMono chromosomeMono = data.AddComponent<LevelChromosomeMono>();
         chromosomeMono.Chromosome = (LevelChromosome)chromosome;
 
-        var Obstacles = new GameObject("Obstacles");
         BoxCollider2D box =
             SetupLevelInitials(chromosome, to,
             new GameObject("VisBound"));
@@ -63,26 +62,6 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
 
         Debug.Log("Generation of phenotype finished");
     }
-
-    //    public void AssignPaths(int geneIndex)
-    //    {
-    //        LevelRandom = new System.Random();
-    //        var pathGenerator =
-    //            To.GetComponentInChildren<DiscretePathGenerator>();
-    //        pathGenerator.geneIndex = geneIndex;
-    //        FloodfilledRoadmapGenerator floodfilledRoadmapGenerator = To.GetComponentInChildren<FloodfilledRoadmapGenerator>();
-    //        floodfilledRoadmapGenerator.Init();
-    //        floodfilledRoadmapGenerator.FloodRegions();
-    //        pathGenerator.Roadmap = floodfilledRoadmapGenerator.RoadMap;
-    //        pathGenerator.LevelRandom = LevelRandom;
-    //        PatrolPath[] enemyPaths = To.GetComponentsInChildren<PatrolPath>();
-    //        List<List<Vector2>> paths = pathGenerator.GeneratePaths(EnemyCount);
-    //        for (int i = 0; i < EnemyCount; i++)
-    //        {
-    //            enemyPaths[i].BacktrackPatrolPath = new BacktrackPatrolPath(paths[i]);
-    //        }
-    //        geneIndex = pathGenerator.geneIndex;
-    //    }
 
     public void AssignPaths(int geneIndex)
     {
@@ -110,14 +89,7 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         int ObstacleCount = GetObstaclesToSpawn(ref geneIndex);
         EnemyCount = EntityCount - ObstacleCount;
         var Obstacles = new GameObject("Obstacles");
-        if (EnemyCount + ObstacleCount > EntityCount)
-        {
-            int b = 3;
-        }
-        if ((EnemyCount + ObstacleCount) * 5 + 1 >= chromosome.Length)
-        {
-            int a = 3;
-        }
+        Obstacles.transform.SetParent(To.transform);
 
         //Test for off by oen errors
         for (int i = 0; i < ObstacleCount; i++)

@@ -108,6 +108,7 @@ GameObject:
   - component: {fileID: 3558959309750259787}
   - component: {fileID: 3558959309750259785}
   - component: {fileID: -2856594718441994140}
+  - component: {fileID: 5610776032691538886}
   m_Layer: 0
   m_Name: NewLI
   m_TagString: Untagged
@@ -174,3 +175,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   geneIndex: 0
+--- !u!114 &5610776032691538886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3558959309750259788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae0c960289b63c549a40492c8ec92f4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FitnessValue: 0
+  NewFitnessValue: 0
+  DoEval: 0

@@ -189,7 +189,7 @@ namespace GeneticSharp.Domain
                 return m_state;
             }
 
-            private set
+            set
             {
                 var shouldStop = Stopped != null && m_state != value && value == GeneticAlgorithmState.Stopped;
 

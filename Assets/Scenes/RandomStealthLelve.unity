@@ -1865,8 +1865,8 @@ MonoBehaviour:
   LogExecutionTimes: 10
   TopNLevels: 5
   ExtraSpacing: {x: 0, y: 0}
-  GenetationStep: 1
-  InteractiveStep: 0
+  InteractionFinsihed: 1
+  DoInteractiveAlgorithm: 0
 --- !u!4 &29713734
 Transform:
   m_ObjectHideFlags: 0
@@ -68276,8 +68276,8 @@ MonoBehaviour:
   LogExecutionTimes: 5
   TopNLevels: 5
   ExtraSpacing: {x: 0, y: 0}
-  GenetationStep: 1
-  InteractiveStep: 0
+  InteractionFinsihed: 1
+  DoInteractiveAlgorithm: 0
 --- !u!4 &1414507313
 Transform:
   m_ObjectHideFlags: 0
@@ -71079,22 +71079,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a59df0218d90434e9622a53774d6147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PopulationCount: 10
-  AimedGenerations: 5
-  MutationProb: 0.152
-  CrossoverProb: 1
+  PopulationCount: 5
+  AimedGenerations: 2
+  MutationProb: 0.203
+  CrossoverProb: 0.702
   PhenotypeEvaluator: {fileID: 1136908432}
   Generator: {fileID: 1513753136}
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   RandomizeSeed: 1
-  Seed: 15
+  Seed: 25
   LogExecutions: 0
   LogIndividualExecutions: 0
   LogExecutionTimes: 1
   TopNLevels: 5
   ExtraSpacing: {x: 10, y: 10}
-  GenetationStep: 0
-  InteractiveStep: 0
+  InteractionFinsihed: 0
+  DoInteractiveAlgorithm: 0
 --- !u!4 &1474898339
 Transform:
   m_ObjectHideFlags: 0
@@ -72818,7 +72818,7 @@ MonoBehaviour:
   DisposeNow: 0
   StartingObstacleCount: 3
   NecessaryObstacles: 3
-  EnemyCount: 0
+  EnemyCount: 3
 --- !u!1 &1514961235
 GameObject:
   m_ObjectHideFlags: 0

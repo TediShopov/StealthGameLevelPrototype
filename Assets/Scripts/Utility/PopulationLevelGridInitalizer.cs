@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEditor.TextCore.Text;
 using UnityEngine;
 
 internal class CustomMutators : MutationBase
@@ -241,6 +242,10 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         for (int i = 0; i < chromosomes.Count; i++)
         {
             var levelChromosome = (LevelChromosome)chromosomes[i];
+            if (levelChromosome is null || levelChromosome.FitnessInfo is null)
+            {
+                int b = 3;
+            }
             foreach (var e in levelChromosome.FitnessInfo.FitnessEvaluations)
             {
                 if (e.Phenotype == null)
@@ -279,34 +284,57 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         GeneticAlgorithm.Termination = new GenerationNumberTermination(AimedGenerations);
         GeneticAlgorithm.GenerationRan += Ga_GenerationRan;
         GeneticAlgorithm.TerminationReached += Ga_TerminationReached; ;
-        ProgressIEAlgo = StartCoroutine(WaitForInteractiveEvaluation());
         GeneticAlgorithm.Population.CreateInitialGeneration();
+        GeneticAlgorithm.EvaluateFitness();
+        ProgressIEAlgo = StartCoroutine(WaitForInteractiveEvaluation());
+
         //GeneticAlgorithm.Start();
     }
 
-    public bool GenetationStep = true;
-    public bool InteractiveStep = false;
+    public bool InteractionFinsihed = false;
+    public bool DoInteractiveAlgorithm = false;
 
     private Coroutine ProgressIEAlgo;
 
     private IEnumerator WaitForInteractiveEvaluation()
     {
-        while (true)
+        if (DoInteractiveAlgorithm == false)
         {
-            if (InteractiveStep)
+            GeneticAlgorithm.State = GeneticAlgorithmState.Started;
+            while (GeneticAlgorithm.IsRunning)
             {
-                InteractiveStep = !InteractiveStep;
-                GeneticAlgorithm.EvaluateFitness();
-                GeneticAlgorithm.IntectiveEvalutionStep();
-            }
-
-            if (GenetationStep)
-            {
-                GenetationStep = !GenetationStep;
+                //If interaction has occurred
                 GeneticAlgorithm.EndCurrentGeneration();
                 GeneticAlgorithm.EvolveOneGeneration();
+                //Evaluates fitness but also manifest the level
+                // in the unity scene
+                GeneticAlgorithm.EvaluateFitness();
             }
-            yield return new WaitForEndOfFrame();
+        }
+        else
+        {
+            while (true)
+            {
+                if (InteractionFinsihed)
+                {
+                    //If interaction has occurred
+                    GeneticAlgorithm.EndCurrentGeneration();
+                    GeneticAlgorithm.EvolveOneGeneration();
+                    //Evaluates fitness but also manifest the level
+                    // in the unity scene
+                    GeneticAlgorithm.EvaluateFitness();
+                    InteractionFinsihed = false;
+                }
+                else
+                {
+                    //Should be assigned from outside source
+
+                    //Wait for another eval
+                    GeneticAlgorithm.IntectiveEvalutionStep();
+                }
+
+                yield return new WaitForSecondsRealtime(0.5f);
+            }
         }
     }
 
