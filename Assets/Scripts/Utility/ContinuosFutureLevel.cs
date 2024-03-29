@@ -98,7 +98,8 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
     public void Init()
     {
         Profiler.BeginSample("Continuos Representation");
-        DynamicThreats = this.GetComponentsInChildren<IPredictableThreat>();
+        var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
+        DynamicThreats = level.GetComponentsInChildren<IPredictableThreat>();
         //EnemyPatrolPaths = GetEnemyPatrolPaths();
         //enemyPaths[i].BacktrackPatrolPath = new BacktrackPatrolPath(paths[i]);
         Profiler.EndSample();

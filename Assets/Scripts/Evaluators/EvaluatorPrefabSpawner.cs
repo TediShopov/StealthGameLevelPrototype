@@ -1,4 +1,5 @@
 using GeneticSharp;
+using log4net.Appender;
 using StealthLevelEvaluation;
 using System.Collections;
 using System.Collections.Generic;
@@ -41,6 +42,10 @@ public class EvaluatorPrefabSpawner : MonoBehaviour, IFitness
             }
             var measurementData = new MeasurementsData(Evaluators.Select(x => x.Result).ToArray());
 
+            if (measurementData == null)
+            {
+                int b = 3;
+            }
             //Assign actual measurement to the chromose object
             levelChromosome.Measurements = measurementData;
 
@@ -49,12 +54,19 @@ public class EvaluatorPrefabSpawner : MonoBehaviour, IFitness
 
             //TODO Apply a proper fitness formula
 
+            double eval = 0;
+
             //Attaching fitness evaluation information to the object itself
             if (measurementData.FitnessEvaluations.Any(x => x.IsValidation && float.Parse(x.Value) == 0.0f))
-                return 0;
-            return measurementData.FitnessEvaluations
-                .Where(x => x.IsValidation == false)
-                .Sum(x => float.Parse(x.Value));
+                eval = 0;
+            else
+            {
+                eval = measurementData.FitnessEvaluations
+                    .Where(x => x.IsValidation == false)
+                    .Sum(x => float.Parse(x.Value));
+            }
+
+            return eval;
         }
         else
         {

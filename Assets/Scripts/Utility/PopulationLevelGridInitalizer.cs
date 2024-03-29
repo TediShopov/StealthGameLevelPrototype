@@ -279,7 +279,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         GeneticAlgorithm.GenerationRan += Ga_GenerationRan;
         GeneticAlgorithm.TerminationReached += Ga_TerminationReached; ;
         GeneticAlgorithm.Population.CreateInitialGeneration();
-        GeneticAlgorithm.EvaluateFitness();
+        GeneticAlgorithm.State = GeneticAlgorithmState.Started;
         ProgressIEAlgo = StartCoroutine(WaitForInteractiveEvaluation());
 
         //GeneticAlgorithm.Start();
@@ -294,16 +294,17 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
     {
         if (DoInteractiveAlgorithm == false)
         {
-            GeneticAlgorithm.State = GeneticAlgorithmState.Started;
+            //GeneticAlgorithm.State = GeneticAlgorithmState.Started;
             while (GeneticAlgorithm.IsRunning)
             {
-                //If interaction has occurred
-                bool e = GeneticAlgorithm.EndCurrentGeneration();
-                if (e) break;
-                GeneticAlgorithm.EvolveOneGeneration();
                 //Evaluates fitness but also manifest the level
                 // in the unity scene
+                //If interaction has occurred
                 GeneticAlgorithm.EvaluateFitness();
+                bool e = GeneticAlgorithm.EndCurrentGeneration();
+                if (e) break;
+                GridPopulation.PrepareForNewGeneration();
+                GeneticAlgorithm.EvolveOneGeneration();
             }
         }
         else
@@ -390,13 +391,17 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
             {
                 values += $"{c.GetHashCode()},";
                 MeasurementsData info = ((LevelChromosome)c).Measurements;
-
-                foreach (var e in info.FitnessEvaluations)
+                if(info != null) 
                 {
-                    values += $"{e.Value},";
-                    values += $"{e.Time},";
+                    foreach (var e in info.FitnessEvaluations)
+                    {
+                        values += $"{e.Value},";
+                        values += $"{e.Time},";
+                    }
+                    values += "\n";
+
                 }
-                values += "\n";
+
             }
         }
         string algoName = $"GEN_{AimedGenerations}_POP{PopulationCount}_SZ{LevelProperties.LevelSize}_IndividualTimes";
@@ -418,9 +423,9 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
     {
         Debug.Log($"{GeneticAlgorithm.GenerationsNumber} Generation Ran");
         //Do not discard the last generation before termination
-        if (GeneticAlgorithm.GenerationsNumber != AimedGenerations)
-        {
-            GridPopulation.PrepareForNewGeneration();
-        }
+        //        if (GeneticAlgorithm.GenerationsNumber != AimedGenerations)
+        //        {
+        //            GridPopulation.PrepareForNewGeneration();
+        //        }
     }
 }

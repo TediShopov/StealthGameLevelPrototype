@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3359944139125092206}
   - component: {fileID: 2851684532165398080}
   - component: {fileID: 8610214142821393071}
-  - component: {fileID: -71676436421272087}
+  - component: {fileID: -4794971453629783604}
   m_Layer: 0
   m_Name: Evaluator
   m_TagString: Untagged
@@ -50,8 +50,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: RiskMeasure
   _value: 0
   Phenotype: {fileID: 0}
   RunNow: 0
@@ -69,8 +67,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: Relative Level Coverage
   _value: 0
   Phenotype: {fileID: 0}
   RunNow: 0
@@ -88,8 +84,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: StartEndObservedEvaluation
   _value: 0
   Phenotype: {fileID: 0}
   RunNow: 0
@@ -141,8 +135,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 1
-  IsTerminating: 0
-  Name: StartEndValidator
   _value: 0
   Phenotype: {fileID: 0}
   RunNow: 0
@@ -160,8 +152,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 1
-  IsTerminating: 0
-  Name: AStarToEnd
   _value: 0
   Phenotype: {fileID: 0}
   RunNow: 0
@@ -172,7 +162,7 @@ MonoBehaviour:
   ObstacleLayerMask:
     serializedVersion: 2
     m_Bits: 64
---- !u!114 &-71676436421272087
+--- !u!114 &-4794971453629783604
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -185,9 +175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 1
-  IsTerminating: 0
-  Name: AStarSafePathToEnd
-  _value: 0
+  _value: 
   Phenotype: {fileID: 0}
   RunNow: 0
   RunOnStart: 0

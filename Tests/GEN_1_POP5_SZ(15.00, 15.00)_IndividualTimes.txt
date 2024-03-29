@@ -1,7 +1,0 @@
-Chromosome Hash,AStartPathEvalution Evaluation,AStartPathEvalution Time,DD-RRTWD Evaluation,DD-RRTWD Time,DD-RRT Evaluation,DD-RRT Time,
-88071669,0,1,1,115,1,36,
-619388956,0,0,1,80,1,18,
--987536653,0,0,1,38,0.625,216,
-1097974423,0,0,
-419867411,0,4,
-

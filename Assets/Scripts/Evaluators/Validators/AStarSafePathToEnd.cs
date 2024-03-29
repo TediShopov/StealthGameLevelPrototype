@@ -31,10 +31,11 @@ namespace StealthLevelEvaluation
             Path = aStar.Run(start, end);
             if (Path == null)
             {
-                IsTerminating = true;
+                IsTerminating = false;
                 return 0.0f.ToString();
             }
             Debug.Log($"Path count from A* is: {Path.Count}");
+            IsTerminating = true;
             return 1.0f.ToString();
         }
 
