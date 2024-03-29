@@ -469,9 +469,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 1
-  IsTerminating: 0
-  Name: AStarSafePathEnd
-  _value: 0
+  _value: 
   Phenotype: {fileID: 0}
   RunNow: 1
   RunOnStart: 0
@@ -492,9 +490,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 1
-  IsTerminating: 0
-  Name: AStartPathEvalution
-  _value: 0
+  _value: 
   Phenotype: {fileID: 297360195}
   RunNow: 0
   RunOnStart: 0
@@ -21514,9 +21510,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: Relative Coverage
-  _value: 31.7750186920166
+  _value: 
   Phenotype: {fileID: 1885642088}
   RunNow: 0
   RunOnStart: 0
@@ -21533,9 +21527,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: Risk Measure
-  _value: 0
+  _value: 
   Phenotype: {fileID: 1885642088}
   RunNow: 0
   RunOnStart: 0
@@ -21552,9 +21544,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: Relative FOV Overla
-  _value: -179.5938262939453
+  _value: 
   Phenotype: {fileID: 1885642088}
   RunNow: 0
   RunOnStart: 0
@@ -22972,9 +22962,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 1
-  IsTerminating: 0
-  Name: AStartPathEvalution
-  _value: 0
+  _value: 
   Phenotype: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
@@ -22997,9 +22985,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 1
-  IsTerminating: 0
-  Name: StartEndObstructionValidator
-  _value: 0
+  _value: 
   Phenotype: {fileID: 1505556623}
   RunNow: 0
   RunOnStart: 0
@@ -23016,9 +23002,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: RRTDynamicDifficulty
-  _value: 1
+  _value: 
   Phenotype: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
@@ -33068,9 +33052,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: Relative Coverage
-  _value: 25.56610679626465
+  _value: 
   Phenotype: {fileID: 2010848117}
   RunNow: 0
   RunOnStart: 0
@@ -33087,9 +33069,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: Risk Measure
-  _value: 0
+  _value: 
   Phenotype: {fileID: 2010848117}
   RunNow: 0
   RunOnStart: 0
@@ -33106,9 +33086,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: Relative FOV Overla
-  _value: -176.563232421875
+  _value: 
   Phenotype: {fileID: 2010848117}
   RunNow: 0
   RunOnStart: 0
@@ -39192,9 +39170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 1
-  IsTerminating: 0
-  Name: AStartPathEvalution
-  _value: 0
+  _value: 
   Phenotype: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
@@ -39217,9 +39193,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 1
-  IsTerminating: 0
-  Name: StartEndObstructionValidator
-  _value: 0
+  _value: 
   Phenotype: {fileID: 428907234}
   RunNow: 0
   RunOnStart: 0
@@ -39236,9 +39210,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: RRTDynamicDifficulty
-  _value: 0.17241379618644714
+  _value: 
   Phenotype: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
@@ -46645,9 +46617,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: Relative Coverage
-  _value: 43.82761001586914
+  _value: 
   Phenotype: {fileID: 1114020434}
   RunNow: 0
   RunOnStart: 0
@@ -46664,9 +46634,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: Risk Measure
-  _value: 0.583519458770752
+  _value: 
   Phenotype: {fileID: 1114020434}
   RunNow: 0
   RunOnStart: 0
@@ -46683,9 +46651,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: Relative FOV Overla
-  _value: -25.32248878479004
+  _value: 
   Phenotype: {fileID: 1114020434}
   RunNow: 0
   RunOnStart: 0
@@ -48904,9 +48870,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 1
-  IsTerminating: 0
-  Name: AStartPathEvalution
-  _value: 0
+  _value: 
   Phenotype: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
@@ -48929,9 +48893,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 1
-  IsTerminating: 0
-  Name: StartEndObstructionValidator
-  _value: 0
+  _value: 
   Phenotype: {fileID: 1681857020}
   RunNow: 0
   RunOnStart: 0
@@ -48948,9 +48910,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: RRTDynamicDifficulty
-  _value: 0.8333333134651184
+  _value: 
   Phenotype: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
@@ -71079,19 +71039,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a59df0218d90434e9622a53774d6147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PopulationCount: 5
-  AimedGenerations: 2
+  PopulationCount: 25
+  AimedGenerations: 5
   MutationProb: 0.203
   CrossoverProb: 0.702
   PhenotypeEvaluator: {fileID: 1136908432}
   Generator: {fileID: 1513753136}
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
-  RandomizeSeed: 1
+  RandomizeSeed: 0
   Seed: 25
   LogExecutions: 0
   LogIndividualExecutions: 0
   LogExecutionTimes: 1
-  TopNLevels: 5
+  TopNLevels: 3
   ExtraSpacing: {x: 10, y: 10}
   InteractionFinsihed: 0
   DoInteractiveAlgorithm: 0
@@ -86146,9 +86106,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 1
-  IsTerminating: 0
-  Name: AStartPathEvalution
-  _value: 0
+  _value: 
   Phenotype: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
@@ -86171,9 +86129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 1
-  IsTerminating: 0
-  Name: StartEndObstructionValidator
-  _value: 0
+  _value: 
   Phenotype: {fileID: 796150121}
   RunNow: 0
   RunOnStart: 0
@@ -86190,9 +86146,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: RRTDynamicDifficulty
-  _value: 0.625
+  _value: 
   Phenotype: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
@@ -90568,9 +90522,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: Relative Coverage
-  _value: 34.69685745239258
+  _value: 
   Phenotype: {fileID: 363065591}
   RunNow: 0
   RunOnStart: 0
@@ -90587,9 +90539,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: Risk Measure
-  _value: 0.00964316911995411
+  _value: 
   Phenotype: {fileID: 363065591}
   RunNow: 0
   RunOnStart: 0
@@ -90606,9 +90556,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: Relative FOV Overla
-  _value: -86.51742553710938
+  _value: 
   Phenotype: {fileID: 363065591}
   RunNow: 0
   RunOnStart: 0
@@ -94534,9 +94482,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 1
-  IsTerminating: 0
-  Name: AStartPathEvalution
-  _value: 0
+  _value: 
   Phenotype: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
@@ -94559,9 +94505,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 1
-  IsTerminating: 0
-  Name: StartEndObstructionValidator
-  _value: 0
+  _value: 
   Phenotype: {fileID: 1938398598}
   RunNow: 0
   RunOnStart: 0
@@ -94578,9 +94522,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: RRTDynamicDifficulty
-  _value: 0
+  _value: 
   Phenotype: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
@@ -100205,9 +100147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: Relative Coverage
-  _value: 34.03944396972656
+  _value: 
   Phenotype: {fileID: 612568502}
   RunNow: 0
   RunOnStart: 0
@@ -100224,9 +100164,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: Risk Measure
-  _value: 0
+  _value: 
   Phenotype: {fileID: 612568502}
   RunNow: 0
   RunOnStart: 0
@@ -100243,9 +100181,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0
-  IsTerminating: 0
-  Name: Relative FOV Overla
-  _value: -40.04073715209961
+  _value: 
   Phenotype: {fileID: 612568502}
   RunNow: 0
   RunOnStart: 0

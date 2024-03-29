@@ -15,19 +15,19 @@ public struct RelativeFovData
 
 namespace StealthLevelEvaluation
 {
-    public class RelativeFOVOverlap : PhenotypeFitnessEvaluation
+    public class RelativeFOVOverlap : MeasureMono
     {
         public RelativeFovData Data;
 
         public void Awake()
         {
             if (Phenotype == null)
-                Init(Helpers.SearchForTagUpHierarchy(this.gameObject, "Level"), "RelativeFOV", 0);
+                Init(Helpers.SearchForTagUpHierarchy(this.gameObject, "Level"), "RelativeFOV");
         }
 
-        public override void Init(GameObject phenotype, string name, double defValue)
+        public override void Init(GameObject phenotype, string name)
         {
-            base.Init(phenotype, name, defValue);
+            base.Init(phenotype, name);
             Data.ObstacleLayerMask = LayerMask.GetMask("Obstacle");
             if (Phenotype != null)
                 Data.Grid = Phenotype.GetComponentInChildren<Grid>();
@@ -37,7 +37,7 @@ namespace StealthLevelEvaluation
 
         public override void Init(GameObject phenotype)
         {
-            Init(phenotype, "Relative FOV Overla", 0);
+            Init(phenotype, "Relative FOV Overlap");
         }
 
         //        public RelativeFOVOverlap(GameObject level) : base(level, "Average realtive overlapping areas", 0)
@@ -70,53 +70,53 @@ namespace StealthLevelEvaluation
             return worldPositions;
         }
 
-        public override void OnSelected()
-        {
-            if (Data._debugEnenmies is null) return;
-            if (Data.Grid is null) return;
-            for (int i = 0; i < Data._debugEnenmies.Length - 1; i++)
-            {
-                for (int j = i + 1; j < Data._debugEnenmies.Length; j++)
-                {
-                    var e = Data._debugEnenmies[i];
-                    var othere = Data._debugEnenmies[j];
-                    float VD = e.EnemyProperties.ViewDistance;
-                    float FOV = e.EnemyProperties.FOV;
-                    Bounds bounds = FieldOfView.GetFovBounds(
-                        e.GetFutureTransform(0),
-                    e.EnemyProperties.ViewDistance,
-                    e.EnemyProperties.FOV);
-                    Bounds otherBounds = FieldOfView.GetFovBounds(
-                        othere.GetFutureTransform(0),
-                        othere.EnemyProperties.ViewDistance,
-                        othere.EnemyProperties.FOV);
-                    if (bounds.Intersects(otherBounds))
-                    {
-                        var overlapp = Helpers.IntersectBounds(bounds, otherBounds);
-                        DebugDrawDiscreteBounds(overlapp, Color.magenta);
-                        List<Vector3Int> visibleCoordinates =
-                            DiscretBoundsCells(overlapp)
-                            .Where(x =>
-                            {
-                                var pos = Data.Grid.GetCellCenterWorld(x);
-                                bool one = FieldOfView.TestCollision(pos, e.GetFutureTransform(0), FOV, VD, Data.ObstacleLayerMask);
-                                bool other = FieldOfView.TestCollision(pos, othere.GetFutureTransform(0), FOV, VD, Data.ObstacleLayerMask);
-                                if (one && other)
-                                {
-                                    Gizmos.color = Color.green;
-                                    Gizmos.DrawSphere(pos, 0.1f);
-                                }
-                                return one && other;
-                            }).ToList();
-                    }
-                }
-            }
-        }
+        //        public override void OnSelected()
+        //        {
+        //            if (Data._debugEnenmies is null) return;
+        //            if (Data.Grid is null) return;
+        //            for (int i = 0; i < Data._debugEnenmies.Length - 1; i++)
+        //            {
+        //                for (int j = i + 1; j < Data._debugEnenmies.Length; j++)
+        //                {
+        //                    var e = Data._debugEnenmies[i];
+        //                    var othere = Data._debugEnenmies[j];
+        //                    float VD = e.EnemyProperties.ViewDistance;
+        //                    float FOV = e.EnemyProperties.FOV;
+        //                    Bounds bounds = FieldOfView.GetFovBounds(
+        //                        e.GetFutureTransform(0),
+        //                    e.EnemyProperties.ViewDistance,
+        //                    e.EnemyProperties.FOV);
+        //                    Bounds otherBounds = FieldOfView.GetFovBounds(
+        //                        othere.GetFutureTransform(0),
+        //                        othere.EnemyProperties.ViewDistance,
+        //                        othere.EnemyProperties.FOV);
+        //                    if (bounds.Intersects(otherBounds))
+        //                    {
+        //                        var overlapp = Helpers.IntersectBounds(bounds, otherBounds);
+        //                        DebugDrawDiscreteBounds(overlapp, Color.magenta);
+        //                        List<Vector3Int> visibleCoordinates =
+        //                            DiscretBoundsCells(overlapp)
+        //                            .Where(x =>
+        //                            {
+        //                                var pos = Data.Grid.GetCellCenterWorld(x);
+        //                                bool one = FieldOfView.TestCollision(pos, e.GetFutureTransform(0), FOV, VD, Data.ObstacleLayerMask);
+        //                                bool other = FieldOfView.TestCollision(pos, othere.GetFutureTransform(0), FOV, VD, Data.ObstacleLayerMask);
+        //                                if (one && other)
+        //                                {
+        //                                    Gizmos.color = Color.green;
+        //                                    Gizmos.DrawSphere(pos, 0.1f);
+        //                                }
+        //                                return one && other;
+        //                            }).ToList();
+        //                    }
+        //                }
+        //            }
+        //        }
 
         private float VD;
         private float FOV;
 
-        public override float Evaluate()
+        public override string Evaluate()
         {
             //Get Future level instance
             var futureLevel = Phenotype.GetComponentInChildren<IFutureLevel>(false);
@@ -133,7 +133,8 @@ namespace StealthLevelEvaluation
             Helpers.LogExecutionTime(() => accumulatedOverlapp = OverlapRelativeToDiscreteMaxFOV(futureLevel, maxTime, maxOverlappArea), "New Overlapp");
 
             float avgRelOverlapp = accumulatedOverlapp / maxTime;
-            return -avgRelOverlapp * 100;
+
+            return avgRelOverlapp.ToString();
         }
 
         private HashSet<Vector3Int> VisibleCells(Bounds bounds, FutureTransform ft)

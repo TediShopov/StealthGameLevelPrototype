@@ -6,7 +6,7 @@ using UnityEngine;
 
 //Provides negative fitness depening on how much spawn or destination areas
 // are observed by guard FOVS
-public class StartEndDestinationObserveTime : PhenotypeFitnessEvaluation
+public class StartEndDestinationObserveTime : MeasureMono
 {
     private IFutureLevel FutureLevel;
     private GameObject Start;
@@ -14,11 +14,10 @@ public class StartEndDestinationObserveTime : PhenotypeFitnessEvaluation
     public AnimationCurve PenalizationCurve;
     public float WorstFitnessPenalty = 1000;
 
-    public override float Evaluate()
+    public override string Evaluate()
     {
         float percetangeOfTimeFramesObserved = PercentageOfTimeFramesObserved(100);
-        float fitness = -WorstFitnessPenalty * PenalizationCurve.Evaluate(percetangeOfTimeFramesObserved);
-        return fitness;
+        return percetangeOfTimeFramesObserved.ToString();
     }
 
     //     private float PercentageOfTimeFramesObserved(float maxTime)
@@ -89,6 +88,7 @@ public class StartEndDestinationObserveTime : PhenotypeFitnessEvaluation
     public override void Init(GameObject phenotype)
     {
         Phenotype = phenotype;
+        Name = "StartEndObservationTime";
         FutureLevel = Phenotype.GetComponentInChildren<IFutureLevel>();
         Start = Phenotype.GetComponentInChildren<CharacterController2D>().gameObject;
         End = Phenotype.GetComponentInChildren<WinTrigger>().gameObject;

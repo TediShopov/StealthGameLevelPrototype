@@ -5,23 +5,23 @@ using UnityEngine;
 
 namespace StealthLevelEvaluation
 {
-    public class RiskMeasure : PhenotypeFitnessEvaluation
+    public class RiskMeasure : MeasureMono
     {
         //            public RiskMeasure(GameObject level) : base(level, "Risk Measure of solutions", 0)
         //            {
         //            }
 
-        public override void Init(GameObject phenotype, string name, double defValue)
+        public override void Init(GameObject phenotype, string name)
         {
-            base.Init(phenotype, name, defValue);
+            base.Init(phenotype, name);
         }
 
         public override void Init(GameObject phenotype)
         {
-            Init(phenotype, "Risk Measure", 0);
+            Init(phenotype, "Risk Measure");
         }
 
-        public override float Evaluate()
+        public override string Evaluate()
         {
             var RRTVisualizers = Phenotype.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
             var patrols = Phenotype.GetComponentsInChildren<PatrolEnemyMono>()
@@ -45,9 +45,9 @@ namespace StealthLevelEvaluation
                     succeeded++;
                 }
             }
-            if (succeeded == 0) { return 0; }
+            if (succeeded == 0) { return "0"; }
             float avg = total / (float)succeeded;
-            return avg;
+            return avg.ToString();
         }
     }
 }

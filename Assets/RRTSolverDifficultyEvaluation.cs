@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RRTSolverDifficultyEvaluation : PhenotypeFitnessEvaluation
+public class RRTSolverDifficultyEvaluation : MeasureMono
 {
     //Solver prefab of object
     public GameObject RRTPrefab;
@@ -11,9 +11,9 @@ public class RRTSolverDifficultyEvaluation : PhenotypeFitnessEvaluation
     public int DeisredSuccesses;
     public int MaxRRTAttempts;
 
-    public override float Evaluate()
+    public override string Evaluate()
     {
-        return CalculateDifficultyFindingSolution();
+        return CalculateDifficultyFindingSolution().ToString();
     }
 
     public override void Init(GameObject phenotype)

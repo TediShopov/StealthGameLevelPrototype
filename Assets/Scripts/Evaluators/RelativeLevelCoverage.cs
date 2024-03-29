@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace StealthLevelEvaluation
 {
-    public class RelativeLevelCoverage : PhenotypeFitnessEvaluation
+    public class RelativeLevelCoverage : MeasureMono
     {
         private Grid Grid;
         private LayerMask ObstacleLayerMask;
@@ -15,16 +15,16 @@ namespace StealthLevelEvaluation
         //                Grid = Phenotype.GetComponentInChildren<Grid>(false);
         //                ObstacleLayerMask = LayerMask.GetMask("Obstacle");
         //            }
-        public override void Init(GameObject phenotype, string name, double defValue)
+        public override void Init(GameObject phenotype, string name)
         {
-            base.Init(phenotype, name, defValue);
+            base.Init(phenotype, name);
             Grid = Phenotype.GetComponentInChildren<Grid>(false);
             ObstacleLayerMask = LayerMask.GetMask("Obstacle");
         }
 
         public override void Init(GameObject phenotype)
         {
-            Init(phenotype, "Relative Coverage", 0);
+            Init(phenotype, "Relative Coverage");
         }
 
         //        private int DiscreteNotCollidingCells(ContinuosFutureLevel futureLevel, ref NativeGrid<bool> staticObstacle)
@@ -65,7 +65,7 @@ namespace StealthLevelEvaluation
             return UniqueVisibleCells.Count;
         }
 
-        public override float Evaluate()
+        public override string Evaluate()
         {
             //Get Future level instance
             var futureLevel = Phenotype.GetComponentInChildren<IFutureLevel>(false);
@@ -84,7 +84,7 @@ namespace StealthLevelEvaluation
             int colliding = DiscreteCollidingCells((ContinuosFutureLevel)futureLevel, Helpers.GetLevelBounds(Phenotype));
             colliding -= obstacleCount;
             float relCoverage = (float)colliding / (float)maxCells;
-            return relCoverage * 100;
+            return relCoverage.ToString();
         }
     }
 }

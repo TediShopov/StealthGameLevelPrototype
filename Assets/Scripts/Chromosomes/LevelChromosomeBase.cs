@@ -11,5 +11,5 @@ public abstract class LevelChromosomeBase : ChromosomeBase
     }
 
     public LevelPhenotypeGenerator PhenotypeGenerator;
-    public FitnessInfo FitnessInfo { get; set; }
+    public MeasurementsData Measurements { get; set; }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace StealthLevelEvaluation
 {
-    public class AStarSafePathToEnd : PhenotypeFitnessEvaluation
+    public class AStarSafePathToEnd : MeasureMono
     {
         private Vector2Int StartCoord;
         private Vector2Int GoalCoord;
@@ -21,7 +21,7 @@ namespace StealthLevelEvaluation
         //a level future
         private NativeGrid<bool> LevelGrid;
 
-        public override float Evaluate()
+        public override string Evaluate()
         {
             AStar aStar = new AStar(LevelGrid);
             Vector2Int startNativeCoord = LevelGrid.GetNativeCoord(StartCoord);
@@ -32,10 +32,10 @@ namespace StealthLevelEvaluation
             if (Path == null)
             {
                 IsTerminating = true;
-                return 0.0f;
+                return 0.0f.ToString();
             }
             Debug.Log($"Path count from A* is: {Path.Count}");
-            return 2000;
+            return 1.0f.ToString();
         }
 
         public override void Init(GameObject phenotype)

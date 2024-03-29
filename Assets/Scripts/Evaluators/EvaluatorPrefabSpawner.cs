@@ -10,7 +10,7 @@ public class EvaluatorPrefabSpawner : MonoBehaviour, IFitness
 {
     public GameObject EvaluatorHolder;
     public GridObjectLayout GridLevelObjects;
-    //private List<PhenotypeFitnessEvaluation> Evaluators = new List<PhenotypeFitnessEvaluation>();
+    //private List<MeasureMono> Evaluators = new List<MeasureMono>();
 
     public double Evaluate(IChromosome chromosome)
     {
@@ -28,23 +28,33 @@ public class EvaluatorPrefabSpawner : MonoBehaviour, IFitness
 
             var evaluator = Instantiate(EvaluatorHolder, levelObject.transform);
             //Get all evaluators from  the prefab
-            PhenotypeFitnessEvaluation[] Evaluators = evaluator.GetComponents<PhenotypeFitnessEvaluation>();
-            var info = FitnessInfoVisualizer.AttachInfo(levelObject.gameObject, new FitnessInfo());
+            MeasureMono[] Evaluators = evaluator.GetComponents<MeasureMono>();
 
             //Run Validators
             Evaluators = Evaluators.OrderByDescending(x => x.IsValidator).ToArray();
             foreach (var e in Evaluators)
             {
                 e.Init(levelObject.gameObject);
-                e.Evaluate();
-                info.FitnessEvaluations.Add(e);
+                e.DoMeasure(levelObject.gameObject);
                 if (e.IsTerminating)
                     break;
             }
+            var measurementData = new MeasurementsData(Evaluators.Select(x => x.Result).ToArray());
 
-            levelChromosome.FitnessInfo = info;
+            //Assign actual measurement to the chromose object
+            levelChromosome.Measurements = measurementData;
+
+            //Attach mono behaviour to visualize the measurements
+            ChromoseMeasurementsVisualizer.AttachDataVisualizer(levelObject.gameObject);
+
+            //TODO Apply a proper fitness formula
+
             //Attaching fitness evaluation information to the object itself
-            return info.FitnessEvaluations.Sum(x => x.Value);
+            if (measurementData.FitnessEvaluations.Any(x => x.IsValidation && float.Parse(x.Value) == 0.0f))
+                return 0;
+            return measurementData.FitnessEvaluations
+                .Where(x => x.IsValidation == false)
+                .Sum(x => float.Parse(x.Value));
         }
         else
         {

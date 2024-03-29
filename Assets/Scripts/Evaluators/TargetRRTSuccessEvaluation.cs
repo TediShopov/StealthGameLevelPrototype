@@ -13,8 +13,8 @@ using StealthLevelEvaluation;
 //{
 //    public GridLayout GridPopulation;
 //
-//    //private List<PhenotypeFitnessEvaluation> Evaluators = new List<PhenotypeFitnessEvaluation>();
-//    private PhenotypeFitnessEvaluation[] Evaluators;
+//    //private List<MeasureMono> Evaluators = new List<MeasureMono>();
+//    private MeasureMono[] Evaluators;
 //
 //    public double Evaluate(IChromosome chromosome)
 //    {
@@ -24,9 +24,9 @@ using StealthLevelEvaluation;
 //        generator.Generate(levelChromose);
 //
 //        //Get all evaluators from  the prefab
-//        Evaluators = this.GetComponents<PhenotypeFitnessEvaluation>();
+//        Evaluators = this.GetComponents<MeasureMono>();
 //        FitnessInfo info = new FitnessInfo();
-//        var infoObj = FitnessInfoVisualizer.AttachInfo(generator.gameObject, info);
+//        var infoObj = ChromoseMeasurementsVisualizer.AttachDataVisualizer(generator.gameObject, info);
 //
 //        foreach (var e in Evaluators)
 //        {

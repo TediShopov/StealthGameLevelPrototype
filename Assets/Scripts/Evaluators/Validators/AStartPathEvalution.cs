@@ -163,7 +163,7 @@ public class AStar
 
 namespace StealthLevelEvaluation
 {
-    public class AStartPathEvalution : PhenotypeFitnessEvaluation
+    public class AStartPathEvalution : MeasureMono
     {
         public Vector2Int StartCoord;
         public Vector2Int GoalCoord;
@@ -197,7 +197,7 @@ namespace StealthLevelEvaluation
             LevelGrid.SetAll(SetObstacleGrid);
         }
 
-        public override float Evaluate()
+        public override string Evaluate()
         {
             AStar aStar = new AStar(LevelGrid);
             Vector2Int startNativeCoord = LevelGrid.GetNativeCoord(StartCoord);
@@ -208,10 +208,10 @@ namespace StealthLevelEvaluation
             if (Path == null)
             {
                 IsTerminating = true;
-                return 0.0f;
+                return 0.0f.ToString();
             }
             Debug.Log($"Path count from A* is: {Path.Count}");
-            return 0.0f;
+            return 0.0f.ToString();
         }
 
         public void DrawLevelGrid()

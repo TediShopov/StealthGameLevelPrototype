@@ -221,8 +221,8 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
 
             //Assign fitness info object showing the exact values achieved
             //without need to recalcuate (RRT may produce different resutls)
-            var infoObj = FitnessInfoVisualizer.AttachInfo(level.gameObject,
-                levelChromosome.FitnessInfo);
+            //            var infoObj = ChromoseMeasurementsVisualizer.AttachDataVisualizer(level.gameObject,
+            //                levelChromosome.FitnessInfo);
 
             //Try to recreate evaluators with given data
             //            GameObject evaluator = new GameObject("Evaluator");
@@ -236,22 +236,16 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
 
     private void ChekcAvailabilitOfFitnessInfo()
     {
-        List<IChromosome> chromosomes = this.GeneticAlgorithm.Population.Generations.SelectMany(x => x.Chromosomes).ToList();
+        List<IChromosome> chromosomes = this.GeneticAlgorithm.Population.Generations
+            .SelectMany(x => x.Chromosomes).ToList();
         //Start with y down
         Vector3 TopLevelsPos = this.transform.position - new Vector3(0, 30, 0);
         for (int i = 0; i < chromosomes.Count; i++)
         {
             var levelChromosome = (LevelChromosome)chromosomes[i];
-            if (levelChromosome is null || levelChromosome.FitnessInfo is null)
+            if (levelChromosome is null || levelChromosome.Measurements is null)
             {
                 int b = 3;
-            }
-            foreach (var e in levelChromosome.FitnessInfo.FitnessEvaluations)
-            {
-                if (e.Phenotype == null)
-                {
-                    int a = 3;
-                }
             }
         }
     }
@@ -304,7 +298,8 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
             while (GeneticAlgorithm.IsRunning)
             {
                 //If interaction has occurred
-                GeneticAlgorithm.EndCurrentGeneration();
+                bool e = GeneticAlgorithm.EndCurrentGeneration();
+                if (e) break;
                 GeneticAlgorithm.EvolveOneGeneration();
                 //Evaluates fitness but also manifest the level
                 // in the unity scene
@@ -359,29 +354,29 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         return topN;
     }
 
-    private void LogFinessFunctionInfo()
-    {
-        foreach (var gen in GeneticAlgorithm.Population.Generations)
-        {
-            foreach (var c in gen.Chromosomes)
-            {
-                FitnessInfo info = ((LevelChromosome)c).FitnessInfo;
-                string chromosomeInfo = $"Generation {gen.Number} - Fitness {c.Fitness}";
-                foreach (var e in info.FitnessEvaluations)
-                {
-                    chromosomeInfo += $" {e.Name} {e.Value} {e.Time}  ";
-                }
-                Debug.Log(chromosomeInfo);
-            }
-        }
-    }
+    //    private void LogFinessFunctionInfo()
+    //    {
+    //        foreach (var gen in GeneticAlgorithm.Population.Generations)
+    //        {
+    //            foreach (var c in gen.Chromosomes)
+    //            {
+    //                MeasurementsData info = ((LevelChromosome)c).FitnessInfo;
+    //                string chromosomeInfo = $"Generation {gen.Number} - Fitness {c.Fitness}";
+    //                foreach (var e in info.FitnessEvaluations)
+    //                {
+    //                    chromosomeInfo += $" {e.Name} {e.Value} {e.Time}  ";
+    //                }
+    //                Debug.Log(chromosomeInfo);
+    //            }
+    //        }
+    //    }
 
     private void OutputEvaluationTimesToCsv()
     {
         StringBuilder header = new StringBuilder();
         var bestInfo = (LevelChromosome)GeneticAlgorithm.BestChromosome;
         header.Append($"Chromosome Hash,");
-        foreach (var e in bestInfo.FitnessInfo.FitnessEvaluations)
+        foreach (var e in bestInfo.Measurements.FitnessEvaluations)
         {
             header.Append($"{e.Name} Evaluation,");
             header.Append($"{e.Name} Time,");
@@ -394,7 +389,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
             foreach (var c in gen.Chromosomes)
             {
                 values += $"{c.GetHashCode()},";
-                FitnessInfo info = ((LevelChromosome)c).FitnessInfo;
+                MeasurementsData info = ((LevelChromosome)c).Measurements;
 
                 foreach (var e in info.FitnessEvaluations)
                 {

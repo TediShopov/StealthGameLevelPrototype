@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace StealthLevelEvaluation
 {
-    public class StartEndObstructionValidator : PhenotypeFitnessEvaluation
+    public class StartEndObstructionValidator : MeasureMono
     {
-        public override float Evaluate()
+        public override string Evaluate()
         {
             var start = Phenotype.GetComponentInChildren<CharacterController2D>().gameObject;
             ContactFilter2D contactFilter2D = new ContactFilter2D
@@ -18,15 +18,15 @@ namespace StealthLevelEvaluation
             if (OverlapWithCollider2d(start, contactFilter2D))
             {
                 IsTerminating = true;
-                return -1000;
+                return (-1000).ToString();
             }
             var end = Phenotype.GetComponentInChildren<WinTrigger>().gameObject;
             if (OverlapWithCollider2d(end, contactFilter2D))
             {
                 IsTerminating = true;
-                return -1000;
+                return (-1000).ToString();
             }
-            return 0;
+            return 0.ToString();
         }
 
         private bool OverlapWithCollider2d(GameObject gameObject, ContactFilter2D filter)
@@ -48,16 +48,6 @@ namespace StealthLevelEvaluation
             Name = "StartEndObstructionValidator";
             IsValidator = true;
             Phenotype = phenotype;
-        }
-
-        // Start is called before the first frame update
-        private void Start()
-        {
-        }
-
-        // Update is called once per frame
-        private void Update()
-        {
         }
     }
 }
