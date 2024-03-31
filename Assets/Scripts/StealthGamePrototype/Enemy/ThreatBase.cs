@@ -9,6 +9,8 @@ public interface IPredictableThreat
 
     public void TimeMove(float deltaTime);
 
+    public void Reset();
+
     //Get the 2d posiiton and direction of the threat
     public FutureTransform GetTransform();
 

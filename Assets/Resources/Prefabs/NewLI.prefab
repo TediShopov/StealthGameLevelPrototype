@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 3558959309090012899}
   - component: {fileID: 3558959309090012900}
   - component: {fileID: 3558959309090012896}
-  - component: {fileID: 5550602329461504337}
   m_Layer: 0
   m_Name: DiscretizeLevel
   m_TagString: Untagged
@@ -76,26 +75,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   DoFloodFill: 0
---- !u!114 &5550602329461504337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3558959309090012902}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d481d66acc9e734787481dd40dd5840, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObstacleLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  BoundaryLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
-  _step: 0.2
-  _iter: 150
 --- !u!1 &3558959309750259788
 GameObject:
   m_ObjectHideFlags: 0
@@ -109,6 +88,7 @@ GameObject:
   - component: {fileID: 3558959309750259785}
   - component: {fileID: -2856594718441994140}
   - component: {fileID: 5610776032691538886}
+  - component: {fileID: 6934552389426757851}
   m_Layer: 0
   m_Name: NewLI
   m_TagString: Untagged
@@ -190,3 +170,25 @@ MonoBehaviour:
   FitnessValue: 0
   NewFitnessValue: 0
   DoEval: 0
+--- !u!114 &6934552389426757851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3558959309750259788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d481d66acc9e734787481dd40dd5840, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  BoundaryLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  _step: 0.2
+  _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0

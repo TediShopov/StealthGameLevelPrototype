@@ -23,6 +23,12 @@ public class BacktrackPatrolPath
         relPathPostion = startPos;
     }
 
+    public void Reset()
+    {
+        relPathPostion = 0;
+        TraverseForward = true;
+    }
+
     public BacktrackPatrolPath(BacktrackPatrolPath other)
     {
         this.Copy(other);

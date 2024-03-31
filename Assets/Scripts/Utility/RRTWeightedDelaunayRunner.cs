@@ -85,6 +85,7 @@ public class RRTWeightedDelaunayRunner : RapidlyExploringRandomTreeVisualizer
         var boundaryVertices =
                 GetSquareColliderVertices(boundaryBox).
                 Select(x => new Point2d(x.x, x.y))
+
                 .ToArray();
 
         var polygonBoundary = new Polygon2<EEK>(boundaryVertices);
@@ -166,8 +167,8 @@ public class RRTWeightedDelaunayRunner : RapidlyExploringRandomTreeVisualizer
                         {
                             if (IsFullyContained(
                                 poly.GetBoundary(), levelPolygon.GetBoundary()))
-                                poly.Print();
                             {
+                                poly.Print();
                                 if (!poly.IsClockWise)
                                     poly.Reverse();
                                 levelPolygon.AddHole(poly.GetBoundary());

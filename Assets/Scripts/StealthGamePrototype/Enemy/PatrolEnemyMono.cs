@@ -39,12 +39,8 @@ public class PatrolEnemyMono : MonoBehaviour, IPredictableThreat
 
     private void FixedUpdate()
     {
-        if (Patrol == null) return;
-        this.TimeMove(UnityEngine.Time.fixedDeltaTime);
-        _rigidBody2D.position =
-            GetTransform().Position;
-        transform.rotation =
-            Quaternion.Euler(0, 0, Helpers.GetAngleFromVectorFloat(GetTransform().Direction));
+        //        if (Patrol == null) return;
+        //        this.TimeMove(UnityEngine.Time.fixedDeltaTime);
     }
 
     //    public void DrawAllSegmentes()
@@ -80,6 +76,10 @@ public class PatrolEnemyMono : MonoBehaviour, IPredictableThreat
     public void TimeMove(float deltaTime)
     {
         Patrol.TimeMove(deltaTime);
+        _rigidBody2D.position =
+            GetTransform().Position;
+        transform.rotation =
+            Quaternion.Euler(0, 0, Helpers.GetAngleFromVectorFloat(GetTransform().Direction));
     }
 
     public FutureTransform GetTransform()
@@ -99,5 +99,10 @@ public class PatrolEnemyMono : MonoBehaviour, IPredictableThreat
     {
         if (Patrol == null) return new Bounds();
         return Patrol.GetBounds();
+    }
+
+    public void Reset()
+    {
+        Patrol?.Reset();
     }
 }

@@ -70,6 +70,14 @@ public class Patrol : IPredictableThreat
         return Transform;
     }
 
+    public void Reset()
+    {
+        if (Route != null)
+        {
+            Route.Reset();
+        }
+    }
+
     public bool TestThreat(Vector2 collision)
     {
         return FieldOfView.TestCollision(
@@ -77,7 +85,7 @@ public class Patrol : IPredictableThreat
             Transform,
             Properties.FOV,
             Properties.ViewDistance,
-            LayerMask.GetMask("Obstacles")
+            LayerMask.GetMask("Obstacle")
             );
     }
 

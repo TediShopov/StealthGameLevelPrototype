@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using PlasticPipe.Client;
 using System;
 using System.Collections;
@@ -19,7 +20,7 @@ public class DynamicLevelSimulation
       Mathf.FloorToInt((To - From) / (float)TimeStep);
 
     public float CurrentTime = 0;
-    public bool IsFinished => CurrentTime >= To;
+    public bool IsFinished => CurrentTime > To;
 
     public DynamicLevelSimulation(
         IEnumerable<IPredictableThreat> threats,
@@ -28,6 +29,8 @@ public class DynamicLevelSimulation
         float timeStep)
     {
         Threats = threats;
+        foreach (var t in Threats)
+            t.Reset();
         From = from;
         To = to;
         TimeStep = timeStep;
@@ -59,6 +62,9 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
     public float Step => _step;
 
     public float Iterations => _iter;
+    public bool EnableSetLevel = true;
+    public bool EnableDiscreteTimes = true;
+    public float SetTime = 0.0f;
 
     public DynamicLevelSimulation GetFullSimulation()
     {
@@ -102,6 +108,7 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
         DynamicThreats = level.GetComponentsInChildren<IPredictableThreat>();
         //EnemyPatrolPaths = GetEnemyPatrolPaths();
         //enemyPaths[i].BacktrackPatrolPath = new BacktrackPatrolPath(paths[i]);
+        StartCoroutine(RefreshLevelSolutionObjects());
         Profiler.EndSample();
     }
 
@@ -245,6 +252,12 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
     //
     //    }
 
+    public Vector2 GetLerpepPositionInTime(Vector3 startT, Vector3 endT, float t)
+    {
+        float rel = Mathf.InverseLerp(startT.z, endT.z, t);
+        return Vector2.Lerp(startT, endT, rel);
+    }
+
     public bool IsColliding(Vector3 from, Vector3 to)
     {
         if (Physics2D.Linecast(from, to, ObstacleLayerMask))
@@ -253,14 +266,14 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
         var simulation = new DynamicLevelSimulation(DynamicThreats, from.z, to.z, Step);
         while (!simulation.IsFinished)
         {
-            simulation.Progress();
             //Get 2d position
-            float passedTime = simulation.CurrentTime - from.z;
-            float rel = Mathf.InverseLerp(from.z, to.z, passedTime);
+            //float passedTime = simulation.CurrentTime - from.z;
+            float rel = Mathf.InverseLerp(from.z, to.z, simulation.CurrentTime);
             Vector2 positionInTime = Vector2.Lerp(from, to, rel);
             foreach (var threat in simulation.Threats)
                 if (threat.TestThreat(positionInTime))
                     return true;
+            simulation.Progress();
         }
         //No threats to any of the interpolatied possition
         //in the simulation
@@ -277,5 +290,78 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
     public float GetMaxSimulationTime()
     {
         return _step * _iter;
+    }
+
+    private List<List<Vector3>> SolutionPaths;
+
+    private IEnumerator RefreshLevelSolutionObjects()
+    {
+        while (true)
+        {
+            var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
+            var rrts = level.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
+
+            SolutionPaths = rrts.Select(x => x.RRT)
+               .Where(x => x.Succeeded())
+               .Select(x => x.ReconstructPathToSolution())
+               .ToList();
+
+            yield return new WaitForSecondsRealtime(2.0f);
+        }
+    }
+
+    private Vector2 GetPosition(List<Vector3> solutionPath, float time)
+    {
+        if (time > solutionPath[solutionPath.Count - 1].z)
+            return Vector2.zero;
+
+        int index = 0;
+        while (index <= solutionPath.Count - 1)
+        {
+            //If current time is smaller than the time of the path in the next node
+            if (time < solutionPath[index].z)
+            {
+                if (index == 0) return Vector2.zero;
+
+                //Position is on this segment
+                float relTime = Mathf.InverseLerp(solutionPath[index - 1].z, solutionPath[index].z, time);
+                Vector2 pos = Vector2.Lerp(solutionPath[index - 1], solutionPath[index], relTime);
+                return pos;
+            }
+            index++;
+        }
+        return Vector2.zero;
+    }
+
+    public void Update()
+    {
+        foreach (var threa in DynamicThreats)
+        {
+            threa.Reset();
+            if (EnableDiscreteTimes)
+            {
+                float discreteTime = Step * Mathf.CeilToInt(SetTime / Step);
+                threa.TimeMove(discreteTime);
+            }
+            else
+            {
+                threa.TimeMove(SetTime);
+            }
+        }
+    }
+
+    public void OnDrawGizmosSelected()
+    {
+        if (EnableSetLevel == false) return;
+        foreach (var path in SolutionPaths)
+        {
+            Vector2 position = GetPosition(path, SetTime);
+            if (EnableDiscreteTimes)
+            {
+                float discreteTime = Step * Mathf.CeilToInt(SetTime / Step);
+                position = GetPosition(path, discreteTime);
+            }
+            Gizmos.DrawSphere(position, 0.1f);
+        }
     }
 }

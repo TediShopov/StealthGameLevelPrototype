@@ -999,6 +999,8 @@ MonoBehaviour:
     m_Bits: 8
   _step: 0.2
   _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0
 --- !u!114 &12652590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1594,6 +1596,8 @@ MonoBehaviour:
     m_Bits: 8
   _step: 0.2
   _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0
 --- !u!114 &24762153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9320,6 +9324,8 @@ MonoBehaviour:
     m_Bits: 8
   _step: 0.2
   _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0
 --- !u!114 &204313699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18526,6 +18532,8 @@ MonoBehaviour:
     m_Bits: 8
   _step: 0.2
   _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0
 --- !u!114 &400735140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25073,6 +25081,8 @@ MonoBehaviour:
     m_Bits: 8
   _step: 0.2
   _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0
 --- !u!114 &537142191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25927,6 +25937,8 @@ MonoBehaviour:
     m_Bits: 8
   _step: 0.2
   _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0
 --- !u!114 &553397207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28050,6 +28062,8 @@ MonoBehaviour:
     m_Bits: 8
   _step: 0.2
   _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0
 --- !u!114 &585856836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30397,6 +30411,8 @@ MonoBehaviour:
     m_Bits: 8
   _step: 0.2
   _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0
 --- !u!114 &629026633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35401,6 +35417,8 @@ MonoBehaviour:
     m_Bits: 8
   _step: 0.2
   _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0
 --- !u!114 &721043078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54804,6 +54822,8 @@ MonoBehaviour:
     m_Bits: 8
   _step: 0.2
   _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0
 --- !u!114 &1132724367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54954,7 +54974,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92e810e9c429cca439e1ade5fa65a8ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EvaluatorHolder: {fileID: 4520497855799095119, guid: 26d868a179738e64c9eb06fa25f7d6fd, type: 3}
+  EvaluatorHolder: {fileID: 4520497855799095119, guid: b308cca844b73a746b3f75733a61eb75, type: 3}
 --- !u!4 &1136908433
 Transform:
   m_ObjectHideFlags: 0
@@ -56682,6 +56702,8 @@ MonoBehaviour:
     m_Bits: 8
   _step: 0.2
   _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0
 --- !u!114 &1171173794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -56834,6 +56856,8 @@ MonoBehaviour:
     m_Bits: 8
   _step: 0.2
   _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0
 --- !u!114 &1174613137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59299,6 +59323,8 @@ MonoBehaviour:
     m_Bits: 8
   _step: 0.2
   _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0
 --- !u!114 &1221474436
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63346,6 +63372,8 @@ MonoBehaviour:
     m_Bits: 8
   _step: 0.2
   _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0
 --- !u!114 &1319571394
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65458,6 +65486,8 @@ MonoBehaviour:
     m_Bits: 8
   _step: 0.2
   _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0
 --- !u!114 &1361014507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66595,6 +66625,8 @@ MonoBehaviour:
     m_Bits: 8
   _step: 0.2
   _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0
 --- !u!114 &1383276946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69684,6 +69716,8 @@ MonoBehaviour:
     m_Bits: 8
   _step: 0.2
   _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0
 --- !u!114 &1453834231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71039,17 +71073,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a59df0218d90434e9622a53774d6147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PopulationCount: 150
+  PopulationCount: 5
   AimedGenerations: 1
   MutationProb: 0.203
-  CrossoverProb: 1
+  CrossoverProb: 0.743
   PhenotypeEvaluator: {fileID: 1136908432}
   Generator: {fileID: 1513753136}
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   RandomizeSeed: 1
-  Seed: 25
+  Seed: 35
   LogExecutions: 0
-  LogIndividualExecutions: 1
+  LogIndividualExecutions: 0
   LogExecutionTimes: 5
   TopNLevels: 3
   ExtraSpacing: {x: 10, y: 10}
@@ -81572,6 +81606,8 @@ MonoBehaviour:
     m_Bits: 8
   _step: 0.2
   _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0
 --- !u!114 &1700045616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91905,6 +91941,8 @@ MonoBehaviour:
     m_Bits: 8
   _step: 0.2
   _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0
 --- !u!114 &1906433876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97599,6 +97637,8 @@ MonoBehaviour:
     m_Bits: 8
   _step: 0.2
   _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0
 --- !u!114 &2009039636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101982,6 +102022,8 @@ MonoBehaviour:
     m_Bits: 8
   _step: 0.2
   _iter: 50
+  EnableSetLevel: 1
+  SetTime: 0
 --- !u!114 &2084489138
 MonoBehaviour:
   m_ObjectHideFlags: 0

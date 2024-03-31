@@ -391,7 +391,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
             {
                 values += $"{c.GetHashCode()},";
                 MeasurementsData info = ((LevelChromosome)c).Measurements;
-                if(info != null) 
+                if (info != null)
                 {
                     foreach (var e in info.FitnessEvaluations)
                     {
@@ -399,9 +399,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
                         values += $"{e.Time},";
                     }
                     values += "\n";
-
                 }
-
             }
         }
         string algoName = $"GEN_{AimedGenerations}_POP{PopulationCount}_SZ{LevelProperties.LevelSize}_IndividualTimes";
