@@ -18,6 +18,7 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
     public IRapidlyEpxploringRandomTree<Vector3> RRT;
     protected GameObject level;
     public RRTStats Stats;
+    public float SteerStep = 9999;
 
     public virtual void Setup()
     {
@@ -35,6 +36,7 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
         Profiler.BeginSample("RRT Run");
         if (VoxelizedLevel == null) return;
         RRT = new DiscreteDistanceBasedRRTSolver(VoxelizedLevel, BiasDistance, GoalDistance, Controller.MaxSpeed);
+        RRT.SteerStep = SteerStep;
 
         RRT.Run(StartNode.transform.position, EndNode.transform.position, maxIterations);
         Stats = RRT.Stats;

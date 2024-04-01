@@ -59,14 +59,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ColliderKeys: []
   Colors:
-  - {r: 1, g: 0, b: 0, a: 0.5176471}
-  - {r: 1, g: 0.92892253, b: 0, a: 0.5019608}
-  - {r: 0.3253131, g: 1, b: 0, a: 0.6117647}
-  - {r: 0, g: 1, b: 0.6075773, a: 0.57254905}
-  - {r: 0, g: 0.41886997, b: 1, a: 0.6117647}
-  - {r: 0.9726496, g: 0, b: 1, a: 0.5686275}
-  - {r: 0, g: 0.08543253, b: 1, a: 0.6117647}
-  DebugDraw: 0
+  - {r: 1, g: 0, b: 0, a: 0.078431375}
+  - {r: 1, g: 0.92892253, b: 0, a: 0.078431375}
+  - {r: 0.3253131, g: 1, b: 0, a: 0.078431375}
+  - {r: 0, g: 1, b: 0.6075773, a: 0.078431375}
+  - {r: 0, g: 0.41886997, b: 1, a: 0.078431375}
+  - {r: 0.9726496, g: 0, b: 1, a: 0.078431375}
+  - {r: 0, g: 0.08543253, b: 1, a: 0.078431375}
+  DebugDraw: 1
   Grid: {fileID: 3558959309090012900}
   ObstacleLayerMask:
     serializedVersion: 2
@@ -191,4 +191,5 @@ MonoBehaviour:
   _step: 0.2
   _iter: 50
   EnableSetLevel: 1
+  EnableDiscreteTimes: 1
   SetTime: 0

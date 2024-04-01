@@ -52,6 +52,19 @@ MonoBehaviour:
   BiasDistance: 10
   Path: []
   OutputDiscretized: 0
+  Stats:
+    TotalIterations: 0
+    SuccesfullConnections: 0
+    StaticFails: 0
+    DynamicFails: 0
+    TimeFails: 0
+  SteerStep: 1
+  Stats:
+    TotalIterations: 0
+    SuccesfullConnections: 0
+    StaticFails: 0
+    DynamicFails: 0
+    TimeFails: 0
   ObstacleLayer:
     serializedVersion: 2
     m_Bits: 64

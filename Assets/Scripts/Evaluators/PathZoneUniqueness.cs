@@ -43,12 +43,21 @@ public class PathZoneUniqueness : MeasureMono
             {
                 int currentZoneIndex = floodfilled.GetCellZoneIndex(cellInSegment);
                 //Add only if index of zone is not found previously in the array
+                //                if (zoneIndexList.Count == 0)
+                //                    zoneIndexList.Add(currentZoneIndex);
+                //                else
+                //                {
+                //                    if (zoneIndexList[zoneIndexList.Count - 1] != currentZoneIndex)
+                //                        zoneIndexList.Add(currentZoneIndex);
+                //                }
+
                 if (zoneIndexList.Any(x => x == currentZoneIndex) == false)
                 {
                     zoneIndexList.Add(currentZoneIndex);
                 }
             }
         }
+
         return zoneIndexList;
     }
 
@@ -74,23 +83,14 @@ public class PathZoneUniqueness : MeasureMono
             .Select(x => GetPathVisitedZones(flood, x))
             .ToList();
 
-        int unqiuePathsCount = 0;
+        List<List<int>> seenPaths = new List<List<int>>();
 
-        if (solutionPathsZones.Count > 0)
+        foreach (var path in solutionPathsZones)
         {
-            unqiuePathsCount++;
+            if (seenPaths.Any(x => ZoneAreEqual(x, path)) == false)
+                seenPaths.Add(path);
         }
-
-        for (int i = 0; i < solutionPathsZones.Count - 1; i++)
-        {
-            for (int j = i + 1; j < solutionPathsZones.Count; j++)
-            {
-                if (ZoneAreEqual(solutionPathsZones[i], solutionPathsZones[j]))
-                { unqiuePathsCount++; }
-            }
-        }
-
-        return unqiuePathsCount.ToString();
+        return seenPaths.Count.ToString();
     }
 
     public override void Init(GameObject phenotype)

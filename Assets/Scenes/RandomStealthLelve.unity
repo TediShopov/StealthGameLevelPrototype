@@ -642,6 +642,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &9179217
 GameObject:
   m_ObjectHideFlags: 0
@@ -848,6 +849,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &12276919
 GameObject:
   m_ObjectHideFlags: 0
@@ -1490,6 +1492,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &22569017
 GameObject:
   m_ObjectHideFlags: 0
@@ -1548,6 +1551,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &24762149
 GameObject:
   m_ObjectHideFlags: 0
@@ -1743,6 +1747,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &27757206
 GameObject:
   m_ObjectHideFlags: 0
@@ -2097,6 +2102,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &38550043
 GameObject:
   m_ObjectHideFlags: 0
@@ -2295,6 +2301,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &40385348
 GameObject:
   m_ObjectHideFlags: 0
@@ -2481,6 +2488,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -2548,6 +2556,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &49496098
 GameObject:
   m_ObjectHideFlags: 0
@@ -2606,6 +2615,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &50018372
 GameObject:
   m_ObjectHideFlags: 0
@@ -3111,6 +3121,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &58507705
 GameObject:
   m_ObjectHideFlags: 0
@@ -3169,6 +3180,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -3492,6 +3504,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -3559,6 +3572,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -3626,6 +3640,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &63669275
 GameObject:
   m_ObjectHideFlags: 0
@@ -3717,6 +3732,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &65449009
 GameObject:
   m_ObjectHideFlags: 0
@@ -3782,6 +3798,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &68987937
 GameObject:
   m_ObjectHideFlags: 0
@@ -4224,6 +4241,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &81801400
 GameObject:
   m_ObjectHideFlags: 0
@@ -4282,6 +4300,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &82850148
 GameObject:
   m_ObjectHideFlags: 0
@@ -4410,6 +4429,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -4715,6 +4735,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &90172797
 GameObject:
   m_ObjectHideFlags: 0
@@ -5089,6 +5110,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -5188,6 +5210,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &96584730
 GameObject:
   m_ObjectHideFlags: 0
@@ -5382,6 +5405,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -5482,6 +5506,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &101422082
 GameObject:
   m_ObjectHideFlags: 0
@@ -5540,6 +5565,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &102728382
 GameObject:
   m_ObjectHideFlags: 0
@@ -5846,6 +5872,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &105885086
 GameObject:
   m_ObjectHideFlags: 0
@@ -6260,6 +6287,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -6327,6 +6355,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &112628691
 GameObject:
   m_ObjectHideFlags: 0
@@ -6385,6 +6414,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &112649351
 GameObject:
   m_ObjectHideFlags: 0
@@ -6443,6 +6473,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &112764941
 GameObject:
   m_ObjectHideFlags: 0
@@ -6681,6 +6712,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &115600590
 GameObject:
   m_ObjectHideFlags: 0
@@ -6823,6 +6855,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &121141826
 GameObject:
   m_ObjectHideFlags: 0
@@ -6881,6 +6914,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &121987700
 GameObject:
   m_ObjectHideFlags: 0
@@ -7151,6 +7185,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &126061532
 GameObject:
   m_ObjectHideFlags: 0
@@ -7657,6 +7692,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &132357969
 GameObject:
   m_ObjectHideFlags: 0
@@ -7834,6 +7870,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -7934,6 +7971,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -8085,6 +8123,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &150483449
 GameObject:
   m_ObjectHideFlags: 0
@@ -8143,6 +8182,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &150694534
 GameObject:
   m_ObjectHideFlags: 0
@@ -8201,6 +8241,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &155746208
 GameObject:
   m_ObjectHideFlags: 0
@@ -8259,6 +8300,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &156302108
 GameObject:
   m_ObjectHideFlags: 0
@@ -8564,6 +8606,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -8631,6 +8674,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &164758281
 GameObject:
   m_ObjectHideFlags: 0
@@ -8800,6 +8844,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &165423517
 GameObject:
   m_ObjectHideFlags: 0
@@ -9002,6 +9047,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &172679092
 GameObject:
   m_ObjectHideFlags: 0
@@ -9060,6 +9106,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &181215542
 GameObject:
   m_ObjectHideFlags: 0
@@ -9454,6 +9501,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &195771055
 GameObject:
   m_ObjectHideFlags: 0
@@ -9576,6 +9624,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &203351802
 GameObject:
   m_ObjectHideFlags: 0
@@ -9809,6 +9858,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &205673165
 GameObject:
   m_ObjectHideFlags: 0
@@ -10099,6 +10149,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &216817491
 GameObject:
   m_ObjectHideFlags: 0
@@ -10157,6 +10208,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &217808399
 GameObject:
   m_ObjectHideFlags: 0
@@ -10311,6 +10363,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &228534559
 GameObject:
   m_ObjectHideFlags: 0
@@ -10369,6 +10422,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -10436,6 +10490,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &229520439
 GameObject:
   m_ObjectHideFlags: 0
@@ -10578,6 +10633,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &235415367
 GameObject:
   m_ObjectHideFlags: 0
@@ -10636,6 +10692,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &236908139
 GameObject:
   m_ObjectHideFlags: 0
@@ -10889,6 +10946,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &239173922
 GameObject:
   m_ObjectHideFlags: 0
@@ -10947,6 +11005,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -11014,6 +11073,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &247920032
 GameObject:
   m_ObjectHideFlags: 0
@@ -11072,6 +11132,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &248796726
 GameObject:
   m_ObjectHideFlags: 0
@@ -11130,6 +11191,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &249539914
 GameObject:
   m_ObjectHideFlags: 0
@@ -11188,6 +11250,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &251856165
 GameObject:
   m_ObjectHideFlags: 0
@@ -11246,6 +11309,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &252237207
 GameObject:
   m_ObjectHideFlags: 0
@@ -11447,6 +11511,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &258985145
 GameObject:
   m_ObjectHideFlags: 0
@@ -11505,6 +11570,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &259471666
 GameObject:
   m_ObjectHideFlags: 0
@@ -11563,6 +11629,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &260254442
 GameObject:
   m_ObjectHideFlags: 0
@@ -11721,6 +11788,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &264144233
 GameObject:
   m_ObjectHideFlags: 0
@@ -11779,6 +11847,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &266965678
 GameObject:
   m_ObjectHideFlags: 0
@@ -11953,6 +12022,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &269729410
 GameObject:
   m_ObjectHideFlags: 0
@@ -12017,6 +12087,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &271379378
 GameObject:
   m_ObjectHideFlags: 0
@@ -12075,6 +12146,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -12270,6 +12342,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &272684498
 GameObject:
   m_ObjectHideFlags: 0
@@ -12412,6 +12485,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &273830945
 GameObject:
   m_ObjectHideFlags: 0
@@ -12470,6 +12544,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -12581,6 +12656,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &282059845
 GameObject:
   m_ObjectHideFlags: 0
@@ -12755,6 +12831,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &285801836
 GameObject:
   m_ObjectHideFlags: 0
@@ -12813,6 +12890,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &286308582
 GameObject:
   m_ObjectHideFlags: 0
@@ -12871,6 +12949,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &287308656
 GameObject:
   m_ObjectHideFlags: 0
@@ -12929,6 +13008,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &287852677
 GameObject:
   m_ObjectHideFlags: 0
@@ -13433,6 +13513,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -13611,6 +13692,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &297166053
 GameObject:
   m_ObjectHideFlags: 0
@@ -13682,6 +13764,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &297360195
 GameObject:
   m_ObjectHideFlags: 0
@@ -13989,6 +14072,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -14152,6 +14236,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &304149231
 GameObject:
   m_ObjectHideFlags: 0
@@ -14326,6 +14411,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -14403,6 +14489,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &310446249
 GameObject:
   m_ObjectHideFlags: 0
@@ -14588,6 +14675,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &311676109
 GameObject:
   m_ObjectHideFlags: 0
@@ -14657,6 +14745,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &311878509
 GameObject:
   m_ObjectHideFlags: 0
@@ -14856,6 +14945,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &313750122
 GameObject:
   m_ObjectHideFlags: 0
@@ -15045,6 +15135,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &315091267
 GameObject:
   m_ObjectHideFlags: 0
@@ -15239,6 +15330,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &319954761
 GameObject:
   m_ObjectHideFlags: 0
@@ -15664,6 +15756,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &328471990
 GameObject:
   m_ObjectHideFlags: 0
@@ -16033,6 +16126,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &338169989
 GameObject:
   m_ObjectHideFlags: 0
@@ -16207,6 +16301,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &341528459
 GameObject:
   m_ObjectHideFlags: 0
@@ -16265,6 +16360,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -16443,6 +16539,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &342605788
 GameObject:
   m_ObjectHideFlags: 0
@@ -16501,6 +16598,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &343416310
 GameObject:
   m_ObjectHideFlags: 0
@@ -16704,6 +16802,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &345173916
 GameObject:
   m_ObjectHideFlags: 0
@@ -17025,6 +17124,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &347550638
 GameObject:
   m_ObjectHideFlags: 0
@@ -17194,6 +17294,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &352914901
 GameObject:
   m_ObjectHideFlags: 0
@@ -17296,6 +17397,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &355094034
 GameObject:
   m_ObjectHideFlags: 0
@@ -17386,6 +17488,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -17453,6 +17556,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &357497531
 GameObject:
   m_ObjectHideFlags: 0
@@ -17627,6 +17731,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &362253047
 GameObject:
   m_ObjectHideFlags: 0
@@ -18058,6 +18163,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -18125,6 +18231,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &377020980
 GameObject:
   m_ObjectHideFlags: 0
@@ -18183,6 +18290,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &379404467
 GameObject:
   m_ObjectHideFlags: 0
@@ -18241,6 +18349,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &380517710
 GameObject:
   m_ObjectHideFlags: 0
@@ -18299,6 +18408,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &381605289
 GameObject:
   m_ObjectHideFlags: 0
@@ -18357,6 +18467,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &381691026
 GameObject:
   m_ObjectHideFlags: 0
@@ -18415,6 +18526,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &384908395
 GameObject:
   m_ObjectHideFlags: 0
@@ -18473,6 +18585,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -18624,6 +18737,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &388126982
 GameObject:
   m_ObjectHideFlags: 0
@@ -18682,6 +18796,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &388569954
 GameObject:
   m_ObjectHideFlags: 0
@@ -18773,6 +18888,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &392836766
 GameObject:
   m_ObjectHideFlags: 0
@@ -19070,6 +19186,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &396489341
 GameObject:
   m_ObjectHideFlags: 0
@@ -19490,6 +19607,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &402650060
 GameObject:
   m_ObjectHideFlags: 0
@@ -19632,6 +19750,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -19848,6 +19967,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &407698699
 GameObject:
   m_ObjectHideFlags: 0
@@ -19906,6 +20026,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -20109,6 +20230,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -20176,6 +20298,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &417676811
 GameObject:
   m_ObjectHideFlags: 0
@@ -20234,6 +20357,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &419704060
 GameObject:
   m_ObjectHideFlags: 0
@@ -20292,6 +20416,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &420992783
 GameObject:
   m_ObjectHideFlags: 0
@@ -20394,6 +20519,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &422162090
 GameObject:
   m_ObjectHideFlags: 0
@@ -20635,6 +20761,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &425408157
 GameObject:
   m_ObjectHideFlags: 0
@@ -20724,6 +20851,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -20823,6 +20951,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -20931,6 +21060,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &434645941
 GameObject:
   m_ObjectHideFlags: 0
@@ -20989,6 +21119,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &435862312
 GameObject:
   m_ObjectHideFlags: 0
@@ -21542,6 +21673,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &455745831
 GameObject:
   m_ObjectHideFlags: 0
@@ -21600,6 +21732,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &456114789
 GameObject:
   m_ObjectHideFlags: 0
@@ -21658,6 +21791,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -22282,6 +22416,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &462253969
 GameObject:
   m_ObjectHideFlags: 0
@@ -22340,6 +22475,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &462466053
 GameObject:
   m_ObjectHideFlags: 0
@@ -22464,6 +22600,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &467310282
 GameObject:
   m_ObjectHideFlags: 0
@@ -22629,6 +22766,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &478068884
 GameObject:
   m_ObjectHideFlags: 0
@@ -22731,6 +22869,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -22862,6 +23001,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &483057209
 GameObject:
   m_ObjectHideFlags: 0
@@ -22920,6 +23060,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &483321765
 GameObject:
   m_ObjectHideFlags: 0
@@ -23081,6 +23222,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &485420946
 GameObject:
   m_ObjectHideFlags: 0
@@ -23255,6 +23397,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -23433,6 +23576,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &487753090
 GameObject:
   m_ObjectHideFlags: 0
@@ -23491,6 +23635,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &487820356
 GameObject:
   m_ObjectHideFlags: 0
@@ -23581,6 +23726,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &492515911
 GameObject:
   m_ObjectHideFlags: 0
@@ -23639,6 +23785,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -23706,6 +23853,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &498465494
 GameObject:
   m_ObjectHideFlags: 0
@@ -23764,6 +23912,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &498928080
 GameObject:
   m_ObjectHideFlags: 0
@@ -23822,6 +23971,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -24171,6 +24321,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &509546190
 GameObject:
   m_ObjectHideFlags: 0
@@ -24411,6 +24562,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &512380101
 GameObject:
   m_ObjectHideFlags: 0
@@ -24469,6 +24621,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -24652,6 +24805,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &513340817
 GameObject:
   m_ObjectHideFlags: 0
@@ -24710,6 +24864,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &513420429
 GameObject:
   m_ObjectHideFlags: 0
@@ -24891,6 +25046,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &515214474
 GameObject:
   m_ObjectHideFlags: 0
@@ -24982,6 +25138,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -25081,6 +25238,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &521451996
 GameObject:
   m_ObjectHideFlags: 0
@@ -25390,6 +25548,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -25688,6 +25847,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &529991587
 GameObject:
   m_ObjectHideFlags: 0
@@ -25746,6 +25906,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &532550861
 GameObject:
   m_ObjectHideFlags: 0
@@ -26199,6 +26360,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -26405,6 +26567,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -26690,6 +26853,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &549592718
 GameObject:
   m_ObjectHideFlags: 0
@@ -26748,6 +26912,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -26815,6 +26980,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &551023233
 GameObject:
   m_ObjectHideFlags: 0
@@ -26873,6 +27039,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &551492423
 GameObject:
   m_ObjectHideFlags: 0
@@ -27463,6 +27630,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &557495937
 GameObject:
   m_ObjectHideFlags: 0
@@ -27521,6 +27689,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &557744348
 GameObject:
   m_ObjectHideFlags: 0
@@ -27774,6 +27943,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &559229615
 GameObject:
   m_ObjectHideFlags: 0
@@ -28084,6 +28254,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &568480305
 GameObject:
   m_ObjectHideFlags: 0
@@ -28142,6 +28313,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &569960701
 GameObject:
   m_ObjectHideFlags: 0
@@ -28327,6 +28499,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -28478,6 +28651,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -28784,6 +28958,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &580052578
 GameObject:
   m_ObjectHideFlags: 0
@@ -28842,6 +29017,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &580245715
 GameObject:
   m_ObjectHideFlags: 0
@@ -28900,6 +29076,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -28967,6 +29144,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -29100,6 +29278,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &582444189
 GameObject:
   m_ObjectHideFlags: 0
@@ -29158,6 +29337,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &583640310
 GameObject:
   m_ObjectHideFlags: 0
@@ -29216,6 +29396,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &584344332
 GameObject:
   m_ObjectHideFlags: 0
@@ -29358,6 +29539,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &585856833
 GameObject:
   m_ObjectHideFlags: 0
@@ -30180,6 +30362,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &592671951
 GameObject:
   m_ObjectHideFlags: 0
@@ -30238,6 +30421,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &596646927
 GameObject:
   m_ObjectHideFlags: 0
@@ -30296,6 +30480,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &597522921
 GameObject:
   m_ObjectHideFlags: 0
@@ -30626,6 +30811,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &607639272
 GameObject:
   m_ObjectHideFlags: 0
@@ -30923,6 +31109,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &608666373
 GameObject:
   m_ObjectHideFlags: 0
@@ -31161,6 +31348,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &612568502
 GameObject:
   m_ObjectHideFlags: 0
@@ -31296,6 +31484,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &615869376
 GameObject:
   m_ObjectHideFlags: 0
@@ -31926,6 +32115,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -31993,6 +32183,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &638713736
 GameObject:
   m_ObjectHideFlags: 0
@@ -32400,6 +32591,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &643330830
 GameObject:
   m_ObjectHideFlags: 0
@@ -32458,6 +32650,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &646770967
 GameObject:
   m_ObjectHideFlags: 0
@@ -32524,6 +32717,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &646955210
 GameObject:
   m_ObjectHideFlags: 0
@@ -32582,6 +32776,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &647443905
 GameObject:
   m_ObjectHideFlags: 0
@@ -32640,6 +32835,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -32740,6 +32936,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -32807,6 +33004,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -32874,6 +33072,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &653747797
 GameObject:
   m_ObjectHideFlags: 0
@@ -32932,6 +33131,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -33167,6 +33367,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &658909266
 GameObject:
   m_ObjectHideFlags: 0
@@ -33225,6 +33426,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -33306,6 +33508,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &662571986
 GameObject:
   m_ObjectHideFlags: 0
@@ -33364,6 +33567,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &663142813
 GameObject:
   m_ObjectHideFlags: 0
@@ -33660,6 +33864,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &667031945
 GameObject:
   m_ObjectHideFlags: 0
@@ -33718,6 +33923,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &667399061
 GameObject:
   m_ObjectHideFlags: 0
@@ -33776,6 +33982,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &668420435
 GameObject:
   m_ObjectHideFlags: 0
@@ -33850,6 +34057,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &668737694
 GameObject:
   m_ObjectHideFlags: 0
@@ -33908,6 +34116,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &671224923
 GameObject:
   m_ObjectHideFlags: 0
@@ -33966,6 +34175,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &671496197
 GameObject:
   m_ObjectHideFlags: 0
@@ -34024,6 +34234,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &671987684
 GameObject:
   m_ObjectHideFlags: 0
@@ -34481,6 +34692,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &679657052
 GameObject:
   m_ObjectHideFlags: 0
@@ -34539,6 +34751,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -34606,6 +34819,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &682346769
 GameObject:
   m_ObjectHideFlags: 0
@@ -34951,6 +35165,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -35158,6 +35373,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &690433527
 GameObject:
   m_ObjectHideFlags: 0
@@ -35356,6 +35572,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &693175763
 GameObject:
   m_ObjectHideFlags: 0
@@ -35447,6 +35664,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &694355471
 GameObject:
   m_ObjectHideFlags: 0
@@ -35505,6 +35723,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &694739473
 GameObject:
   m_ObjectHideFlags: 0
@@ -36298,6 +36517,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &707678455
 GameObject:
   m_ObjectHideFlags: 0
@@ -36356,6 +36576,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &708097160
 GameObject:
   m_ObjectHideFlags: 0
@@ -36634,6 +36855,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &709201545
 GameObject:
   m_ObjectHideFlags: 0
@@ -36776,6 +36998,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &714160317
 GameObject:
   m_ObjectHideFlags: 0
@@ -36834,6 +37057,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &714994471
 GameObject:
   m_ObjectHideFlags: 0
@@ -36892,6 +37116,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &715224232
 GameObject:
   m_ObjectHideFlags: 0
@@ -37008,6 +37233,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &721043074
 GameObject:
   m_ObjectHideFlags: 0
@@ -37340,6 +37566,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &723492757
 GameObject:
   m_ObjectHideFlags: 0
@@ -37538,6 +37765,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &725322250
 GameObject:
   m_ObjectHideFlags: 0
@@ -37596,6 +37824,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &731461534
 GameObject:
   m_ObjectHideFlags: 0
@@ -37930,6 +38159,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &735570531
 GameObject:
   m_ObjectHideFlags: 0
@@ -38072,6 +38302,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &736916410
 GameObject:
   m_ObjectHideFlags: 0
@@ -38136,6 +38367,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &738273099
 GameObject:
   m_ObjectHideFlags: 0
@@ -38194,6 +38426,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &742992737
 GameObject:
   m_ObjectHideFlags: 0
@@ -38368,6 +38601,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &745529896
 GameObject:
   m_ObjectHideFlags: 0
@@ -38697,6 +38931,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &751431806
 GameObject:
   m_ObjectHideFlags: 0
@@ -38858,6 +39093,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &753171793
 GameObject:
   m_ObjectHideFlags: 0
@@ -38916,6 +39152,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &756110702
 GameObject:
   m_ObjectHideFlags: 0
@@ -38974,6 +39211,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -39041,6 +39279,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &759561308
 GameObject:
   m_ObjectHideFlags: 0
@@ -39099,6 +39338,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &760282457
 GameObject:
   m_ObjectHideFlags: 0
@@ -39157,6 +39397,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &760538613
 GameObject:
   m_ObjectHideFlags: 0
@@ -39215,6 +39456,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &760894471
 GameObject:
   m_ObjectHideFlags: 0
@@ -39706,6 +39948,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &766186655
 GameObject:
   m_ObjectHideFlags: 0
@@ -40028,6 +40271,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &768264554
 GameObject:
   m_ObjectHideFlags: 0
@@ -40086,6 +40330,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &768654912
 GameObject:
   m_ObjectHideFlags: 0
@@ -40260,6 +40505,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &774075021
 GameObject:
   m_ObjectHideFlags: 0
@@ -40429,6 +40675,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &776396985
 GameObject:
   m_ObjectHideFlags: 0
@@ -40709,6 +40956,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &778416698
 GameObject:
   m_ObjectHideFlags: 0
@@ -40767,6 +41015,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &778971084
 GameObject:
   m_ObjectHideFlags: 0
@@ -40825,6 +41074,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &781823697
 GameObject:
   m_ObjectHideFlags: 0
@@ -40915,6 +41165,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &783336862
 GameObject:
   m_ObjectHideFlags: 0
@@ -41125,6 +41376,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &785682346
 GameObject:
   m_ObjectHideFlags: 0
@@ -41215,6 +41467,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &788188165
 GameObject:
   m_ObjectHideFlags: 0
@@ -41409,6 +41662,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &790693709
 GameObject:
   m_ObjectHideFlags: 0
@@ -41467,6 +41721,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &792743900
 GameObject:
   m_ObjectHideFlags: 0
@@ -41525,6 +41780,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &793701996
 GameObject:
   m_ObjectHideFlags: 0
@@ -41583,6 +41839,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &793863824
 GameObject:
   m_ObjectHideFlags: 0
@@ -41641,6 +41898,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &794436508
 GameObject:
   m_ObjectHideFlags: 0
@@ -41699,6 +41957,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &796150121
 GameObject:
   m_ObjectHideFlags: 0
@@ -41856,6 +42115,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -41923,6 +42183,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -42023,6 +42284,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &802938516
 GameObject:
   m_ObjectHideFlags: 0
@@ -42145,6 +42407,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &806983679
 GameObject:
   m_ObjectHideFlags: 0
@@ -42655,6 +42918,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &811812899
 GameObject:
   m_ObjectHideFlags: 0
@@ -42824,6 +43088,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &813730461
 GameObject:
   m_ObjectHideFlags: 0
@@ -42993,6 +43258,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -43060,6 +43326,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &820212678
 GameObject:
   m_ObjectHideFlags: 0
@@ -43286,6 +43553,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &822825719
 GameObject:
   m_ObjectHideFlags: 0
@@ -43344,6 +43612,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &822851123
 GameObject:
   m_ObjectHideFlags: 0
@@ -43402,6 +43671,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &823189734
 GameObject:
   m_ObjectHideFlags: 0
@@ -43474,6 +43744,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &823723201
 GameObject:
   m_ObjectHideFlags: 0
@@ -43532,6 +43803,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &827565458
 GameObject:
   m_ObjectHideFlags: 0
@@ -43590,6 +43862,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &829104576
 GameObject:
   m_ObjectHideFlags: 0
@@ -43848,6 +44121,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &840911935
 GameObject:
   m_ObjectHideFlags: 0
@@ -43906,6 +44180,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &846114097
 GameObject:
   m_ObjectHideFlags: 0
@@ -43964,6 +44239,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &846570575
 GameObject:
   m_ObjectHideFlags: 0
@@ -44055,6 +44331,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -44122,6 +44399,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &848552181
 GameObject:
   m_ObjectHideFlags: 0
@@ -44180,6 +44458,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -44247,6 +44526,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &852412440
 GameObject:
   m_ObjectHideFlags: 0
@@ -44305,6 +44585,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &855719331
 GameObject:
   m_ObjectHideFlags: 0
@@ -44459,6 +44740,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &857717926
 GameObject:
   m_ObjectHideFlags: 0
@@ -44613,6 +44895,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &864436184
 GameObject:
   m_ObjectHideFlags: 0
@@ -44671,6 +44954,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &865054675
 GameObject:
   m_ObjectHideFlags: 0
@@ -45018,6 +45302,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -45085,6 +45370,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -45152,6 +45438,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &876162955
 GameObject:
   m_ObjectHideFlags: 0
@@ -45210,6 +45497,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &883270253
 GameObject:
   m_ObjectHideFlags: 0
@@ -45300,6 +45588,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &887356195
 GameObject:
   m_ObjectHideFlags: 0
@@ -45469,6 +45758,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &892037361
 GameObject:
   m_ObjectHideFlags: 0
@@ -45754,6 +46044,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &895483202
 GameObject:
   m_ObjectHideFlags: 0
@@ -45812,6 +46103,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &895645316
 GameObject:
   m_ObjectHideFlags: 0
@@ -45870,6 +46162,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -46033,6 +46326,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &896883797
 GameObject:
   m_ObjectHideFlags: 0
@@ -46187,6 +46481,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &898522753
 GameObject:
   m_ObjectHideFlags: 0
@@ -46245,6 +46540,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -46312,6 +46608,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &900950611
 GameObject:
   m_ObjectHideFlags: 0
@@ -46776,6 +47073,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &908147485
 GameObject:
   m_ObjectHideFlags: 0
@@ -46840,6 +47138,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &909870135
 GameObject:
   m_ObjectHideFlags: 0
@@ -46982,6 +47281,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -47049,6 +47349,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &918804286
 GameObject:
   m_ObjectHideFlags: 0
@@ -47107,6 +47408,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -47174,6 +47476,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -47241,6 +47544,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &922467178
 GameObject:
   m_ObjectHideFlags: 0
@@ -47299,6 +47603,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &922996246
 GameObject:
   m_ObjectHideFlags: 0
@@ -47571,6 +47876,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &926610959
 GameObject:
   m_ObjectHideFlags: 0
@@ -48151,6 +48457,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &930421778
 GameObject:
   m_ObjectHideFlags: 0
@@ -48209,6 +48516,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &930449262
 GameObject:
   m_ObjectHideFlags: 0
@@ -48351,6 +48659,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -48698,6 +49007,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &943701870
 GameObject:
   m_ObjectHideFlags: 0
@@ -48794,6 +49104,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &951974903
 GameObject:
   m_ObjectHideFlags: 0
@@ -48852,6 +49163,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &951983171
 GameObject:
   m_ObjectHideFlags: 0
@@ -49017,6 +49329,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -49187,6 +49500,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -49545,6 +49859,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &968343882
 GameObject:
   m_ObjectHideFlags: 0
@@ -49699,6 +50014,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &968571657
 GameObject:
   m_ObjectHideFlags: 0
@@ -49790,6 +50106,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &968713238
 GameObject:
   m_ObjectHideFlags: 0
@@ -49848,6 +50165,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &969736643
 GameObject:
   m_ObjectHideFlags: 0
@@ -50145,6 +50463,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &975566140
 GameObject:
   m_ObjectHideFlags: 0
@@ -50620,6 +50939,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &985931280
 GameObject:
   m_ObjectHideFlags: 0
@@ -50688,6 +51008,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &987649563
 GameObject:
   m_ObjectHideFlags: 0
@@ -50857,6 +51178,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &988511167
 GameObject:
   m_ObjectHideFlags: 0
@@ -50915,6 +51237,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -50982,6 +51305,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &991750225
 GameObject:
   m_ObjectHideFlags: 0
@@ -51040,6 +51364,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -51395,6 +51720,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -51462,6 +51788,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1015975143
 GameObject:
   m_ObjectHideFlags: 0
@@ -51631,6 +51958,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1020654863
 GameObject:
   m_ObjectHideFlags: 0
@@ -51800,6 +52128,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1021639328
 GameObject:
   m_ObjectHideFlags: 0
@@ -52312,6 +52641,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1033053884
 GameObject:
   m_ObjectHideFlags: 0
@@ -52373,6 +52703,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1033058733
 GameObject:
   m_ObjectHideFlags: 0
@@ -52431,6 +52762,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1038309517
 GameObject:
   m_ObjectHideFlags: 0
@@ -52771,6 +53103,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1047171076
 GameObject:
   m_ObjectHideFlags: 0
@@ -53224,6 +53557,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1058764438
 GameObject:
   m_ObjectHideFlags: 0
@@ -53282,6 +53616,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1059531289
 GameObject:
   m_ObjectHideFlags: 0
@@ -53584,6 +53919,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1061623373
 GameObject:
   m_ObjectHideFlags: 0
@@ -53905,6 +54241,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -54056,6 +54393,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -54123,6 +54461,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1066613087
 GameObject:
   m_ObjectHideFlags: 0
@@ -54181,6 +54520,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1068304035
 GameObject:
   m_ObjectHideFlags: 0
@@ -54458,6 +54798,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -54525,6 +54866,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1076249239
 GameObject:
   m_ObjectHideFlags: 0
@@ -54583,6 +54925,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1077452609
 GameObject:
   m_ObjectHideFlags: 0
@@ -54641,6 +54984,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -54708,6 +55052,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -54808,6 +55153,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1088047712
 GameObject:
   m_ObjectHideFlags: 0
@@ -54866,6 +55212,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1090611382
 GameObject:
   m_ObjectHideFlags: 0
@@ -54933,6 +55280,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1091534850
 GameObject:
   m_ObjectHideFlags: 0
@@ -54998,6 +55346,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1095049552
 GameObject:
   m_ObjectHideFlags: 0
@@ -55056,6 +55405,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -55226,6 +55576,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1098110997
 GameObject:
   m_ObjectHideFlags: 0
@@ -55420,6 +55771,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -55487,6 +55839,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1103246855
 GameObject:
   m_ObjectHideFlags: 0
@@ -55730,6 +56083,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -55797,6 +56151,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -55864,6 +56219,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1111596149
 GameObject:
   m_ObjectHideFlags: 0
@@ -55922,6 +56278,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1113717588
 GameObject:
   m_ObjectHideFlags: 0
@@ -55980,6 +56337,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1114020434
 GameObject:
   m_ObjectHideFlags: 0
@@ -56122,6 +56480,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1115810072
 GameObject:
   m_ObjectHideFlags: 0
@@ -56180,6 +56539,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -56447,6 +56807,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1121268086
 GameObject:
   m_ObjectHideFlags: 0
@@ -56673,6 +57034,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1126848856
 GameObject:
   m_ObjectHideFlags: 0
@@ -56731,6 +57093,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1128685289
 GameObject:
   m_ObjectHideFlags: 0
@@ -57313,6 +57676,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1132721385
 GameObject:
   m_ObjectHideFlags: 0
@@ -57619,6 +57983,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1136908431
 GameObject:
   m_ObjectHideFlags: 0
@@ -57722,6 +58087,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -58100,6 +58466,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1146971290
 GameObject:
   m_ObjectHideFlags: 0
@@ -58365,6 +58732,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -58516,6 +58884,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1154803201
 GameObject:
   m_ObjectHideFlags: 0
@@ -58658,6 +59027,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -58746,6 +59116,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1157136166
 GameObject:
   m_ObjectHideFlags: 0
@@ -58804,6 +59175,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1157221112
 GameObject:
   m_ObjectHideFlags: 0
@@ -58862,6 +59234,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1160438097
 GameObject:
   m_ObjectHideFlags: 0
@@ -59134,6 +59507,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -59234,6 +59608,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -59412,6 +59787,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1171173791
 GameObject:
   m_ObjectHideFlags: 0
@@ -59750,6 +60126,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1175561173
 GameObject:
   m_ObjectHideFlags: 0
@@ -59808,6 +60185,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1178261261
 GameObject:
   m_ObjectHideFlags: 0
@@ -59866,6 +60244,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1178300194
 GameObject:
   m_ObjectHideFlags: 0
@@ -60111,6 +60490,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -60379,6 +60759,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1189369701
 GameObject:
   m_ObjectHideFlags: 0
@@ -60657,6 +61038,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1192567083
 GameObject:
   m_ObjectHideFlags: 0
@@ -60747,6 +61129,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1192965798
 GameObject:
   m_ObjectHideFlags: 0
@@ -60805,6 +61188,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1193768994
 GameObject:
   m_ObjectHideFlags: 0
@@ -60873,6 +61257,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1195988643
 GameObject:
   m_ObjectHideFlags: 0
@@ -60973,6 +61358,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1196605800
 GameObject:
   m_ObjectHideFlags: 0
@@ -61031,6 +61417,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1197366800
 GameObject:
   m_ObjectHideFlags: 0
@@ -61126,6 +61513,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -61457,6 +61845,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1208546147
 GameObject:
   m_ObjectHideFlags: 0
@@ -61626,6 +62015,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1211923248
 GameObject:
   m_ObjectHideFlags: 0
@@ -61787,6 +62177,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1215591733
 GameObject:
   m_ObjectHideFlags: 0
@@ -62003,6 +62394,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1218857573
 GameObject:
   m_ObjectHideFlags: 0
@@ -62326,6 +62718,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1227245476
 GameObject:
   m_ObjectHideFlags: 0
@@ -62384,6 +62777,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1229646685
 GameObject:
   m_ObjectHideFlags: 0
@@ -62442,6 +62836,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -62636,6 +63031,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1232676553
 GameObject:
   m_ObjectHideFlags: 0
@@ -63289,6 +63685,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -63361,6 +63758,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1251061602
 GameObject:
   m_ObjectHideFlags: 0
@@ -63590,6 +63988,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1253817344
 GameObject:
   m_ObjectHideFlags: 0
@@ -63662,6 +64061,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1254655383
 GameObject:
   m_ObjectHideFlags: 0
@@ -63907,6 +64307,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -63974,6 +64375,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1261223918
 GameObject:
   m_ObjectHideFlags: 0
@@ -64032,6 +64434,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1261581439
 GameObject:
   m_ObjectHideFlags: 0
@@ -64407,6 +64810,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1266219075
 GameObject:
   m_ObjectHideFlags: 0
@@ -64465,6 +64869,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -64616,6 +65021,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1269464005
 GameObject:
   m_ObjectHideFlags: 0
@@ -64674,6 +65080,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -64773,6 +65180,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1275171431
 GameObject:
   m_ObjectHideFlags: 0
@@ -64848,6 +65256,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1275752643
 GameObject:
   m_ObjectHideFlags: 0
@@ -65017,6 +65426,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1277849188
 GameObject:
   m_ObjectHideFlags: 0
@@ -65108,6 +65518,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1278857648
 GameObject:
   m_ObjectHideFlags: 0
@@ -65250,6 +65661,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -65317,6 +65729,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1285510921
 GameObject:
   m_ObjectHideFlags: 0
@@ -65440,6 +65853,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -65774,6 +66188,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1303976403
 GameObject:
   m_ObjectHideFlags: 0
@@ -65832,6 +66247,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1308627436
 GameObject:
   m_ObjectHideFlags: 0
@@ -65974,6 +66390,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1310680537
 GameObject:
   m_ObjectHideFlags: 0
@@ -66096,6 +66513,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1312895577
 GameObject:
   m_ObjectHideFlags: 0
@@ -66154,6 +66572,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1316042307
 GameObject:
   m_ObjectHideFlags: 0
@@ -66348,6 +66767,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1318753643
 GameObject:
   m_ObjectHideFlags: 0
@@ -66406,6 +66826,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -66597,6 +67018,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1322032325
 GameObject:
   m_ObjectHideFlags: 0
@@ -66791,6 +67213,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1324429517
 GameObject:
   m_ObjectHideFlags: 0
@@ -66849,6 +67272,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -66916,6 +67340,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -67079,6 +67504,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1332555620
 GameObject:
   m_ObjectHideFlags: 0
@@ -67503,6 +67929,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1340992634
 GameObject:
   m_ObjectHideFlags: 0
@@ -67561,6 +67988,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1342873916
 GameObject:
   m_ObjectHideFlags: 0
@@ -67849,6 +68277,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1347636866
 GameObject:
   m_ObjectHideFlags: 0
@@ -68034,6 +68463,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -68357,6 +68787,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -68424,6 +68855,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1355835297
 GameObject:
   m_ObjectHideFlags: 0
@@ -68482,6 +68914,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -68549,6 +68982,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1357022811
 GameObject:
   m_ObjectHideFlags: 0
@@ -68893,6 +69327,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1364385511
 GameObject:
   m_ObjectHideFlags: 0
@@ -69111,6 +69546,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1377603328
 GameObject:
   m_ObjectHideFlags: 0
@@ -69169,6 +69605,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1378594361
 GameObject:
   m_ObjectHideFlags: 0
@@ -69343,6 +69780,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1378987968
 GameObject:
   m_ObjectHideFlags: 0
@@ -69697,6 +70135,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -70006,6 +70445,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -70073,6 +70513,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1388900150
 GameObject:
   m_ObjectHideFlags: 0
@@ -70131,6 +70572,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1389557235
 GameObject:
   m_ObjectHideFlags: 0
@@ -70384,6 +70826,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1397651338
 GameObject:
   m_ObjectHideFlags: 0
@@ -70442,6 +70885,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -70858,6 +71302,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1407612421
 GameObject:
   m_ObjectHideFlags: 0
@@ -71187,6 +71632,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1411979941
 GameObject:
   m_ObjectHideFlags: 0
@@ -71361,6 +71807,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1412781506
 GameObject:
   m_ObjectHideFlags: 0
@@ -71451,6 +71898,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1413208780
 GameObject:
   m_ObjectHideFlags: 0
@@ -71740,6 +72188,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -71891,6 +72340,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1428331724
 GameObject:
   m_ObjectHideFlags: 0
@@ -72144,6 +72594,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1436797605
 GameObject:
   m_ObjectHideFlags: 0
@@ -72202,6 +72653,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1437983675
 GameObject:
   m_ObjectHideFlags: 0
@@ -72371,6 +72823,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -72741,6 +73194,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1451077429
 GameObject:
   m_ObjectHideFlags: 0
@@ -73023,6 +73477,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -73492,6 +73947,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1455326754
 GameObject:
   m_ObjectHideFlags: 0
@@ -73550,6 +74006,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -73753,6 +74210,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -73820,6 +74278,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -74300,6 +74759,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1470752549
 GameObject:
   m_ObjectHideFlags: 0
@@ -74505,7 +74965,7 @@ MonoBehaviour:
   PhenotypeEvaluator: {fileID: 1136908432}
   Generator: {fileID: 1513753136}
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
-  RandomizeSeed: 1
+  RandomizeSeed: 0
   Seed: 35
   LogExecutions: 0
   LogIndividualExecutions: 0
@@ -75251,6 +75711,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1490340223
 GameObject:
   m_ObjectHideFlags: 0
@@ -75768,6 +76229,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -75835,6 +76297,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1505498959
 GameObject:
   m_ObjectHideFlags: 0
@@ -75893,6 +76356,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -76806,6 +77270,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -76957,6 +77422,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1531689285
 GameObject:
   m_ObjectHideFlags: 0
@@ -77080,6 +77546,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1536463164
 GameObject:
   m_ObjectHideFlags: 0
@@ -77144,6 +77611,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1536514916
 GameObject:
   m_ObjectHideFlags: 0
@@ -77665,6 +78133,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1554181400
 GameObject:
   m_ObjectHideFlags: 0
@@ -77723,6 +78192,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1556311785
 GameObject:
   m_ObjectHideFlags: 0
@@ -77781,6 +78251,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1557585316
 GameObject:
   m_ObjectHideFlags: 0
@@ -77839,6 +78310,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1562317571
 GameObject:
   m_ObjectHideFlags: 0
@@ -78277,6 +78749,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1571016129
 GameObject:
   m_ObjectHideFlags: 0
@@ -78535,6 +79008,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1573494324
 GameObject:
   m_ObjectHideFlags: 0
@@ -78696,6 +79170,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1577735429
 GameObject:
   m_ObjectHideFlags: 0
@@ -79031,6 +79506,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -79098,6 +79574,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1584146972
 GameObject:
   m_ObjectHideFlags: 0
@@ -79164,6 +79641,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1586985043
 GameObject:
   m_ObjectHideFlags: 0
@@ -79333,6 +79811,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1588779711
 GameObject:
   m_ObjectHideFlags: 0
@@ -79551,6 +80030,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1596837670
 GameObject:
   m_ObjectHideFlags: 0
@@ -79810,6 +80290,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1604455132
 GameObject:
   m_ObjectHideFlags: 0
@@ -79868,6 +80349,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -79935,6 +80417,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1606124126
 GameObject:
   m_ObjectHideFlags: 0
@@ -79993,6 +80476,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1607006534
 GameObject:
   m_ObjectHideFlags: 0
@@ -80051,6 +80535,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -80182,6 +80667,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1611431768
 GameObject:
   m_ObjectHideFlags: 0
@@ -80520,6 +81006,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1614962340
 GameObject:
   m_ObjectHideFlags: 0
@@ -80976,6 +81463,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -81146,6 +81634,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1621465532
 GameObject:
   m_ObjectHideFlags: 0
@@ -81236,6 +81725,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -81303,6 +81793,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1628821406
 GameObject:
   m_ObjectHideFlags: 0
@@ -81361,6 +81852,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1629354204
 GameObject:
   m_ObjectHideFlags: 0
@@ -81419,6 +81911,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1629646598
 GameObject:
   m_ObjectHideFlags: 0
@@ -81561,6 +82054,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1630941639
 GameObject:
   m_ObjectHideFlags: 0
@@ -81686,6 +82180,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1636364584
 GameObject:
   m_ObjectHideFlags: 0
@@ -81828,6 +82323,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1637228595
 GameObject:
   m_ObjectHideFlags: 0
@@ -81886,6 +82382,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1639228768
 GameObject:
   m_ObjectHideFlags: 0
@@ -81955,6 +82452,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1643316757
 GameObject:
   m_ObjectHideFlags: 0
@@ -82266,6 +82764,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -82366,6 +82865,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1655153784
 GameObject:
   m_ObjectHideFlags: 0
@@ -82424,6 +82924,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1656498935
 GameObject:
   m_ObjectHideFlags: 0
@@ -82482,6 +82983,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -82808,6 +83310,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1664115227
 GameObject:
   m_ObjectHideFlags: 0
@@ -82969,6 +83472,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1665586124
 GameObject:
   m_ObjectHideFlags: 0
@@ -83283,6 +83787,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1669183345
 GameObject:
   m_ObjectHideFlags: 0
@@ -83470,6 +83975,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1673330894
 GameObject:
   m_ObjectHideFlags: 0
@@ -83528,6 +84034,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1674761322
 GameObject:
   m_ObjectHideFlags: 0
@@ -83586,6 +84093,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1675674578
 GameObject:
   m_ObjectHideFlags: 0
@@ -83644,6 +84152,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1676359931
 GameObject:
   m_ObjectHideFlags: 0
@@ -83702,6 +84211,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1676454761
 GameObject:
   m_ObjectHideFlags: 0
@@ -83760,6 +84270,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1676459201
 GameObject:
   m_ObjectHideFlags: 0
@@ -83818,6 +84329,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1676697329
 GameObject:
   m_ObjectHideFlags: 0
@@ -84063,6 +84575,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1678573253
 GameObject:
   m_ObjectHideFlags: 0
@@ -84375,6 +84888,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1684525005
 GameObject:
   m_ObjectHideFlags: 0
@@ -84601,6 +85115,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1688239852
 GameObject:
   m_ObjectHideFlags: 0
@@ -84770,6 +85285,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1691293120
 GameObject:
   m_ObjectHideFlags: 0
@@ -84828,6 +85344,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1692006918
 GameObject:
   m_ObjectHideFlags: 0
@@ -85030,6 +85547,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -85218,6 +85736,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1698200035
 GameObject:
   m_ObjectHideFlags: 0
@@ -85276,6 +85795,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1698720065
 GameObject:
   m_ObjectHideFlags: 0
@@ -85334,6 +85854,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1699621749
 GameObject:
   m_ObjectHideFlags: 0
@@ -85595,6 +86116,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1702585387
 GameObject:
   m_ObjectHideFlags: 0
@@ -85653,6 +86175,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1702971089
 GameObject:
   m_ObjectHideFlags: 0
@@ -85795,6 +86318,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -85862,6 +86386,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -85929,6 +86454,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1706603686
 GameObject:
   m_ObjectHideFlags: 0
@@ -86123,6 +86649,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1708908779
 GameObject:
   m_ObjectHideFlags: 0
@@ -86376,6 +86903,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1709906083
 GameObject:
   m_ObjectHideFlags: 0
@@ -86434,6 +86962,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -86501,6 +87030,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -86568,6 +87098,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1712048649
 GameObject:
   m_ObjectHideFlags: 0
@@ -86626,6 +87157,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1712408149
 GameObject:
   m_ObjectHideFlags: 0
@@ -86684,6 +87216,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1714055789
 GameObject:
   m_ObjectHideFlags: 0
@@ -86786,6 +87319,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1716637481
 GameObject:
   m_ObjectHideFlags: 0
@@ -86844,6 +87378,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1718215110
 GameObject:
   m_ObjectHideFlags: 0
@@ -87196,6 +87731,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -87727,6 +88263,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1732499402
 GameObject:
   m_ObjectHideFlags: 0
@@ -87785,6 +88322,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1735796048
 GameObject:
   m_ObjectHideFlags: 0
@@ -87856,6 +88394,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1735844987
 GameObject:
   m_ObjectHideFlags: 0
@@ -87914,6 +88453,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -88014,6 +88554,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1738262373
 GameObject:
   m_ObjectHideFlags: 0
@@ -88072,6 +88613,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -88208,6 +88750,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1740143931
 GameObject:
   m_ObjectHideFlags: 0
@@ -88506,6 +89049,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -88690,6 +89234,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1755080541
 GameObject:
   m_ObjectHideFlags: 0
@@ -89103,6 +89648,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1760648778
 GameObject:
   m_ObjectHideFlags: 0
@@ -89161,6 +89707,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1760773463
 GameObject:
   m_ObjectHideFlags: 0
@@ -89219,6 +89766,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1760873165
 GameObject:
   m_ObjectHideFlags: 0
@@ -89277,6 +89825,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1761246158
 GameObject:
   m_ObjectHideFlags: 0
@@ -89419,6 +89968,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1764581547
 GameObject:
   m_ObjectHideFlags: 0
@@ -89477,6 +90027,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1766113743
 GameObject:
   m_ObjectHideFlags: 0
@@ -89715,6 +90266,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1774415596
 GameObject:
   m_ObjectHideFlags: 0
@@ -90019,6 +90571,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1778167211
 GameObject:
   m_ObjectHideFlags: 0
@@ -90345,6 +90898,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1782563540
 GameObject:
   m_ObjectHideFlags: 0
@@ -90416,6 +90970,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1783868497
 GameObject:
   m_ObjectHideFlags: 0
@@ -90474,6 +91029,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -90541,6 +91097,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1790678473
 GameObject:
   m_ObjectHideFlags: 0
@@ -90859,6 +91416,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1796038997
 GameObject:
   m_ObjectHideFlags: 0
@@ -90917,6 +91475,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1796346955
 GameObject:
   m_ObjectHideFlags: 0
@@ -91039,6 +91598,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1796928966
 GameObject:
   m_ObjectHideFlags: 0
@@ -91097,6 +91657,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1797874637
 GameObject:
   m_ObjectHideFlags: 0
@@ -91155,6 +91716,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1800210763
 GameObject:
   m_ObjectHideFlags: 0
@@ -91642,6 +92204,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -91947,6 +92510,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1810584776
 GameObject:
   m_ObjectHideFlags: 0
@@ -92005,6 +92569,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1810630944
 GameObject:
   m_ObjectHideFlags: 0
@@ -92063,6 +92628,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -92130,6 +92696,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1812905837
 GameObject:
   m_ObjectHideFlags: 0
@@ -92246,6 +92813,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1813394353
 GameObject:
   m_ObjectHideFlags: 0
@@ -92370,6 +92938,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1822351259
 GameObject:
   m_ObjectHideFlags: 0
@@ -92428,6 +92997,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1823560828
 GameObject:
   m_ObjectHideFlags: 0
@@ -92486,6 +93056,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1825646848
 GameObject:
   m_ObjectHideFlags: 0
@@ -92613,6 +93184,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1828151191
 GameObject:
   m_ObjectHideFlags: 0
@@ -92755,6 +93327,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1838300539
 GameObject:
   m_ObjectHideFlags: 0
@@ -92813,6 +93386,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1838502828
 GameObject:
   m_ObjectHideFlags: 0
@@ -92929,6 +93503,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1844424985
 GameObject:
   m_ObjectHideFlags: 0
@@ -93009,6 +93584,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1846659222
 GameObject:
   m_ObjectHideFlags: 0
@@ -93067,6 +93643,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -93143,6 +93720,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1848424409
 GameObject:
   m_ObjectHideFlags: 0
@@ -93201,6 +93779,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1848893720
 GameObject:
   m_ObjectHideFlags: 0
@@ -93259,6 +93838,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1848913316
 GameObject:
   m_ObjectHideFlags: 0
@@ -93419,6 +93999,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1849583051
 GameObject:
   m_ObjectHideFlags: 0
@@ -93729,6 +94310,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1853372565
 GameObject:
   m_ObjectHideFlags: 0
@@ -93787,6 +94369,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1858601649
 GameObject:
   m_ObjectHideFlags: 0
@@ -94331,6 +94914,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -94514,6 +95098,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1880721317
 GameObject:
   m_ObjectHideFlags: 0
@@ -94587,6 +95172,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1880886130
 GameObject:
   m_ObjectHideFlags: 0
@@ -94645,6 +95231,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1881299640
 GameObject:
   m_ObjectHideFlags: 0
@@ -94768,6 +95355,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -95135,6 +95723,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -95202,6 +95791,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -95600,6 +96190,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1888910926
 GameObject:
   m_ObjectHideFlags: 0
@@ -95794,6 +96385,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1892789675
 GameObject:
   m_ObjectHideFlags: 0
@@ -95884,6 +96476,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1894777727
 GameObject:
   m_ObjectHideFlags: 0
@@ -96000,6 +96593,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1896532978
 GameObject:
   m_ObjectHideFlags: 0
@@ -96091,6 +96685,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1900278371
 GameObject:
   m_ObjectHideFlags: 0
@@ -96149,6 +96744,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1900549437
 GameObject:
   m_ObjectHideFlags: 0
@@ -96207,6 +96803,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1901082072
 GameObject:
   m_ObjectHideFlags: 0
@@ -96472,6 +97069,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1909480268
 GameObject:
   m_ObjectHideFlags: 0
@@ -96562,6 +97160,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -96748,6 +97347,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1914385750
 GameObject:
   m_ObjectHideFlags: 0
@@ -96806,6 +97406,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -96873,6 +97474,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1918041561
 GameObject:
   m_ObjectHideFlags: 0
@@ -97042,6 +97644,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1918758556
 GameObject:
   m_ObjectHideFlags: 0
@@ -97132,6 +97735,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1921348172
 GameObject:
   m_ObjectHideFlags: 0
@@ -97190,6 +97794,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1921758387
 GameObject:
   m_ObjectHideFlags: 0
@@ -97364,6 +97969,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -97626,6 +98232,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -97777,6 +98384,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1928295979
 GameObject:
   m_ObjectHideFlags: 0
@@ -97835,6 +98443,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -97902,6 +98511,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1929430278
 GameObject:
   m_ObjectHideFlags: 0
@@ -98174,6 +98784,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1934693332
 GameObject:
   m_ObjectHideFlags: 0
@@ -98265,6 +98876,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1935825723
 GameObject:
   m_ObjectHideFlags: 0
@@ -98323,6 +98935,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -98390,6 +99003,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -98457,6 +99071,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1938398598
 GameObject:
   m_ObjectHideFlags: 0
@@ -98756,6 +99371,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1950389617
 GameObject:
   m_ObjectHideFlags: 0
@@ -99236,6 +99852,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1957652390
 GameObject:
   m_ObjectHideFlags: 0
@@ -99410,6 +100027,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -99588,6 +100206,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1963006942
 GameObject:
   m_ObjectHideFlags: 0
@@ -99646,6 +100265,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1963616021
 GameObject:
   m_ObjectHideFlags: 0
@@ -99788,6 +100408,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1965748151
 GameObject:
   m_ObjectHideFlags: 0
@@ -99846,6 +100467,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1966923210
 GameObject:
   m_ObjectHideFlags: 0
@@ -99904,6 +100526,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1967417780
 GameObject:
   m_ObjectHideFlags: 0
@@ -100169,6 +100792,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1969861429
 GameObject:
   m_ObjectHideFlags: 0
@@ -100260,6 +100884,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1971570347
 GameObject:
   m_ObjectHideFlags: 0
@@ -100318,6 +100943,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1972661267
 GameObject:
   m_ObjectHideFlags: 0
@@ -100376,6 +101002,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1976325785
 GameObject:
   m_ObjectHideFlags: 0
@@ -100518,6 +101145,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1977833901
 GameObject:
   m_ObjectHideFlags: 0
@@ -100576,6 +101204,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1980496290
 GameObject:
   m_ObjectHideFlags: 0
@@ -100952,6 +101581,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1988054644
 GameObject:
   m_ObjectHideFlags: 0
@@ -101209,6 +101839,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1989559094
 GameObject:
   m_ObjectHideFlags: 0
@@ -101378,6 +102009,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1993474755
 GameObject:
   m_ObjectHideFlags: 0
@@ -101500,6 +102132,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1994598226
 GameObject:
   m_ObjectHideFlags: 0
@@ -101698,6 +102331,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &1996444723
 GameObject:
   m_ObjectHideFlags: 0
@@ -102099,6 +102733,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2001361042
 GameObject:
   m_ObjectHideFlags: 0
@@ -102215,6 +102850,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -102282,6 +102918,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2009039633
 GameObject:
   m_ObjectHideFlags: 0
@@ -102540,6 +103177,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2015689932
 GameObject:
   m_ObjectHideFlags: 0
@@ -102993,6 +103631,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2030171974
 GameObject:
   m_ObjectHideFlags: 0
@@ -103135,6 +103774,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2031725189
 GameObject:
   m_ObjectHideFlags: 0
@@ -103463,6 +104103,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2040634472
 GameObject:
   m_ObjectHideFlags: 0
@@ -103521,6 +104162,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2040991388
 GameObject:
   m_ObjectHideFlags: 0
@@ -103695,6 +104337,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2041718925
 GameObject:
   m_ObjectHideFlags: 0
@@ -103797,6 +104440,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2042241775
 GameObject:
   m_ObjectHideFlags: 0
@@ -103991,6 +104635,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2044001490
 GameObject:
   m_ObjectHideFlags: 0
@@ -104185,6 +104830,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2046766589
 GameObject:
   m_ObjectHideFlags: 0
@@ -104243,6 +104889,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -104403,6 +105050,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2048327305
 GameObject:
   m_ObjectHideFlags: 0
@@ -104743,6 +105391,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2051054921
 GameObject:
   m_ObjectHideFlags: 0
@@ -104801,6 +105450,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2052018184
 GameObject:
   m_ObjectHideFlags: 0
@@ -104859,6 +105509,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2052549501
 GameObject:
   m_ObjectHideFlags: 0
@@ -105100,6 +105751,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2054449546
 GameObject:
   m_ObjectHideFlags: 0
@@ -105242,6 +105894,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2056241742
 GameObject:
   m_ObjectHideFlags: 0
@@ -105403,6 +106056,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -105470,6 +106124,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2058007706
 GameObject:
   m_ObjectHideFlags: 0
@@ -105528,6 +106183,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2058189741
 GameObject:
   m_ObjectHideFlags: 0
@@ -105702,6 +106358,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2060167455
 GameObject:
   m_ObjectHideFlags: 0
@@ -105876,6 +106533,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2064720618
 GameObject:
   m_ObjectHideFlags: 0
@@ -106232,6 +106890,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2075440862
 GameObject:
   m_ObjectHideFlags: 0
@@ -106290,6 +106949,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -106390,6 +107050,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2079133212
 GameObject:
   m_ObjectHideFlags: 0
@@ -106823,6 +107484,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2084489134
 GameObject:
   m_ObjectHideFlags: 0
@@ -107018,6 +107680,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2087134202
 GameObject:
   m_ObjectHideFlags: 0
@@ -107160,6 +107823,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2092006931
 GameObject:
   m_ObjectHideFlags: 0
@@ -107218,6 +107882,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2093227209
 GameObject:
   m_ObjectHideFlags: 0
@@ -107276,6 +107941,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -107343,6 +108009,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2094625688
 GameObject:
   m_ObjectHideFlags: 0
@@ -107504,6 +108171,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2097231149
 GameObject:
   m_ObjectHideFlags: 0
@@ -107673,6 +108341,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2100060028
 GameObject:
   m_ObjectHideFlags: 0
@@ -107848,6 +108517,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -107915,6 +108585,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2104924886
 GameObject:
   m_ObjectHideFlags: 0
@@ -107973,6 +108644,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2106057981
 GameObject:
   m_ObjectHideFlags: 0
@@ -108200,6 +108872,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2115307239
 GameObject:
   m_ObjectHideFlags: 0
@@ -108258,6 +108931,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2116409668
 GameObject:
   m_ObjectHideFlags: 0
@@ -108316,6 +108990,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2116554732
 GameObject:
   m_ObjectHideFlags: 0
@@ -108390,6 +109065,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2116560371
 GameObject:
   m_ObjectHideFlags: 0
@@ -108680,6 +109356,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2123340921
 GameObject:
   m_ObjectHideFlags: 0
@@ -108922,6 +109599,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2129089130
 GameObject:
   m_ObjectHideFlags: 0
@@ -108980,6 +109658,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2130272971
 GameObject:
   m_ObjectHideFlags: 0
@@ -109038,6 +109717,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2130563024
 GameObject:
   m_ObjectHideFlags: 0
@@ -109463,6 +110143,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2140855326
 GameObject:
   m_ObjectHideFlags: 0
@@ -109521,6 +110202,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
   Stats:
     TotalIterations: 0
     SuccesfullConnections: 0
@@ -109588,6 +110270,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1 &2144035109
 GameObject:
   m_ObjectHideFlags: 0
@@ -109907,6 +110590,7 @@ MonoBehaviour:
     StaticFails: 0
     DynamicFails: 0
     TimeFails: 0
+  SteerStep: 9999
 --- !u!1001 &5922416481761259104
 PrefabInstance:
   m_ObjectHideFlags: 0

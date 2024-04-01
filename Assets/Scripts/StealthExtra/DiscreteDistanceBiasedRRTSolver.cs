@@ -31,6 +31,7 @@ public interface IRapidlyEpxploringRandomTree<TState>
     public TState Goal { get; set; }
     public int MaxIterations { get; set; }
     public TreeNode<TState> GoalNodeFound { get; set; }
+    public float SteerStep { get; set; }
 
     public void Run(TState start, TState end, int maxIteration = 100);
 
@@ -73,6 +74,8 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
     public TreeNode<Vector3> StartNode { get; set; }
     public TreeNode<Vector3> GoalNodeFound { get; set; }
     public Vector3 Goal { get; set; }
+
+    public float SteerStep { get; set; }
 
     public float MaxVelocity;
     private KDTree _kdTree;
@@ -288,15 +291,30 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
     {
         Vector2 direction = (to - from).normalized;
         float distanceToGoal = Vector2.Distance(from, to);
-        float timePassed = to.z - from.z;
-        if (distanceToGoal / timePassed <= MaxVelocity)
+
+        if (distanceToGoal <= SteerStep + 0.1f)
         {
-            return new Vector3(to.x, to.y, to.z);
+            float timePassed = to.z - from.z;
+            if (distanceToGoal / timePassed <= MaxVelocity)
+            {
+                return new Vector3(to.x, to.y, to.z);
+            }
+            else
+            {
+                Vector2 reachedPosition = new Vector2(from.x, from.y) + direction * (MaxVelocity * timePassed);
+                return new Vector3(reachedPosition.x, reachedPosition.y, from.z + timePassed);
+            }
         }
         else
         {
-            Vector2 reachedPosition = new Vector2(from.x, from.y) + direction * (MaxVelocity * timePassed);
-            return new Vector3(reachedPosition.x, reachedPosition.y, from.z + timePassed);
+            try
+            {
+                return Steer(from, from + (to - from).normalized * SteerStep);
+            }
+            catch (System.StackOverflowException)
+            {
+                throw;
+            }
         }
     }
 

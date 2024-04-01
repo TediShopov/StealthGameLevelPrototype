@@ -35,11 +35,18 @@ public class RRTWeightedDelaunayRunner : RapidlyExploringRandomTreeVisualizer
 
         rRTWDelaunay.SetTrianglesInFreeSpace(TringulationData.DelaynayTriangles);
         RRT = rRTWDelaunay;
+        RRT.SteerStep = SteerStep;
         RRT.Run(
             StartNode.transform.position,
             EndNode.transform.position,
             maxIterations);
         Stats = RRT.Stats;
+        string rrtStatsLog = $"RRT Iterations {RRT.Stats.TotalIterations}," +
+            $"  Failed: {RRT.Stats.FailedConnections} " +
+            $"(Time: {RRT.Stats.TimeFails}), " +
+            $"(Static: {RRT.Stats.StaticFails}), " +
+            $"(Dynamic: {RRT.Stats.DynamicFails})";
+        Debug.Log(rrtStatsLog);
         Path = RRT.ReconstructPathToSolution();
 
         Profiler.EndSample();
