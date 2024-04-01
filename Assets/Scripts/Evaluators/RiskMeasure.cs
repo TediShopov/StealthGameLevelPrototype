@@ -21,15 +21,16 @@ namespace StealthLevelEvaluation
             Init(phenotype, "Risk Measure");
         }
 
+        public List<float> RiskMeasures;
+
         public override string Evaluate()
         {
+            RiskMeasures = new List<float>();
             var RRTVisualizers = Phenotype.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
             var patrols = Phenotype.GetComponentsInChildren<PatrolEnemyMono>()
                 .Select(x => x.GetPatrol());
             //var voxelizedLevel = generator.GetComponentInChildren<VoxelizedLevel>();
             var futureLevel = Phenotype.GetComponentInChildren<IFutureLevel>();
-            float total = 0;
-            int succeeded = 0;
             foreach (var x in RRTVisualizers)
             {
                 if (x.RRT.Succeeded())
@@ -41,13 +42,10 @@ namespace StealthLevelEvaluation
                         patrols);
 
                     float overallRisk = riskMeasure.OverallRisk(futureLevel.Step);
-                    total += overallRisk;
-                    succeeded++;
+                    RiskMeasures.Add(overallRisk);
                 }
             }
-            if (succeeded == 0) { return "0"; }
-            float avg = total / (float)succeeded;
-            return avg.ToString();
+            return string.Join(",", RiskMeasures.ToArray());
         }
     }
 }

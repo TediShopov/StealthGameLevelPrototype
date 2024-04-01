@@ -11,6 +11,9 @@ GameObject:
   - component: {fileID: 4520497855799095118}
   - component: {fileID: -7389177555761256694}
   - component: {fileID: -1400473969929813684}
+  - component: {fileID: -4074138831780179867}
+  - component: {fileID: -5281071348302234667}
+  - component: {fileID: -8927237631082155595}
   m_Layer: 0
   m_Name: PathZoneUniquenessTest
   m_TagString: Untagged
@@ -63,6 +66,67 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e3556d20b7c09d44bfd418b13c59569, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsValidator: 0
+  _value: 
+  Phenotype: {fileID: 0}
+  RunNow: 0
+  RunOnStart: 0
+--- !u!114 &-4074138831780179867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4520497855799095119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24e0fc32056cffc46b0d750bc5c7e935, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsValidator: 1
+  _value: 
+  Phenotype: {fileID: 0}
+  RunNow: 0
+  RunOnStart: 0
+  StartCoord: {x: 0, y: 0}
+  GoalCoord: {x: 0, y: 0}
+  PlayerCollider: {fileID: 0}
+  ObstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+--- !u!114 &-5281071348302234667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4520497855799095119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad1973ff3d699f449b4aff28915382ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsValidator: 1
+  _value: 
+  Phenotype: {fileID: 0}
+  RunNow: 0
+  RunOnStart: 0
+  ObstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  FutureLevel: {fileID: 0}
+--- !u!114 &-8927237631082155595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4520497855799095119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14ea9b3965f3c294fa0143e2a9b6ea7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0

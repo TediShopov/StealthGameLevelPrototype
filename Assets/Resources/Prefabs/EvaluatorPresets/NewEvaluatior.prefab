@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5684448429466627126}
   - component: {fileID: -2704249602867331223}
   m_Layer: 0
-  m_Name: SafePathE
+  m_Name: NewEvaluatior
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

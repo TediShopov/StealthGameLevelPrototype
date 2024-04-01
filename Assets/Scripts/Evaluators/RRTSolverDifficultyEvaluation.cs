@@ -11,8 +11,14 @@ public class RRTSolverDifficultyEvaluation : MeasureMono
     public int DeisredSuccesses;
     public int MaxRRTAttempts;
 
+    public int Successes;
+    public int Attempts;
+    public float Chance => (float)Successes / (float)Attempts;
+
     public override string Evaluate()
     {
+        Successes = 0;
+        Attempts = 0;
         return CalculateDifficultyFindingSolution().ToString();
     }
 
@@ -22,17 +28,17 @@ public class RRTSolverDifficultyEvaluation : MeasureMono
 
     private float CalculateDifficultyFindingSolution()
     {
-        int attempts = 0;
-        int successful = 0;
-        while (attempts < MaxRRTAttempts)
+        Attempts = 0;
+        Successes = 0;
+        while (Attempts < MaxRRTAttempts)
         {
             if (RunRRT())
-                successful++;
-            attempts++;
-            if (successful >= DeisredSuccesses)
+                Successes++;
+            Attempts++;
+            if (Successes >= DeisredSuccesses)
                 break;
         }
-        return (float)successful / (float)attempts;
+        return Chance;
     }
 
     private bool RunRRT()

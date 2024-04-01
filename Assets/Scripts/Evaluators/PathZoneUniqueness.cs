@@ -61,6 +61,8 @@ public class PathZoneUniqueness : MeasureMono
         return zoneIndexList;
     }
 
+    public List<List<int>> SeenPaths;
+
     public bool ZoneAreEqual(List<int> zoneA, List<int> zoneB)
     {
         return zoneA.SequenceEqual(zoneB);
@@ -68,6 +70,7 @@ public class PathZoneUniqueness : MeasureMono
 
     public override string Evaluate()
     {
+        SeenPaths = new List<List<int>>();
         var monos = GetRRTMonos();
 
         var flood = LevelObject.GetComponentInChildren<FloodfilledRoadmapGenerator>();
@@ -83,14 +86,14 @@ public class PathZoneUniqueness : MeasureMono
             .Select(x => GetPathVisitedZones(flood, x))
             .ToList();
 
-        List<List<int>> seenPaths = new List<List<int>>();
+        SeenPaths = new List<List<int>>();
 
         foreach (var path in solutionPathsZones)
         {
-            if (seenPaths.Any(x => ZoneAreEqual(x, path)) == false)
-                seenPaths.Add(path);
+            if (SeenPaths.Any(x => ZoneAreEqual(x, path)) == false)
+                SeenPaths.Add(path);
         }
-        return seenPaths.Count.ToString();
+        return SeenPaths.Count.ToString();
     }
 
     public override void Init(GameObject phenotype)

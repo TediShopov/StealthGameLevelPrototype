@@ -217,6 +217,8 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
             level.gameObject.name = $"Top {i} - {chromosomes[i].Fitness}";
             var levelChromosome = (LevelChromosome)chromosomes[i];
             levelChromosome.PhenotypeGenerator.Generate(levelChromosome, level.gameObject);
+            ChromoseMeasurementsVisualizer.AttachDataVisualizer(level.gameObject);
+
             //level.Generate(levelChromosome);
 
             //Assign fitness info object showing the exact values achieved
@@ -252,7 +254,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
 
     private void Run()
     {
-        var selection = new TournamentSelection(3, true);
+        var selection = new RouletteWheelSelection();
         var crossover = new TwoPointCrossover();
         var mutation = new CustomMutators(1, 1, 1);
         //var chromosome = new FloatingPointChromosome(0,1,35,8);

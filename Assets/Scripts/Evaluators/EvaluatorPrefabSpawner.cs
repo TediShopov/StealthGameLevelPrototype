@@ -57,13 +57,34 @@ public class EvaluatorPrefabSpawner : MonoBehaviour, IFitness
             double eval = 0;
 
             //Attaching fitness evaluation information to the object itself
-            if (measurementData.FitnessEvaluations.Any(x => x.IsValidation && float.Parse(x.Value) == 0.0f))
+            if (Evaluators.Any(x => x.IsTerminating))
                 eval = 0;
             else
             {
-                eval = measurementData.FitnessEvaluations
-                    .Where(x => x.IsValidation == false)
-                    .Sum(x => float.Parse(x.Value));
+                var riskMeasure = levelObject.GetComponentInChildren<RiskMeasure>();
+                var pathUniqueness = levelObject.GetComponentInChildren<PathZoneUniqueness>();
+                var solver = levelObject.GetComponentInChildren<RRTSolverDifficultyEvaluation>();
+                if (riskMeasure != null && pathUniqueness != null)
+                {
+
+                    if (pathUniqueness.SeenPaths.Count == 0)
+                        eval = 0;
+                    else 
+                    {
+                        eval = riskMeasure.RiskMeasures.Min()
+                            * pathUniqueness.SeenPaths.Count
+                            * solver.Chance * 30;
+
+                    }
+
+
+                }
+                else
+                {
+                    eval = measurementData.FitnessEvaluations
+                        .Where(x => x.IsValidation == false)
+                        .Sum(x => float.Parse(x.Value));
+                }
             }
 
             return eval;

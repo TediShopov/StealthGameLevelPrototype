@@ -74959,7 +74959,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PopulationCount: 10
-  AimedGenerations: 1
+  AimedGenerations: 5
   MutationProb: 0.203
   CrossoverProb: 0.743
   PhenotypeEvaluator: {fileID: 1136908432}
