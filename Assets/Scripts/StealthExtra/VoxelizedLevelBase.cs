@@ -15,6 +15,12 @@ public interface IFutureLevel
 
     public Bounds GetBounds();
 
+    //Static collisions are collision with the level geomtry
+    public bool IsStaticCollision(Vector3 from, Vector3 to);
+
+    //Dynamic collisions are collisions with dynamic threats. E.g enemies
+    public bool IsDynamicCollision(Vector3 from, Vector3 to);
+
     public bool IsColliding(Vector3 from, Vector3 to);
 
     public bool IsColliding(Vector2 from, Vector2 to, float timeFrom, float timeTo);
@@ -145,6 +151,16 @@ public class VoxelizedLevelBase : MonoBehaviour, IFutureLevel
     public bool IsColliding(Vector3 from, Vector3 to)
     {
         return IsColliding(from, to, from.z, to.z);
+    }
+
+    public bool IsStaticCollision(Vector3 from, Vector3 to)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public bool IsDynamicCollision(Vector3 from, Vector3 to)
+    {
+        throw new System.NotImplementedException();
     }
 }
 

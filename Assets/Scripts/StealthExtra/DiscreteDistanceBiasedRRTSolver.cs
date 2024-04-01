@@ -26,6 +26,7 @@ public struct RRTResults
 
 public interface IRapidlyEpxploringRandomTree<TState>
 {
+    public RRTStats Stats { get; }
     public TreeNode<TState> StartNode { get; set; }
     public TState Goal { get; set; }
     public int MaxIterations { get; set; }
@@ -55,6 +56,16 @@ public interface IRapidlyEpxploringRandomTree<TState>
 //{
 //    public Vector3 Position;
 //}
+[System.Serializable]
+public struct RRTStats
+{
+    public int TotalIterations;
+    public int SuccesfullConnections;
+    public int FailedConnections => StaticFails + DynamicFails + TimeFails;
+    public int StaticFails;
+    public int DynamicFails;
+    public int TimeFails;
+}
 
 public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vector3>
 {
@@ -70,6 +81,9 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
 
     //..private VoxelizedLevelBase FutureLevel;
     private IFutureLevel FutureLevel;
+
+    public RRTStats _stats;
+    public RRTStats Stats => _stats;
 
     private Dictionary<Vector3, TreeNode<Vector3>> _stateToTreeNode;
     private TreeNode<Vector3> _lastAddedState;
@@ -150,6 +164,7 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
             if (stepResult != null) _lastAddedState = stepResult;
             iter++;
         }
+        _stats.TotalIterations = iter;
     }
 
     public bool IsInBiasDistance(Vector3 state, Vector3 goal)
@@ -177,13 +192,28 @@ public class DiscreteDistanceBasedRRTSolver : IRapidlyEpxploringRandomTree<Vecto
 
     public bool IsColliding(Vector3 from, Vector3 to)
     {
-        if (from.z < 0 || to.z < 0) return true;
-        if (from.z > to.z) return true;
-        //        Vector2Int startCell = (Vector2Int)this.FutureLevel.Grid.WorldToCell(from);
-        //        Vector2Int endCell = (Vector2Int)this.FutureLevel.Grid.WorldToCell(to);
-        //        var listOfRCells = VoxelizedLevelBase.GetCellsInLine(startCell, endCell);
-        //        return FutureLevel.CheckCellsColliding(listOfRCells.ToList(), from.z, to.z);
-        return FutureLevel.IsColliding(from, to, from.z, to.z);
+        if (from.z < 0 || to.z < 0)
+        {
+            _stats.TimeFails++;
+            return true;
+        }
+        if (from.z > to.z)
+        {
+            _stats.TimeFails++;
+            return true;
+        }
+
+        if (FutureLevel.IsStaticCollision(from, to))
+        {
+            _stats.StaticFails++;
+            return true;
+        }
+        else if (FutureLevel.IsDynamicCollision(from, to))
+        {
+            _stats.DynamicFails++;
+            return true;
+        }
+        return false;
     }
 
     public List<Vector3> ReconstructPathToSolution()

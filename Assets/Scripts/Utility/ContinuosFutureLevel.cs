@@ -48,6 +48,7 @@ public class DynamicLevelSimulation
 }
 
 public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
+
 {
     public LayerMask ObstacleLayerMask;
     public LayerMask BoundaryLayerMask;
@@ -258,16 +259,18 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
         return Vector2.Lerp(startT, endT, rel);
     }
 
-    public bool IsColliding(Vector3 from, Vector3 to)
+    public bool IsStaticCollision(Vector3 from, Vector3 to)
     {
-        if (Physics2D.Linecast(from, to, ObstacleLayerMask))
-            return true;
+        return Physics2D.Linecast(from, to, ObstacleLayerMask);
+    }
 
+    public bool IsDynamicCollision(Vector3 from, Vector3 to)
+    {
         var simulation = new DynamicLevelSimulation(DynamicThreats, from.z, to.z, Step);
         while (!simulation.IsFinished)
         {
             //Get 2d position
-            //float passedTime = simulation.CurrentTime - from.z;
+            //float passedTim e = simulation.CurrentTime - from.z;
             float rel = Mathf.InverseLerp(from.z, to.z, simulation.CurrentTime);
             Vector2 positionInTime = Vector2.Lerp(from, to, rel);
             foreach (var threat in simulation.Threats)
@@ -275,8 +278,19 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
                     return true;
             simulation.Progress();
         }
+        return false;
+    }
+
+    public bool IsColliding(Vector3 from, Vector3 to)
+    {
+        //No colliision with geomtry
+        if (IsStaticCollision(from, to))
+            return true;
+
         //No threats to any of the interpolatied possition
         //in the simulation
+        if (IsDynamicCollision(from, to))
+            return true;
         return false;
     }
 

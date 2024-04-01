@@ -17,6 +17,7 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
     public bool OutputDiscretized = false;
     public IRapidlyEpxploringRandomTree<Vector3> RRT;
     protected GameObject level;
+    public RRTStats Stats;
 
     public virtual void Setup()
     {
@@ -36,6 +37,16 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
         RRT = new DiscreteDistanceBasedRRTSolver(VoxelizedLevel, BiasDistance, GoalDistance, Controller.MaxSpeed);
 
         RRT.Run(StartNode.transform.position, EndNode.transform.position, maxIterations);
+        Stats = RRT.Stats;
+
+        //Ouputs RRT stats
+        string rrtStatsLog = $"RRT Iterations {RRT.Stats.TotalIterations}," +
+            $"  Failed: {RRT.Stats.FailedConnections} " +
+            $"(Time: {RRT.Stats.TimeFails}), " +
+            $"(Static: {RRT.Stats.StaticFails}), " +
+            $"(Dynamic: {RRT.Stats.DynamicFails})";
+        Debug.Log(rrtStatsLog);
+
         Path = RRT.ReconstructPathToSolution();
         Profiler.EndSample();
     }

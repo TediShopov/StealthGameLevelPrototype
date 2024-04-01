@@ -37,6 +37,12 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
     public NativeGrid<int> GetFloodGrid()
     { return LevelGrid; }
 
+    public int GetCellZoneIndex(Vector2Int worldGrid)
+    {
+        Vector2Int nativeCoord = LevelGrid.GetNativeCoord(worldGrid);
+        return LevelGrid.Get(nativeCoord.x, nativeCoord.y);
+    }
+
     public void Init()
     {
         Profiler.BeginSample("Enemy Roadmap Init");
