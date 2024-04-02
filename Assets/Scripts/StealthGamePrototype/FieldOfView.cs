@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Profiling;
 
 [RequireComponent(typeof(MeshFilter))]
+[ExecuteAlways]
 public class FieldOfView : MonoBehaviour
 {
     public int RayCount;
@@ -15,7 +16,7 @@ public class FieldOfView : MonoBehaviour
     public LayerMask ObstacleLayerMask;
 
     // Start is called before the first frame update
-    private void Start()
+    private void Awake()
     {
         _mesh = new Mesh();
         _meshFilter = this.gameObject.GetComponent<MeshFilter>();

@@ -79,6 +79,7 @@ public class PatrolEnemyMono : MonoBehaviour, IPredictableThreat
         Patrol.TimeMove(deltaTime);
         _rigidBody2D.position =
             GetTransform().Position;
+        this.transform.position = _rigidBody2D.position;
         transform.rotation =
             Quaternion.Euler(0, 0, Helpers.GetAngleFromVectorFloat(GetTransform().Direction));
     }
