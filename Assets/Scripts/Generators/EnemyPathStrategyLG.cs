@@ -172,6 +172,17 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         {
             if (c is not CompositeCollider2D)
                 SimpleShapeToCompositeCollider(c, comp);
+            else
+            {
+                var otherComposite = (CompositeCollider2D)c;
+                var shapesFromOtherComposite = otherComposite.gameObject.GetComponentsInChildren<Collider2D>()
+                    .Where(x => x.usedByComposite == true).
+                    ToList();
+                foreach (var shape in shapesFromOtherComposite)
+                {
+                    SimpleShapeToCompositeCollider(shape, comp);
+                }
+            }
         }
         Physics2D.SyncTransforms();
         comp.GenerateGeometry();
