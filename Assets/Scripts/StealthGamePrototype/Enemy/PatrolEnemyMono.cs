@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Profiling;
 
 [RequireComponent(typeof(Rigidbody2D))]
+[ExecuteAlways]
 public class PatrolEnemyMono : MonoBehaviour, IPredictableThreat
 {
     private Patrol Patrol;

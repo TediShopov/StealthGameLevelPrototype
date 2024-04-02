@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class InteractiveEvalutation : MonoBehaviour
 {
-    private PopulationLevelGridInitalizer IEMono;
+    private StealthLevelIEMono IEMono;
     private IChromosome Chromosome;
     public float FitnessValue = 0;
     public float NewFitnessValue = 0;

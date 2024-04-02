@@ -49,7 +49,7 @@ MonoBehaviour:
   EndNode: {fileID: 0}
   maxIterations: 3000
   GoalDistance: 1
-  BiasDistance: 10
+  BiasDistance: 5
   Path: []
   OutputDiscretized: 0
   Stats:

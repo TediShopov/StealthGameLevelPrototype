@@ -189,7 +189,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   _step: 0.2
-  _iter: 50
+  _iter: 30
   EnableSetLevel: 1
   EnableDiscreteTimes: 1
   SetTime: 0

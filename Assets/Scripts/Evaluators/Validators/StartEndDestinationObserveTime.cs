@@ -11,8 +11,8 @@ public class StartEndDestinationObserveTime : MeasureMono
     private IFutureLevel FutureLevel;
     private GameObject Start;
     private GameObject End;
-    public AnimationCurve PenalizationCurve;
-    public float WorstFitnessPenalty = 1000;
+    public int TimeframesObserved = 0;
+    public int TimesFrameSimulated = 0;
 
     public override string Evaluate()
     {
@@ -62,8 +62,8 @@ public class StartEndDestinationObserveTime : MeasureMono
     //    }
     private float PercentageOfTimeFramesObserved(float maxTime)
     {
-        int timeframesObserved = 0;
-        int timesFrameSimulated = 0;
+        TimeframesObserved = 0;
+        TimesFrameSimulated = 0;
 
         var contLevel = (ContinuosFutureLevel)FutureLevel;
         var simulation = contLevel.GetFullSimulation();
@@ -75,18 +75,21 @@ public class StartEndDestinationObserveTime : MeasureMono
                 if (threat.TestThreat(Start.transform.position)
                     || threat.TestThreat(End.transform.position))
                 {
-                    timeframesObserved++;
+                    TimeframesObserved++;
+                    IsTerminating = true;
+                    return 0.0f;
                 }
             }
-            timesFrameSimulated++;
+            TimesFrameSimulated++;
             simulation.Progress();
         }
-        if (timesFrameSimulated == 0) { return 0; }
-        return (float)timeframesObserved / (float)timesFrameSimulated;
+        if (TimesFrameSimulated == 0) { return 0; }
+        return (float)TimeframesObserved / (float)TimesFrameSimulated;
     }
 
     public override void Init(GameObject phenotype)
     {
+        IsValidator = true;
         Phenotype = phenotype;
         Name = "StartEndObservationTime";
         FutureLevel = Phenotype.GetComponentInChildren<IFutureLevel>();

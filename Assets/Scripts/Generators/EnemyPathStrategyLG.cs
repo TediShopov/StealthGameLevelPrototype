@@ -69,6 +69,7 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         var pathGenerator =
             To.GetComponentInChildren<DiscretePathGenerator>();
         pathGenerator.geneIndex = geneIndex;
+        pathGenerator.Init();
         FloodfilledRoadmapGenerator floodfilledRoadmapGenerator = To.GetComponentInChildren<FloodfilledRoadmapGenerator>();
         floodfilledRoadmapGenerator.Init();
         floodfilledRoadmapGenerator.FloodRegions();

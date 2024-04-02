@@ -203,15 +203,9 @@ public class DiscretePathGenerator : MonoBehaviour, IPathGenerator
         return pathsToReturn;
     }
 
-    // Start is called before the first frame update
-    public void Awake()
+    public void Init()
     {
         var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
         Chromosome = level.GetComponentInChildren<LevelChromosomeMono>().Chromosome;
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
     }
 }

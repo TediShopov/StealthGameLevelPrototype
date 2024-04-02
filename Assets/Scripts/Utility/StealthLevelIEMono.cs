@@ -144,6 +144,7 @@ public class GridObjectLayout
         Debug.Log("Disposing generated artefacts of previous levels");
         foreach (var item in LevelObjects)
         {
+            if (item == null) continue;
             var tempList = item.transform.Cast<Transform>().ToList();
             foreach (var child in tempList)
             {
@@ -153,7 +154,7 @@ public class GridObjectLayout
     }
 }
 
-public class PopulationLevelGridInitalizer : MonoBehaviour
+public class StealthLevelIEMono : MonoBehaviour
 {
     //public int Rows = 5; // Number of rows in the grid
     //public int Columns = 5; // Number of columns in the grid
@@ -173,9 +174,8 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
     private GridObjectLayout GridPopulation;
 
     [Header("Seed")]
-    public bool RandomizeSeed;
-
     public int Seed;
+
     public System.Random RandomSeedGenerator;
 
     [Header("Logging")]
@@ -190,9 +190,6 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
 
     public void Start()
     {
-        if (RandomizeSeed)
-            Seed = new System.Random().Next();
-        RandomSeedGenerator = new System.Random(Seed);
         if (LogExecutions)
         {
             string algoName = $"GEN_{AimedGenerations}_POP{PopulationCount}_SZ{LevelProperties.LevelSize}";
@@ -203,6 +200,11 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         {
             Run();
         }
+    }
+
+    public void RandomizeSeed()
+    {
+        Seed = new System.Random().Next();
     }
 
     private void ManifestTopLevels(List<IChromosome> chromosomes)
@@ -252,8 +254,19 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         }
     }
 
-    private void Run()
+    public void Run()
     {
+        SetupGA();
+        GeneticAlgorithm.Population.CreateInitialGeneration();
+        GeneticAlgorithm.State = GeneticAlgorithmState.Started;
+        ProgressIEAlgo = StartCoroutine(WaitForInteractiveEvaluation());
+
+        //GeneticAlgorithm.Start();
+    }
+
+    public void SetupGA()
+    {
+        RandomSeedGenerator = new System.Random(Seed);
         var selection = new RouletteWheelSelection();
         var crossover = new TwoPointCrossover();
         var mutation = new CustomMutators(1, 1, 1);
@@ -280,11 +293,37 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
         GeneticAlgorithm.Termination = new GenerationNumberTermination(AimedGenerations);
         GeneticAlgorithm.GenerationRan += Ga_GenerationRan;
         GeneticAlgorithm.TerminationReached += Ga_TerminationReached; ;
-        GeneticAlgorithm.Population.CreateInitialGeneration();
-        GeneticAlgorithm.State = GeneticAlgorithmState.Started;
-        ProgressIEAlgo = StartCoroutine(WaitForInteractiveEvaluation());
+    }
 
-        //GeneticAlgorithm.Start();
+    public void DoGeneration()
+    {
+        if (GeneticAlgorithm.State == GeneticAlgorithmState.Started)
+        {
+            GridPopulation.PrepareForNewGeneration();
+            //If interaction has occurred
+            GeneticAlgorithm.EndCurrentGeneration();
+            GeneticAlgorithm.EvolveOneGeneration();
+            //Evaluates fitness but also manifest the level
+            // in the unity scene
+            GeneticAlgorithm.EvaluateFitness();
+            InteractionFinsihed = false;
+        }
+        else
+        {
+            GeneticAlgorithm.State = GeneticAlgorithmState.Started;
+            GeneticAlgorithm.Population.CreateInitialGeneration();
+            GeneticAlgorithm.EvaluateFitness();
+        }
+    }
+
+    public void Dispose()
+    {
+        var tempList = this.transform.Cast<Transform>().ToList();
+        foreach (var child in tempList)
+        {
+            GameObject.DestroyImmediate(child.gameObject);
+        }
+        this.GridPopulation = null;
     }
 
     public bool InteractionFinsihed = false;
@@ -315,6 +354,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
             {
                 if (InteractionFinsihed)
                 {
+                    GridPopulation.PrepareForNewGeneration();
                     //If interaction has occurred
                     GeneticAlgorithm.EndCurrentGeneration();
                     GeneticAlgorithm.EvolveOneGeneration();
@@ -372,6 +412,7 @@ public class PopulationLevelGridInitalizer : MonoBehaviour
     //                Debug.Log(chromosomeInfo);
     //            }
     //        }
+    //}
     //    }
 
     private void OutputEvaluationTimesToCsv()

@@ -47,6 +47,7 @@ public class DynamicLevelSimulation
     }
 }
 
+[ExecuteAlways]
 public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
 
 {
@@ -91,17 +92,7 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
         return bounds;
     }
 
-    //    public PatrolPath[] GetEnemyPatrolPaths()
-    //    {
-    //        var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
-    //        return level.GetComponentsInChildren<PatrolPath>();
-    //    }
-
     // Start is called before the first frame update
-    private void Start()
-    {
-    }
-
     public void Init()
     {
         Profiler.BeginSample("Continuos Representation");
