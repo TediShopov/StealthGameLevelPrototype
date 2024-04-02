@@ -52,6 +52,8 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
             new GameObject("VisBound"));
         Instantiate(LevelInitializer, To.transform);
         GenerateLevelContent(chromosome, box);
+
+        PlaceBoundaryVisualPrefabs(box, Obstacles);
         //Solvers
         InitializeAdditionalLevelData();
 
@@ -116,7 +118,6 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         BoxCollider2D box = InitLevelBoundary(LevelProperties.LevelSize.x, LevelProperties.LevelSize.y, to);
 
         Obstacles.transform.SetParent(To.transform, false);
-        PlaceBoundaryVisualPrefabs(box, Obstacles);
 
         box.size = new Vector2(
             box.size.x - PlayerPrefab.GetComponent<Collider2D>().bounds.extents.x / 2.0f - VisualBoundWidth / 2.0f,
