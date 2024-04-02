@@ -58,7 +58,7 @@ public class EvaluatorPrefabSpawner : MonoBehaviour, IFitness
 
             //Attaching fitness evaluation information to the object itself
             if (Evaluators.Any(x => x.IsTerminating))
-                eval = 0;
+                eval = 0.5f;
             else
             {
                 var riskMeasure = levelObject.GetComponentInChildren<RiskMeasure>();
@@ -66,18 +66,14 @@ public class EvaluatorPrefabSpawner : MonoBehaviour, IFitness
                 var solver = levelObject.GetComponentInChildren<RRTSolverDifficultyEvaluation>();
                 if (riskMeasure != null && pathUniqueness != null)
                 {
-
                     if (pathUniqueness.SeenPaths.Count == 0)
-                        eval = 0;
-                    else 
+                        eval = 0.5f;
+                    else
                     {
                         eval = riskMeasure.RiskMeasures.Min()
                             * pathUniqueness.SeenPaths.Count
                             * solver.Chance * 30;
-
                     }
-
-
                 }
                 else
                 {

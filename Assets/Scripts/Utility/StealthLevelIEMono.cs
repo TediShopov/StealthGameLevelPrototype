@@ -299,14 +299,13 @@ public class StealthLevelIEMono : MonoBehaviour
     {
         if (GeneticAlgorithm.State == GeneticAlgorithmState.Started)
         {
-            GridPopulation.PrepareForNewGeneration();
             //If interaction has occurred
             GeneticAlgorithm.EndCurrentGeneration();
+            GridPopulation.PrepareForNewGeneration();
             GeneticAlgorithm.EvolveOneGeneration();
             //Evaluates fitness but also manifest the level
             // in the unity scene
             GeneticAlgorithm.EvaluateFitness();
-            InteractionFinsihed = false;
         }
         else
         {
