@@ -55,7 +55,7 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         BoxCollider2D box =
             SetupLevelInitials(chromosome, to,
             new GameObject("VisBound"));
-        Instantiate(LevelInitializer, To.transform);
+        Instantiate(LevelProperties.LevelInitializer, To.transform);
         int geneIndex = GenerateLevelContent(chromosome, box);
 
         var visualBoundary = new GameObject("VisualBoundary");
@@ -114,11 +114,10 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
 
         for (int i = 0; i < EnemyCount; i++)
         {
-            Instantiate(EnemyPrefab, To.transform);
+            Instantiate(LevelProperties.EnemyPrefab, To.transform);
         }
 
         //Enemy Behaviour
-
         Physics2D.SyncTransforms();
         return geneIndex;
     }
@@ -132,7 +131,7 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
             useLayerMask = true,
             useTriggers = false,
             useOutsideDepth = false,
-            layerMask = ObstacleLayerMask
+            layerMask = LevelProperties.ObstacleLayerMask
         };
         for (int i = 0; i < colliders.Count; i++)
         {
@@ -248,7 +247,7 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
             useLayerMask = true,
             useTriggers = false,
             useOutsideDepth = false,
-            layerMask = ObstacleLayerMask
+            layerMask = LevelProperties.ObstacleLayerMask
         };
 
         List<Collider2D> overlappingCollider = new List<Collider2D>();

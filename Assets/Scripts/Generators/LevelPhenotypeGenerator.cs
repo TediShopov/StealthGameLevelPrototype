@@ -19,6 +19,8 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
     public bool DisposeNow = false;
     protected LevelChromosomeBase LevelChromosome;
     protected GameObject To;
+    public int MinEnemiesSpawned = 1;
+    public int MaxEnemiesSpawned = 3;
 
     public int StartingObstacleCount = 3;
 
@@ -50,7 +52,7 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         BoxCollider2D box =
             SetupLevelInitials(chromosome, to,
             new GameObject("VisBound"));
-        Instantiate(LevelInitializer, To.transform);
+        Instantiate(LevelProperties.LevelInitializer, To.transform);
         GenerateLevelContent(chromosome, box);
 
         PlaceBoundaryVisualPrefabs(box, Obstacles);
@@ -81,7 +83,7 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
 
         for (int i = 0; i < enemyCount; i++)
         {
-            Instantiate(EnemyPrefab, To.transform);
+            Instantiate(LevelProperties.EnemyPrefab, To.transform);
         }
 
         //Enemy Behaviour
@@ -120,16 +122,16 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         Obstacles.transform.SetParent(To.transform, false);
 
         box.size = new Vector2(
-            box.size.x - PlayerPrefab.GetComponent<Collider2D>().bounds.extents.x / 2.0f - VisualBoundWidth / 2.0f,
-            box.size.y - PlayerPrefab.GetComponent<Collider2D>().bounds.extents.y / 2.0f - VisualBoundWidth / 2.0f
+            box.size.x - LevelProperties.PlayerPrefab.GetComponent<Collider2D>().bounds.extents.x / 2.0f - VisualBoundWidth / 2.0f,
+            box.size.y - LevelProperties.PlayerPrefab.GetComponent<Collider2D>().bounds.extents.y / 2.0f - VisualBoundWidth / 2.0f
             );
 
         //Player
         //var playerInstance = SpawnGameObject(ref geneIndex, box, PlayerPrefab);
-        var playerInstance = SpawnGameObjectAtRelative(LevelProperties.RelativeStartPosition, box, PlayerPrefab);
+        var playerInstance = SpawnGameObjectAtRelative(LevelProperties.RelativeStartPosition, box, LevelProperties.PlayerPrefab);
         //Destination
         //var destinationIntance = SpawnGameObject(ref geneIndex, box, DestinationPrefab);
-        var destinationIntance = SpawnGameObjectAtRelative(LevelProperties.RelativeEndPosiiton, box, DestinationPrefab);
+        var destinationIntance = SpawnGameObjectAtRelative(LevelProperties.RelativeEndPosiiton, box, LevelProperties.DestinationPrefab);
         return box;
     }
 
@@ -149,8 +151,8 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
     protected GameObject SpawnObstacle(ref int geneIndex, BoxCollider2D box, GameObject Obstacles)
     {
         //Get Obstacle Variant
-        int prefabIndex = (int)(GetGeneValue(geneIndex) * ObstaclePrefabs.Count + 1);
-        GameObject ObstaclePrefabVariant = ObstaclePrefabs[prefabIndex - 1];
+        int prefabIndex = (int)(GetGeneValue(geneIndex) * LevelProperties.ObstaclePrefabs.Count + 1);
+        GameObject ObstaclePrefabVariant = LevelProperties.ObstaclePrefabs[prefabIndex - 1];
 
         float x = Mathf.Lerp(box.bounds.min.x, box.bounds.max.x, GetGeneValue(geneIndex + 1));
         float y = Mathf.Lerp(box.bounds.min.y, box.bounds.max.y, GetGeneValue(geneIndex + 2));
