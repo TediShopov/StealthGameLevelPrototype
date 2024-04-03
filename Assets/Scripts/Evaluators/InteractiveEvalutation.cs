@@ -6,15 +6,13 @@ using UnityEngine;
 public class InteractiveEvalutation : MonoBehaviour
 {
     private StealthLevelIEMono IEMono;
-    private IChromosome Chromosome;
-    public float FitnessValue = 0;
-    public float NewFitnessValue = 0;
-    public bool DoEval = false;
+    private LevelChromosome Chromosome;
 
-    private void Start()
+    public void SelectLevel()
     {
         //Find level object
         var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
+
         //Get the level chromosome object and change get ref to
         var chromosomeMono = level?.GetComponentInChildren<LevelChromosomeMono>();
         if (chromosomeMono == null)
@@ -23,26 +21,14 @@ public class InteractiveEvalutation : MonoBehaviour
         Chromosome = chromosomeMono.Chromosome;
         if (Chromosome == null)
             throw new System.ArgumentException("No acutal chromose contntes");
+
+        IEMono = this.GetComponentInParent<StealthLevelIEMono>();
+        if (IEMono == null)
+            throw new System.ArgumentException("No interactive evolution found");
+
+        Debug.Log($"Selected level {level.gameObject.name}");
+        IEMono.SelectChromosome(Chromosome);
     }
 
     // Update is called once per frame
-    private void Update()
-    {
-        if (Chromosome.Fitness.HasValue)
-        {
-            FitnessValue = (float)Chromosome.Fitness.Value;
-        }
-        if (DoEval)
-        {
-            if (Chromosome is not null)
-            {
-                if (Chromosome.Fitness.HasValue)
-                {
-                    Chromosome.Fitness = NewFitnessValue;
-                    FitnessValue = NewFitnessValue;
-                }
-            }
-            DoEval = !DoEval;
-        }
-    }
 }

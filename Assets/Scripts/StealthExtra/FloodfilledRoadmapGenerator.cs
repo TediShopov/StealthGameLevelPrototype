@@ -238,8 +238,8 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour, IPrototypable<Floodfil
 
     public bool CannotTraverse(Vector2 a, Vector2 b)
     {
-        return Physics2D.CircleCast(a, EnemyBSRadius, (b - a).normalized, Vector2.Distance(b, a), ObstacleLayerMask);
-        //return Physics2D.Linecast(a, b, ObstacleLayerMask);
+        //return Physics2D.CircleCast(a, EnemyBSRadius, (b - a).normalized, Vector2.Distance(b, a), ObstacleLayerMask);
+        return Physics2D.Linecast(a, b, ObstacleLayerMask);
     }
 
     public Vector2 RemoveRedundantNodesInConnection(Vector2 start, Vector2 end, ref int recursionCount, List<Vector2> visited)

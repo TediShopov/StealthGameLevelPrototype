@@ -168,7 +168,7 @@ public class StealthLevelIEMono : MonoBehaviour
     [Range(0, 1)]
     public float CrossoverProb = 10;
 
-    public EvaluatorPrefabSpawner PhenotypeEvaluator;
+    public EvaluatorMono PhenotypeEvaluator;
     public LevelPhenotypeGenerator Generator;
     public LevelProperties LevelProperties;
     private GridObjectLayout GridPopulation;
@@ -190,6 +190,7 @@ public class StealthLevelIEMono : MonoBehaviour
 
     public void Start()
     {
+        InteractiveSelections = new HashSet<Tuple<int, LevelChromosome>>();
         if (LogExecutions)
         {
             string algoName = $"GEN_{AimedGenerations}_POP{PopulationCount}_SZ{LevelProperties.LevelSize}";
@@ -207,6 +208,19 @@ public class StealthLevelIEMono : MonoBehaviour
         Seed = new System.Random().Next();
     }
 
+    private HashSet<Tuple<int, LevelChromosome>> InteractiveSelections;
+
+    public void SelectChromosome(LevelChromosome chromosome)
+    {
+        if (GeneticAlgorithm.IsRunning)
+        {
+            InteractiveSelections.Add(
+                new Tuple<int, LevelChromosome>(
+                    GeneticAlgorithm.GenerationsNumber,
+                    chromosome));
+        }
+    }
+
     private void ManifestTopLevels(List<IChromosome> chromosomes)
     {
         //Start with y down
@@ -220,21 +234,6 @@ public class StealthLevelIEMono : MonoBehaviour
             var levelChromosome = (LevelChromosome)chromosomes[i];
             levelChromosome.PhenotypeGenerator.Generate(levelChromosome, level.gameObject);
             ChromoseMeasurementsVisualizer.AttachDataVisualizer(level.gameObject);
-
-            //level.Generate(levelChromosome);
-
-            //Assign fitness info object showing the exact values achieved
-            //without need to recalcuate (RRT may produce different resutls)
-            //            var infoObj = ChromoseMeasurementsVisualizer.AttachDataVisualizer(level.gameObject,
-            //                levelChromosome.FitnessInfo);
-
-            //Try to recreate evaluators with given data
-            //            GameObject evaluator = new GameObject("Evaluator");
-            //            evaluator.transform.parent = level.transform;
-            //            foreach (var e in infoObj.FitnessEvaluations)
-            //            {
-            //                evaluator.AddComponent(e.GetType());
-            //            }
         }
     }
 
@@ -259,9 +258,6 @@ public class StealthLevelIEMono : MonoBehaviour
         SetupGA();
         GeneticAlgorithm.Population.CreateInitialGeneration();
         GeneticAlgorithm.State = GeneticAlgorithmState.Started;
-        ProgressIEAlgo = StartCoroutine(WaitForInteractiveEvaluation());
-
-        //GeneticAlgorithm.Start();
     }
 
     public void SetupGA()
@@ -309,6 +305,8 @@ public class StealthLevelIEMono : MonoBehaviour
         }
         else
         {
+            //Refresh selection list
+            this.InteractiveSelections = new HashSet<Tuple<int, LevelChromosome>>();
             GeneticAlgorithm.State = GeneticAlgorithmState.Started;
             GeneticAlgorithm.Population.CreateInitialGeneration();
             GeneticAlgorithm.EvaluateFitness();
@@ -323,56 +321,6 @@ public class StealthLevelIEMono : MonoBehaviour
             GameObject.DestroyImmediate(child.gameObject);
         }
         this.GridPopulation = null;
-    }
-
-    public bool InteractionFinsihed = false;
-    public bool DoInteractiveAlgorithm = false;
-
-    private Coroutine ProgressIEAlgo;
-
-    private IEnumerator WaitForInteractiveEvaluation()
-    {
-        if (DoInteractiveAlgorithm == false)
-        {
-            //GeneticAlgorithm.State = GeneticAlgorithmState.Started;
-            while (GeneticAlgorithm.IsRunning)
-            {
-                //Evaluates fitness but also manifest the level
-                // in the unity scene
-                //If interaction has occurred
-                GeneticAlgorithm.EvaluateFitness();
-                bool e = GeneticAlgorithm.EndCurrentGeneration();
-                if (e) break;
-                GridPopulation.PrepareForNewGeneration();
-                GeneticAlgorithm.EvolveOneGeneration();
-            }
-        }
-        else
-        {
-            while (true)
-            {
-                if (InteractionFinsihed)
-                {
-                    GridPopulation.PrepareForNewGeneration();
-                    //If interaction has occurred
-                    GeneticAlgorithm.EndCurrentGeneration();
-                    GeneticAlgorithm.EvolveOneGeneration();
-                    //Evaluates fitness but also manifest the level
-                    // in the unity scene
-                    GeneticAlgorithm.EvaluateFitness();
-                    InteractionFinsihed = false;
-                }
-                else
-                {
-                    //Should be assigned from outside source
-
-                    //Wait for another eval
-                    GeneticAlgorithm.IntectiveEvalutionStep();
-                }
-
-                yield return new WaitForSecondsRealtime(0.5f);
-            }
-        }
     }
 
     private List<IChromosome> GetTopLevelsFitness()
@@ -395,24 +343,6 @@ public class StealthLevelIEMono : MonoBehaviour
         }
         return topN;
     }
-
-    //    private void LogFinessFunctionInfo()
-    //    {
-    //        foreach (var gen in GeneticAlgorithm.Population.Generations)
-    //        {
-    //            foreach (var c in gen.Chromosomes)
-    //            {
-    //                MeasurementsData info = ((LevelChromosome)c).FitnessInfo;
-    //                string chromosomeInfo = $"Generation {gen.Number} - Fitness {c.Fitness}";
-    //                foreach (var e in info.FitnessEvaluations)
-    //                {
-    //                    chromosomeInfo += $" {e.Name} {e.Value} {e.Time}  ";
-    //                }
-    //                Debug.Log(chromosomeInfo);
-    //            }
-    //        }
-    //}
-    //    }
 
     private void OutputEvaluationTimesToCsv()
     {
@@ -462,10 +392,5 @@ public class StealthLevelIEMono : MonoBehaviour
     private void Ga_GenerationRan(object sender, EventArgs e)
     {
         Debug.Log($"{GeneticAlgorithm.GenerationsNumber} Generation Ran");
-        //Do not discard the last generation before termination
-        //        if (GeneticAlgorithm.GenerationsNumber != AimedGenerations)
-        //        {
-        //            GridPopulation.PrepareForNewGeneration();
-        //        }
     }
 }

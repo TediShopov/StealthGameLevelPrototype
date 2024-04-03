@@ -7,7 +7,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-public class EvaluatorPrefabSpawner : MonoBehaviour, IFitness
+public class EvaluatorMono : MonoBehaviour, IFitness
 {
     public GameObject EvaluatorHolder;
     public GridObjectLayout GridLevelObjects;
