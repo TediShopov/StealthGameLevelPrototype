@@ -187,8 +187,8 @@ namespace StealthLevelEvaluation
         {
             Name = "AStartPathEvalution";
             IsValidator = true;
-            var floodFillGenerator = phenotype.GetComponentInChildren<FloodfilledRoadmapGenerator>();
-            Grid grid = phenotype.GetComponentInChildren<Grid>();
+            var roadmap = phenotype.GetComponentInChildren<FloodfilledRoadmapGenerator>();
+            Grid grid = roadmap.Grid;
             var character = phenotype.GetComponentInChildren<CharacterController2D>().gameObject;
             StartCoord = (Vector2Int)grid.WorldToCell(character.transform.position);
             PlayerCollider = character.GetComponent<Collider2D>();

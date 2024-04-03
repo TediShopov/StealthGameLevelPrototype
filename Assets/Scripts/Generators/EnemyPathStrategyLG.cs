@@ -4,10 +4,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+[RequireComponent(typeof(FloodfilledRoadmapGenerator))]
+[RequireComponent(typeof(DiscretePathGenerator))]
+[RequireComponent(typeof(IFutureLevel))]
+[ExecuteInEditMode]
 public class EnemyPathStrategyLG : LevelPhenotypeGenerator
 {
     public const int ObstaccleGeneLength = 5;
@@ -15,6 +20,15 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
     public int NecessaryObstacles = 3;
     public int EnemyCount;
     private int EntityCount => (LevelChromosome.Length - 1) / 5;
+    [HideInInspector] public FloodfilledRoadmapGenerator RoadmapGenerator;
+    [HideInInspector] public DiscretePathGenerator PathGenerator;
+    public ContinuosFutureLevel FutureLevel;
+
+    public void Awake()
+    {
+        RoadmapGenerator = GetComponent<FloodfilledRoadmapGenerator>();
+        PathGenerator = GetComponent<DiscretePathGenerator>();
+    }
 
     public int GetObstaclesToSpawn(ref int geneIndex)
     {
@@ -42,6 +56,9 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
 
     public override void Generate(LevelChromosomeBase chromosome, GameObject to = null)
     {
+        RoadmapGenerator.ObstacleLayerMask = LevelProperties.ObstacleLayerMask;
+        RoadmapGenerator.BoundaryLayerMask = LevelProperties.BoundaryLayerMask;
+
         To = to;
         LevelChromosome = chromosome;
         //Boundary
@@ -55,43 +72,95 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         BoxCollider2D box =
             SetupLevelInitials(chromosome, to,
             new GameObject("VisBound"));
-        Instantiate(LevelProperties.LevelInitializer, To.transform);
+
         int geneIndex = GenerateLevelContent(chromosome, box);
 
         var visualBoundary = new GameObject("VisualBoundary");
         visualBoundary.transform.SetParent(To.transform, false);
         PlaceBoundaryVisualPrefabs(box, visualBoundary);
+
         Physics2D.SyncTransforms();
-        //Solvers
-        var levelInitializer = To.gameObject.GetComponentInChildren<InitializeStealthLevel>();
-        //var voxelizedLevel = gameObject.GetComponentInChildren<>();
-        var voxelizedLevel = To.gameObject.GetComponentInChildren<IFutureLevel>();
-        //var multipleRRTSolvers = To.gameObject.GetComponentInChildren<MultipleRRTRunner>();
-        Helpers.LogExecutionTime(voxelizedLevel.Init, "Future Level Logic Time");
-        AssignPaths(geneIndex);
+
+        var otherGrid = To.AddComponent<Grid>();
+        otherGrid.cellSize = this.GetComponent<Grid>().cellSize;
+        otherGrid.cellSwizzle = this.GetComponent<Grid>().cellSwizzle;
+        otherGrid.cellLayout = this.GetComponent<Grid>().cellLayout;
+
+        var roadmap = RoadmapGenerator.PrototypeComponent(To);
+        roadmap.Init();
+        //        var rd = CopyComponent(RoadmapGenerator, To.gameObject);
+        //        To.GetComponent<Grid>().cellSize = this.GetComponent<Grid>().cellSize;
+        //        rd.Init(To);
+        //Initialize the roadmap
+        //RoadmapGenerator.Init(To);
+
+        //RoadmapMono roadmap = To.gameObject.AddComponent<RoadmapMono>();
+        //roadmap.Grid = RoadmapGenerator.Grid;
+        //roadmap.RoadMap = RoadmapGenerator.RoadMap;
+        //roadmap.LevelGrid = RoadmapGenerator.LevelGrid;
+
+        //Use the generated roadmap to assign guard paths
+        AssignPaths(geneIndex, roadmap.RoadMap);
+
+        //Initialize the future level
+        //CopyComponent(FutureLevel, To).Init(To);
+        var futurePrototype = FutureLevel.PrototypeComponent(To);
+        futurePrototype.Init();
 
         Debug.Log("Generation of phenotype finished");
     }
 
-    public void AssignPaths(int geneIndex)
+    public static T CopyComponent<T>(T original, GameObject destination) where T : Component
+    {
+        System.Type type = original.GetType();
+
+        var dst = destination.GetComponent(type) as T;
+        if (!dst) dst = destination.AddComponent(type) as T;
+
+        var fields = GetAllFields(type);
+        foreach (var field in fields)
+        {
+            if (field.IsStatic) continue;
+            field.SetValue(dst, field.GetValue(original));
+        }
+
+        var props = type.GetProperties();
+        foreach (var prop in props)
+        {
+            if (!prop.CanWrite || !prop.CanWrite || prop.Name == "name") continue;
+            prop.SetValue(dst, prop.GetValue(original, null), null);
+        }
+
+        return dst as T;
+    }
+
+    public static IEnumerable<FieldInfo> GetAllFields(System.Type t)
+    {
+        if (t == null)
+        {
+            return Enumerable.Empty<FieldInfo>();
+        }
+
+        BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
+                             BindingFlags.Static | BindingFlags.Instance |
+                             BindingFlags.DeclaredOnly;
+        return t.GetFields(flags).Concat(GetAllFields(t.BaseType));
+    }
+
+    public void AssignPaths(int geneIndex, Graph<Vector2> roadmap)
     {
         LevelRandom = new System.Random();
-        var pathGenerator =
-            To.GetComponentInChildren<DiscretePathGenerator>();
-        pathGenerator.geneIndex = geneIndex;
-        pathGenerator.Init();
-        FloodfilledRoadmapGenerator floodfilledRoadmapGenerator = To.GetComponentInChildren<FloodfilledRoadmapGenerator>();
-        floodfilledRoadmapGenerator.Init();
-        floodfilledRoadmapGenerator.FloodRegions();
-        pathGenerator.Roadmap = floodfilledRoadmapGenerator.RoadMap;
-        pathGenerator.LevelRandom = LevelRandom;
+        PathGenerator.geneIndex = geneIndex;
+        PathGenerator.Init(To);
+        PathGenerator.Roadmap = roadmap;
+        PathGenerator.LevelRandom = LevelRandom;
         PatrolEnemyMono[] enemyPaths = To.GetComponentsInChildren<PatrolEnemyMono>();
-        List<List<Vector2>> paths = pathGenerator.GeneratePaths(EnemyCount);
+        List<List<Vector2>> paths = PathGenerator.GeneratePaths(EnemyCount);
         for (int i = 0; i < EnemyCount; i++)
         {
             enemyPaths[i].InitPatrol(paths[i]);
         }
-        geneIndex = pathGenerator.geneIndex;
+        geneIndex = PathGenerator.geneIndex;
     }
 
     protected override int GenerateLevelContent(LevelChromosomeBase chromosome, BoxCollider2D box)

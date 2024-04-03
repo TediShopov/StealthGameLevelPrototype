@@ -142,7 +142,7 @@ public class DiscretePathGenerator : MonoBehaviour, IPathGenerator
     public Graph<Vector2> Roadmap { get; set; }
     public System.Random LevelRandom { get; set; }
     public LevelChromosome Chromosome;
-    public int geneIndex = 0;
+    [HideInInspector] public int geneIndex = 0;
 
     public List<EnemyPathingStategy> Stategies = new List<EnemyPathingStategy>()
     {
@@ -203,9 +203,9 @@ public class DiscretePathGenerator : MonoBehaviour, IPathGenerator
         return pathsToReturn;
     }
 
-    public void Init()
+    public void Init(GameObject To)
     {
-        var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
+        var level = Helpers.SearchForTagUpHierarchy(To.gameObject, "Level");
         Chromosome = level.GetComponentInChildren<LevelChromosomeMono>().Chromosome;
     }
 }

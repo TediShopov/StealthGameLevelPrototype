@@ -15,3 +15,17 @@ MonoBehaviour:
   LevelSize: {x: 15, y: 15}
   RelativeStartPosition: {x: 0.1, y: 0.1}
   RelativeEndPosiiton: {x: 0.9, y: 0.9}
+  PlayerPrefab: {fileID: 6410257650287846966, guid: 3e5537301517ee44a9291e89e4a23a2a, type: 3}
+  DestinationPrefab: {fileID: 6213345698534562546, guid: 9b977143c0ed4574092c33d8e8923adb, type: 3}
+  EnemyPrefab: {fileID: 5922416480227771763, guid: 82b50f82814ebcc4783fedd7e8edaffd, type: 3}
+  BoundaryViualPrefab: {fileID: 7711139357044409656, guid: 08b6193f02d8f434d96468973b833db0, type: 3}
+  LevelInitializer: {fileID: 3558959309750259788, guid: 69cb3862483af4348bb1455a8c0d3594, type: 3}
+  ObstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  BoundaryLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  ObstaclePrefabs:
+  - {fileID: 6228754912093341014, guid: fcde0039f3d6b4c40b99b26661cbff0f, type: 3}
+  - {fileID: 6228754912093341014, guid: b6381710a36f67e43902d4ed3ef11681, type: 3}

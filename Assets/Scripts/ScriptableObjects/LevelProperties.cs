@@ -15,7 +15,7 @@ public class LevelProperties : ScriptableObject
     public GameObject DestinationPrefab;
     public GameObject EnemyPrefab;
     public GameObject BoundaryViualPrefab;
-    public GameObject LevelInitializer;
     public LayerMask ObstacleLayerMask;
+    public LayerMask BoundaryLayerMask;
     public List<GameObject> ObstaclePrefabs;
 }

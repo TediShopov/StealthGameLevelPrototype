@@ -6,32 +6,50 @@ using UnityEngine;
 using UnityEngine.Profiling;
 
 [ExecuteInEditMode]
-public class FloodfilledRoadmapGenerator : MonoBehaviour
+[RequireComponent(typeof(Grid))]
+public class FloodfilledRoadmapGenerator : MonoBehaviour, IPrototypable<FloodfilledRoadmapGenerator>
 {
     //Dictionary exposed to Unity editor
-    public List<Collider2D> ColliderKeys;
+    [HideInInspector] public List<Collider2D> ColliderKeys;
 
-    public List<Color> Colors;
+    public bool DoFloodFill = false;
     public bool DebugDraw;
+    public bool ExtraChecks = false;
+    public float EnemyBSRadius = 1.0f;
+    public List<Color> Colors;
+
+    ///    [HideInInspector] public Grid Grid;
+    ///    [HideInInspector] public LayerMask ObstacleLayerMask;
+    ///    [HideInInspector] public LayerMask BoundaryLayerMask;
     public Grid Grid;
+
     public LayerMask ObstacleLayerMask;
     public LayerMask BoundaryLayerMask;
     public Graph<Vector2> RoadMap = new Graph<Vector2>();
     public List<Tuple<Vector2, Vector2>> _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
-    public float EnemyBSRadius = 1.0f;
 
     private Queue<Tuple<int, int>> BoundaryCells = new Queue<Tuple<int, int>>();
 
-    public bool DoFloodFill = false;
-
     //Transforms the unity grid to c# binary represenetaion of the level
-    private NativeGrid<int> LevelGrid;
+    public NativeGrid<int> LevelGrid;
+
+    public void Awake()
+    {
+        Grid = GetComponent<Grid>();
+        //        Colors = new List<Color>();
+        //        Colors.Add(new Color(1, 0, 0, 0.2f));
+        //        Colors.Add(new Color(0, 1, 0, 0.2f));
+        //        Colors.Add(new Color(0, 0, 1, 0.2f));
+        //        Colors.Add(new Color(1, 1, 0, 0.2f));
+        //        Colors.Add(new Color(1, 0, 1, 0.2f));
+        //        Colors.Add(new Color(0, 1, 1, 0.2f));
+    }
 
     public void Update()
     {
         if (DoFloodFill)
         {
-            Init();
+            //Init();
             FloodRegions();
             //return Physics2D.Linecast(a, b, ObstacleLayerMask);
             DoFloodFill = false;
@@ -49,11 +67,13 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
 
     public void Init()
     {
+        ColliderKeys = new List<Collider2D>();
         Profiler.BeginSample("Enemy Roadmap Init");
         _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
         this.Grid = GetComponent<Grid>();
 
-        LevelGrid = new NativeGrid<int>(this.Grid, Helpers.GetLevelBounds(this.gameObject));
+        LevelGrid = new NativeGrid<int>(this.Grid, Helpers.GetLevelBounds(gameObject));
+
         LevelGrid.SetAll(SetCellColliderIndex);
 
         FloodRegions();
@@ -155,26 +175,6 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
                     {
                         int relRow = neighborRow - currentCell.Item1;
                         int relCol = neighborCol - currentCell.Item2;
-                        Vector3 currentCellUnityCoord = LevelGrid.GetWorldPosition(currentCell.Item1, currentCell.Item2);
-                        Vector3 neighboursCellUnityCoord = LevelGrid.GetWorldPosition(neighborRow, neighborCol);
-
-                        Vector3 directionToNeighbour = neighboursCellUnityCoord - currentCellUnityCoord;
-                        Vector3 middlePoint = currentCellUnityCoord + directionToNeighbour * 0.5f;
-
-                        //Atemps to mitigate some untraversable roadmap edges
-
-                        //                        if (Physics2D.CircleCast(middlePoint, EnemyBSRadius, Vector2.zero, 0, ObstacleLayerMask))
-                        //                        {
-                        //                            continue;
-                        //                        }
-                        //                        if (Physics2D.CircleCast(currentCellUnityCoord, EnemyBSRadius, Vector2.zero, 0, ObstacleLayerMask))
-                        //                            continue;
-                        //                        if (Physics2D.CircleCast(neighboursCellUnityCoord, EnemyBSRadius, Vector2.zero, 0, ObstacleLayerMask))
-                        //                            continue;
-                        //if (Physics2D.CircleCast(neighboursCellUnityCoord, EnemyBSRadius, Vector2.zero, 0, ObstacleLayerMask))
-                        //{
-                        //    continue;
-                        //}
 
                         if (relRow > 0)
                         {
@@ -182,7 +182,7 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
                             {
                                 var lowerLeft = GetLowerLeft(neighborCol, neighborRow);
                                 var lowerRight = GetLowerLeft(neighborCol + 1, neighborRow);
-                                if (CannotTraverse(lowerLeft, lowerRight))
+                                if (ExtraChecks && CannotTraverse(lowerLeft, lowerRight))
                                     continue;
                                 RoadMap.AddNode(lowerRight);
                                 RoadMap.AddNode(lowerLeft);
@@ -196,7 +196,7 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
                                 var lowerLeft = GetLowerLeft(neighborCol, neighborRow);
                                 var upperLeft = GetLowerLeft(neighborCol, neighborRow + 1);
 
-                                if (CannotTraverse(lowerLeft, upperLeft))
+                                if (ExtraChecks && CannotTraverse(lowerLeft, upperLeft))
                                     continue;
                                 RoadMap.AddNode(upperLeft);
                                 RoadMap.AddNode(lowerLeft);
@@ -215,6 +215,7 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
             + new Vector3(-Grid.cellSize.x / 2.0f, -Grid.cellSize.y / 2.0f, 0);
     }
 
+    //}
     public void RemoveRedundantNodes(Vector2 start, ref int totalRecursions, List<Vector2> visited)
     {
         visited.Add(start);
@@ -376,11 +377,6 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
             LevelGrid.Get(x.Item1, x.Item2) == -1);
     }
 
-    public void Start()
-    {
-        //Helpers.LogExecutionTime(Init, "Floodfill algorithm intitializaiton");
-    }
-
     private Collider2D[] GetStaticColliderAt(Vector3 worldPosition)
     {
         Vector2 position2D = new Vector2(worldPosition.x, worldPosition.y);
@@ -399,6 +395,15 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
         return hit.Select(x => x.collider).ToArray();
     }
 
+    //        int rows = _gridMax.y - _gridMin.y;
+    //        int cols = _gridMax.x - _gridMin.x;
+    //        for (int row = 0; row < rows; row++)
+    //        {
+    //            for (int col = 0; col < cols; col++)
+    //            {
+    //            }
+    //        }
+
     #region Debug
 
     private void DebugDrawGridByIndex()
@@ -415,14 +420,6 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
                 Gizmos.DrawCube(worldPosition, Grid.cellSize);
             }
         });
-        //        int rows = _gridMax.y - _gridMin.y;
-        //        int cols = _gridMax.x - _gridMin.x;
-        //        for (int row = 0; row < rows; row++)
-        //        {
-        //            for (int col = 0; col < cols; col++)
-        //            {
-        //            }
-        //        }
     }
 
     private void DebugSimplifiedConnections()
@@ -447,6 +444,17 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour
             //DebugSimplifiedConnections();
             //Debug draw nodes with only one connecitons
         }
+    }
+
+    public FloodfilledRoadmapGenerator PrototypeComponent(GameObject to)
+    {
+        var other = to.AddComponent<FloodfilledRoadmapGenerator>();
+        other.ObstacleLayerMask = this.ObstacleLayerMask;
+        other.BoundaryLayerMask = this.BoundaryLayerMask;
+        other.Colors = this.Colors;
+        other.DebugDraw = this.DebugDraw;
+        other.ExtraChecks = this.ExtraChecks;
+        return other;
     }
 
     #endregion Debug

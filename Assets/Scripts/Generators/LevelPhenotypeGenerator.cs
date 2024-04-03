@@ -52,7 +52,6 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         BoxCollider2D box =
             SetupLevelInitials(chromosome, to,
             new GameObject("VisBound"));
-        Instantiate(LevelProperties.LevelInitializer, To.transform);
         GenerateLevelContent(chromosome, box);
 
         PlaceBoundaryVisualPrefabs(box, Obstacles);

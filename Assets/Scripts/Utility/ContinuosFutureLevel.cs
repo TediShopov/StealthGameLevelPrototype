@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -47,8 +48,14 @@ public class DynamicLevelSimulation
     }
 }
 
+public interface IPrototypable<T>
+{
+    T PrototypeComponent(GameObject to);
+}
+
 [ExecuteAlways]
-public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
+[RequireComponent(typeof(Grid))]
+public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel, IPrototypable<ContinuosFutureLevel>
 
 {
     public LayerMask ObstacleLayerMask;
@@ -97,6 +104,7 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
     {
         Profiler.BeginSample("Continuos Representation");
         var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
+        SolutionPaths = new List<List<Vector3>>();
         DynamicThreats = level.GetComponentsInChildren<IPredictableThreat>();
         //EnemyPatrolPaths = GetEnemyPatrolPaths();
         //enemyPaths[i].BacktrackPatrolPath = new BacktrackPatrolPath(paths[i]);
@@ -340,6 +348,7 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
 
     public void Update()
     {
+        if (DynamicThreats == null) return;
         foreach (var threa in DynamicThreats)
         {
             threa.Reset();
@@ -358,6 +367,7 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
     public void OnDrawGizmosSelected()
     {
         if (EnableSetLevel == false) return;
+        if (SolutionPaths == null) return;
         foreach (var path in SolutionPaths)
         {
             Vector2 position = GetPosition(path, SetTime);
@@ -368,5 +378,15 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel
             }
             Gizmos.DrawSphere(position, 0.1f);
         }
+    }
+
+    public ContinuosFutureLevel PrototypeComponent(GameObject to)
+    {
+        var other = to.AddComponent<ContinuosFutureLevel>();
+        other.BoundaryLayerMask = this.BoundaryLayerMask;
+        other.ObstacleLayerMask = this.ObstacleLayerMask;
+        other._iter = this._iter;
+        other._step = this._step;
+        return other;
     }
 }

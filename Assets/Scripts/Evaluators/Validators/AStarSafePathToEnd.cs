@@ -43,15 +43,15 @@ namespace StealthLevelEvaluation
         {
             Name = "SafePathToEnd";
             IsValidator = true;
-            var floodFillGenerator = phenotype.GetComponentInChildren<FloodfilledRoadmapGenerator>();
-            Grid grid = phenotype.GetComponentInChildren<Grid>();
+            var roadmap = phenotype.GetComponentInChildren<FloodfilledRoadmapGenerator>();
+            Grid grid = roadmap.Grid;
             var character = phenotype.GetComponentInChildren<CharacterController2D>().gameObject;
             StartCoord = (Vector2Int)grid.WorldToCell(character.transform.position);
             PlayerCollider = character.GetComponent<Collider2D>();
             GoalCoord = (Vector2Int)grid.WorldToCell(phenotype.GetComponentInChildren<WinTrigger>().transform.position);
 
             FutureLevel = phenotype.GetComponentInChildren<ContinuosFutureLevel>();
-            Grid = phenotype.GetComponentInChildren<Grid>();
+            Grid = grid;
             if (FutureLevel != null)
             {
                 UniqueVisibleCells = FutureLevel.UniqueVisibleCells(
