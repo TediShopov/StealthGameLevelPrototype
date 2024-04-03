@@ -61,7 +61,7 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         var visualBoundary = new GameObject("VisualBoundary");
         visualBoundary.transform.SetParent(To.transform, false);
         PlaceBoundaryVisualPrefabs(box, visualBoundary);
-
+        Physics2D.SyncTransforms();
         //Solvers
         var levelInitializer = To.gameObject.GetComponentInChildren<InitializeStealthLevel>();
         //var voxelizedLevel = gameObject.GetComponentInChildren<>();
@@ -181,10 +181,12 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
                 foreach (var shape in shapesFromOtherComposite)
                 {
                     SimpleShapeToCompositeCollider(shape, comp);
+                    shape.gameObject.transform.SetParent(comp.transform, true);
                 }
+                Physics2D.SyncTransforms();
+                DestroyImmediate(otherComposite.gameObject);
             }
         }
-        Physics2D.SyncTransforms();
         comp.GenerateGeometry();
     }
 
