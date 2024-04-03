@@ -218,6 +218,13 @@ public class StealthLevelIEMono : MonoBehaviour
                 new Tuple<int, LevelChromosome>(
                     GeneticAlgorithm.GenerationsNumber,
                     chromosome));
+
+            //Change the wieght preference of the evaluator
+            LevelMeasuredProperties levelMeasuredProperties = chromosome.Properties;
+            float step = 0.2f;
+            var changeInWeight = step *
+                (levelMeasuredProperties.SuccessChance - AverageLevelPreferences().SuccessChance);
+            var newWeight = levelMeasuredProperties.SuccessChance + changeInWeight;
         }
     }
 
@@ -289,6 +296,18 @@ public class StealthLevelIEMono : MonoBehaviour
         GeneticAlgorithm.Termination = new GenerationNumberTermination(AimedGenerations);
         GeneticAlgorithm.GenerationRan += Ga_GenerationRan;
         GeneticAlgorithm.TerminationReached += Ga_TerminationReached; ;
+    }
+
+    public LevelMeasuredProperties AverageLevelPreferences()
+    {
+        var allValidProperties =
+        this.GeneticAlgorithm.Population.CurrentGeneration.Chromosomes
+            .Select(x => (LevelChromosomeBase)x);
+
+        LevelMeasuredProperties avgProperties = new LevelMeasuredProperties();
+        avgProperties.PathUniqeness = allValidProperties.Select(x => x.Properties.PathUniqeness).Average();
+        avgProperties.SuccessChance = allValidProperties.Select(x => x.Properties.SuccessChance).Average();
+        return avgProperties;
     }
 
     public void DoGeneration()

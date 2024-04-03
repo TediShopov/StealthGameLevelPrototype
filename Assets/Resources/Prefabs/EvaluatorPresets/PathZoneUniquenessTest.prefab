@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: -5281071348302234667}
   - component: {fileID: -8927237631082155595}
   - component: {fileID: 8980104959754126724}
+  - component: {fileID: 4072880465894338835}
   m_Layer: 0
   m_Name: PathZoneUniquenessTest
   m_TagString: Untagged
@@ -56,7 +57,7 @@ MonoBehaviour:
   RunOnStart: 0
   RRTPrefab: {fileID: 7030242558019223737, guid: 7f0457cd415130a49905aa062fe61a4f, type: 3}
   DeisredSuccesses: 5
-  MaxRRTAttempts: 50
+  MaxRRTAttempts: 25
   Successes: 0
   Attempts: 0
 --- !u!114 &-1400473969929813684
@@ -157,3 +158,15 @@ MonoBehaviour:
   RunOnStart: 0
   TimeframesObserved: 0
   TimesFrameSimulated: 0
+--- !u!114 &4072880465894338835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4520497855799095119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae0c960289b63c549a40492c8ec92f4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

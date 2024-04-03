@@ -343,8 +343,6 @@ MonoBehaviour:
   LogExecutionTimes: 0
   TopNLevels: 5
   ExtraSpacing: {x: 10, y: 10}
-  InteractionFinsihed: 0
-  DoInteractiveAlgorithm: 1
 --- !u!1 &1513753133
 GameObject:
   m_ObjectHideFlags: 0

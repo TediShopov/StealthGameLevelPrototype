@@ -12,4 +12,5 @@ public abstract class LevelChromosomeBase : ChromosomeBase
 
     public LevelPhenotypeGenerator PhenotypeGenerator;
     public MeasurementsData Measurements { get; set; }
+    public LevelMeasuredProperties Properties;
 }

@@ -1,19 +1,29 @@
 using GeneticSharp;
-using log4net.Appender;
 using StealthLevelEvaluation;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
-public class EvaluatorMono : MonoBehaviour, IFitness
+[System.Serializable]
+public struct UserPreferenceModel
 {
-    public GameObject EvaluatorHolder;
-    public GridObjectLayout GridLevelObjects;
+    public float OverallPathRisk;
+    public float SuccessChance;
+    public float PathUniqeness;
+}
+
+public struct LevelMeasuredProperties
+{
+    public float SuccessChance;
+    public float PathUniqeness;
+}
+
+public class InteractiveEvalutorMono : EvaluatorMono
+{
     //private List<MeasureMono> Evaluators = new List<MeasureMono>();
 
-    public virtual double Evaluate(IChromosome chromosome)
+    public override double Evaluate(IChromosome chromosome) 
     {
         if (chromosome is LevelChromosomeBase)
         {
@@ -41,7 +51,6 @@ public class EvaluatorMono : MonoBehaviour, IFitness
                     break;
             }
             var measurementData = new MeasurementsData(Evaluators.Select(x => x.Result).ToArray());
-
             if (measurementData == null)
             {
                 int b = 3;
@@ -64,23 +73,11 @@ public class EvaluatorMono : MonoBehaviour, IFitness
                 var riskMeasure = levelObject.GetComponentInChildren<RiskMeasure>();
                 var pathUniqueness = levelObject.GetComponentInChildren<PathZoneUniqueness>();
                 var solver = levelObject.GetComponentInChildren<RRTSolverDifficultyEvaluation>();
-                if (riskMeasure != null && pathUniqueness != null)
-                {
-                    if (pathUniqueness.SeenPaths.Count == 0)
-                        eval = 0.5f;
-                    else
-                    {
-                        eval = riskMeasure.RiskMeasures.Min()
-                            * pathUniqueness.SeenPaths.Count
-                            * solver.Chance * 30;
-                    }
-                }
-                else
-                {
-                    eval = measurementData.FitnessEvaluations
-                        .Where(x => x.IsValidation == false)
-                        .Sum(x => float.Parse(x.Value));
-                }
+
+                levelChromosome.Properties.PathUniqeness = pathUniqueness.SeenPaths.Count / 5.0f;
+                levelChromosome.Properties.SuccessChance = (float)solver.Successes / (float)solver.Attempts;
+                if (levelChromosome.Properties.SuccessChance > 0)
+                    Debug.Log($"Level with name {levelObject.name} has non-zero properties");
             }
 
             return eval;
