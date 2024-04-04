@@ -8,6 +8,7 @@ public class StealthLevelIEEditor : Editor
 {
     private bool showMetaproperties;
     private bool showFundamental;
+    private bool showLayout;
 
     private GUIStyle _bolded = GUIStyle.none;
 
@@ -57,6 +58,12 @@ public class StealthLevelIEEditor : Editor
                 ie.LevelProperties = (LevelProperties)EditorGUILayout.ObjectField(ie.LevelProperties, typeof(LevelProperties), false);
                 ie.Generator = (LevelPhenotypeGenerator)EditorGUILayout.ObjectField(ie.Generator, typeof(LevelPhenotypeGenerator), true);
                 ie.Seed = EditorGUILayout.IntField("Seed: ", ie.Seed);
+            }
+
+            showLayout = EditorGUILayout.Foldout(showLayout, "Layout");
+            if (showLayout)
+            {
+                ie.ExtraSpacing = EditorGUILayout.Vector2Field("Extra Spacing: ", ie.ExtraSpacing);
             }
 
             if (GUILayout.Button("Randmozise Seed"))
