@@ -94,6 +94,13 @@ public class GridObjectLayout
     private GameObject[,] LevelObjects;
 
     private int currentIndex = -1;
+
+    public struct SelectionDetails
+    {
+        private int Generation;
+        private LevelChromosome Chromosome;
+    }
+
     private int GridDimension;
 
     public GameObject GetNextLevelObject()
@@ -222,7 +229,7 @@ public class StealthLevelIEMono : MonoBehaviour
         Seed = new System.Random().Next();
     }
 
-    private HashSet<Tuple<int, LevelChromosome>> InteractiveSelections;
+    public HashSet<Tuple<int, LevelChromosome>> InteractiveSelections;
 
     public void SelectChromosome(LevelChromosome chromosome)
     {
