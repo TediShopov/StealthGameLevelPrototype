@@ -145,6 +145,16 @@ public class GridObjectLayout
         foreach (var item in LevelObjects)
         {
             if (item == null) continue;
+            GameObject.DestroyImmediate(item.GetComponent<ContinuosFutureLevel>());
+            GameObject.DestroyImmediate(item.GetComponent<FloodfilledRoadmapGenerator>());
+            GameObject.DestroyImmediate(item.GetComponent<Grid>());
+            //            foreach (var comp in item.GetComponents<Component>())
+            //            {
+            //                if (!(comp is Transform))
+            //                {
+            //                    GameObject.DestroyImmediate(comp);
+            //                }
+            //            }
             var tempList = item.transform.Cast<Transform>().ToList();
             foreach (var child in tempList)
             {
@@ -185,23 +195,27 @@ public class StealthLevelIEMono : MonoBehaviour
     public int LogExecutionTimes = 0;
     public int TopNLevels = 5;
 
-    private InteractiveGeneticAlgorithm GeneticAlgorithm;
+    public InteractiveGeneticAlgorithm GeneticAlgorithm;
     public Vector2 ExtraSpacing;
 
-    public void Start()
+    public void Awake()
     {
         InteractiveSelections = new HashSet<Tuple<int, LevelChromosome>>();
-        if (LogExecutions)
-        {
-            string algoName = $"GEN_{AimedGenerations}_POP{PopulationCount}_SZ{LevelProperties.LevelSize}";
-            float[] runs = Helpers.TrackExecutionTime(Run, LogExecutionTimes);
-            Helpers.SaveRunToCsv($"Tests/{algoName}.txt", runs);
-        }
-        else
-        {
-            Run();
-        }
+        Dispose();
+        //        if (LogExecutions)
+        //        {
+        //            string algoName = $"GEN_{AimedGenerations}_POP{PopulationCount}_SZ{LevelProperties.LevelSize}";
+        //            float[] runs = Helpers.TrackExecutionTime(Run, LogExecutionTimes);
+        //            Helpers.SaveRunToCsv($"Tests/{algoName}.txt", runs);
+        //        }
+        //        else
+        //        {
+        //            Run();
+        //        }
     }
+
+    public bool IsRunning => GeneticAlgorithm != null
+        && GeneticAlgorithm.IsRunning;
 
     public void RandomizeSeed()
     {
@@ -340,6 +354,7 @@ public class StealthLevelIEMono : MonoBehaviour
             GameObject.DestroyImmediate(child.gameObject);
         }
         this.GridPopulation = null;
+        this.GeneticAlgorithm = null;
     }
 
     private List<IChromosome> GetTopLevelsFitness()
