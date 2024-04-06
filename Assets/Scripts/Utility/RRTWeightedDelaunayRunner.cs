@@ -20,7 +20,6 @@ public class DelunayTriangulatedLevelData : MonoBehaviour
 public class RRTWeightedDelaunayRunner : RapidlyExploringRandomTreeVisualizer
 {
     private DelunayTriangulatedLevelData TringulationData;
-    public RRTStats Stats;
 
     public override void Run()
     {

@@ -3,7 +3,7 @@
   <Class Name="GeneticSharp.Domain.Fitnesses.FitnessException" Collapsed="true">
     <Position X="5.5" Y="1" Width="2.5" />
     <Compartments>
-      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="AestheticProperties" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>

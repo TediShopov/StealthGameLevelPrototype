@@ -9,6 +9,11 @@ public class PathZoneUniqueness : MeasureMono
 {
     private GameObject LevelObject;
 
+    public override string GetName()
+    {
+        return "PathZoneUniqueness";
+    }
+
     public RapidlyExploringRandomTreeVisualizer[] GetRRTMonos()
     {
         if (LevelObject == null)
@@ -68,7 +73,7 @@ public class PathZoneUniqueness : MeasureMono
         return zoneA.SequenceEqual(zoneB);
     }
 
-    public override string Evaluate()
+    protected override string Evaluate()
     {
         SeenPaths = new List<List<int>>();
         var monos = GetRRTMonos();
@@ -98,7 +103,6 @@ public class PathZoneUniqueness : MeasureMono
 
     public override void Init(GameObject phenotype)
     {
-        Name = "PathZoneUniqueness";
         LevelObject = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
     }
 }

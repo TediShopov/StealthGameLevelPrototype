@@ -39,7 +39,7 @@ namespace GeneticSharp
 
         #endregion Constructors
 
-        #region Properties
+        #region AestheticProperties
 
         /// <summary>
         /// Gets the number.
@@ -64,7 +64,7 @@ namespace GeneticSharp
         /// <value>The best chromosome.</value>
         public IChromosome BestChromosome { get; set; }
 
-        #endregion Properties
+        #endregion AestheticProperties
 
         #region Methods
 

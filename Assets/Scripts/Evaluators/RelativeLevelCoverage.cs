@@ -15,17 +15,21 @@ namespace StealthLevelEvaluation
         //                Grid = Phenotype.GetComponentInChildren<Grid>(false);
         //                ObstacleLayerMask = LayerMask.GetMask("Obstacle");
         //            }
-        public override void Init(GameObject phenotype, string name)
+        public override string GetName()
         {
-            base.Init(phenotype, name);
-            Grid = Phenotype.GetComponentInChildren<Grid>(false);
-            ObstacleLayerMask = LayerMask.GetMask("Obstacle");
+            return "Relative Coverage";
         }
 
         public override void Init(GameObject phenotype)
         {
-            Init(phenotype, "Relative Coverage");
+            Grid = Phenotype.GetComponentInChildren<Grid>(false);
+            ObstacleLayerMask = LayerMask.GetMask("Obstacle");
         }
+
+        //        public override void Init(GameObject phenotype)
+        //        {
+        //            Init(phenotype,);
+        //        }
 
         //        private int DiscreteNotCollidingCells(ContinuosFutureLevel futureLevel, ref NativeGrid<bool> staticObstacle)
         //        {
@@ -65,7 +69,7 @@ namespace StealthLevelEvaluation
             return UniqueVisibleCells.Count;
         }
 
-        public override string Evaluate()
+        protected override string Evaluate()
         {
             //Get Future level instance
             var futureLevel = Phenotype.GetComponentInChildren<IFutureLevel>(false);

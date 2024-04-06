@@ -25,7 +25,7 @@ namespace GeneticSharp
         }
         #endregion
 
-        #region Properties
+        #region AestheticProperties
 
         /// <summary>
         /// Gets the value.

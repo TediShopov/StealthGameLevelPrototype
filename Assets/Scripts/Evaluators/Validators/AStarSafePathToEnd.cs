@@ -21,7 +21,12 @@ namespace StealthLevelEvaluation
         //a level future
         private NativeGrid<bool> LevelGrid;
 
-        public override string Evaluate()
+        public override string GetName()
+        {
+            return "AStarSafePathToEnd";
+        }
+
+        protected override string Evaluate()
         {
             AStar aStar = new AStar(LevelGrid);
             Vector2Int startNativeCoord = LevelGrid.GetNativeCoord(StartCoord);
@@ -41,7 +46,6 @@ namespace StealthLevelEvaluation
 
         public override void Init(GameObject phenotype)
         {
-            Name = "SafePathToEnd";
             IsValidator = true;
             var roadmap = phenotype.GetComponentInChildren<FloodfilledRoadmapGenerator>();
             Grid grid = roadmap.Grid;
@@ -78,6 +82,7 @@ namespace StealthLevelEvaluation
 
         private void OnDrawGizmosSelected()
         {
+            if (DrawOnSelected == false) return;
             if (UniqueVisibleCells != null)
             {
                 foreach (var cell in UniqueVisibleCells)

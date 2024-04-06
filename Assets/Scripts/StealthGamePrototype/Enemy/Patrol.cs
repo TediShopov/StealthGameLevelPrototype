@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Patrol : IPredictableThreat
 {
-    public DefaultEnemyProperties Properties;
+    public DefaultEnemyProperties AestheticProperties;
     private BacktrackPatrolPath Route;
 
     private FutureTransform Transform = new FutureTransform
@@ -17,7 +17,7 @@ public class Patrol : IPredictableThreat
         DefaultEnemyProperties props,
         List<Vector2> path)
     {
-        this.Properties = props;
+        this.AestheticProperties = props;
 
         //Route creation strategy
 
@@ -49,8 +49,8 @@ public class Patrol : IPredictableThreat
     {
         return FieldOfView.GetFovBounds(
             GetTransform(),
-            this.Properties.ViewDistance,
-            this.Properties.FOV
+            this.AestheticProperties.ViewDistance,
+            this.AestheticProperties.FOV
             );
     }
 
@@ -83,8 +83,8 @@ public class Patrol : IPredictableThreat
         return FieldOfView.TestCollision(
             collision,
             Transform,
-            Properties.FOV,
-            Properties.ViewDistance,
+            AestheticProperties.FOV,
+            AestheticProperties.ViewDistance,
             LayerMask.GetMask("Obstacle")
             );
     }
@@ -93,7 +93,7 @@ public class Patrol : IPredictableThreat
     {
         if (Route == null) return;
         //Move a constant speed along a route
-        Route.MoveAlong(deltaTime * Properties.Speed);
+        Route.MoveAlong(deltaTime * AestheticProperties.Speed);
 
         //Get the position along the route and direction
         //heading to the next path point

@@ -14,7 +14,7 @@ namespace GeneticSharp
     /// </summary>
     public interface IChromosome : IComparable<IChromosome>
     {
-        #region Properties
+        #region AestheticProperties
         /// <summary>
         /// Gets or sets the fitness.
         /// </summary>

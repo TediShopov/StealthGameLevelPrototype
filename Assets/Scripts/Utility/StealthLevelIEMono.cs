@@ -117,6 +117,7 @@ public class GridObjectLayout
     {
         GridDimension = Mathf.CeilToInt(Mathf.Sqrt(populationCount));
 
+        float step = 0.1f;
         //Setup Generator Prototype
         LevelObjects = new GameObject[GridDimension, GridDimension];
 
@@ -201,6 +202,7 @@ public class StealthLevelIEMono : MonoBehaviour
     public bool LogIndividualExecutions = false;
     public int LogExecutionTimes = 0;
     public int TopNLevels = 5;
+    public float Step;
 
     public InteractiveGeneticAlgorithm GeneticAlgorithm;
     public Vector2 ExtraSpacing;
@@ -241,11 +243,15 @@ public class StealthLevelIEMono : MonoBehaviour
                     chromosome));
 
             //Change the wieght preference of the evaluator
-            LevelMeasuredProperties levelMeasuredProperties = chromosome.Properties;
-            float step = 0.2f;
-            var changeInWeight = step *
-                (levelMeasuredProperties.SuccessChance - AverageLevelPreferences().SuccessChance);
-            var newWeight = levelMeasuredProperties.SuccessChance + changeInWeight;
+            List<float> measures = chromosome.AestheticProperties;
+
+            List<float> avgLevelProperties = AverageLevelPreferences();
+            for (int i = 0; i < measures.Count; i++)
+            {
+                var changeInWeight = Step *
+                    (measures[i] - avgLevelProperties[i]);
+                var newWeight = measures[i] + changeInWeight;
+            }
         }
     }
 
@@ -319,15 +325,19 @@ public class StealthLevelIEMono : MonoBehaviour
         GeneticAlgorithm.TerminationReached += Ga_TerminationReached; ;
     }
 
-    public LevelMeasuredProperties AverageLevelPreferences()
+    public List<float> AverageLevelPreferences()
     {
         var allValidProperties =
         this.GeneticAlgorithm.Population.CurrentGeneration.Chromosomes
-            .Select(x => (LevelChromosomeBase)x);
+            .Select(x => ((LevelChromosomeBase)x).AestheticProperties)
+            .ToList();
 
-        LevelMeasuredProperties avgProperties = new LevelMeasuredProperties();
-        avgProperties.PathUniqeness = allValidProperties.Select(x => x.Properties.PathUniqeness).Average();
-        avgProperties.SuccessChance = allValidProperties.Select(x => x.Properties.SuccessChance).Average();
+        List<float> avgProperties = new List<float>(allValidProperties.First());
+
+        for (int i = 0; i < avgProperties.Count; i++)
+        {
+            avgProperties[i] = allValidProperties.Average(x => x[i]);
+        }
         return avgProperties;
     }
 

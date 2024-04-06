@@ -14,7 +14,12 @@ public class StartEndDestinationObserveTime : MeasureMono
     public int TimeframesObserved = 0;
     public int TimesFrameSimulated = 0;
 
-    public override string Evaluate()
+    public override string GetName()
+    {
+        return "StartEndDestinationObserveTime";
+    }
+
+    protected override string Evaluate()
     {
         float percetangeOfTimeFramesObserved = PercentageOfTimeFramesObserved(100);
         return percetangeOfTimeFramesObserved.ToString();
@@ -91,7 +96,6 @@ public class StartEndDestinationObserveTime : MeasureMono
     {
         IsValidator = true;
         Phenotype = phenotype;
-        Name = "StartEndObservationTime";
         FutureLevel = Phenotype.GetComponentInChildren<IFutureLevel>();
         Start = Phenotype.GetComponentInChildren<CharacterController2D>().gameObject;
         End = Phenotype.GetComponentInChildren<WinTrigger>().gameObject;

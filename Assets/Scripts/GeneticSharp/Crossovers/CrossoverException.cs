@@ -70,7 +70,7 @@ namespace GeneticSharp
         }
         #endregion
 
-        #region Properties
+        #region AestheticProperties
         /// <summary>
         /// Gets the crossover.
         /// </summary>

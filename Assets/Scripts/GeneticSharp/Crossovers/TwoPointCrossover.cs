@@ -42,7 +42,7 @@ namespace GeneticSharp
         }
         #endregion
 
-        #region Properties
+        #region AestheticProperties
         /// <summary>
         /// Gets or sets the index of the swap point one gene.
         /// </summary>

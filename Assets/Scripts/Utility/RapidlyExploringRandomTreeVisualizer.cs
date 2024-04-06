@@ -58,8 +58,20 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
         //EndNode = level.GetComponentInChildren<WinTrigger>().gameObject;
     }
 
+    public bool SelectionDrawingRequirements => Selection.transforms.Any(
+        x => x == this.transform
+        || x == this.transform.parent.transform
+        || x == this.transform.parent.parent.transform);
+
     public void OnDrawGizmosSelected()
     {
+        if (Selection.transforms.Any(x => x.Equals(this.gameObject.transform)))
+        {
+            int b = 3;
+        }
+        //Avodi drawing if not clicking on this, parent, or level
+        if (SelectionDrawingRequirements == false) return;
+
         //Do not draw anything as algorithm has not been stared
         if (RRT == null) return;
         //Draw whole tree

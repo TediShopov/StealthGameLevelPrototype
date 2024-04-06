@@ -33,7 +33,7 @@ namespace GeneticSharp
         }
         #endregion
 
-        #region Properties
+        #region AestheticProperties
         /// <summary>
         /// Gets or sets the execution max time.
         /// </summary>

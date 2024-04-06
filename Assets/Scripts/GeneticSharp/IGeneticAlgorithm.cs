@@ -7,7 +7,7 @@ namespace GeneticSharp
     /// </summary>
     public interface IGeneticAlgorithm
     {
-        #region Properties
+        #region AestheticProperties
         /// <summary>
         /// Gets the generations number.
         /// </summary>

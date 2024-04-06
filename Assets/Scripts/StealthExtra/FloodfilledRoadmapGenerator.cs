@@ -454,6 +454,7 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour, IPrototypable<Floodfil
         other.Colors = this.Colors;
         other.DebugDraw = this.DebugDraw;
         other.ExtraChecks = this.ExtraChecks;
+        other.EnemyBSRadius = this.EnemyBSRadius;
         return other;
     }
 

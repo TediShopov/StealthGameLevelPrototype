@@ -15,7 +15,7 @@ namespace GeneticSharp
         event EventHandler BestChromosomeChanged;
         #endregion
 
-        #region Properties
+        #region AestheticProperties
         /// <summary>
         /// Gets the creation date.
         /// </summary>

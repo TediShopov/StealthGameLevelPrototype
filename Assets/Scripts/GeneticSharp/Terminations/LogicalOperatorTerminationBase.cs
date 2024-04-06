@@ -41,14 +41,14 @@ namespace GeneticSharp
         }
         #endregion
 
-        #region Properties
+        #region AestheticProperties
         /// <summary>
         /// Gets the terminations.
         /// </summary>
         protected IList<ITermination> Terminations { get; private set; }
         #endregion
 
-        #region Properties
+        #region AestheticProperties
         /// <summary>
         /// Adds the termination.
         /// </summary>

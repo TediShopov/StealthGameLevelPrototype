@@ -15,7 +15,12 @@ public class RRTSolverDifficultyEvaluation : MeasureMono
     public int Attempts;
     public float Chance => (float)Successes / (float)Attempts;
 
-    public override string Evaluate()
+    public override string GetName()
+    {
+        return "RRTSolverDifficultyEvaluation";
+    }
+
+    protected override string Evaluate()
     {
         Successes = 0;
         Attempts = 0;

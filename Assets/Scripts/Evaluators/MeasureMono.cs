@@ -8,7 +8,8 @@ namespace StealthLevelEvaluation
 {
     public interface IMeasure<T>
     {
-        public string Name { get; }
+        public abstract string GetName();
+
         public double Time { get; }
         public MeasureResult? Result { get; }
 
@@ -40,7 +41,8 @@ namespace StealthLevelEvaluation
         //If a validator is terminating, the no other validation and/or evaluation should be carried out.
         [HideInInspector] public bool IsTerminating { get; protected set; }
 
-        [HideInInspector] public string Name { get; protected set; }
+        //[HideInInspector] public string Name { get; protected set; }
+        public abstract string GetName();
 
         [SerializeField] protected string _value;
         protected double _time;
@@ -48,6 +50,7 @@ namespace StealthLevelEvaluation
 
         public bool RunNow = false;
         public bool RunOnStart = false;
+        public bool DrawOnSelected = false;
 
         public void Start()
         {
@@ -73,13 +76,13 @@ namespace StealthLevelEvaluation
 
         public abstract void Init(GameObject phenotype);
 
-        public virtual void Init(GameObject phenotype, string name)
-        {
-            Phenotype = phenotype;
-            Name = name;
-            _value = "";
-            _evaluted = false;
-        }
+        //        public virtual void Init(GameObject phenotype, string name)
+        //        {
+        //            Phenotype = phenotype;
+        //            Name = name;
+        //            _value = "";
+        //            _evaluted = false;
+        //        }
 
         //        public MeasureMono(GameObject phenotype, string name, double defValue)
         //        {
@@ -90,7 +93,7 @@ namespace StealthLevelEvaluation
                 if (!_evaluted)
                 {
                     _evaluted = true;
-                    Profiler.BeginSample(Name);
+                    Profiler.BeginSample(GetName());
                     _time = Helpers.TrackExecutionTime(() => _value = Evaluate());
                     Profiler.EndSample();
                 }
@@ -106,16 +109,26 @@ namespace StealthLevelEvaluation
         public MeasureResult? Result { get; private set; }
 
         //Accepts the phenotype of a generated level and assigns a fitness value
-        public abstract string Evaluate();
+        protected abstract string Evaluate();
+
+        //        public void Measure()
+        //        {
+        //            _evaluted = true;
+        //            Profiler.BeginSample(Name);
+        //            _time = Helpers.TrackExecutionTime(() => _value = Evaluate());
+        //            Profiler.EndSample();
+        //
+        //
+        //        }
 
         public void DoMeasure(GameObject data)
         {
             Phenotype = data;
-            var measurment = Evaluate();
+            var measurment = this.Value;
             if (Result.HasValue == false)
                 Result = new MeasureResult
                 {
-                    Name = Name,
+                    Name = GetName(),
                     Time = _time,
                     Value = measurment,
                     IsValidation = IsValidator,
@@ -124,7 +137,7 @@ namespace StealthLevelEvaluation
             else
             {
                 MeasureResult m = Result.Value;
-                m.Name = Name;
+                m.Name = GetName();
                 m.Time = Time;
                 m.IsValidation = IsValidator;
                 m.Value = measurment;

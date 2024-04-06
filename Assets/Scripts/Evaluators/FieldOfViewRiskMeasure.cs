@@ -116,11 +116,11 @@ public class FieldOfViewRiskMeasure : ISolutionPathRiskMeasurement
         Vector2 directionToPlayer = (player.Position - enemy.GetTransform().Position).normalized;
         float angle = Vector2.Angle(enemy.GetTransform().Direction, directionToPlayer);
         //Is in view range
-        if (angle < enemy.Properties.FOV / 2.0f)
+        if (angle < enemy.AestheticProperties.FOV / 2.0f)
         {
             return 1;
         }
-        float relAngularCost = Mathf.InverseLerp(180, enemy.Properties.FOV / 2.0f, angle);
+        float relAngularCost = Mathf.InverseLerp(180, enemy.AestheticProperties.FOV / 2.0f, angle);
         return Mathf.Lerp(0.5f, 1, relAngularCost);
     }
 }

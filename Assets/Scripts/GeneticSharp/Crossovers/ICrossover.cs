@@ -16,7 +16,7 @@ namespace GeneticSharp
     /// </summary>
     public interface ICrossover : IChromosomeOperator
     {
-        #region Properties
+        #region AestheticProperties
         /// <summary>
         /// Gets the number of parents need for cross.
         /// </summary>

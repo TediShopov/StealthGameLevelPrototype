@@ -20,7 +20,7 @@ namespace GeneticSharp
         }
         #endregion
 
-        #region Properties
+        #region AestheticProperties
         /// <summary>
         /// Gets a value indicating whether can collapse the number of selected chromosomes for reinsertion.
         /// </summary>

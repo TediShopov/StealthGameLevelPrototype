@@ -29,7 +29,7 @@ namespace GeneticSharp
         }
         #endregion
 
-        #region Properties
+        #region AestheticProperties
         /// <summary>
         /// Gets or sets the fitness of the chromosome in the current problem.
         /// </summary>

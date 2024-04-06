@@ -5,7 +5,7 @@
     /// </summary>
     public abstract class MutationBase : IMutation
     {
-        #region Properties
+        #region AestheticProperties
         /// <summary>
         /// Gets or sets a value indicating whether the operator is ordered (if can keep the chromosome order).
         /// </summary>

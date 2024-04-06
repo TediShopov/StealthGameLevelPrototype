@@ -60,6 +60,8 @@ public class StealthLevelIEEditor : Editor
 
                 ie.CrossoverProb = EditorGUILayout.Slider("Crossover", ie.CrossoverProb, 0.0f, 1.0f);
                 ie.MutationProb = EditorGUILayout.Slider("Mutation", ie.MutationProb, 0.0f, 1.0f);
+
+                ie.Step = EditorGUILayout.Slider("Step", ie.Step, 0, 1);
             }
 
             showFundamental = EditorGUILayout.Foldout(showFundamental, "Fundamentals");

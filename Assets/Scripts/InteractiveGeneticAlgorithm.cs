@@ -92,7 +92,7 @@ namespace GeneticSharp.Domain
 
         #endregion Events
 
-        #region Properties
+        #region AestheticProperties
 
         /// <summary>
         /// </summary>
@@ -217,7 +217,7 @@ namespace GeneticSharp.Domain
         /// </summary>
         public ITaskExecutor TaskExecutor { get; set; }
 
-        #endregion Properties
+        #endregion AestheticProperties
 
         #region Methods
 

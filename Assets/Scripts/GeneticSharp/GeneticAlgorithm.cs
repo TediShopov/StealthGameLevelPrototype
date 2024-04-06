@@ -138,7 +138,7 @@ namespace GeneticSharp
 
         #endregion Events
 
-        #region Properties
+        #region AestheticProperties
 
         /// <summary>
         /// Gets the operators strategy
@@ -259,7 +259,7 @@ namespace GeneticSharp
         /// </summary>
         public ITaskExecutor TaskExecutor { get; set; }
 
-        #endregion Properties
+        #endregion AestheticProperties
 
         #region Methods
 

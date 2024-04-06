@@ -8,7 +8,7 @@ namespace GeneticSharp
     /// </summary>
     public interface ITaskExecutor
     {
-        #region Properties
+        #region AestheticProperties
         /// <summary>
         /// Gets or sets the timeout to execute the tasks.
         /// </summary>

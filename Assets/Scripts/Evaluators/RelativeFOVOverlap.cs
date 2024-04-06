@@ -19,15 +19,16 @@ namespace StealthLevelEvaluation
     {
         public RelativeFovData Data;
 
-        public void Awake()
-        {
-            if (Phenotype == null)
-                Init(Helpers.SearchForTagUpHierarchy(this.gameObject, "Level"), "RelativeFOV");
-        }
+        //        public void Awake()
+        //        {
+        //            if (Phenotype == null)
+        //                Init(Helpers.SearchForTagUpHierarchy(this.gameObject, "Level"), "RelativeFOV");
+        //        }
 
-        public override void Init(GameObject phenotype, string name)
+        public override string GetName() => "RelativeFOVOverlap";
+
+        public override void Init(GameObject phenotype)
         {
-            base.Init(phenotype, name);
             Data.ObstacleLayerMask = LayerMask.GetMask("Obstacle");
             if (Phenotype != null)
                 Data.Grid = Phenotype.GetComponentInChildren<Grid>();
@@ -35,10 +36,10 @@ namespace StealthLevelEvaluation
                 throw new System.ArgumentException("No valid grid component in level");
         }
 
-        public override void Init(GameObject phenotype)
-        {
-            Init(phenotype, "Relative FOV Overlap");
-        }
+        //        public override void Init(GameObject phenotype)
+        //        {
+        //            Init(phenotype, "Relative FOV Overlap");
+        //        }
 
         //        public RelativeFOVOverlap(GameObject level) : base(level, "Average realtive overlapping areas", 0)
         //        {
@@ -116,7 +117,7 @@ namespace StealthLevelEvaluation
         private float VD;
         private float FOV;
 
-        public override string Evaluate()
+        protected override string Evaluate()
         {
             //Get Future level instance
             var futureLevel = Phenotype.GetComponentInChildren<IFutureLevel>(false);

@@ -13,17 +13,18 @@ public struct UserPreferenceModel
     public float PathUniqeness;
 }
 
-public struct LevelMeasuredProperties
-{
-    public float SuccessChance;
-    public float PathUniqeness;
-}
-
 public class InteractiveEvalutorMono : EvaluatorMono
 {
     //private List<MeasureMono> Evaluators = new List<MeasureMono>();
 
-    public override double Evaluate(IChromosome chromosome) 
+    public void AppendAestheticMeasureToObject(GameObject level, LevelChromosomeBase chromosomeBase)
+    {
+        var asm = level.AddComponent<AestheticCriteriaMeasure>();
+        asm.Measure(level);
+        chromosomeBase.AestheticProperties = asm.RealAestheticsMeasures;
+    }
+
+    public override double Evaluate(IChromosome chromosome)
     {
         if (chromosome is LevelChromosomeBase)
         {
@@ -61,6 +62,8 @@ public class InteractiveEvalutorMono : EvaluatorMono
             //Attach mono behaviour to visualize the measurements
             ChromoseMeasurementsVisualizer.AttachDataVisualizer(levelObject.gameObject);
 
+            AppendAestheticMeasureToObject(levelObject, levelChromosome);
+
             //TODO Apply a proper fitness formula
 
             double eval = 0;
@@ -73,11 +76,6 @@ public class InteractiveEvalutorMono : EvaluatorMono
                 var riskMeasure = levelObject.GetComponentInChildren<RiskMeasure>();
                 var pathUniqueness = levelObject.GetComponentInChildren<PathZoneUniqueness>();
                 var solver = levelObject.GetComponentInChildren<RRTSolverDifficultyEvaluation>();
-
-                levelChromosome.Properties.PathUniqeness = pathUniqueness.SeenPaths.Count / 5.0f;
-                levelChromosome.Properties.SuccessChance = (float)solver.Successes / (float)solver.Attempts;
-                if (levelChromosome.Properties.SuccessChance > 0)
-                    Debug.Log($"Level with name {levelObject.name} has non-zero properties");
             }
 
             return eval;
@@ -87,4 +85,10 @@ public class InteractiveEvalutorMono : EvaluatorMono
             throw new System.ArgumentException("Expected level chromosome.");
         }
     }
+}
+
+public struct LevelMeasuredProperties
+{
+    public float SuccessChance;
+    public float PathUniqeness;
 }

@@ -10,20 +10,18 @@ namespace StealthLevelEvaluation
         //            public RiskMeasure(GameObject level) : base(level, "Risk Measure of solutions", 0)
         //            {
         //            }
-
-        public override void Init(GameObject phenotype, string name)
+        public override string GetName()
         {
-            base.Init(phenotype, name);
+            return "RiskMeasure";
         }
 
         public override void Init(GameObject phenotype)
         {
-            Init(phenotype, "Risk Measure");
         }
 
         public List<float> RiskMeasures;
 
-        public override string Evaluate()
+        protected override string Evaluate()
         {
             RiskMeasures = new List<float>();
             var RRTVisualizers = Phenotype.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();

@@ -32,7 +32,7 @@ namespace GeneticSharp
         }
         #endregion
 
-        #region Properties
+        #region AestheticProperties
         /// <summary>
         /// Gets or sets the expected fitness to consider that termination has been reached.
         /// </summary>

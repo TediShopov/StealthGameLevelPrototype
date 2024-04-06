@@ -7,7 +7,12 @@ namespace StealthLevelEvaluation
 {
     public class StartEndObstructionValidator : MeasureMono
     {
-        public override string Evaluate()
+        public override string GetName()
+        {
+            return "StartEndObstructionValidator";
+        }
+
+        protected override string Evaluate()
         {
             var start = Phenotype.GetComponentInChildren<CharacterController2D>().gameObject;
             ContactFilter2D contactFilter2D = new ContactFilter2D
@@ -45,7 +50,6 @@ namespace StealthLevelEvaluation
 
         public override void Init(GameObject phenotype)
         {
-            Name = "StartEndObstructionValidator";
             IsValidator = true;
             Phenotype = phenotype;
         }

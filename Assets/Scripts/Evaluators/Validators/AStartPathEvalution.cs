@@ -172,6 +172,11 @@ namespace StealthLevelEvaluation
         public Collider2D PlayerCollider;
         public LayerMask ObstacleLayerMask;
 
+        public override string GetName()
+        {
+            return "AStartPathEvalution";
+        }
+
         public bool SetObstacleGrid(int row, int col, NativeGrid<bool> ngrid)
         {
             //Return true if box cast did not collide with any obstacle
@@ -185,7 +190,6 @@ namespace StealthLevelEvaluation
 
         public override void Init(GameObject phenotype)
         {
-            Name = "AStartPathEvalution";
             IsValidator = true;
             var roadmap = phenotype.GetComponentInChildren<FloodfilledRoadmapGenerator>();
             Grid grid = roadmap.Grid;
@@ -197,7 +201,7 @@ namespace StealthLevelEvaluation
             LevelGrid.SetAll(SetObstacleGrid);
         }
 
-        public override string Evaluate()
+        protected override string Evaluate()
         {
             AStar aStar = new AStar(LevelGrid);
             Vector2Int startNativeCoord = LevelGrid.GetNativeCoord(StartCoord);
@@ -230,6 +234,7 @@ namespace StealthLevelEvaluation
 
         private void OnDrawGizmosSelected()
         {
+            if (DrawOnSelected == false) return;
             DrawLevelGrid();
             if (Path != null)
             {

@@ -31,7 +31,7 @@ namespace GeneticSharp
         }
         #endregion
 
-        #region Properties
+        #region AestheticProperties
         /// <summary>
         /// Gets or sets the number of generations to keep in the population.
         /// <remars>The default is 1.</remars>

@@ -37,7 +37,7 @@ namespace GeneticSharp
         }
         #endregion
 
-        #region Properties
+        #region AestheticProperties
         /// <summary>
         /// Gets or sets the expected stagnant generations number to reach the termination.
         /// </summary>
