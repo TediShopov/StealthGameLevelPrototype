@@ -1,12 +1,27 @@
 using GeneticSharp;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
+[ExecuteInEditMode]
 public class InteractiveEvalutation : MonoBehaviour
 {
-    private StealthLevelIEMono IEMono;
+    public StealthLevelIEMono IEMono;
     private LevelChromosome Chromosome;
+
+    public void Awake()
+    {
+        IEMono = this.GetComponentInParent<StealthLevelIEMono>();
+        SceneView.duringSceneGui += this.DrawSelectionButton;
+    }
+
+    public void OnDestroy()
+    {
+        SceneView.duringSceneGui -= this.DrawSelectionButton;
+    }
 
     public void SelectLevel()
     {
@@ -22,12 +37,31 @@ public class InteractiveEvalutation : MonoBehaviour
         if (Chromosome == null)
             throw new System.ArgumentException("No acutal chromose contntes");
 
-        IEMono = this.GetComponentInParent<StealthLevelIEMono>();
         if (IEMono == null)
             throw new System.ArgumentException("No interactive evolution found");
 
         Debug.Log($"Selected level {level.gameObject.name}");
         IEMono.SelectChromosome(Chromosome);
+    }
+
+    public void DrawSelectionButton(SceneView view)
+    {
+        Vector2 levelSize = IEMono.LevelProperties.LevelSize;
+
+        Vector3 belowLevel = transform.position +
+            (Vector3.down * (levelSize.y)) + new Vector3(0, 2.0f, 0);
+
+        Vector2 buttonSize = new Vector2(levelSize.x, 2.0f);
+
+        if (Handles.Button(belowLevel, Quaternion.identity, 2.0f, 2.2f, Handles.RectangleHandleCap))
+        {
+            SelectLevel();
+        }
+    }
+
+    public void OnDrawGizmosSelected()
+    {
+        Handles.color = Color.red;
     }
 
     // Update is called once per frame
