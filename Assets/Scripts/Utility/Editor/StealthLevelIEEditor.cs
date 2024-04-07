@@ -1,3 +1,4 @@
+using PlasticGui.Configuration;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -11,6 +12,12 @@ public class StealthLevelIEEditor : Editor
     private bool showLayout;
 
     private GUIStyle _bolded = GUIStyle.none;
+    private SerializedObject so;
+
+    private void OnEnable()
+    {
+        so = new SerializedObject(target);
+    }
 
     public override void OnInspectorGUI()
     {
@@ -22,6 +29,14 @@ public class StealthLevelIEEditor : Editor
             //Additional info for the running algorithm
 
             //Todo visualizer user subject preference evaluator
+            if (so != null)
+            {
+                so.Update();
+                var prop = so.FindProperty("UserPreferences");
+                EditorGUILayout.PropertyField(prop, true);
+                serializedObject.ApplyModifiedProperties();
+                EditorApplication.update.Invoke();
+            }
 
             //Currently selected levels
             foreach (var pair in ie.InteractiveSelections)
@@ -67,7 +82,7 @@ public class StealthLevelIEEditor : Editor
             showFundamental = EditorGUILayout.Foldout(showFundamental, "Fundamentals");
             if (showFundamental)
             {
-                ie.PhenotypeEvaluator = (EvaluatorMono)EditorGUILayout.ObjectField(ie.PhenotypeEvaluator, typeof(EvaluatorMono), true);
+                ie.PhenotypeEvaluator = (InteractiveEvalutorMono)EditorGUILayout.ObjectField(ie.PhenotypeEvaluator, typeof(InteractiveEvalutorMono), true);
                 ie.LevelProperties = (LevelProperties)EditorGUILayout.ObjectField(ie.LevelProperties, typeof(LevelProperties), false);
                 ie.Generator = (LevelPhenotypeGenerator)EditorGUILayout.ObjectField(ie.Generator, typeof(LevelPhenotypeGenerator), true);
                 ie.Seed = EditorGUILayout.IntField("Seed: ", ie.Seed);

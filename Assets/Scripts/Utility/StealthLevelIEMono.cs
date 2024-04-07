@@ -1,4 +1,5 @@
 using CGALDotNet;
+using Codice.Client.Common;
 using GeneticSharp;
 using GeneticSharp.Domain;
 using System;
@@ -153,9 +154,9 @@ public class GridObjectLayout
         foreach (var item in LevelObjects)
         {
             if (item == null) continue;
-            GameObject.DestroyImmediate(item.GetComponent<ContinuosFutureLevel>());
-            GameObject.DestroyImmediate(item.GetComponent<FloodfilledRoadmapGenerator>());
-            GameObject.DestroyImmediate(item.GetComponent<Grid>());
+            // GameObject.DestroyImmediate(item.GetComponent<ContinuosFutureLevel>());
+            // GameObject.DestroyImmediate(item.GetComponent<FloodfilledRoadmapGenerator>());
+            // GameObject.DestroyImmediate(item.GetComponent<Grid>());
             //            foreach (var comp in item.GetComponents<Component>())
             //            {
             //                if (!(comp is Transform))
@@ -186,7 +187,7 @@ public class StealthLevelIEMono : MonoBehaviour
     [Range(0, 1)]
     public float CrossoverProb = 10;
 
-    public EvaluatorMono PhenotypeEvaluator;
+    public InteractiveEvalutorMono PhenotypeEvaluator;
     public LevelPhenotypeGenerator Generator;
     public LevelProperties LevelProperties;
     private GridObjectLayout GridPopulation;
@@ -206,6 +207,16 @@ public class StealthLevelIEMono : MonoBehaviour
 
     public InteractiveGeneticAlgorithm GeneticAlgorithm;
     public Vector2 ExtraSpacing;
+
+    public List<float> UserPreferences;
+
+    public void RefreshPreferencesWeight()
+    {
+        UserPreferences = PreferencesDefault;
+    }
+
+    public List<float> PreferencesDefault =>
+        new List<float>() { 0.3333f, 0.3333f, 0.3333f };
 
     public void Awake()
     {
@@ -235,23 +246,32 @@ public class StealthLevelIEMono : MonoBehaviour
 
     public void SelectChromosome(LevelChromosome chromosome)
     {
-        if (GeneticAlgorithm.IsRunning)
+        List<float> avgLevelProperties = null;
+        try
         {
-            InteractiveSelections.Add(
-                new Tuple<int, LevelChromosome>(
-                    GeneticAlgorithm.GenerationsNumber,
-                    chromosome));
-
-            //Change the wieght preference of the evaluator
-            List<float> measures = chromosome.AestheticProperties;
-
-            List<float> avgLevelProperties = AverageLevelPreferences();
-            for (int i = 0; i < measures.Count; i++)
+            avgLevelProperties = AverageLevelPreferences();
+            if (GeneticAlgorithm.IsRunning)
             {
-                var changeInWeight = Step *
-                    (measures[i] - avgLevelProperties[i]);
-                var newWeight = measures[i] + changeInWeight;
+                InteractiveSelections.Add(
+                    new Tuple<int, LevelChromosome>(
+                        GeneticAlgorithm.GenerationsNumber,
+                        chromosome));
+
+                //Change the wieght preference of the evaluator
+                List<float> measures = chromosome.AestheticProperties;
+
+                for (int i = 0; i < measures.Count; i++)
+                {
+                    var changeInWeight = Step *
+                        (measures[i] - avgLevelProperties[i]);
+                    UserPreferences[i] = measures[i] + changeInWeight;
+                }
             }
+        }
+        catch (Exception)
+        {
+            int a = 3;
+            throw;
         }
     }
 
@@ -334,9 +354,16 @@ public class StealthLevelIEMono : MonoBehaviour
 
         List<float> avgProperties = new List<float>(allValidProperties.First());
 
-        for (int i = 0; i < avgProperties.Count; i++)
+        try
         {
-            avgProperties[i] = allValidProperties.Average(x => x[i]);
+            for (int i = 0; i < avgProperties.Count; i++)
+            {
+                avgProperties[i] = allValidProperties.Average(x => x[i]);
+            }
+        }
+        catch (Exception)
+        {
+            throw;
         }
         return avgProperties;
     }
@@ -356,6 +383,8 @@ public class StealthLevelIEMono : MonoBehaviour
         else
         {
             //Refresh selection list
+            PhenotypeEvaluator.IE = this;
+            RefreshPreferencesWeight();
             this.InteractiveSelections = new HashSet<Tuple<int, LevelChromosome>>();
             GeneticAlgorithm.State = GeneticAlgorithmState.Started;
             GeneticAlgorithm.Population.CreateInitialGeneration();

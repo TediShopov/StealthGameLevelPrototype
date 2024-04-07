@@ -16,12 +16,17 @@ public struct UserPreferenceModel
 public class InteractiveEvalutorMono : EvaluatorMono
 {
     //private List<MeasureMono> Evaluators = new List<MeasureMono>();
+    public LevelProperties LevelProperties;
+
+    public bool DoObjectiveDifficultyEvaluation;
+    public StealthLevelIEMono IE;
 
     public void AppendAestheticMeasureToObject(GameObject level, LevelChromosomeBase chromosomeBase)
     {
         var asm = level.AddComponent<AestheticCriteriaMeasure>();
+        asm.LevelProperties = LevelProperties;
         asm.Measure(level);
-        chromosomeBase.AestheticProperties = asm.RealAestheticsMeasures;
+        chromosomeBase.AestheticProperties = new List<float>(asm.RealAestheticsMeasures);
     }
 
     public override double Evaluate(IChromosome chromosome)
@@ -62,20 +67,36 @@ public class InteractiveEvalutorMono : EvaluatorMono
             //Attach mono behaviour to visualize the measurements
             ChromoseMeasurementsVisualizer.AttachDataVisualizer(levelObject.gameObject);
 
-            AppendAestheticMeasureToObject(levelObject, levelChromosome);
+            Transform data = levelObject.transform.Find("Data");
+            if (data is not null)
+            {
+                AppendAestheticMeasureToObject(data.gameObject, levelChromosome);
+            }
 
             //TODO Apply a proper fitness formula
 
             double eval = 0;
 
             //Attaching fitness evaluation information to the object itself
+
             if (Evaluators.Any(x => x.IsTerminating))
                 eval = 0.5f;
             else
             {
-                var riskMeasure = levelObject.GetComponentInChildren<RiskMeasure>();
-                var pathUniqueness = levelObject.GetComponentInChildren<PathZoneUniqueness>();
-                var solver = levelObject.GetComponentInChildren<RRTSolverDifficultyEvaluation>();
+                if (DoObjectiveDifficultyEvaluation)
+                {
+                    var riskMeasure = levelObject.GetComponentInChildren<RiskMeasure>();
+                    var pathUniqueness = levelObject.GetComponentInChildren<PathZoneUniqueness>();
+                    var solver = levelObject.GetComponentInChildren<RRTSolverDifficultyEvaluation>();
+                }
+                else
+                {
+                    for (int i = 0; i < levelChromosome.AestheticProperties.Count; i++)
+                    {
+                        eval += levelChromosome.AestheticProperties[i] * IE.UserPreferences[i];
+                    }
+                    eval *= 10;
+                }
             }
 
             return eval;

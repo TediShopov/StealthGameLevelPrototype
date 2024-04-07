@@ -65,7 +65,7 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         To.tag = "Level";
 
         var data = new GameObject("Data");
-        data.transform.SetParent(To.transform);
+        data.transform.SetParent(To.transform, false);
         LevelChromosomeMono chromosomeMono = data.AddComponent<LevelChromosomeMono>();
         chromosomeMono.Chromosome = (LevelChromosome)chromosome;
 
@@ -81,12 +81,12 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
 
         Physics2D.SyncTransforms();
 
-        var otherGrid = To.AddComponent<Grid>();
+        var otherGrid = data.AddComponent<Grid>();
         otherGrid.cellSize = this.GetComponent<Grid>().cellSize;
         otherGrid.cellSwizzle = this.GetComponent<Grid>().cellSwizzle;
         otherGrid.cellLayout = this.GetComponent<Grid>().cellLayout;
 
-        var roadmap = RoadmapGenerator.PrototypeComponent(To);
+        var roadmap = RoadmapGenerator.PrototypeComponent(data);
         roadmap.Init();
         //        var rd = CopyComponent(RoadmapGenerator, To.gameObject);
         //        To.GetComponent<Grid>().cellSize = this.GetComponent<Grid>().cellSize;
@@ -104,7 +104,7 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
 
         //Initialize the future level
         //CopyComponent(FutureLevel, To).Init(To);
-        var futurePrototype = FutureLevel.PrototypeComponent(To);
+        var futurePrototype = FutureLevel.PrototypeComponent(data);
         futurePrototype.Init();
 
         Debug.Log("Generation of phenotype finished");
