@@ -29,16 +29,20 @@ public class RRTBiased : RRT
     //iteration to steer it to goal
     public float BiasDistance;
 
-    public RRTBiased(IFutureLevel discretizedLevel, float bias, float goalDist, float maxvel)
-        : base(discretizedLevel, goalDist, maxvel)
+    public RRTBiased()
     {
-        this.FutureLevel = discretizedLevel;
-        _randomMin = discretizedLevel.GetBounds().min;
-        _randomMax = discretizedLevel.GetBounds().max;
-        this.BiasDistance = bias;
-        this.GoalDistance = goalDist;
-        this.MaxVelocity = maxvel;
     }
+
+    //    public RRTBiased(IFutureLevel discretizedLevel, float bias, float goalDist, float maxvel)
+    //        : base(discretizedLevel, goalDist, maxvel)
+    //    {
+    //        this.FutureLevel = discretizedLevel;
+    //        _randomMin = discretizedLevel.GetBounds().min;
+    //        _randomMax = discretizedLevel.GetBounds().max;
+    //        this.BiasDistance = bias;
+    //        this.GoalDistance = goalDist;
+    //        this.MaxVelocity = maxvel;
+    //    }
 
     public override TreeNode<Vector3> DoStep()
     {
@@ -47,6 +51,7 @@ public class RRTBiased : RRT
         if (cannotBiasStateThatWasAlreadyBiased)
         {
             //Debug.Log("cannotBiasStateThatWasAlreadyBiased");
+            int a = 3;
         }
         if (_lastAddedState != null
             && !_lastBiasedState.Equals(_lastAddedState.Content)

@@ -16,11 +16,15 @@ public class RRTWDelaunay : RRTBiased
 
     private System.Random Random;
 
-    public RRTWDelaunay(IFutureLevel discretizedLevel, float bias, float goalDist, float maxvel)
-        : base(discretizedLevel, bias, goalDist, maxvel)
+    public RRTWDelaunay()
     {
-        Random = new System.Random();
     }
+
+    //    public RRTWDelaunay(IFutureLevel discretizedLevel, float bias, float goalDist, float maxvel)
+    //        : base(discretizedLevel, bias, goalDist, maxvel)
+    //    {
+    //        Random = new System.Random();
+    //    }
 
     public void SetTrianglesInFreeSpace(Triangle2d[] tris)
     {

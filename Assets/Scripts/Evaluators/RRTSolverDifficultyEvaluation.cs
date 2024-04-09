@@ -17,7 +17,7 @@ public class RRTSolverDifficultyEvaluation : MeasureMono
 
     public override string GetName()
     {
-        return "RRTSolverDifficultyEvaluation";
+        return "" + RRTPrefab.name;
     }
 
     protected override string Evaluate()

@@ -8,19 +8,23 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
 {
     public IFutureLevel VoxelizedLevel;
 
-    [SerializeField] public CharacterController2D Controller;
-    [SerializeField] public GameObject StartNode;
-    [SerializeField] public GameObject EndNode;
+    [HideInInspector] public CharacterController2D Controller;
+    [HideInInspector] public GameObject StartNode;
+    [HideInInspector] public GameObject EndNode;
     public int maxIterations = 1000;
 
-    public float GoalDistance = 1.0f;
-    public float BiasDistance = 25.0f;
+    //    public float GoalDistance = 1.0f;
+    //    public float BiasDistance = 25.0f;
     public List<Vector3> Path = new List<Vector3>();
+
     public bool OutputDiscretized = false;
-    public IRapidlyEpxploringRandomTree<Vector3> RRT;
+
+    //public IRapidlyEpxploringRandomTree<Vector3> RRT;
+    [SerializeReference, SubclassPicker] public RRT RRT;
+
     protected GameObject level;
-    public RRTStats Stats;
-    public float SteerStep = 9999;
+    //    public RRTStats Stats;
+    //    public float SteerStep = 9999;
 
     public virtual void Setup()
     {
@@ -37,11 +41,17 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
     {
         Profiler.BeginSample("RRT Run");
         if (VoxelizedLevel == null) return;
-        RRT = new RRTBiased(VoxelizedLevel, BiasDistance, GoalDistance, Controller.MaxSpeed);
-        RRT.SteerStep = SteerStep;
 
-        RRT.Run(StartNode.transform.position, EndNode.transform.position, maxIterations);
-        Stats = RRT.Stats;
+        //        RRT = new RRTBiased(VoxelizedLevel, , GoalDistance, Controller.MaxSpeed);
+        //        RRT.SteerStep = SteerStep;
+
+        //        RRT.Run(StartNode.transform.position, EndNode.transform.position, maxIterations);
+        //        Stats = RRT.Stats;
+        if (RRT == null) return;
+
+        RRT.Setup(VoxelizedLevel, RRT.GoalDistance, Controller.MaxSpeed,
+            StartNode.transform.position, EndNode.transform.position);
+        RRT.Run();
 
         //Ouputs RRT stats
         string rrtStatsLog = $"RRT Iterations {RRT.Stats.TotalIterations}," +
@@ -81,7 +91,7 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
         DFSDraw(this.RRT.StartNode);
         //Draw correct path on top so it is visible
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(this.RRT.Goal, BiasDistance);
+        //Gizmos.DrawWireSphere(this.RRT.Goal, BiasDistance);
         for (int i = 0; i < Path.Count - 1; i++)
         {
             Gizmos.DrawSphere(Path[i], 0.1f);

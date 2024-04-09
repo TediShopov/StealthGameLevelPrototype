@@ -11,7 +11,7 @@ public interface IRapidlyEpxploringRandomTree<TState>
     public TreeNode<TState> GoalNodeFound { get; set; }
     public float SteerStep { get; set; }
 
-    public void Run(TState start, TState end, int maxIteration = 100);
+    public void Run();
 
     public bool Succeeded();
 

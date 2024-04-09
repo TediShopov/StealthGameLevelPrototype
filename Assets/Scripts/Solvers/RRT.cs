@@ -4,14 +4,33 @@ using UnityEngine;
 
 public class RRT : IRapidlyEpxploringRandomTree<Vector3>
 {
-    public int MaxIterations { get; set; }
     public TreeNode<Vector3> StartNode { get; set; }
     public TreeNode<Vector3> GoalNodeFound { get; set; }
     public Vector3 Goal { get; set; }
 
-    public float SteerStep { get; set; }
+    //If distance between some state and and end state is below
+    //this distance the state is treated as a solution
+    [SerializeField] public float GoalDistance;
 
-    public float MaxVelocity;
+    [SerializeField] private int _maxIterations;
+
+    public int MaxIterations
+    {
+        get { return _maxIterations; }
+        set { _maxIterations = value; }
+    }
+
+    [SerializeField] public float _steerStep;
+
+    public float SteerStep
+    {
+        get { return _steerStep; }
+        set { _steerStep = value; }
+    }
+
+    [HideInInspector] public int Iterations = 0;
+
+    protected float MaxVelocity;
     protected KDTree _kdTree;
     protected Vector3 _randomMin;
     protected Vector3 _randomMax;
@@ -30,23 +49,18 @@ public class RRT : IRapidlyEpxploringRandomTree<Vector3>
         return false;
     }
 
-    //If distance between some state and and end state is below
-    //this distance the state is treated as a solution
-    public float GoalDistance;
+    public RRT()
+    {
+    }
 
-    public RRT(IFutureLevel discretizedLevel, float goalDist, float maxvel)
+    public virtual void Setup(IFutureLevel discretizedLevel, float goalDist, float maxvel
+        , Vector3 start, Vector3 end)
     {
         this.FutureLevel = discretizedLevel;
         _randomMin = discretizedLevel.GetBounds().min;
         _randomMax = discretizedLevel.GetBounds().max;
         this.GoalDistance = goalDist;
         this.MaxVelocity = maxvel;
-    }
-
-    public int Iterations = 0;
-
-    public virtual void Setup(Vector3 start, Vector3 end, int maxIteration = 100)
-    {
         StartNode = new TreeNode<Vector3>(start);
         Goal = end;
         //Initializing mapping from explored states to tree node that contain information about parent and children
@@ -56,13 +70,11 @@ public class RRT : IRapidlyEpxploringRandomTree<Vector3>
         //initialzing KDtree strucutre to improve performance of nearease neighbour search
         _kdTree = new KDTree(KDTree.ToFloatArray(start), 3, 0);
         Iterations = 0;
-        MaxIterations = maxIteration;
     }
 
-    public void Run(Vector3 start, Vector3 end, int maxIteration = 100)
+    public void Run()
     {
-        Setup(start, end, maxIteration);
-        while (Iterations < maxIteration)
+        while (Iterations < MaxIterations)
         {
             TreeNode<Vector3> stepResult = null;
             stepResult = DoStep();
