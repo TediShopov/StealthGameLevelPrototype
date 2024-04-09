@@ -25,7 +25,7 @@ public class RRTWeightedDelaunayRunner : RapidlyExploringRandomTreeVisualizer
     {
         Profiler.BeginSample("RRT Weighted Run");
         if (VoxelizedLevel == null) return;
-        //RRT = new DiscreteDistanceBasedRRTSolver(VoxelizedLevel, BiasDistance, GoalDistance, Controller.MaxSpeed);
+        //RRT = new RRT_B(VoxelizedLevel, BiasDistance, GoalDistance, Controller.MaxSpeed);
         var rRTWDelaunay = new RRTWDelaunay(
             VoxelizedLevel,
             BiasDistance,

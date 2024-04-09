@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 8980104959754126724}
   - component: {fileID: 4072880465894338835}
   m_Layer: 0
-  m_Name: PathZoneUniquenessTest
+  m_Name: PathZoneUniquenessTest 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -55,7 +55,8 @@ MonoBehaviour:
   Phenotype: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
-  RRTPrefab: {fileID: 7030242558019223737, guid: 7f0457cd415130a49905aa062fe61a4f, type: 3}
+  DrawOnSelected: 0
+  RRTPrefab: {fileID: 3930090248339898022, guid: ec19519b0cc38344cbc65e077c36110f, type: 3}
   DeisredSuccesses: 5
   MaxRRTAttempts: 25
   Successes: 0
@@ -77,6 +78,7 @@ MonoBehaviour:
   Phenotype: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
+  DrawOnSelected: 0
 --- !u!114 &-4074138831780179867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,6 +96,7 @@ MonoBehaviour:
   Phenotype: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
+  DrawOnSelected: 0
   StartCoord: {x: 0, y: 0}
   GoalCoord: {x: 0, y: 0}
   PlayerCollider: {fileID: 0}
@@ -117,6 +120,7 @@ MonoBehaviour:
   Phenotype: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
+  DrawOnSelected: 0
   ObstacleLayerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -138,6 +142,7 @@ MonoBehaviour:
   Phenotype: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
+  DrawOnSelected: 0
   RiskMeasures: []
 --- !u!114 &8980104959754126724
 MonoBehaviour:
@@ -156,6 +161,7 @@ MonoBehaviour:
   Phenotype: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
+  DrawOnSelected: 0
   TimeframesObserved: 0
   TimesFrameSimulated: 0
 --- !u!114 &4072880465894338835
@@ -170,3 +176,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae0c960289b63c549a40492c8ec92f4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IEMono: {fileID: 0}

@@ -6,7 +6,7 @@ using CGALDotNetGeometry.Numerics;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-public class RRTWDelaunay : DiscreteDistanceBasedRRTSolver
+public class RRTWDelaunay : RRTBiased
 {
     //Trinagles that reside in free space - achieved from delaunay trinagulation
     private Triangle2d[] freeSpaceTriangles;

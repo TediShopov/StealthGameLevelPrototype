@@ -112,47 +112,6 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel, IPrototypable<C
         Profiler.EndSample();
     }
 
-    //    public List<Vector2> AreNotCollidingDynamicDiscrete(List<Vector2> positions, float timeFrom, float timeTo, float step = float.MaxValue)
-    //    {
-    //        return new List<Vector2>();
-    //        //        if (step == float.MaxValue) step = Step;
-    //        //        //        List<Vector2> _uncollidedPositions = new List<Vector2>(positions);
-    //        //        //        _uncollidedPositions = _uncollidedPositions.Where(x =>
-    //        //        //             !Physics2D.OverlapBox(x, area, ObstacleLayerMask)
-    //        //        //        ).ToList();
-    //        //
-    //        //        int timeSteps = Mathf.FloorToInt((timeTo - timeFrom) / (float)step);
-    //        //        foreach (var p in EnemyPatrolPaths)
-    //        //        {
-    //        //            BacktrackPatrolPath patrol = null;
-    //        //            if (p.BacktrackPatrolPath != null)
-    //        //            {
-    //        //                patrol = new BacktrackPatrolPath(p.BacktrackPatrolPath);
-    //        //                patrol.MoveAlong(timeFrom * p.EnemyProperties.Speed);
-    //        //            }
-    //        //            float time = timeFrom;
-    //        //            for (int i = 0; i <= timeSteps; i++)
-    //        //            {
-    //        //                time += Step;
-    //        //                time = Mathf.Clamp(time, timeFrom, timeTo);
-    //        //                //Small Inaccuracy
-    //        //                if (patrol != null)
-    //        //                    patrol.MoveAlong(Step * p.EnemyProperties.Speed);
-    //        //                positions = positions.Where(x =>
-    //        //                {
-    //        //                    FutureTransform ft;
-    //        //                    if (patrol is not null)
-    //        //                        ft = PatrolPath.GetPathOrientedTransform(patrol);
-    //        //                    else
-    //        //                        ft = p.GetFutureTransform(0);
-    //        //                    return !FieldOfView.TestCollision(x, ft,
-    //        //                        p.EnemyProperties.FOV, p.EnemyProperties.ViewDistance, ObstacleLayerMask);
-    //        //                }).ToList();
-    //        //            }
-    //        //        }
-    //        //        return positions;
-    //    }
-
     public HashSet<Vector2Int> UniqueVisibleCells(
         Grid grid,
         float timeFrom,
@@ -194,63 +153,6 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel, IPrototypable<C
 
         return cells;
     }
-
-    //    private bool IsCollidingWithStationeryEnemy(Vector2 from, Vector2 to, float timeFrom, float timeTo, PatrolPath path)
-    //    {
-    //        if (path == null) return false;
-    //        if (path.BacktrackPatrolPath is not null) throw new ArgumentException();
-    //
-    //        FutureTransform ft = path.GetFutureTransform(0);
-    //        int timeSteps = Mathf.FloorToInt((timeTo - timeFrom) / (float)Step);
-    //        for (int i = 0; i <= timeSteps; i++)
-    //        {
-    //            float time = timeFrom;
-    //}
-    //            time += Step;
-    //            time = Mathf.Clamp(time, timeFrom, timeTo);
-    //            float rel = Mathf.InverseLerp(timeFrom, timeTo, time);
-    //            Vector2 positionInTime = Vector2.Lerp(from, to, rel);
-    //            bool hitEnemyCone = FieldOfView.TestCollision(positionInTime, ft,
-    //                    path.EnemyProperties.FOV, path.EnemyProperties.ViewDistance, ObstacleLayerMask);
-    //            if (hitEnemyCone)
-    //                return true;
-    //        }
-    //        return false;
-    //    }
-    //
-    //    private bool IsCollidingWithPatrol(Vector2 from, Vector2 to, float timeFrom, float timeTo, PatrolPath path)
-    //    {
-    //        BacktrackPatrolPath patrol = new BacktrackPatrolPath(path.BacktrackPatrolPath);
-    //        float time = timeFrom;
-    //        int timeSteps = Mathf.FloorToInt((timeTo - timeFrom) / (float)Step);
-    //        patrol.MoveAlong(timeFrom * path.EnemyProperties.Speed);
-    //        for (int i = 0; i <= timeSteps; i++)
-    //        {
-    //            time += Step;
-    //            time = Mathf.Clamp(time, timeFrom, timeTo);
-    //            //Small Inaccuracy
-    //            patrol.MoveAlong(Step * path.EnemyProperties.Speed);
-    //
-    //            float rel = Mathf.InverseLerp(timeFrom, timeTo, time);
-    //            Vector2 positionInTime = Vector2.Lerp(from, to, rel);
-    //            FutureTransform ft = PatrolPath.GetPathOrientedTransform(patrol);
-    //            bool hitEnemyCone = FieldOfView.TestCollision(positionInTime, ft,
-    //                    path.EnemyProperties.FOV, path.EnemyProperties.ViewDistance, ObstacleLayerMask);
-    //            if (hitEnemyCone)
-    //                return true;
-    //        }
-    //        return false;
-    //    }
-
-    //    //Given a 3d position with the z coordinate interpereted as time
-    //    //Return a list of interpolated position on that line
-    //    public static List<Vector3> GetPathSegmentsInTime(
-    //        Vector3 from, Vector3 to, int step)
-    //    {
-    //        float rel = Mathf.InverseLerp(timeFrom, timeTo, time);
-    //        Vector2 positionInTime = Vector2.Lerp(from, to, rel);
-    //
-    //    }
 
     public Vector2 GetLerpepPositionInTime(Vector3 startT, Vector3 endT, float t)
     {

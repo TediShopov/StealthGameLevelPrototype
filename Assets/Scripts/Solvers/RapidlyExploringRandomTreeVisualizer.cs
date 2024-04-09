@@ -7,10 +7,12 @@ using UnityEngine.Profiling;
 public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
 {
     public IFutureLevel VoxelizedLevel;
-    public CharacterController2D Controller;
-    public GameObject StartNode;
-    public GameObject EndNode;
+
+    [SerializeField] public CharacterController2D Controller;
+    [SerializeField] public GameObject StartNode;
+    [SerializeField] public GameObject EndNode;
     public int maxIterations = 1000;
+
     public float GoalDistance = 1.0f;
     public float BiasDistance = 25.0f;
     public List<Vector3> Path = new List<Vector3>();
@@ -35,7 +37,7 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
     {
         Profiler.BeginSample("RRT Run");
         if (VoxelizedLevel == null) return;
-        RRT = new DiscreteDistanceBasedRRTSolver(VoxelizedLevel, BiasDistance, GoalDistance, Controller.MaxSpeed);
+        RRT = new RRTBiased(VoxelizedLevel, BiasDistance, GoalDistance, Controller.MaxSpeed);
         RRT.SteerStep = SteerStep;
 
         RRT.Run(StartNode.transform.position, EndNode.transform.position, maxIterations);
