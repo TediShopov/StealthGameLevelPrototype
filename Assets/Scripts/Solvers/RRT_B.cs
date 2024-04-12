@@ -33,17 +33,6 @@ public class RRTBiased : RRT
     {
     }
 
-    //    public RRTBiased(IFutureLevel discretizedLevel, float bias, float goalDist, float maxvel)
-    //        : base(discretizedLevel, goalDist, maxvel)
-    //    {
-    //        this.FutureLevel = discretizedLevel;
-    //        _randomMin = discretizedLevel.GetBounds().min;
-    //        _randomMax = discretizedLevel.GetBounds().max;
-    //        this.BiasDistance = bias;
-    //        this.GoalDistance = goalDist;
-    //        this.MaxVelocity = maxvel;
-    //    }
-
     public override TreeNode<Vector3> DoStep()
     {
         TreeNode<Vector3> stepResult = null;

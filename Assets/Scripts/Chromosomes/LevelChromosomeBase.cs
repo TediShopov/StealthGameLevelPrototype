@@ -25,4 +25,25 @@ public abstract class LevelChromosomeBase : ChromosomeBase
         clone.AestheticProperties = AestheticProperties;
         return clone;
     }
+
+    public override bool Equals(object obj)
+    {
+        if (obj is LevelChromosomeBase)
+        {
+            var other = (LevelChromosomeBase)obj;
+            if (this.Length != other.Length) return false;
+
+            //Compare genes one by one
+            Gene[] current = this.GetGenes();
+            Gene[] otherGenes = other.GetGenes();
+
+            for (int i = 0; i < current.Length; i++)
+            {
+                if (current[i].Equals(otherGenes[i]) == false)
+                    return false;
+            }
+            return true;
+        }
+        return false;
+    }
 }

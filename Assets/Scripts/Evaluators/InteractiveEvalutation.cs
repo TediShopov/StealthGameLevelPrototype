@@ -9,8 +9,9 @@ using static UnityEngine.GraphicsBuffer;
 [ExecuteInEditMode]
 public class InteractiveEvalutation : MonoBehaviour
 {
-    public StealthLevelIEMono IEMono;
+    private StealthLevelIEMono IEMono;
     private LevelChromosome Chromosome;
+    private bool _isSelected = false;
 
     public void Awake()
     {
@@ -53,9 +54,19 @@ public class InteractiveEvalutation : MonoBehaviour
 
         Vector2 buttonSize = new Vector2(levelSize.x, 2.0f);
 
+        if (_isSelected)
+        {
+            Handles.Label(belowLevel, "Deselect");
+        }
+        else
+        {
+            Handles.Label(belowLevel, "Select");
+        }
+
         if (Handles.Button(belowLevel, Quaternion.identity, 2.0f, 2.2f, Handles.RectangleHandleCap))
         {
             SelectLevel();
+            _isSelected = !_isSelected;
         }
     }
 

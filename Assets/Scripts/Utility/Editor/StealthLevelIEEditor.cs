@@ -39,13 +39,14 @@ public class StealthLevelIEEditor : Editor
             }
 
             //Currently selected levels
-            foreach (var pair in ie.InteractiveSelections)
+            foreach (var selections in ie.InteractiveSelections)
             {
                 int count = 0;
-                if (pair.Item1 == ie.GeneticAlgorithm.GenerationsNumber)
+                if (selections.GenerationNumber == ie.GeneticAlgorithm.GenerationsNumber)
                 {
                     count++;
                 }
+
                 EditorGUILayout.LabelField("Selections Count: ", count.ToString());
             }
 
