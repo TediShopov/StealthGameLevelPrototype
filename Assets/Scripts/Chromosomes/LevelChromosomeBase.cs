@@ -47,3 +47,7 @@ public abstract class LevelChromosomeBase : ChromosomeBase
         return false;
     }
 }
+
+//Refresh selection list
+//    }
+//}

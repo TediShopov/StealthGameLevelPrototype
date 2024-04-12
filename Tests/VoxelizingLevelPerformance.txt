@@ -1,3 +1,0 @@
-DiscretizeLevel (VoxelizedLevel)427,447,432,426,433,446,431,433,438,417
-GameObject (DiscretizeLevelToGrid)2930,2970,3041,3019,2954,2971,2887,2865,2861,2879
-

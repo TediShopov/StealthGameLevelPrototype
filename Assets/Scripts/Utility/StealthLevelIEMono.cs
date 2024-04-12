@@ -199,17 +199,18 @@ public class StealthLevelIEMono : MonoBehaviour
     public System.Random RandomSeedGenerator;
 
     [Header("Logging")]
-    public bool LogExecutions = false;
+    public bool LogMeasurements = false;
 
-    public bool LogIndividualExecutions = false;
-    public int LogExecutionTimes = 0;
+    //public bool LogIndividualExecutions = false;
+    //public int LogExecutionTimes = 0;
     public int TopNLevels = 5;
+
     public float Step;
 
     public InteractiveGeneticAlgorithm GeneticAlgorithm;
     public Vector2 ExtraSpacing;
 
-    public List<float> UserPreferences;
+    [SerializeField] public List<float> UserPreferences;
     public List<LevelChromosomeBase> GenerationSelecitons;
     public List<List<LevelChromosomeBase>> InteractiveSelections;
 
@@ -242,6 +243,22 @@ public class StealthLevelIEMono : MonoBehaviour
     public void RandomizeSeed()
     {
         Seed = new System.Random().Next();
+    }
+
+    public void RunWithSyntheticModel()
+    {
+        Dispose();
+        PhenotypeEvaluator.IE = this;
+        this.GenerationSelecitons = new List<LevelChromosomeBase>();
+        this.InteractiveSelections = new List<List<LevelChromosomeBase>>();
+        SetupGA();
+        GeneticAlgorithm.State = GeneticAlgorithmState.Started;
+        GeneticAlgorithm.Population.CreateInitialGeneration();
+        GeneticAlgorithm.EvaluateFitness();
+        while (GeneticAlgorithm.State != GeneticAlgorithmState.TerminationReached)
+        {
+            DoGeneration();
+        }
     }
 
     public void ApplyChangesToPreferenceModel()
@@ -388,11 +405,7 @@ public class StealthLevelIEMono : MonoBehaviour
         }
         else
         {
-            //Refresh selection list
-            //    }
-            //}
             PhenotypeEvaluator.IE = this;
-            RefreshPreferencesWeight();
             this.GenerationSelecitons = new List<LevelChromosomeBase>();
             this.InteractiveSelections = new List<List<LevelChromosomeBase>>();
             GeneticAlgorithm.State = GeneticAlgorithmState.Started;
@@ -472,7 +485,7 @@ public class StealthLevelIEMono : MonoBehaviour
         List<IChromosome> chromosomes = GetTopLevelsFitness();
         ManifestTopLevels(chromosomes);
         ChekcAvailabilitOfFitnessInfo();
-        if (LogIndividualExecutions)
+        if (LogMeasurements)
         {
             OutputEvaluationTimesToCsv();
         }

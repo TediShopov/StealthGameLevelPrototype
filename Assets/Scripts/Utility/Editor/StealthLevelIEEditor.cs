@@ -10,13 +10,30 @@ public class StealthLevelIEEditor : Editor
     private bool showMetaproperties;
     private bool showFundamental;
     private bool showLayout;
+    private bool showLogging;
 
     private GUIStyle _bolded = GUIStyle.none;
     private SerializedObject so;
+    private SerializedProperty SerializedPreferences;
 
     private void OnEnable()
     {
         so = new SerializedObject(target);
+    }
+
+    private void ArrayGUI(SerializedObject obj, string name)
+    {
+        int no = obj.FindProperty(name + ".Array.size").intValue;
+        EditorGUI.indentLevel = 3;
+        int c = EditorGUILayout.IntField("Size", no);
+        if (c != no)
+            obj.FindProperty(name + ".Array.size").intValue = c;
+
+        for (int i = 0; i < no; i++)
+        {
+            var prop = obj.FindProperty(string.Format("{0}.Array.data[{1}]", name, i));
+            EditorGUILayout.PropertyField(prop);
+        }
     }
 
     public override void OnInspectorGUI()
@@ -24,19 +41,22 @@ public class StealthLevelIEEditor : Editor
         StealthLevelIEMono ie = (StealthLevelIEMono)target;
         //base.OnInspectorGUI();
 
+        serializedObject.Update();
+        SerializedPreferences = so.FindProperty("UserPreferences");
+        ArrayGUI(so, "UserPreferences");
+        //EditorGUILayout.PropertyField(SerializedPreferences, true);
+        bool appleid = serializedObject.ApplyModifiedProperties();
+        if (appleid)
+        {
+            Debug.Log("Applied");
+        }
         if (ie != null && ie.IsRunning)
         {
             //Additional info for the running algorithm
 
             //Todo visualizer user subject preference evaluator
-            if (so != null)
-            {
-                so.Update();
-                var prop = so.FindProperty("UserPreferences");
-                EditorGUILayout.PropertyField(prop, true);
-                serializedObject.ApplyModifiedProperties();
-                EditorApplication.update.Invoke();
-            }
+            serializedObject.ApplyModifiedProperties();
+            EditorApplication.update.Invoke();
 
             //Currently selected levels
             EditorGUILayout.LabelField("Selections Count: ", ie.GenerationSelecitons.Count.ToString());
@@ -74,7 +94,8 @@ public class StealthLevelIEEditor : Editor
             showFundamental = EditorGUILayout.Foldout(showFundamental, "Fundamentals");
             if (showFundamental)
             {
-                ie.PhenotypeEvaluator = (InteractiveEvalutorMono)EditorGUILayout.ObjectField(ie.PhenotypeEvaluator, typeof(InteractiveEvalutorMono), true);
+                ie.PhenotypeEvaluator =
+                    (InteractiveEvalutorMono)EditorGUILayout.ObjectField(ie.PhenotypeEvaluator, typeof(InteractiveEvalutorMono), true);
                 ie.LevelProperties = (LevelProperties)EditorGUILayout.ObjectField(ie.LevelProperties, typeof(LevelProperties), false);
                 ie.Generator = (LevelPhenotypeGenerator)EditorGUILayout.ObjectField(ie.Generator, typeof(LevelPhenotypeGenerator), true);
                 ie.Seed = EditorGUILayout.IntField("Seed: ", ie.Seed);
@@ -84,6 +105,18 @@ public class StealthLevelIEEditor : Editor
             if (showLayout)
             {
                 ie.ExtraSpacing = EditorGUILayout.Vector2Field("Extra Spacing: ", ie.ExtraSpacing);
+            }
+            showLogging = EditorGUILayout.Foldout(showLogging, "Logging");
+            if (showLogging)
+            {
+                //Todo visualizer user subject preference evaluator
+                ie.LogMeasurements = EditorGUILayout.Toggle("Is Logging", ie.LogMeasurements);
+                //so.Update();
+                if (GUILayout.Button("Run with synthetic model"))
+                {
+                    Debug.Log($"First value of weights {ie.UserPreferences[0]}");
+                    //ie.RunWithSyntheticModel();
+                }
             }
 
             if (GUILayout.Button("Randmozise Seed"))

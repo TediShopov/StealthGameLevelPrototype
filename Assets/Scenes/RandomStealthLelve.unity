@@ -239,7 +239,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1411282488
 GameObject:
@@ -287,7 +287,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1474898337
 GameObject:
@@ -333,7 +333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a59df0218d90434e9622a53774d6147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PopulationCount: 5
+  PopulationCount: 15
   AimedGenerations: 6
   MutationProb: 0.199
   CrossoverProb: 0.779
@@ -385,7 +385,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1513753136
 MonoBehaviour:
@@ -434,7 +434,7 @@ MonoBehaviour:
   MaxEnemiesSpawned: 3
   StartingObstacleCount: 3
   NecessaryObstacles: 3
-  EnemyCount: 6
+  EnemyCount: 8
   RoadmapGenerator: {fileID: 1513753139}
   PathGenerator: {fileID: 1513753138}
   FutureLevel: {fileID: 1513753136}
@@ -450,7 +450,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03cdefe7d50e1f44495c882f2424a4b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  geneIndex: 65
+  geneIndex: 63
 --- !u!114 &1513753139
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -500,60 +500,3 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
---- !u!1001 &1931997647
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4520497855799095118, guid: 61a72d3025511b24e85ef74bd71815fd, type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4520497855799095118, guid: 61a72d3025511b24e85ef74bd71815fd, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 19.30086
-      objectReference: {fileID: 0}
-    - target: {fileID: 4520497855799095118, guid: 61a72d3025511b24e85ef74bd71815fd, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 17.73096
-      objectReference: {fileID: 0}
-    - target: {fileID: 4520497855799095118, guid: 61a72d3025511b24e85ef74bd71815fd, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.19585921
-      objectReference: {fileID: 0}
-    - target: {fileID: 4520497855799095118, guid: 61a72d3025511b24e85ef74bd71815fd, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4520497855799095118, guid: 61a72d3025511b24e85ef74bd71815fd, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4520497855799095118, guid: 61a72d3025511b24e85ef74bd71815fd, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4520497855799095118, guid: 61a72d3025511b24e85ef74bd71815fd, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4520497855799095118, guid: 61a72d3025511b24e85ef74bd71815fd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4520497855799095118, guid: 61a72d3025511b24e85ef74bd71815fd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4520497855799095118, guid: 61a72d3025511b24e85ef74bd71815fd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4520497855799095119, guid: 61a72d3025511b24e85ef74bd71815fd, type: 3}
-      propertyPath: m_Name
-      value: PathZoneUniquenessTest 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 61a72d3025511b24e85ef74bd71815fd, type: 3}
