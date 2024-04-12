@@ -174,58 +174,6 @@ public class GridObjectLayout
     }
 }
 
-public class ChromosomeSelection
-{
-    public int GenerationNumber { get; }
-    public LevelChromosomeBase LevelChromosome { get; }
-    public float Step { get; }
-    public List<float> NewPreferences = new List<float>();
-    public List<float> OldPrefenreces = new List<float>();
-
-    public ChromosomeSelection(
-        LevelChromosomeBase levelChromosome,
-        List<float> oldPref,
-        int gen, float step)
-    {
-        this.LevelChromosome = levelChromosome;
-        NewPreferences = new List<float>(oldPref);
-        OldPrefenreces = new List<float>(oldPref);
-        this.GenerationNumber = gen;
-        this.Step = step;
-    }
-
-    public List<float> ChangePreferenceModel(List<float> avgLevelProperties)
-    {
-        //Change the wieght preference of the evaluator
-
-        List<float> measures = LevelChromosome.AestheticProperties;
-        for (int i = 0; i < measures.Count; i++)
-        {
-            var changeInWeight = Step *
-                (measures[i] - avgLevelProperties[i]);
-            NewPreferences[i] = OldPrefenreces[i] + changeInWeight;
-        }
-        return NewPreferences;
-    }
-
-    public override bool Equals(object obj)
-    {
-        if (obj is ChromosomeSelection)
-
-        {
-            var other = (ChromosomeSelection)obj;
-            return this.LevelChromosome.Equals(other.LevelChromosome)
-                && this.GenerationNumber.Equals(other.GenerationNumber);
-        }
-        return false;
-    }
-
-    public override int GetHashCode()
-    {
-        return base.GetHashCode();
-    }
-}
-
 public class StealthLevelIEMono : MonoBehaviour
 {
     //public int Rows = 5; // Number of rows in the grid
@@ -262,11 +210,21 @@ public class StealthLevelIEMono : MonoBehaviour
     public Vector2 ExtraSpacing;
 
     public List<float> UserPreferences;
-    public List<ChromosomeSelection> InteractiveSelections;
+    public List<LevelChromosomeBase> GenerationSelecitons;
+    public List<List<LevelChromosomeBase>> InteractiveSelections;
 
     public void RefreshPreferencesWeight()
     {
         UserPreferences = PreferencesDefault;
+    }
+
+    public void NormalizeUserPreferences()
+    {
+        float sum = UserPreferences.Sum();
+        for (int i = 0; i < UserPreferences.Count; i++)
+        {
+            UserPreferences[i] = UserPreferences[i] / sum;
+        }
     }
 
     public List<float> PreferencesDefault =>
@@ -274,18 +232,8 @@ public class StealthLevelIEMono : MonoBehaviour
 
     public void Awake()
     {
-        InteractiveSelections = new List<ChromosomeSelection>();
+        InteractiveSelections = new List<List<LevelChromosomeBase>>();
         Dispose();
-        //        if (LogExecutions)
-        //        {
-        //            string algoName = $"GEN_{AimedGenerations}_POP{PopulationCount}_SZ{LevelProperties.LevelSize}";
-        //            float[] runs = Helpers.TrackExecutionTime(Run, LogExecutionTimes);
-        //            Helpers.SaveRunToCsv($"Tests/{algoName}.txt", runs);
-        //        }
-        //        else
-        //        {
-        //            Run();
-        //        }
     }
 
     public bool IsRunning => GeneticAlgorithm != null
@@ -296,51 +244,33 @@ public class StealthLevelIEMono : MonoBehaviour
         Seed = new System.Random().Next();
     }
 
+    public void ApplyChangesToPreferenceModel()
+    {
+        if (GenerationSelecitons.Count <= 0) return;
+        var avgGenerationProps = AverageLevelPreferences(
+            this.GeneticAlgorithm.Population.CurrentGeneration.Chromosomes.Select(x => (LevelChromosomeBase)x).ToList());
+
+        var avgSelectionProps = AverageLevelPreferences(GenerationSelecitons);
+
+        for (int i = 0; i < avgSelectionProps.Count; i++)
+        {
+            var changeInWeight = Step *
+                (avgSelectionProps[i] - avgGenerationProps[i]);
+
+            UserPreferences[i] = UserPreferences[i] + changeInWeight;
+            UserPreferences[i] = Mathf.Clamp01(UserPreferences[i]);
+        }
+    }
+
     public void SelectChromosome(LevelChromosome chromosome)
     {
-        List<float> avgLevelProperties = null;
-        try
+        if (GenerationSelecitons.Contains(chromosome))
         {
-            avgLevelProperties = AverageLevelPreferences();
-            if (GeneticAlgorithm.IsRunning)
-            {
-                int previousSelectionIndex =
-                    InteractiveSelections.FindIndex(0, x => x.LevelChromosome.Equals(chromosome));
-                if (previousSelectionIndex != -1)
-                {
-                    ChromosomeSelection previousSelection = InteractiveSelections[previousSelectionIndex];
-                    UserPreferences = previousSelection.OldPrefenreces;
-                    //Deselect
-                    List<ChromosomeSelection> afterSelection =
-                        InteractiveSelections.Skip(previousSelectionIndex + 1)
-                        .ToList();
-
-                    InteractiveSelections = InteractiveSelections.GetRange(0, previousSelectionIndex);
-
-                    foreach (var item in afterSelection)
-                    {
-                        InteractiveSelections.Add(item);
-                        UserPreferences = item.ChangePreferenceModel(avgLevelProperties);
-                    }
-                    Debug.Log($"Reaplied user selections count: {afterSelection.Count}");
-                }
-                else
-                {
-                    //Select and update user preferences
-                    ChromosomeSelection newSelection = new ChromosomeSelection(
-                        chromosome,
-                        UserPreferences,
-                        GeneticAlgorithm.GenerationsNumber,
-                        0.2f);
-                    UserPreferences = newSelection.ChangePreferenceModel(avgLevelProperties);
-                    InteractiveSelections.Add(newSelection);
-                }
-            }
+            GenerationSelecitons.Remove(chromosome);
         }
-        catch (Exception)
+        else
         {
-            int a = 3;
-            throw;
+            GenerationSelecitons.Add(chromosome);
         }
     }
 
@@ -414,10 +344,10 @@ public class StealthLevelIEMono : MonoBehaviour
         GeneticAlgorithm.TerminationReached += Ga_TerminationReached; ;
     }
 
-    public List<float> AverageLevelPreferences()
+    public List<float> AverageLevelPreferences(List<LevelChromosomeBase> chromosomes)
     {
         var allValidProperties =
-        this.GeneticAlgorithm.Population.CurrentGeneration.Chromosomes
+            chromosomes
             .Select(x => ((LevelChromosomeBase)x).AestheticProperties)
             .ToList();
 
@@ -442,6 +372,13 @@ public class StealthLevelIEMono : MonoBehaviour
         if (GeneticAlgorithm.State == GeneticAlgorithmState.Started)
         {
             //If interaction has occurred
+
+            NormalizeUserPreferences();
+            ApplyChangesToPreferenceModel();
+
+            InteractiveSelections.Add(GenerationSelecitons);
+            GenerationSelecitons.Clear();
+
             GeneticAlgorithm.EndCurrentGeneration();
             GridPopulation.PrepareForNewGeneration();
             GeneticAlgorithm.EvolveOneGeneration();
@@ -452,9 +389,12 @@ public class StealthLevelIEMono : MonoBehaviour
         else
         {
             //Refresh selection list
+            //    }
+            //}
             PhenotypeEvaluator.IE = this;
             RefreshPreferencesWeight();
-            this.InteractiveSelections = new List<ChromosomeSelection>();
+            this.GenerationSelecitons = new List<LevelChromosomeBase>();
+            this.InteractiveSelections = new List<List<LevelChromosomeBase>>();
             GeneticAlgorithm.State = GeneticAlgorithmState.Started;
             GeneticAlgorithm.Population.CreateInitialGeneration();
             GeneticAlgorithm.EvaluateFitness();

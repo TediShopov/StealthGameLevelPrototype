@@ -39,16 +39,7 @@ public class StealthLevelIEEditor : Editor
             }
 
             //Currently selected levels
-            foreach (var selections in ie.InteractiveSelections)
-            {
-                int count = 0;
-                if (selections.GenerationNumber == ie.GeneticAlgorithm.GenerationsNumber)
-                {
-                    count++;
-                }
-
-                EditorGUILayout.LabelField("Selections Count: ", count.ToString());
-            }
+            EditorGUILayout.LabelField("Selections Count: ", ie.GenerationSelecitons.Count.ToString());
 
             //- Best Fitness
             if (ie.GeneticAlgorithm.BestChromosome != null)
