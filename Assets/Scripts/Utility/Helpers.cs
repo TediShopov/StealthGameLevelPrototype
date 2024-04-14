@@ -122,7 +122,7 @@ public class Helpers : MonoBehaviour
     {
         try
         {
-            using (StreamWriter writer = new StreamWriter(filePath))
+            using (StreamWriter writer = new StreamWriter(filePath, true))
             {
                 // Write CSV header
                 writer.WriteLine(s);

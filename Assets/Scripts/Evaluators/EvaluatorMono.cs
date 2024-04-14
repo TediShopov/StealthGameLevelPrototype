@@ -77,9 +77,10 @@ public class EvaluatorMono : MonoBehaviour, IFitness
                 }
                 else
                 {
-                    eval = measurementData.FitnessEvaluations
-                        .Where(x => x.IsValidation == false)
-                        .Sum(x => float.Parse(x.Value));
+                    //                    eval = measurementData.FitnessEvaluations
+                    //                        .Where(x => x.IsValidation == false)
+                    //                        .Sum(x => float.Parse(x.Value));
+                    eval = 0;
                 }
             }
 

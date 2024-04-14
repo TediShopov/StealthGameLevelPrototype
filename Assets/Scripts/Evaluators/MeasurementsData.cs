@@ -9,11 +9,9 @@ using System.Text;
 
 public class MeasurementsData
 {
-    public MeasurementsData(params MeasureResult?[] measures)
+    public MeasurementsData(params MeasureResult[] measures)
     {
-        this.FitnessEvaluations = measures
-            .Where(x => x.HasValue)
-            .Select(x => x.Value).ToList();
+        this.FitnessEvaluations = measures.ToList();
     }
 
     public List<MeasureResult> FitnessEvaluations;

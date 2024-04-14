@@ -201,6 +201,9 @@ public class StealthLevelIEMono : MonoBehaviour
     [Header("Logging")]
     public bool LogMeasurements = false;
 
+    public int LogEveryGenerations = 5;
+    private GAGenerationLogger GAGenerationLogger;
+
     //public bool LogIndividualExecutions = false;
     //public int LogExecutionTimes = 0;
     public int TopNLevels = 5;
@@ -358,7 +361,12 @@ public class StealthLevelIEMono : MonoBehaviour
         GeneticAlgorithm.CrossoverProbability = CrossoverProb;
         GeneticAlgorithm.Termination = new GenerationNumberTermination(AimedGenerations);
         GeneticAlgorithm.GenerationRan += Ga_GenerationRan;
-        GeneticAlgorithm.TerminationReached += Ga_TerminationReached; ;
+        GeneticAlgorithm.TerminationReached += Ga_TerminationReached;
+
+        if (this.LogMeasurements)
+            GAGenerationLogger = new GAGenerationLogger(this, LogEveryGenerations);
+        else
+            GAGenerationLogger = null;
     }
 
     public List<float> AverageLevelPreferences(List<LevelChromosomeBase> chromosomes)
@@ -446,49 +454,11 @@ public class StealthLevelIEMono : MonoBehaviour
         return topN;
     }
 
-    private void OutputEvaluationTimesToCsv()
-    {
-        StringBuilder header = new StringBuilder();
-        var bestInfo = (LevelChromosome)GeneticAlgorithm.BestChromosome;
-        header.Append($"Chromosome Hash,");
-        foreach (var e in bestInfo.Measurements.FitnessEvaluations)
-        {
-            header.Append($"{e.Name} Evaluation,");
-            header.Append($"{e.Name} Time,");
-        }
-        header.Remove(header.Length - 1, 0);
-
-        string values = string.Empty;
-        foreach (var gen in GeneticAlgorithm.Population.Generations)
-        {
-            foreach (var c in gen.Chromosomes)
-            {
-                values += $"{c.GetHashCode()},";
-                MeasurementsData info = ((LevelChromosome)c).Measurements;
-                if (info != null)
-                {
-                    foreach (var e in info.FitnessEvaluations)
-                    {
-                        values += $"{e.Value},";
-                        values += $"{e.Time},";
-                    }
-                    values += "\n";
-                }
-            }
-        }
-        string algoName = $"GEN_{AimedGenerations}_POP{PopulationCount}_SZ{LevelProperties.LevelSize}_IndividualTimes";
-        Helpers.SaveToCSV($"Tests/{algoName}.txt", header + "\n" + values);
-    }
-
     private void Ga_TerminationReached(object sender, EventArgs e)
     {
         List<IChromosome> chromosomes = GetTopLevelsFitness();
         ManifestTopLevels(chromosomes);
         ChekcAvailabilitOfFitnessInfo();
-        if (LogMeasurements)
-        {
-            OutputEvaluationTimesToCsv();
-        }
     }
 
     private void Ga_GenerationRan(object sender, EventArgs e)
