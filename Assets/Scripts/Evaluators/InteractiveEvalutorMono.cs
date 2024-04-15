@@ -126,6 +126,12 @@ public class InteractiveEvalutorMono : EvaluatorMono
                 }
             }
 
+            levelChromosome.Measurements.Add(new MeasureResult()
+            {
+                Name = "Fitness",
+                Category = MeasurementType.OVERALLFITNESS,
+                Value = eval.ToString()
+            });
             return eval;
         }
         else

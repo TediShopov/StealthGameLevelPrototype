@@ -203,7 +203,7 @@ public class StealthLevelIEMono : MonoBehaviour
 
     public int LogEveryGenerations = 5;
     public int IndependentRuns = 5;
-    private GAGenerationLogger GAGenerationLogger;
+    public GAGenerationLogger GAGenerationLogger;
 
     //public bool LogIndividualExecutions = false;
     //public int LogExecutionTimes = 0;
@@ -217,6 +217,8 @@ public class StealthLevelIEMono : MonoBehaviour
     [SerializeField] public List<float> UserPreferences;
     public List<LevelChromosomeBase> GenerationSelecitons;
     public List<List<LevelChromosomeBase>> InteractiveSelections;
+
+    public event EventHandler FinishIESetup;
 
     public void RefreshPreferencesWeight()
     {
@@ -339,6 +341,7 @@ public class StealthLevelIEMono : MonoBehaviour
 
     public void SetupGA()
     {
+        GAGenerationLogger = null;
         RandomSeedGenerator = new System.Random(Seed);
         var selection = new RouletteWheelSelection();
         var crossover = new TwoPointCrossover();
@@ -367,10 +370,14 @@ public class StealthLevelIEMono : MonoBehaviour
         GeneticAlgorithm.GenerationRan += Ga_GenerationRan;
         GeneticAlgorithm.TerminationReached += Ga_TerminationReached;
 
-        if (this.LogMeasurements)
-            GAGenerationLogger = new GAGenerationLogger(this, LogEveryGenerations);
-        else
-            GAGenerationLogger = null;
+        var handler = FinishIESetup;
+        handler?.Invoke(this, EventArgs.Empty);
+
+        if (this.LogMeasurements && GAGenerationLogger == null)
+        {
+            GAGenerationLogger = new GAGenerationLogger(LogEveryGenerations);
+            GAGenerationLogger.BindTo(this);
+        }
     }
 
     public List<float> AverageLevelPreferences(List<LevelChromosomeBase> chromosomes)

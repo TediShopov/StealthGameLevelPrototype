@@ -10,7 +10,8 @@ public enum MeasurementType
     INITIALIZATION,
     VALIDATION,
     DIFFICULTY,
-    PROPERTIES
+    PROPERTIES,
+    OVERALLFITNESS,
 }
 
 namespace StealthLevelEvaluation

@@ -43,6 +43,10 @@ public class ChromoseMeasurementsVisualizer : MonoBehaviour
         {
             return "DIFFICULTY";
         }
+        if (category == MeasurementType.OVERALLFITNESS)
+        {
+            return "OVERALLFITNESS";
+        }
         return "None";
     }
 

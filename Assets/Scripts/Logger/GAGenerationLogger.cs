@@ -15,13 +15,18 @@ public class GAGenerationLogger
     public int LogEveryNGenerations = 1;
     private int LastLoggedGeneration = 0;
 
-    public GAGenerationLogger(StealthLevelIEMono stealthLevelIEMono, int everyN)
+    public GAGenerationLogger(int everyN)
+    {
+        this.LogEveryNGenerations = everyN;
+    }
+
+    public void BindTo(StealthLevelIEMono stealthLevelIEMono)
     {
         InteractiveGeneticMono = stealthLevelIEMono;
         GA = InteractiveGeneticMono.GeneticAlgorithm;
-        this.LogEveryNGenerations = everyN;
         GA.GenerationRan += AppendEvaluationsEveryNGenerations;
         GA.TerminationReached += AppendAfterTermination;
+        AlgorithmName = GetDefaultName();
     }
 
     private void AppendEvaluationsEveryNGenerations(object sender, EventArgs e)
@@ -63,10 +68,19 @@ public class GAGenerationLogger
         return header.ToString();
     }
 
-    private string AlgorithmName =>
-        $"GEN_{InteractiveGeneticMono.AimedGenerations}" +
+    public string AlgorithmName { get; set; }
+
+    public string GetDefaultName()
+    {
+        return $"GEN_{InteractiveGeneticMono.AimedGenerations}" +
             $"_POP{InteractiveGeneticMono.PopulationCount}" +
             $"_SZ{InteractiveGeneticMono.LevelProperties.LevelSize}_IndividualTimes";
+    }
+
+    //    private string AlgorithmName =>
+    //        $"GEN_{InteractiveGeneticMono.AimedGenerations}" +
+    //            $"_POP{InteractiveGeneticMono.PopulationCount}" +
+    //            $"_SZ{InteractiveGeneticMono.LevelProperties.LevelSize}_IndividualTimes";
 
     private string GetUserPrefferenceModel()
     {
