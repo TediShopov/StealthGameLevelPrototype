@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5edeb2a5aed587544b2115e81e8ad200, type: 3}
   m_Name: DefaultEnemyProperties
   m_EditorClassIdentifier: 
-  Speed: 3
+  Speed: 1.5
   ReachRadius: 0.15
-  FOV: 90
-  ViewDistance: 5
+  FOV: 70
+  ViewDistance: 3
   DebugRadius: 0.1

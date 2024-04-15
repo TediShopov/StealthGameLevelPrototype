@@ -333,24 +333,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a59df0218d90434e9622a53774d6147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PopulationCount: 15
-  AimedGenerations: 6
+  PopulationCount: 10
+  AimedGenerations: 5
   MutationProb: 0.199
   CrossoverProb: 0.779
   PhenotypeEvaluator: {fileID: 1411282489}
   Generator: {fileID: 1513753137}
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
-  Seed: 132278179
-  LogExecutions: 0
-  LogIndividualExecutions: 0
-  LogExecutionTimes: 0
+  Seed: 1355743295
+  LogMeasurements: 1
+  LogEveryGenerations: 2
   TopNLevels: 5
   Step: 0.426
   ExtraSpacing: {x: 10, y: 10}
   UserPreferences:
-  - 0.3333
-  - 0.3333
-  - 0.3333
+  - 0.33333334
+  - 0.33333334
+  - 0.33333334
 --- !u!1 &1513753133
 GameObject:
   m_ObjectHideFlags: 0
@@ -434,7 +433,7 @@ MonoBehaviour:
   MaxEnemiesSpawned: 3
   StartingObstacleCount: 3
   NecessaryObstacles: 3
-  EnemyCount: 8
+  EnemyCount: 1
   RoadmapGenerator: {fileID: 1513753139}
   PathGenerator: {fileID: 1513753138}
   FutureLevel: {fileID: 1513753136}
@@ -450,7 +449,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03cdefe7d50e1f44495c882f2424a4b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  geneIndex: 63
+  geneIndex: 50
 --- !u!114 &1513753139
 MonoBehaviour:
   m_ObjectHideFlags: 0

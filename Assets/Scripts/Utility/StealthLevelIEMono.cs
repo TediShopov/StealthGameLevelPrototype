@@ -202,6 +202,7 @@ public class StealthLevelIEMono : MonoBehaviour
     public bool LogMeasurements = false;
 
     public int LogEveryGenerations = 5;
+    public int IndependentRuns = 5;
     private GAGenerationLogger GAGenerationLogger;
 
     //public bool LogIndividualExecutions = false;
@@ -250,17 +251,20 @@ public class StealthLevelIEMono : MonoBehaviour
 
     public void RunWithSyntheticModel()
     {
-        Dispose();
-        PhenotypeEvaluator.IE = this;
-        this.GenerationSelecitons = new List<LevelChromosomeBase>();
-        this.InteractiveSelections = new List<List<LevelChromosomeBase>>();
-        SetupGA();
-        GeneticAlgorithm.State = GeneticAlgorithmState.Started;
-        GeneticAlgorithm.Population.CreateInitialGeneration();
-        GeneticAlgorithm.EvaluateFitness();
-        while (GeneticAlgorithm.State != GeneticAlgorithmState.TerminationReached)
+        for (int i = 0; i < IndependentRuns; i++)
         {
-            DoGeneration();
+            Dispose();
+            PhenotypeEvaluator.IE = this;
+            this.GenerationSelecitons = new List<LevelChromosomeBase>();
+            this.InteractiveSelections = new List<List<LevelChromosomeBase>>();
+            SetupGA();
+            GeneticAlgorithm.State = GeneticAlgorithmState.Started;
+            GeneticAlgorithm.Population.CreateInitialGeneration();
+            GeneticAlgorithm.EvaluateFitness();
+            while (GeneticAlgorithm.State != GeneticAlgorithmState.TerminationReached)
+            {
+                DoGeneration();
+            }
         }
     }
 

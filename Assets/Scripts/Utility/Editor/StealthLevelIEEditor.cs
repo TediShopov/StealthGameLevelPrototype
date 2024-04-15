@@ -111,7 +111,8 @@ public class StealthLevelIEEditor : Editor
             {
                 //Todo visualizer user subject preference evaluator
                 ie.LogMeasurements = EditorGUILayout.Toggle("Is Logging", ie.LogMeasurements);
-                ie.LogEveryGenerations = EditorGUILayout.IntField("Every N", ie.LogEveryGenerations);
+                ie.LogEveryGenerations = EditorGUILayout.IntField("Log Every N Generations", ie.LogEveryGenerations);
+                ie.IndependentRuns = EditorGUILayout.IntField("Log Every N Generations", ie.IndependentRuns);
                 //so.Update();
                 if (GUILayout.Button("Run with synthetic model"))
                 {
