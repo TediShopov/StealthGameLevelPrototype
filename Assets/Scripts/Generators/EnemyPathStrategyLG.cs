@@ -22,7 +22,7 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
     private int EntityCount => (LevelChromosome.Length - 1) / 5;
     [HideInInspector] public FloodfilledRoadmapGenerator RoadmapGenerator;
     [HideInInspector] public DiscretePathGenerator PathGenerator;
-    public ContinuosFutureLevel FutureLevel;
+    public DiscreteRecalculatingFutureLevel FutureLevel;
 
     public void Awake()
     {

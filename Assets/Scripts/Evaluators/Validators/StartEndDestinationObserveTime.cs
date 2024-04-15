@@ -75,7 +75,7 @@ public class StartEndDestinationObserveTime : MeasureMono
         TimeframesObserved = 0;
         TimesFrameSimulated = 0;
 
-        var contLevel = (ContinuosFutureLevel)FutureLevel;
+        var contLevel = (DiscreteRecalculatingFutureLevel)FutureLevel;
         var simulation = contLevel.GetFullSimulation();
 
         while (simulation.IsFinished == false)

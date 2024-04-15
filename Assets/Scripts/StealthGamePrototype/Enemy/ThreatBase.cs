@@ -17,4 +17,6 @@ public interface IPredictableThreat
     public bool TestThreat(Vector2 collision);
 
     public Bounds GetBounds();
+
+    public IPredictableThreat Copy();
 }

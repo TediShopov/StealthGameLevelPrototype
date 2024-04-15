@@ -32,6 +32,11 @@ public class PatrolEnemyMono : MonoBehaviour, IPredictableThreat
         //                SetPatrolPath(Transforms.Select(x => (Vector2)x.position).ToList());
     }
 
+    public IPredictableThreat Copy()
+    {
+        return new Patrol(this.Patrol);
+    }
+
     public void InitPatrol(List<Vector2> points)
     {
         PathPoints = points;

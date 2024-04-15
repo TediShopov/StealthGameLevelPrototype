@@ -13,6 +13,31 @@ public class Patrol : IPredictableThreat
         Direction = Vector2.right,
     };
 
+    public IPredictableThreat Copy()
+    {
+        var copy = new Patrol(this);
+        return copy;
+    }
+
+    public Patrol(Patrol other)
+    {
+        this.AestheticProperties = other.AestheticProperties;
+        //Route creation strategy
+
+        Route = new BacktrackPatrolPath(other.Route);
+        this.Time = other.Time;
+        this.Transform = other.Transform;
+        this.AestheticProperties = other.AestheticProperties;
+
+        //Path should be valid
+        //Otherwise treated as static
+
+        //If paths begging and end point are the same
+        //route is cyclic
+
+        //If no of the above the rotue is backtracking
+    }
+
     public Patrol(
         DefaultEnemyProperties props,
         List<Vector2> path)
@@ -94,6 +119,7 @@ public class Patrol : IPredictableThreat
         if (Route == null) return;
         //Move a constant speed along a route
         Route.MoveAlong(deltaTime * AestheticProperties.Speed);
+        Time += deltaTime;
 
         //Get the position along the route and direction
         //heading to the next path point

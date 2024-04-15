@@ -55,7 +55,7 @@ public interface IPrototypable<T>
 
 [ExecuteAlways]
 [RequireComponent(typeof(Grid))]
-public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel, IPrototypable<ContinuosFutureLevel>
+public class DiscreteRecalculatingFutureLevel : MonoBehaviour, IFutureLevel, IPrototypable<IFutureLevel>
 
 {
     public LayerMask ObstacleLayerMask;
@@ -65,8 +65,8 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel, IPrototypable<C
     //public PatrolPath[] EnemyPatrolPaths;
     public IPredictableThreat[] DynamicThreats;
 
-    [SerializeField] private float _step = 0.2f;
-    [SerializeField] private float _iter = 50;
+    [SerializeField] protected float _step = 0.2f;
+    [SerializeField] protected float _iter = 50;
 
     public float Step => _step;
 
@@ -100,7 +100,7 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel, IPrototypable<C
     }
 
     // Start is called before the first frame update
-    public void Init()
+    public virtual void Init()
     {
         Profiler.BeginSample("Continuos Representation");
         var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
@@ -160,12 +160,12 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel, IPrototypable<C
         return Vector2.Lerp(startT, endT, rel);
     }
 
-    public bool IsStaticCollision(Vector3 from, Vector3 to)
+    public virtual bool IsStaticCollision(Vector3 from, Vector3 to)
     {
         return Physics2D.Linecast(from, to, ObstacleLayerMask);
     }
 
-    public bool IsDynamicCollision(Vector3 from, Vector3 to)
+    public virtual bool IsDynamicCollision(Vector3 from, Vector3 to)
     {
         var simulation = new DynamicLevelSimulation(DynamicThreats, from.z, to.z, Step);
         while (!simulation.IsFinished)
@@ -248,7 +248,7 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel, IPrototypable<C
         return Vector2.zero;
     }
 
-    public void Update()
+    public virtual void Update()
     {
         if (DynamicThreats == null) return;
         foreach (var threa in DynamicThreats)
@@ -266,7 +266,7 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel, IPrototypable<C
         }
     }
 
-    public void OnDrawGizmosSelected()
+    public virtual void OnDrawGizmosSelected()
     {
         if (EnableSetLevel == false) return;
         if (SolutionPaths == null) return;
@@ -282,9 +282,9 @@ public class ContinuosFutureLevel : MonoBehaviour, IFutureLevel, IPrototypable<C
         }
     }
 
-    public ContinuosFutureLevel PrototypeComponent(GameObject to)
+    public virtual IFutureLevel PrototypeComponent(GameObject to)
     {
-        var other = to.AddComponent<ContinuosFutureLevel>();
+        var other = to.AddComponent<DiscreteRecalculatingFutureLevel>();
         other.BoundaryLayerMask = this.BoundaryLayerMask;
         other.ObstacleLayerMask = this.ObstacleLayerMask;
         other._iter = this._iter;

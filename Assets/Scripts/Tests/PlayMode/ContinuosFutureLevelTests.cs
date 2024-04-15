@@ -9,17 +9,17 @@ using UnityEngine.TestTools;
 
 public class ContinuosFutureLevelTests
 {
-    private ContinuosFutureLevel CreateFutureLevelMono()
+    private DiscreteRecalculatingFutureLevel CreateFutureLevelMono()
     {
         GameObject Level = new GameObject("Level");
         Level.tag = "Level";
 
         GameObject futureLevelObject = new GameObject("CLI");
         futureLevelObject.transform.parent = Level.transform;
-        return futureLevelObject.AddComponent<ContinuosFutureLevel>();
+        return futureLevelObject.AddComponent<DiscreteRecalculatingFutureLevel>();
     }
 
-    private PatrolEnemyMono SpawnPatrolMono(ContinuosFutureLevel cli)
+    private PatrolEnemyMono SpawnPatrolMono(DiscreteRecalculatingFutureLevel cli)
     {
         var Enemy = GameObject.Instantiate(
             EnemyPrefab,

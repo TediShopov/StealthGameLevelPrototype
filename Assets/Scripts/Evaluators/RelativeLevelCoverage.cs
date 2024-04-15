@@ -55,7 +55,7 @@ namespace StealthLevelEvaluation
         //            return notcolliding.Count;
         //        }
 
-        private int DiscreteCollidingCells(ContinuosFutureLevel futureLevel, Bounds levelBounds)
+        private int DiscreteCollidingCells(DiscreteRecalculatingFutureLevel futureLevel, Bounds levelBounds)
         {
             var boundsInt = new BoundsInt();
             boundsInt.min = Grid.WorldToCell(levelBounds.min);
@@ -85,7 +85,7 @@ namespace StealthLevelEvaluation
                 return false;
             });
             int maxCells = _staticObstacleGrid.GetCols() * _staticObstacleGrid.GetRows();
-            int colliding = DiscreteCollidingCells((ContinuosFutureLevel)futureLevel, Helpers.GetLevelBounds(Phenotype));
+            int colliding = DiscreteCollidingCells((DiscreteRecalculatingFutureLevel)futureLevel, Helpers.GetLevelBounds(Phenotype));
             colliding -= obstacleCount;
             float relCoverage = (float)colliding / (float)maxCells;
             return relCoverage.ToString();

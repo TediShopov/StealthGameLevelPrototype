@@ -11,7 +11,7 @@ namespace StealthLevelEvaluation
         private Vector2Int GoalCoord;
         private Collider2D PlayerCollider;
         public LayerMask ObstacleLayerMask;
-        public ContinuosFutureLevel FutureLevel;
+        public DiscreteRecalculatingFutureLevel FutureLevel;
         private Grid Grid;
         private HashSet<Vector2Int> UniqueVisibleCells;
         private List<AStar.Node> Path;
@@ -59,7 +59,8 @@ namespace StealthLevelEvaluation
             PlayerCollider = character.GetComponent<Collider2D>();
             GoalCoord = (Vector2Int)grid.WorldToCell(phenotype.GetComponentInChildren<WinTrigger>().transform.position);
 
-            FutureLevel = phenotype.GetComponentInChildren<ContinuosFutureLevel>();
+            FutureLevel = phenotype
+                .GetComponentInChildren<DiscreteRecalculatingFutureLevel>();
             Grid = grid;
             if (FutureLevel != null)
             {
