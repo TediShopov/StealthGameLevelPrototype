@@ -16,7 +16,8 @@ public class InteractiveEvalutation : MonoBehaviour
     public void Awake()
     {
         IEMono = this.GetComponentInParent<StealthLevelIEMono>();
-        SceneView.duringSceneGui += this.DrawSelectionButton;
+        if (IEMono != null)
+            SceneView.duringSceneGui += this.DrawSelectionButton;
     }
 
     public void OnDestroy()

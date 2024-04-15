@@ -1,5 +1,6 @@
 using GeneticSharp;
 using GeneticSharp.Domain;
+using StealthLevelEvaluation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -53,7 +54,7 @@ public class GAGenerationLogger
         StringBuilder header = new StringBuilder();
         var bestInfo = (LevelChromosome)GA.BestChromosome;
         header.Append($"Chromosome Hash,");
-        foreach (var e in bestInfo.Measurements.FitnessEvaluations)
+        foreach (var e in bestInfo.Measurements)
         {
             header.Append($"{e.Name} Evaluation,");
             header.Append($"{e.Name} Time,");
@@ -67,6 +68,15 @@ public class GAGenerationLogger
             $"_POP{InteractiveGeneticMono.PopulationCount}" +
             $"_SZ{InteractiveGeneticMono.LevelProperties.LevelSize}_IndividualTimes";
 
+    private string GetUserPrefferenceModel()
+    {
+        string preferences = "";
+        preferences += "Preference Model,";
+        foreach (float weight in InteractiveGeneticMono.UserPreferences)
+            preferences += weight + ",";
+        return preferences;
+    }
+
     private void AppendEvaluationToCsv(IList<Generation> generationsToOutput)
     {
         var GA = InteractiveGeneticMono.GeneticAlgorithm;
@@ -74,13 +84,16 @@ public class GAGenerationLogger
         string values = string.Empty;
         foreach (var gen in generationsToOutput)
         {
+            values += GetUserPrefferenceModel();
+            values += "\n";
+
             foreach (var c in gen.Chromosomes)
             {
                 values += $"{c.GetHashCode()},";
-                MeasurementsData info = ((LevelChromosome)c).Measurements;
+                List<MeasureResult> info = ((LevelChromosome)c).Measurements;
                 if (info != null)
                 {
-                    foreach (var e in info.FitnessEvaluations)
+                    foreach (var e in info)
                     {
                         values += $"{e.Value},";
                         values += $"{e.Time},";

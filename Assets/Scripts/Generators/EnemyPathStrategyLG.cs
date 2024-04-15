@@ -87,7 +87,9 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         otherGrid.cellLayout = this.GetComponent<Grid>().cellLayout;
 
         var roadmap = RoadmapGenerator.PrototypeComponent(data);
-        roadmap.Init();
+        roadmap.Init(to);
+        roadmap.DoMeasure(to);
+        chromosome.Measurements.Add(roadmap.Result);
         //        var rd = CopyComponent(RoadmapGenerator, To.gameObject);
         //        To.GetComponent<Grid>().cellSize = this.GetComponent<Grid>().cellSize;
         //        rd.Init(To);

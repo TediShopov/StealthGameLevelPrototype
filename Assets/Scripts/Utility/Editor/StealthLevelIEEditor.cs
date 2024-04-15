@@ -83,6 +83,7 @@ public class StealthLevelIEEditor : Editor
             if (showMetaproperties)
             {
                 ie.PopulationCount = EditorGUILayout.IntField("Population Count", ie.PopulationCount);
+
                 ie.AimedGenerations = EditorGUILayout.IntField("Generaiton", ie.AimedGenerations);
 
                 ie.CrossoverProb = EditorGUILayout.Slider("Crossover", ie.CrossoverProb, 0.0f, 1.0f);

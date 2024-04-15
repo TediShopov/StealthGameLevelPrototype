@@ -21,12 +21,29 @@ public class InteractiveEvalutorMono : EvaluatorMono
     public bool DoObjectiveDifficultyEvaluation;
     public StealthLevelIEMono IE;
 
-    public void AppendAestheticMeasureToObject(GameObject level, LevelChromosomeBase chromosomeBase)
+    //    public void AppendAestheticMeasureToObject(GameObject level, LevelChromosomeBase chromosomeBase)
+    //    {
+    //        var asm = level.AddComponent<LevelPropertiesBulkEvaluator>();
+    //        asm.LevelProperties = LevelProperties;
+    //        asm.Measure(level);
+    //        chromosomeBase.AestheticProperties = new List<float>(asm.RealAestheticsMeasures);
+    //    }
+    public void AppendAestheticMeasureToObject(
+        LevelChromosomeBase chromo,
+        MeasureMono[] evals)
     {
-        var asm = level.AddComponent<AestheticCriteriaMeasure>();
-        asm.LevelProperties = LevelProperties;
-        asm.Measure(level);
-        chromosomeBase.AestheticProperties = new List<float>(asm.RealAestheticsMeasures);
+        //Find all measurement of type properties
+        var PropertyEvaluators = evals.Where(x => x.GetCategory() == MeasurementType.PROPERTIES)
+            .Select(x => (LevelPropertiesEvaluator)x)
+            .ToList();
+        if (chromo.AestheticProperties == null)
+            chromo.AestheticProperties = new List<float>();
+
+        chromo.AestheticProperties.Clear();
+        foreach (var propertyEvaluator in PropertyEvaluators)
+        {
+            chromo.AestheticProperties.Add(propertyEvaluator.PropertyValue);
+        }
     }
 
     public override double Evaluate(IChromosome chromosome)
@@ -47,8 +64,14 @@ public class InteractiveEvalutorMono : EvaluatorMono
             //Get all evaluators from  the prefab
             MeasureMono[] Evaluators = evaluator.GetComponents<MeasureMono>();
 
-            //Run Validators
-            Evaluators = Evaluators.OrderByDescending(x => x.IsValidator).ToArray();
+            //Order so level properties are measured first, followed by validators and
+            // difficulty estimation
+            Evaluators = Evaluators
+                .Where(x => x.GetCategory() != MeasurementType.INITIALIZATION)
+                .OrderByDescending(x => x.GetCategory() == MeasurementType.PROPERTIES)
+                .ThenByDescending(x => x.IsValidator)
+                .ToArray();
+
             foreach (var e in Evaluators)
             {
                 e.Init(levelObject.gameObject);
@@ -56,21 +79,25 @@ public class InteractiveEvalutorMono : EvaluatorMono
                 if (e.IsTerminating)
                     break;
             }
-            var measurementData = new MeasurementsData(Evaluators.Select(x => x.Result).ToArray());
-            if (measurementData == null)
+
+            var newMeasurement = Evaluators.Select(x => x.Result).ToArray();
+            if (levelChromosome.Measurements == null)
             {
-                int b = 3;
+                levelChromosome.Measurements = new List<MeasureResult>();
             }
-            //Assign actual measurement to the chromose object
-            levelChromosome.Measurements = measurementData;
+            levelChromosome.Measurements.AddRange(newMeasurement);
+
+            Vector2 placement = new Vector2(IE.ExtraSpacing.x / 1.5f, 0);
 
             //Attach mono behaviour to visualize the measurements
-            ChromoseMeasurementsVisualizer.AttachDataVisualizer(levelObject.gameObject);
+            ChromoseMeasurementsVisualizer.AttachDataVisualizer(
+                levelObject.gameObject,
+                placement);
 
             Transform data = levelObject.transform.Find("Data");
             if (data is not null)
             {
-                AppendAestheticMeasureToObject(data.gameObject, levelChromosome);
+                AppendAestheticMeasureToObject(levelChromosome, Evaluators);
             }
 
             //TODO Apply a proper fitness formula

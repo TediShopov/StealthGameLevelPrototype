@@ -7,6 +7,11 @@ namespace StealthLevelEvaluation
 {
     public class StartEndObstructionValidator : MeasureMono
     {
+        public override MeasurementType GetCategory()
+        {
+            return MeasurementType.VALIDATION;
+        }
+
         public override string GetName()
         {
             return "StartEndObstructionValidator";

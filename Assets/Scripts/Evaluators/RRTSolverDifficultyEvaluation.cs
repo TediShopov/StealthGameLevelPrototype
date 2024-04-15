@@ -15,6 +15,11 @@ public class RRTSolverDifficultyEvaluation : MeasureMono
     public int Attempts;
     public float Chance => (float)Successes / (float)Attempts;
 
+    public override MeasurementType GetCategory()
+    {
+        return MeasurementType.DIFFICULTY;
+    }
+
     public override string GetName()
     {
         return "" + RRTPrefab.name;

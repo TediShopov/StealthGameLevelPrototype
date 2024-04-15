@@ -165,6 +165,11 @@ namespace StealthLevelEvaluation
 {
     public class AStartPathEvalution : MeasureMono
     {
+        public override MeasurementType GetCategory()
+        {
+            return MeasurementType.VALIDATION;
+        }
+
         public Vector2Int StartCoord;
         public Vector2Int GoalCoord;
         private NativeGrid<bool> LevelGrid;

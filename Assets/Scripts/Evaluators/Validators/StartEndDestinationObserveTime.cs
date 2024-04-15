@@ -14,6 +14,11 @@ public class StartEndDestinationObserveTime : MeasureMono
     public int TimeframesObserved = 0;
     public int TimesFrameSimulated = 0;
 
+    public override MeasurementType GetCategory()
+    {
+        return MeasurementType.VALIDATION;
+    }
+
     public override string GetName()
     {
         return "StartEndDestinationObserveTime";

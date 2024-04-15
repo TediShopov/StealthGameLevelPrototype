@@ -1,5 +1,6 @@
 using GeneticSharp;
 using PlasticPipe.PlasticProtocol.Messages;
+using StealthLevelEvaluation;
 using System.Collections.Generic;
 using System.Security.Claims;
 
@@ -11,10 +12,12 @@ public abstract class LevelChromosomeBase : ChromosomeBase
     protected LevelChromosomeBase(int length, LevelPhenotypeGenerator generator) : base(length)
     {
         PhenotypeGenerator = generator;
+        Measurements = new List<MeasureResult>();
+        AestheticProperties = new List<float>();
     }
 
     public LevelPhenotypeGenerator PhenotypeGenerator;
-    public MeasurementsData Measurements { get; set; }
+    public List<MeasureResult> Measurements { get; set; }
     public List<float> AestheticProperties;
 
     public override IChromosome Clone()

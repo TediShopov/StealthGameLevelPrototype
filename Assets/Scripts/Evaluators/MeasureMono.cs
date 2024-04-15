@@ -8,6 +8,7 @@ using UnityEngine.Profiling;
 public enum MeasurementType
 {
     INITIALIZATION,
+    VALIDATION,
     DIFFICULTY,
     PROPERTIES
 }
@@ -16,7 +17,9 @@ namespace StealthLevelEvaluation
 {
     public interface IMeasure<T>
     {
-        public abstract string GetName();
+        public string GetName();
+
+        public MeasurementType GetCategory();
 
         public double Time { get; }
         public MeasureResult Result { get; }
@@ -130,7 +133,7 @@ namespace StealthLevelEvaluation
                         Name = GetName(),
                         Value = "-",
                         Time = -1,
-                        Category = MeasurementType.INITIALIZATION,
+                        Category = GetCategory(),
                         Type = this.GetType(),
                     };
                 }
@@ -163,7 +166,7 @@ namespace StealthLevelEvaluation
                     Name = GetName(),
                     Time = _time,
                     Value = measurment,
-                    Category = MeasurementType.INITIALIZATION,
+                    Category = GetCategory(),
                     Type = this.GetType()
                 };
             else
@@ -171,10 +174,15 @@ namespace StealthLevelEvaluation
                 MeasureResult m = _result.Value;
                 m.Name = GetName();
                 m.Time = Time;
-                m.Category = MeasurementType.INITIALIZATION;
+                m.Category = GetCategory();
                 m.Value = measurment;
                 m.Type = this.GetType();
             }
+        }
+
+        public virtual MeasurementType GetCategory()
+        {
+            return MeasurementType.INITIALIZATION;
         }
     }
 }

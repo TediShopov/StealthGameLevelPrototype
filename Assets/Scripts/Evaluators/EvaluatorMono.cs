@@ -40,7 +40,7 @@ public class EvaluatorMono : MonoBehaviour, IFitness
                 if (e.IsTerminating)
                     break;
             }
-            var measurementData = new MeasurementsData(Evaluators.Select(x => x.Result).ToArray());
+            var measurementData = new List<MeasureResult>(Evaluators.Select(x => x.Result).ToArray());
 
             if (measurementData == null)
             {

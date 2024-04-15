@@ -7,6 +7,11 @@ using UnityEngine;
 
 public class PathZoneUniqueness : MeasureMono
 {
+    public override MeasurementType GetCategory()
+    {
+        return MeasurementType.DIFFICULTY;
+    }
+
     private GameObject LevelObject;
 
     public override string GetName()

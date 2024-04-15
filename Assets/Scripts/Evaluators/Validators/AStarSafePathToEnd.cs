@@ -21,6 +21,11 @@ namespace StealthLevelEvaluation
         //a level future
         private NativeGrid<bool> LevelGrid;
 
+        public override MeasurementType GetCategory()
+        {
+            return MeasurementType.VALIDATION;
+        }
+
         public override string GetName()
         {
             return "AStarSafePathToEnd";

@@ -7,6 +7,11 @@ namespace StealthLevelEvaluation
 {
     public class RiskMeasure : MeasureMono
     {
+        public override MeasurementType GetCategory()
+        {
+            return MeasurementType.DIFFICULTY;
+        }
+
         //            public RiskMeasure(GameObject level) : base(level, "Risk Measure of solutions", 0)
         //            {
         //            }

@@ -7,42 +7,59 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-public class MeasurementsData
-{
-    public MeasurementsData(params MeasureResult[] measures)
-    {
-        this.FitnessEvaluations = measures.ToList();
-    }
-
-    public List<MeasureResult> FitnessEvaluations;
-}
-
 public class ChromoseMeasurementsVisualizer : MonoBehaviour
 {
-    //    public static FitnessInfo AttachDataVisualizer(GameObject to, )
-    //    {
-    //        var obj = new GameObject("FitnessInfo", new System.Type[] { typeof(FitnessInfo) });
-    //        obj.transform.SetParent(to.transform, false);
-    //        var info = obj.GetComponent<FitnessInfo>();
-    //        info.FitnessEvaluations = evals.ToList();
-    //        return info;
-    //    }
-    public static void AttachDataVisualizer(GameObject to)
+    public static void AttachDataVisualizer(GameObject to, Vector2 relPos)
     {
         var obj = new GameObject("FitnessInfo", new System.Type[] { typeof(ChromoseMeasurementsVisualizer) });
+        obj.transform.localPosition = relPos;
         obj.transform.SetParent(to.transform, false);
         var infoMono = obj.GetComponent<ChromoseMeasurementsVisualizer>();
         infoMono.levelChromosome = to.GetComponentInChildren<LevelChromosomeMono>().Chromosome;
     }
 
+    public static void AttachDataVisualizer(GameObject to)
+    {
+        AttachDataVisualizer(to, Vector2.zero);
+    }
+
     private LevelChromosomeBase levelChromosome;
+
+    public string GetCategoryString(MeasurementType category)
+    {
+        if (category == MeasurementType.INITIALIZATION)
+        {
+            return "INITIALIZATION";
+        }
+        if (category == MeasurementType.PROPERTIES)
+        {
+            return "PROPERTIES";
+        }
+        if (category == MeasurementType.VALIDATION)
+        {
+            return "VALIDATION";
+        }
+        if (category == MeasurementType.DIFFICULTY)
+        {
+            return "DIFFICULTY";
+        }
+        return "None";
+    }
 
     public void OnDrawGizmosSelected()
     {
         string allEvals = "";
-        foreach (var evaluation in levelChromosome.Measurements.FitnessEvaluations)
+        MeasurementType previousMeasurementType = MeasurementType.INITIALIZATION;
+        allEvals += "---" + GetCategoryString(previousMeasurementType) + "---" + "\n";
+        foreach (var evaluation in levelChromosome.Measurements)
         {
+            if (evaluation.Category != previousMeasurementType)
+            {
+                allEvals += "---" + GetCategoryString(evaluation.Category) + "---" + "\n";
+            }
+
             allEvals += evaluation.ToString();
+            previousMeasurementType = evaluation.Category;
         }
         Handles.Label(this.transform.position, allEvals.ToString());
     }

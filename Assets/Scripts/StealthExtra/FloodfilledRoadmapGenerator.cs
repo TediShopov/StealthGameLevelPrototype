@@ -1,4 +1,5 @@
 using CGALDotNet.Processing;
+using StealthLevelEvaluation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,8 @@ using UnityEngine.Profiling;
 
 [ExecuteInEditMode]
 [RequireComponent(typeof(Grid))]
-public class FloodfilledRoadmapGenerator : MonoBehaviour, IPrototypable<FloodfilledRoadmapGenerator>
+public class FloodfilledRoadmapGenerator : MeasureMono,
+    IPrototypable<FloodfilledRoadmapGenerator>
 {
     //Dictionary exposed to Unity editor
     [HideInInspector] public List<Collider2D> ColliderKeys;
@@ -63,36 +65,6 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour, IPrototypable<Floodfil
     {
         Vector2Int nativeCoord = LevelGrid.GetNativeCoord(worldGrid);
         return LevelGrid.Get(nativeCoord.x, nativeCoord.y);
-    }
-
-    public void Init()
-    {
-        ColliderKeys = new List<Collider2D>();
-        Profiler.BeginSample("Enemy Roadmap Init");
-        _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
-        this.Grid = GetComponent<Grid>();
-
-        LevelGrid = new NativeGrid<int>(this.Grid, Helpers.GetLevelBounds(gameObject));
-
-        LevelGrid.SetAll(SetCellColliderIndex);
-
-        FloodRegions();
-        Profiler.EndSample();
-
-        if (RoadMap.adjacencyList.Count <= 0) return;
-        int totalRecursion = 0;
-
-        List<List<Vector2>> subgraphs = FindSubgraphsDFS();
-        foreach (var subgraph in subgraphs)
-        {
-            Vector2 superNode = PickUnvistiedSuperNode(subgraph);
-            RemoveRedundantNodes(superNode, ref totalRecursion, new List<Vector2>());
-        }
-
-        Debug.Log($"Roadmap nodes: {RoadMap.adjacencyList.Count}");
-        Debug.Log($"Simplified connection count : {_debugSimplifiedConnections.Count}");
-        Debug.Log($"Recursion count is : {totalRecursion}");
-        Debug.Log($"Graph count is : {subgraphs.Count}");
     }
 
     private List<List<Vector2>> FindSubgraphsDFS()
@@ -456,6 +428,45 @@ public class FloodfilledRoadmapGenerator : MonoBehaviour, IPrototypable<Floodfil
         other.ExtraChecks = this.ExtraChecks;
         other.EnemyBSRadius = this.EnemyBSRadius;
         return other;
+    }
+
+    public override string GetName()
+    {
+        return "RoadmapFloofill";
+    }
+
+    public override void Init(GameObject phenotype)
+    {
+        ColliderKeys = new List<Collider2D>();
+        Profiler.BeginSample("Enemy Roadmap Init");
+        _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
+        this.Grid = GetComponent<Grid>();
+
+        LevelGrid = new NativeGrid<int>(this.Grid, Helpers.GetLevelBounds(gameObject));
+
+        LevelGrid.SetAll(SetCellColliderIndex);
+    }
+
+    protected override string Evaluate()
+    {
+        Profiler.BeginSample(GetName());
+        FloodRegions();
+        if (RoadMap.adjacencyList.Count <= 0) return "-";
+        int totalRecursion = 0;
+
+        List<List<Vector2>> subgraphs = FindSubgraphsDFS();
+        foreach (var subgraph in subgraphs)
+        {
+            Vector2 superNode = PickUnvistiedSuperNode(subgraph);
+            RemoveRedundantNodes(superNode, ref totalRecursion, new List<Vector2>());
+        }
+        Profiler.EndSample();
+
+        Debug.Log($"Roadmap nodes: {RoadMap.adjacencyList.Count}");
+        Debug.Log($"Simplified connection count : {_debugSimplifiedConnections.Count}");
+        Debug.Log($"Recursion count is : {totalRecursion}");
+        Debug.Log($"Graph count is : {subgraphs.Count}");
+        return "-";
     }
 
     #endregion Debug
