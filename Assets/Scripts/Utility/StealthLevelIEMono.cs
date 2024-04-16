@@ -264,18 +264,6 @@ public class StealthLevelIEMono : MonoBehaviour
         //var population = new Population(PopulationCount, PopulationCount, chromosome);
         var population = new PopulationPhenotypeLayout(PopulationPhenotypeLayout, this.gameObject, chromosome);
 
-        //        if (GridPopulation != null)
-        //        {
-        //            GridPopulation.PrepareForNewGeneration();
-        //        }
-        //        else
-        //        {
-        //            GridPopulation = new GridObjectLayout(LevelProperties);
-        //            GridPopulation.ExtraSpacing = ExtraSpacing;
-        //            GridPopulation.SpawnGrid(PopulationCount, this.transform);
-        //        }
-        //PhenotypeEvaluator.GridLevelObjects = GridPopulation;
-
         GeneticAlgorithm = new
             InteractiveGeneticAlgorithm(population, PhenotypeEvaluator, selection, crossover, mutation);
         GeneticAlgorithm.MutationProbability = MutationProb;
@@ -330,8 +318,8 @@ public class StealthLevelIEMono : MonoBehaviour
             GenerationSelecitons.Clear();
 
             GeneticAlgorithm.EndCurrentGeneration();
-            //GridPopulation.PrepareForNewGeneration();
             GeneticAlgorithm.EvolveOneGeneration();
+
             //Evaluates fitness but also manifest the level
             // in the unity scene
             GeneticAlgorithm.EvaluateFitness();

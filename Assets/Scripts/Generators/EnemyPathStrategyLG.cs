@@ -35,22 +35,8 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         float obstacleToEnemyRatio = GetGeneValue(geneIndex);
         geneIndex++;
         //Both obstacle and enemies need 5 genes to represent an entity
-
-        //        //Converting 0,1 range to a range [3, chromosomeLength -1]
-        //        //Ensures at least 3 obstacle for a level and at least one chromose for enemy
-        //        float convertedObstacleToEnemyRatio =
-        //            Mathf.Lerp(NecessaryObstacles, EntityCount - 1, obstacleToEnemyRatio);
-
-        //        int enemyWeight = Mathf.FloorToInt(Mathf.Lerp(1, 5, obstacleToEnemyRatio));
-        //        int totalWeight = 1 + enemyWeight;
-        //
-        //        float e = (float)enemyWeight / 6.0f;
-        //        int enemyCount = Mathf.CeilToInt(e * EntityCount);
-        //        int obstacleCount = EntityCount - enemyCount;
-
         int obstacleCount = Mathf.CeilToInt(
         Mathf.Lerp(NecessaryObstacles, EntityCount - 1, obstacleToEnemyRatio));
-
         return obstacleCount;
     }
 
@@ -64,19 +50,18 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         //Boundary
         To.tag = "Level";
 
+        GameObject content = new GameObject("Content");
+        content.transform.SetParent(to.transform, false);
+
         var data = new GameObject("Data");
         data.transform.SetParent(To.transform, false);
         LevelChromosomeMono chromosomeMono = data.AddComponent<LevelChromosomeMono>();
         chromosomeMono.Chromosome = (LevelChromosome)chromosome;
-
-        BoxCollider2D box =
-            SetupLevelInitials(chromosome, to,
-            new GameObject("VisBound"));
-
-        int geneIndex = GenerateLevelContent(chromosome, box);
+        BoxCollider2D box = SetupLevelInitials(chromosome, content);
+        int geneIndex = GenerateLevelContent(chromosome, box, content);
 
         var visualBoundary = new GameObject("VisualBoundary");
-        visualBoundary.transform.SetParent(To.transform, false);
+        visualBoundary.transform.SetParent(content.transform, false);
         PlaceBoundaryVisualPrefabs(box, visualBoundary);
 
         Physics2D.SyncTransforms();
@@ -90,16 +75,6 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         roadmap.Init(to);
         roadmap.DoMeasure(to);
         chromosome.Measurements.Add(roadmap.Result);
-        //        var rd = CopyComponent(RoadmapGenerator, To.gameObject);
-        //        To.GetComponent<Grid>().cellSize = this.GetComponent<Grid>().cellSize;
-        //        rd.Init(To);
-        //Initialize the roadmap
-        //RoadmapGenerator.Init(To);
-
-        //RoadmapMono roadmap = To.gameObject.AddComponent<RoadmapMono>();
-        //roadmap.Grid = RoadmapGenerator.Grid;
-        //roadmap.RoadMap = RoadmapGenerator.RoadMap;
-        //roadmap.LevelGrid = RoadmapGenerator.LevelGrid;
 
         //Use the generated roadmap to assign guard paths
         AssignPaths(geneIndex, roadmap.RoadMap);
@@ -165,13 +140,13 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         geneIndex = PathGenerator.geneIndex;
     }
 
-    protected override int GenerateLevelContent(LevelChromosomeBase chromosome, BoxCollider2D box)
+    protected override int GenerateLevelContent(LevelChromosomeBase chromosome, BoxCollider2D box, GameObject container)
     {
         int geneIndex = 0;
         int ObstacleCount = GetObstaclesToSpawn(ref geneIndex);
         EnemyCount = EntityCount - ObstacleCount;
         var Obstacles = new GameObject("Obstacles");
-        Obstacles.transform.SetParent(To.transform);
+        Obstacles.transform.SetParent(container.transform);
 
         //Test for off by oen errors
         for (int i = 0; i < ObstacleCount; i++)
@@ -185,7 +160,7 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
 
         for (int i = 0; i < EnemyCount; i++)
         {
-            Instantiate(LevelProperties.EnemyPrefab, To.transform);
+            Instantiate(LevelProperties.EnemyPrefab, container.transform);
         }
 
         //Enemy Behaviour

@@ -51,10 +51,8 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         chromosomeMono.Chromosome = (LevelChromosome)chromosome;
 
         var Obstacles = new GameObject("Obstacles");
-        BoxCollider2D box =
-            SetupLevelInitials(chromosome, to,
-            new GameObject("VisBound"));
-        GenerateLevelContent(chromosome, box);
+        BoxCollider2D box = SetupLevelInitials(chromosome, to);
+        GenerateLevelContent(chromosome, box, to);
 
         PlaceBoundaryVisualPrefabs(box, Obstacles);
         //Solvers
@@ -63,7 +61,8 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         Debug.Log("Generation of phenotype finished");
     }
 
-    protected virtual int GenerateLevelContent(LevelChromosomeBase chromosome, BoxCollider2D box)
+    protected virtual int GenerateLevelContent(LevelChromosomeBase chromosome, BoxCollider2D box,
+        GameObject container)
     {
         int geneIndex = 0;
         int ObstaclesSpawned = (chromosome.Length - 4) / 5;
@@ -115,12 +114,10 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         Helpers.LogExecutionTime(voxelizedLevel.Init, "Future Level Logic Time");
     }
 
-    protected BoxCollider2D SetupLevelInitials(LevelChromosomeBase chromosome, GameObject to, GameObject Obstacles)
+    protected BoxCollider2D SetupLevelInitials(LevelChromosomeBase chromosome, GameObject to)
     {
         //Boundary constructed first 2 genes
         BoxCollider2D box = InitLevelBoundary(LevelProperties.LevelSize.x, LevelProperties.LevelSize.y, to);
-
-        Obstacles.transform.SetParent(To.transform, false);
 
         box.size = new Vector2(
             box.size.x - LevelProperties.PlayerPrefab.GetComponent<Collider2D>().bounds.extents.x / 2.0f - VisualBoundWidth / 2.0f,
@@ -130,9 +127,11 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         //Player
         //var playerInstance = SpawnGameObject(ref geneIndex, box, PlayerPrefab);
         var playerInstance = SpawnGameObjectAtRelative(LevelProperties.RelativeStartPosition, box, LevelProperties.PlayerPrefab);
+        playerInstance.transform.SetParent(to.transform, true);
         //Destination
         //var destinationIntance = SpawnGameObject(ref geneIndex, box, DestinationPrefab);
         var destinationIntance = SpawnGameObjectAtRelative(LevelProperties.RelativeEndPosiiton, box, LevelProperties.DestinationPrefab);
+        destinationIntance.transform.SetParent(to.transform, true);
         return box;
     }
 

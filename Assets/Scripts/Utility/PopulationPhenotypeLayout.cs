@@ -7,30 +7,6 @@ using UnityEngine;
 
 //Interface of how population phenotype is layed out in Unity editor
 //
-public interface IPopulationLayout
-{
-    public void Init();
-
-    public void Dispose();
-
-    public void MoveToNewGeneration(
-        List<LevelChromosomeBase> oldGen,
-        List<LevelChromosomeBase> newGen);
-
-    //Check of availabiltiy of spot. It may be unavalable if used by another process.
-    public bool IsDefaultSpotAvailable();
-
-    //Spot for evaluation of phenotype in Unity Editor
-    //Expected to be isolated from other levels
-    public GameObject DefaultEvalutionSpot();
-
-    /// <summary>
-    /// Was moving the object successful
-    /// </summary>
-    /// <param name="obj">Gameobject that is to be placed in the next spot in the layout</param>
-    /// <returns>Booleand if operation was successful</returns>
-    public bool PostEvaluationInsert(GameObject obj);
-}
 
 [Serializable]
 public class PopulationPhenotypeLayout : Population
