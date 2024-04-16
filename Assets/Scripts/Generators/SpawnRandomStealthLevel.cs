@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEditor.Experimental.GraphView;
+using UnityEngine.UIElements;
 
 //Class used to proved utility functions for generating
 //standartizes level structure
@@ -17,9 +19,63 @@ public class LevelGeneratorBase : MonoBehaviour
     //Randomizer specific for the level
     public System.Random LevelRandom;
 
-    protected GameObject Boundary;
     public float VisualBoundWidth;
+    protected BoxCollider2D LevelBounds;
+
+    protected GameObject To;
+
+    protected GameObject Contents;
     protected GameObject CompositeVisualBoundary;
+    protected GameObject Boundary;
+    protected GameObject Obstacles;
+    protected GameObject Data;
+
+    public virtual void Generate(GameObject to = null)
+    {
+        CreateLevelStructure(to);
+    }
+
+    public void CreateLevelStructure(GameObject to)
+    {
+        To = to;
+        To.tag = "Level";
+
+        //Create level and initialize boundary object`
+        CreateBoundaryObjectAndBox(LevelProperties.LevelSize);
+
+        Data = new GameObject("Data");
+        Data.transform.SetParent(to.transform, false);
+
+        Contents = new GameObject("Content");
+        Contents.transform.SetParent(to.transform, false);
+
+        PlaceInitialStartGoalPositions();
+
+        Physics2D.SyncTransforms();
+    }
+
+    private void PlaceInitialStartGoalPositions()
+    {
+        var playerInstance = SpawnGameObjectAtRelative(LevelProperties.RelativeStartPosition,
+            LevelProperties.PlayerPrefab);
+        playerInstance.transform.SetParent(Contents.transform, true);
+        //Destination
+        //var destinationIntance = SpawnGameObject(ref geneIndex, box, DestinationPrefab);
+        var destinationIntance = SpawnGameObjectAtRelative(LevelProperties.RelativeEndPosiiton,
+            LevelProperties.DestinationPrefab);
+        destinationIntance.transform.SetParent(Contents.transform, true);
+    }
+
+    protected GameObject SpawnGameObjectAtRelative(Vector2 coord, GameObject Prefab)
+    {
+        float x = Mathf.Lerp(LevelBounds.bounds.min.x, LevelBounds.bounds.max.x, coord.x);
+        float y = Mathf.Lerp(LevelBounds.bounds.min.y, LevelBounds.bounds.max.y, coord.y);
+        var player = Instantiate(Prefab,
+            new Vector3(x, y, 0),
+            Quaternion.Euler(0, 0, 0),
+            To.transform);
+        return player;
+    }
 
     private Vector2 GetRandomPositionInsideCollider(BoxCollider2D spawnArea)
     {
@@ -51,6 +107,21 @@ public class LevelGeneratorBase : MonoBehaviour
         return null;
     }
 
+    protected void CreateBoundaryObjectAndBox(Vector2 size)
+    {
+        //Spawn boundary object at the boundary level
+        Boundary = new GameObject("Boundary", new System.Type[] { typeof(BoxCollider2D) });
+        Boundary.transform.SetParent(To.transform);
+        Boundary.transform.localPosition = new Vector3(0, 0, 0);
+        Boundary.layer = LayerMask.NameToLayer("Boundary");
+        var boxCollider = Boundary.GetComponent<BoxCollider2D>();
+        //Mark as trigger
+        boxCollider.isTrigger = true;
+        boxCollider.size = size;
+        //Assign to level bounds
+        LevelBounds = boxCollider;
+    }
+
     private bool CheckCollisionWithObstacles(GameObject spawnedObject)
     {
         // Check if the spawned object collides with any obstacles on the specified layer
@@ -60,42 +131,34 @@ public class LevelGeneratorBase : MonoBehaviour
         return colliders.Length > 1;
     }
 
-    public BoxCollider2D InitLevelBoundary(float length, float width, GameObject to)
-    {
-        Boundary = new GameObject("Boundary", new System.Type[] { typeof(BoxCollider2D) });
-        Boundary.transform.SetParent(to.transform);
-        Boundary.transform.localPosition = new Vector3(0, 0, 0);
-        Boundary.layer = LayerMask.NameToLayer("Boundary");
-        var boxCollider = Boundary.GetComponent<BoxCollider2D>();
-        boxCollider.isTrigger = true;
-        //Pick random sizes
-        //boxCollider.size = new Vector2(Random.Range(MinDimension, MaxDimension), Random.Range(MinDimension, MaxDimension));
-        boxCollider.size = new Vector2(length, width);
-        return boxCollider;
-    }
-
     public float HalfBoundWidth => VisualBoundWidth / 2.0f;
 
     //Place viusal components and a composity collider for them
-    public GameObject PlaceBoundaryVisualPrefabs(BoxCollider2D collider2D, GameObject containedIn)
+    public GameObject PlaceBoundaryVisualPrefabs()
     {
+        var visualBoundary = new GameObject("VisualBoundary");
+        visualBoundary.transform.SetParent(Contents.transform, false);
+        //Add parrent object to contain all smaller wall objects
         CompositeVisualBoundary = new GameObject("CompositeViualBoundary", new System.Type[] { typeof(CompositeCollider2D) });
-        CompositeVisualBoundary.transform.SetParent(containedIn.transform, false);
+        CompositeVisualBoundary.transform.SetParent(visualBoundary.transform, false);
+
+        //Containing object is made to be static composite collider
         var compositeCollider = CompositeVisualBoundary.GetComponent<CompositeCollider2D>();
         compositeCollider.geometryType = CompositeCollider2D.GeometryType.Polygons;
-        //compositeCollider.generationType = CompositeCollider2D.GenerationType.Manual;
         CompositeVisualBoundary.layer = LayerMask.NameToLayer("Obstacle");
-        //CompositeVisualBoundary.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
         CompositeVisualBoundary.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
 
-        float halfHeight = collider2D.size.y / 2.0f;
-        float halfWidth = collider2D.size.x / 2.0f;
+        //Define height and width of walls
+        float halfHeight = LevelBounds.size.y / 2.0f;
+        float halfWidth = LevelBounds.size.x / 2.0f;
 
-        PlaceHorizontal(halfHeight + HalfBoundWidth, collider2D.size.x);
-        PlaceHorizontal(-halfHeight - HalfBoundWidth, collider2D.size.x);
-        PlaceVertical(-halfWidth - HalfBoundWidth, collider2D.size.y);
-        PlaceVertical(halfWidth + HalfBoundWidth, collider2D.size.y);
+        //Place the four walls of the collider
+        PlaceHorizontal(halfHeight + HalfBoundWidth, LevelBounds.size.x);
+        PlaceHorizontal(-halfHeight - HalfBoundWidth, LevelBounds.size.x);
+        PlaceVertical(-halfWidth - HalfBoundWidth, LevelBounds.size.y);
+        PlaceVertical(halfWidth + HalfBoundWidth, LevelBounds.size.y);
 
+        //Manually generate composite collider
         compositeCollider.GenerateGeometry();
         return CompositeVisualBoundary;
     }
@@ -114,83 +177,3 @@ public class LevelGeneratorBase : MonoBehaviour
         topSide.transform.localScale = new Vector3(length + HalfBoundWidth, VisualBoundWidth, 0);
     }
 }
-
-//public class SpawnRandomStealthLevel : LevelGeneratorBase
-//{
-//    public int RandomSeed;
-//
-//    // Start is called before the first frame update
-//    private void Start()
-//    {
-//        //Assign this object to be root object of level by assignign tag
-//        this.tag = "Level";
-//        var Obstacles = new GameObject("Obstacles");
-//        Obstacles.transform.SetParent(this.transform);
-//        Obstacles.transform.localPosition = new Vector3(0, 0, 0);
-//        this.LevelRandom = new System.Random(RandomSeed);
-//        //        BoxCollider2D box = InitLevelBoundary(
-//        //            Helpers.GetRandomFloat(LevelRandom, LevelProperties.M, MaxDimension)
-//        //            , Helpers.GetRandomFloat(LevelRandom, MinDimension, MaxDimension));
-//
-//        BoxCollider2D box = InitLevelBoundary(LevelProperties.LevelSize.x, LevelProperties.LevelSize.y, this.gameObject);
-//
-//        //SpawnRandomObstacles(box, Obstacles);
-//        var playerInstance = SpawnPrefabWithoutCollision(PlayerPrefab, box, 150);
-//        var destinationIntance = SpawnPrefabWithoutCollision(DestinationPrefab, box, 150);
-//        //int enemiesToSpaw = Random.Range(MinEnemiesSpawned, MaxEnemiesSpawned);
-//        int enemiesToSpaw = LevelRandom.Next(MinEnemiesSpawned, MaxEnemiesSpawned + 1);
-//        for (int i = 0; i < enemiesToSpaw; i++)
-//        {
-//            SpawnPrefabWithoutCollision(EnemyPrefab, box, 25);
-//        }
-//        //SetupRRT(playerInstance.GetComponent<CharacterController2D>(), destinationIntance);
-//        Instantiate(LevelInitializer, this.transform, false);
-//
-//        //Triggers scripts
-//
-//        var levelInitializer = gameObject.GetComponentInChildren<InitializeStealthLevel>();
-//        var voxelizedLevel = gameObject.GetComponentInChildren<VoxelizedLevel>();
-//        var multipleRRTSolvers = gameObject.GetComponentInChildren<MultipleRRTRunner>();
-//        levelInitializer.Init();
-//        voxelizedLevel.Init();
-//        multipleRRTSolvers.Run();
-//
-//        Debug.Log("Random Level Initialziation Finished");
-//    }
-//
-//    //    private void SpawnRandomObstacles(BoxCollider2D box, GameObject Obstacles)
-//    //    {
-//    //        for (int i = 0; i < ObstaclesSpawned; i++)
-//    //        {
-//    //            for (int j = 0; j < 5; j++)
-//    //            {
-//    //                GameObject randomPrefab = GetRandomPrefab();
-//    //                var obstacle = SpawnPrefabWithoutCollision(randomPrefab, box, 5);
-//    //                if (obstacle != null)
-//    //                {
-//    //                    //Samples position is already inside box collider, keep its values
-//    //                    obstacle.transform.SetParent(Obstacles.transform, true);
-//    //                    break;
-//    //                }
-//    //            }
-//    //        }
-//    //    }
-//
-//    private GameObject GetRandomPrefab()
-//    {
-//        if (ObstaclePrefabs.Count == 0)
-//        {
-//            Debug.LogError("Object list is empty. Please assign GameObjects to the ObstaclePrefabs array.");
-//            return null;
-//        }
-//        GameObject randomPrefab = ObstaclePrefabs[LevelRandom.Next(0, ObstaclePrefabs.Count)];
-//        float scaleRandom = Helpers.GetRandomFloat(LevelRandom, MinObjectScale, MaxObjectScale);
-//        randomPrefab.transform.localScale = new Vector3(scaleRandom, scaleRandom, 0); ;
-//Prefabs used for building the level
-//
-//        int randomRotationIndex = LevelRandom.Next(0, 8);
-//        float angle = Mathf.Lerp(0f, 90f, randomRotationIndex / 7f); // 7 because there are 8 positions
-//        randomPrefab.transform.rotation = Quaternion.Euler(0f, 0f, angle);
-//        return randomPrefab;
-//    }
-//}

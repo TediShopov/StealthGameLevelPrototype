@@ -45,33 +45,23 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         RoadmapGenerator.ObstacleLayerMask = LevelProperties.ObstacleLayerMask;
         RoadmapGenerator.BoundaryLayerMask = LevelProperties.BoundaryLayerMask;
 
-        To = to;
         LevelChromosome = chromosome;
-        //Boundary
-        To.tag = "Level";
-
-        GameObject content = new GameObject("Content");
-        content.transform.SetParent(to.transform, false);
-
-        var data = new GameObject("Data");
-        data.transform.SetParent(To.transform, false);
-        LevelChromosomeMono chromosomeMono = data.AddComponent<LevelChromosomeMono>();
+        CreateLevelStructure(to);
+        //Setup chromosome
+        LevelChromosomeMono chromosomeMono = Data.AddComponent<LevelChromosomeMono>();
         chromosomeMono.Chromosome = (LevelChromosome)chromosome;
-        BoxCollider2D box = SetupLevelInitials(chromosome, content);
-        int geneIndex = GenerateLevelContent(chromosome, box, content);
 
-        var visualBoundary = new GameObject("VisualBoundary");
-        visualBoundary.transform.SetParent(content.transform, false);
-        PlaceBoundaryVisualPrefabs(box, visualBoundary);
+        int geneIndex = GenerateLevelContent(chromosome);
+        PlaceBoundaryVisualPrefabs();
 
         Physics2D.SyncTransforms();
 
-        var otherGrid = data.AddComponent<Grid>();
+        var otherGrid = Data.AddComponent<Grid>();
         otherGrid.cellSize = this.GetComponent<Grid>().cellSize;
         otherGrid.cellSwizzle = this.GetComponent<Grid>().cellSwizzle;
         otherGrid.cellLayout = this.GetComponent<Grid>().cellLayout;
 
-        var roadmap = RoadmapGenerator.PrototypeComponent(data);
+        var roadmap = RoadmapGenerator.PrototypeComponent(Data);
         roadmap.Init(to);
         roadmap.DoMeasure(to);
         chromosome.Measurements.Add(roadmap.Result);
@@ -81,47 +71,10 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
 
         //Initialize the future level
         //CopyComponent(FutureLevel, To).Init(To);
-        var futurePrototype = FutureLevel.PrototypeComponent(data);
+        var futurePrototype = FutureLevel.PrototypeComponent(Data);
         futurePrototype.Init();
 
         Debug.Log("Generation of phenotype finished");
-    }
-
-    public static T CopyComponent<T>(T original, GameObject destination) where T : Component
-    {
-        System.Type type = original.GetType();
-
-        var dst = destination.GetComponent(type) as T;
-        if (!dst) dst = destination.AddComponent(type) as T;
-
-        var fields = GetAllFields(type);
-        foreach (var field in fields)
-        {
-            if (field.IsStatic) continue;
-            field.SetValue(dst, field.GetValue(original));
-        }
-
-        var props = type.GetProperties();
-        foreach (var prop in props)
-        {
-            if (!prop.CanWrite || !prop.CanWrite || prop.Name == "name") continue;
-            prop.SetValue(dst, prop.GetValue(original, null), null);
-        }
-
-        return dst as T;
-    }
-
-    public static IEnumerable<FieldInfo> GetAllFields(System.Type t)
-    {
-        if (t == null)
-        {
-            return Enumerable.Empty<FieldInfo>();
-        }
-
-        BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
-                             BindingFlags.Static | BindingFlags.Instance |
-                             BindingFlags.DeclaredOnly;
-        return t.GetFields(flags).Concat(GetAllFields(t.BaseType));
     }
 
     public void AssignPaths(int geneIndex, Graph<Vector2> roadmap)
@@ -140,18 +93,18 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         geneIndex = PathGenerator.geneIndex;
     }
 
-    protected override int GenerateLevelContent(LevelChromosomeBase chromosome, BoxCollider2D box, GameObject container)
+    protected override int GenerateLevelContent(LevelChromosomeBase chromosome)
     {
         int geneIndex = 0;
         int ObstacleCount = GetObstaclesToSpawn(ref geneIndex);
         EnemyCount = EntityCount - ObstacleCount;
         var Obstacles = new GameObject("Obstacles");
-        Obstacles.transform.SetParent(container.transform);
+        Obstacles.transform.SetParent(Contents.transform);
 
         //Test for off by oen errors
         for (int i = 0; i < ObstacleCount; i++)
         {
-            SpawnObstacle(ref geneIndex, box, Obstacles);
+            SpawnObstacle(ref geneIndex, LevelBounds, Obstacles);
         }
 
         MergeObstacles(Obstacles);
@@ -160,7 +113,7 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
 
         for (int i = 0; i < EnemyCount; i++)
         {
-            Instantiate(LevelProperties.EnemyPrefab, container.transform);
+            Instantiate(LevelProperties.EnemyPrefab, Contents.transform);
         }
 
         //Enemy Behaviour
@@ -258,63 +211,56 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         }
     }
 
-    public void MergeCollidersIntoACompositeCollider(CompositeCollider2D toBeComposite, List<Collider2D> colliderToMerge)
-    {
-        if (colliderToMerge.Count <= 1) return;
-        //        Collider2D toBeComposite =
-        //            colliderToMerge.OrderBy(x => x is CompositeCollider2D).First();
-        //        CompositeCollider2D toBeComposite = new GameObject("Composite", new System.Type[] { typeof(CompositeCollider2D) })
-        //            .GetComponent<CompositeCollider2D>();
-        //        toBeComposite.transform.SetParent(To.transform);
-        //        EditorUtility.SetDirty(toBeComposite.gameObject);
-        //
-        List<Collider2D> rest = colliderToMerge.Where(x => x != toBeComposite).ToList();
-
-        foreach (var r in rest)
-        {
-            var rb = r.GetComponent<Rigidbody2D>();
-            if (rb)
-                DestroyImmediate(rb);
-            r.usedByComposite = true;
-            //Change the parent to be the parent with the RB2D but do not change position
-            r.gameObject.transform.SetParent(toBeComposite.transform, true);
-            EditorUtility.SetDirty(r.gameObject);
-        }
-        EditorUtility.SetDirty(To.gameObject);
-    }
-
-    public void SpawnObstacleAndMerge(ref int geneIndex, BoxCollider2D box, GameObject Obstacles)
-    {
-        var obst = SpawnObstacle(ref geneIndex, box, Obstacles);
-        Physics2D.SyncTransforms();
-        ContactFilter2D filter = new ContactFilter2D
-        {
-            useDepth = false,
-            useLayerMask = true,
-            useTriggers = false,
-            useOutsideDepth = false,
-            layerMask = LevelProperties.ObstacleLayerMask
-        };
-
-        List<Collider2D> overlappingCollider = new List<Collider2D>();
-        Physics2D.OverlapCollider(
-            obst.GetComponent<Collider2D>(),
-            filter,
-            overlappingCollider
-            );
-        //overlappingCollider = overlappingCollider.Where(x => x.gameObject.transform.parent == Obstacles).ToList();
-
-        if (overlappingCollider.Count >= 2)
-        {
-            GameObject gm = new GameObject("Composite");
-            gm.transform.SetParent(To.transform);
-            var rb = gm.AddComponent<Rigidbody2D>();
-            var comp = gm.AddComponent<CompositeCollider2D>();
-            EditorUtility.SetDirty(gm);
-
-            //MergeCollidersIntoACompositeCollider(comp, overlappingCollider);
-        }
-
-        return;
-    }
+    //    public void MergeCollidersIntoACompositeCollider(CompositeCollider2D toBeComposite, List<Collider2D> colliderToMerge)
+    //    {
+    //        if (colliderToMerge.Count <= 1) return;
+    //        List<Collider2D> rest = colliderToMerge.Where(x => x != toBeComposite).ToList();
+    //
+    //        foreach (var r in rest)
+    //        {
+    //            var rb = r.GetComponent<Rigidbody2D>();
+    //            if (rb)
+    //                DestroyImmediate(rb);
+    //            r.usedByComposite = true;
+    //            //Change the parent to be the parent with the RB2D but do not change position
+    //            r.gameObject.transform.SetParent(toBeComposite.transform, true);
+    //            EditorUtility.SetDirty(r.gameObject);
+    //        }
+    //        EditorUtility.SetDirty(To.gameObject);
+    //    }
+    //
+    //    public void SpawnObstacleAndMerge(ref int geneIndex, BoxCollider2D box, GameObject Obstacles)
+    //    {
+    //        var obst = SpawnObstacle(ref geneIndex, box, Obstacles);
+    //        Physics2D.SyncTransforms();
+    //        ContactFilter2D filter = new ContactFilter2D
+    //        {
+    //            useDepth = false,
+    //            useLayerMask = true,
+    //            useTriggers = false,
+    //            useOutsideDepth = false,
+    //            layerMask = LevelProperties.ObstacleLayerMask
+    //        };
+    //
+    //        List<Collider2D> overlappingCollider = new List<Collider2D>();
+    //        Physics2D.OverlapCollider(
+    //            obst.GetComponent<Collider2D>(),
+    //            filter,
+    //            overlappingCollider
+    //            );
+    //        //overlappingCollider = overlappingCollider.Where(x => x.gameObject.transform.parent == Obstacles).ToList();
+    //
+    //        if (overlappingCollider.Count >= 2)
+    //        {
+    //            GameObject gm = new GameObject("Composite");
+    //            gm.transform.SetParent(To.transform);
+    //            var rb = gm.AddComponent<Rigidbody2D>();
+    //            var comp = gm.AddComponent<CompositeCollider2D>();
+    //            EditorUtility.SetDirty(gm);
+    //
+    //            //MergeCollidersIntoACompositeCollider(comp, overlappingCollider);
+    //        }
+    //
+    //        return;
+    //    }
 }

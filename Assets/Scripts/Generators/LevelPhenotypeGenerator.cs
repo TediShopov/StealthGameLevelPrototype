@@ -19,12 +19,12 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
     public bool IsRandom = false;
     public int RandomChromosomeSeed;
     public bool DisposeNow = false;
-    protected LevelChromosomeBase LevelChromosome;
-    protected GameObject To;
     public int MinEnemiesSpawned = 1;
     public int MaxEnemiesSpawned = 3;
-
     public int StartingObstacleCount = 3;
+
+    protected LevelChromosomeBase LevelChromosome;
+    public int IndexOfChromosome;
 
     public void Awake()
     {
@@ -39,30 +39,28 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
 
     public virtual void Generate(LevelChromosomeBase chromosome, GameObject to = null)
     {
-        To = to;
-        LevelChromosome = chromosome;
-        //Boundary
-        To.tag = "Level";
+        //Base generation of the chromosome templatej
+        this.CreateLevelStructure(to);
 
-        //Add chromosome information to the gameobejct itself
-        var data = new GameObject("Data");
-        data.transform.SetParent(To.transform);
-        LevelChromosomeMono chromosomeMono = data.AddComponent<LevelChromosomeMono>();
-        chromosomeMono.Chromosome = (LevelChromosome)chromosome;
+        AttachChromosome(chromosome);
 
-        var Obstacles = new GameObject("Obstacles");
-        BoxCollider2D box = SetupLevelInitials(chromosome, to);
-        GenerateLevelContent(chromosome, box, to);
+        GenerateLevelContent(chromosome);
 
-        PlaceBoundaryVisualPrefabs(box, Obstacles);
+        PlaceBoundaryVisualPrefabs();
         //Solvers
         InitializeAdditionalLevelData();
 
         Debug.Log("Generation of phenotype finished");
     }
 
-    protected virtual int GenerateLevelContent(LevelChromosomeBase chromosome, BoxCollider2D box,
-        GameObject container)
+    private void AttachChromosome(LevelChromosomeBase chromosome)
+    {
+        LevelChromosome = chromosome;
+        LevelChromosomeMono chromosomeMono = Data.AddComponent<LevelChromosomeMono>();
+        chromosomeMono.Chromosome = (LevelChromosome)chromosome;
+    }
+
+    protected virtual int GenerateLevelContent(LevelChromosomeBase chromosome)
     {
         int geneIndex = 0;
         int ObstaclesSpawned = (chromosome.Length - 4) / 5;
@@ -71,7 +69,7 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         //Test for off by oen errors
         for (int i = 0; i < ObstaclesSpawned; i++)
         {
-            SpawnObstacle(ref geneIndex, box, Obstacles);
+            SpawnObstacle(ref geneIndex, LevelBounds, Obstacles);
         }
 
         //Read enemy counts and spawn enemies
@@ -114,27 +112,6 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         Helpers.LogExecutionTime(voxelizedLevel.Init, "Future Level Logic Time");
     }
 
-    protected BoxCollider2D SetupLevelInitials(LevelChromosomeBase chromosome, GameObject to)
-    {
-        //Boundary constructed first 2 genes
-        BoxCollider2D box = InitLevelBoundary(LevelProperties.LevelSize.x, LevelProperties.LevelSize.y, to);
-
-        box.size = new Vector2(
-            box.size.x - LevelProperties.PlayerPrefab.GetComponent<Collider2D>().bounds.extents.x / 2.0f - VisualBoundWidth / 2.0f,
-            box.size.y - LevelProperties.PlayerPrefab.GetComponent<Collider2D>().bounds.extents.y / 2.0f - VisualBoundWidth / 2.0f
-            );
-
-        //Player
-        //var playerInstance = SpawnGameObject(ref geneIndex, box, PlayerPrefab);
-        var playerInstance = SpawnGameObjectAtRelative(LevelProperties.RelativeStartPosition, box, LevelProperties.PlayerPrefab);
-        playerInstance.transform.SetParent(to.transform, true);
-        //Destination
-        //var destinationIntance = SpawnGameObject(ref geneIndex, box, DestinationPrefab);
-        var destinationIntance = SpawnGameObjectAtRelative(LevelProperties.RelativeEndPosiiton, box, LevelProperties.DestinationPrefab);
-        destinationIntance.transform.SetParent(to.transform, true);
-        return box;
-    }
-
     //!WARNING! uses destroy immediate as mulitple level can be geenrated an
     //disposed in the same frame
     public void Dispose()
@@ -175,17 +152,6 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         float y = Mathf.Lerp(box.bounds.min.y, box.bounds.max.y, GetGeneValue(geneIndex + 1));
 
         geneIndex += 2;
-        var player = Instantiate(Prefab,
-            new Vector3(x, y, 0),
-            Quaternion.Euler(0, 0, 0),
-            To.transform);
-        return player;
-    }
-
-    protected GameObject SpawnGameObjectAtRelative(Vector2 coord, BoxCollider2D box, GameObject Prefab)
-    {
-        float x = Mathf.Lerp(box.bounds.min.x, box.bounds.max.x, coord.x);
-        float y = Mathf.Lerp(box.bounds.min.y, box.bounds.max.y, coord.y);
         var player = Instantiate(Prefab,
             new Vector3(x, y, 0),
             Quaternion.Euler(0, 0, 0),
