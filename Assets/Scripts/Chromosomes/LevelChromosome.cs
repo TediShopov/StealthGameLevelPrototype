@@ -1,6 +1,8 @@
 using UnityEngine;
 using GeneticSharp;
+using System;
 
+[Serializable]
 public class LevelChromosome : LevelChromosomeBase
 {
     private System.Random ChromosomeRandom = new System.Random();

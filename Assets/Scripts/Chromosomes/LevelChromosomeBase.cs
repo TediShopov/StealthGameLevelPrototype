@@ -1,12 +1,15 @@
 using GeneticSharp;
 using PlasticPipe.PlasticProtocol.Messages;
 using StealthLevelEvaluation;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using UnityEngine;
 
 //Level chromosome base holds a reference to the phenotype/level generator
 // as to allow easy change and iteration via mono scirpts in the unity editor.
 
+[Serializable]
 public abstract class LevelChromosomeBase : ChromosomeBase
 {
     protected LevelChromosomeBase(int length, LevelPhenotypeGenerator generator) : base(length)
@@ -17,8 +20,12 @@ public abstract class LevelChromosomeBase : ChromosomeBase
     }
 
     public LevelPhenotypeGenerator PhenotypeGenerator;
-    public List<MeasureResult> Measurements { get; set; }
-    public List<float> AestheticProperties;
+
+    //The decoded game object - could be null if not generated
+    public GameObject Phenotype { get; set; }
+
+    [SerializeField] public List<MeasureResult> Measurements;
+    [SerializeField] public List<float> AestheticProperties;
 
     public override IChromosome Clone()
     {

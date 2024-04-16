@@ -1,14 +1,16 @@
 using JetBrains.Annotations;
 using Mono.Cecil;
+using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering.VirtualTexturing;
 
 //GENOTYPE desciprtion:
 
+[Serializable]
 internal class LevelChromosomeMono : MonoBehaviour
 {
-    public LevelChromosome Chromosome;
+    [SerializeField] public LevelChromosome Chromosome;
 }
 
 public class LevelPhenotypeGenerator : LevelGeneratorBase

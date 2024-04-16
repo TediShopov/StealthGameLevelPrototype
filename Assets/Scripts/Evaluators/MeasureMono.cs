@@ -28,6 +28,7 @@ namespace StealthLevelEvaluation
         public void DoMeasure(T data);
     }
 
+    [Serializable]
     public struct MeasureResult
     {
         public string Name;

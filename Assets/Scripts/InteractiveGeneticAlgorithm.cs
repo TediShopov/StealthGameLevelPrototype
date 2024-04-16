@@ -217,6 +217,14 @@ namespace GeneticSharp.Domain
         /// </summary>
         public ITaskExecutor TaskExecutor { get; set; }
 
+        public int Property
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
         #endregion AestheticProperties
 
         #region Methods

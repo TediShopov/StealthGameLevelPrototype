@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="GeneticSharp.Domain.InteractiveGeneticAlgorithm" Collapsed="true">
+    <Position X="2" Y="2.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAUkgAEAAAIJAQAYAJICwABAACAEgBQAGACABSAAQAE=</HashCode>
+      <FileName>Assets\Scripts\InteractiveGeneticAlgorithm.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CustomMutators" Collapsed="true">
+    <Position X="6.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAEIA=</HashCode>
+      <FileName>Assets\Scripts\Utility\StealthLevelIEMono.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GridObjectLayout" Collapsed="true">
+    <Position X="8.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAACAAAQACAAAAiAAJAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Utility\StealthLevelIEMono.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StealthLevelIEMono" Collapsed="true">
+    <Position X="7.25" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>ADgAAkgARiBSADAQAEwmQAEAAAEABEogIAGEAAEAQUI=</HashCode>
+      <FileName>Assets\Scripts\Utility\StealthLevelIEMono.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
