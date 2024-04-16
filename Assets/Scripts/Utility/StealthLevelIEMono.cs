@@ -85,94 +85,6 @@ internal class CustomMutators : MutationBase
 //Given an level phenotype generator, population count and level size
 // spreads levels manifestations in a grid. Used by all phenotype evalutions
 // to trigger the level generations when needed
-public class GridObjectLayout
-{
-    public GridObjectLayout(LevelProperties levelProperties)
-    {
-        this.LevelProperties = levelProperties;
-    }
-
-    private LevelProperties LevelProperties;
-    private GameObject[,] LevelObjects;
-
-    private int currentIndex = -1;
-
-    public struct SelectionDetails
-    {
-        private int Generation;
-        private LevelChromosome Chromosome;
-    }
-
-    private int GridDimension;
-
-    public GameObject GetNextLevelObject()
-    {
-        currentIndex++;
-        if (currentIndex >= GridDimension * GridDimension)
-            return null;
-        return LevelObjects[currentIndex / GridDimension, currentIndex % GridDimension];
-    }
-
-    public Vector2 ExtraSpacing = Vector2.zero;
-
-    public void SpawnGrid(int populationCount, Transform transform)
-    {
-        GridDimension = Mathf.CeilToInt(Mathf.Sqrt(populationCount));
-
-        float step = 0.1f;
-        //Setup Generator Prototype
-        LevelObjects = new GameObject[GridDimension, GridDimension];
-
-        for (int i = 0; i < GridDimension; i++)
-        {
-            for (int j = 0; j < GridDimension; j++)
-            {
-                Vector3 levelGridPosition =
-                    new Vector3(
-                        i * (LevelProperties.LevelSize.x + ExtraSpacing.x),
-                        j * (LevelProperties.LevelSize.y + ExtraSpacing.y),
-                        0);
-                var g = new GameObject($"{i * GridDimension + j}");
-                g.transform.position = levelGridPosition;
-                g.transform.parent = transform;
-                LevelObjects[i, j] = g;
-            }
-        }
-    }
-
-    public void PrepareForNewGeneration()
-    {
-        //Clearing old data
-        DisposeOldPopulation();
-        //Resetting index
-        currentIndex = -1;
-    }
-
-    //Once a new population has been started the gameobject generated must be cleared
-    private void DisposeOldPopulation()
-    {
-        Debug.Log("Disposing generated artefacts of previous levels");
-        foreach (var item in LevelObjects)
-        {
-            if (item == null) continue;
-            // GameObject.DestroyImmediate(item.GetComponent<ContinuosFutureLevel>());
-            // GameObject.DestroyImmediate(item.GetComponent<FloodfilledRoadmapGenerator>());
-            // GameObject.DestroyImmediate(item.GetComponent<Grid>());
-            //            foreach (var comp in item.GetComponents<Component>())
-            //            {
-            //                if (!(comp is Transform))
-            //                {
-            //                    GameObject.DestroyImmediate(comp);
-            //                }
-            //            }
-            var tempList = item.transform.Cast<Transform>().ToList();
-            foreach (var child in tempList)
-            {
-                GameObject.DestroyImmediate(child.gameObject);
-            }
-        }
-    }
-}
 
 public class StealthLevelIEMono : MonoBehaviour
 {
@@ -191,7 +103,8 @@ public class StealthLevelIEMono : MonoBehaviour
     public InteractiveEvalutorMono PhenotypeEvaluator;
     public LevelPhenotypeGenerator Generator;
     public LevelProperties LevelProperties;
-    private GridObjectLayout GridPopulation;
+    public PopulationPhenotypeLayout PopulationPhenotypeLayout;
+    //private GridObjectLayout GridPopulation;
 
     [Header("Seed")]
     public int Seed;
@@ -348,19 +261,20 @@ public class StealthLevelIEMono : MonoBehaviour
         var mutation = new CustomMutators(1, 1, 1);
         //var chromosome = new FloatingPointChromosome(0,1,35,8);
         var chromosome = new LevelChromosome(Generator, RandomSeedGenerator);
-        var population = new Population(PopulationCount, PopulationCount, chromosome);
+        //var population = new Population(PopulationCount, PopulationCount, chromosome);
+        var population = new PopulationPhenotypeLayout(PopulationPhenotypeLayout, this.gameObject, chromosome);
 
-        if (GridPopulation != null)
-        {
-            GridPopulation.PrepareForNewGeneration();
-        }
-        else
-        {
-            GridPopulation = new GridObjectLayout(LevelProperties);
-            GridPopulation.ExtraSpacing = ExtraSpacing;
-            GridPopulation.SpawnGrid(PopulationCount, this.transform);
-        }
-        PhenotypeEvaluator.GridLevelObjects = GridPopulation;
+        //        if (GridPopulation != null)
+        //        {
+        //            GridPopulation.PrepareForNewGeneration();
+        //        }
+        //        else
+        //        {
+        //            GridPopulation = new GridObjectLayout(LevelProperties);
+        //            GridPopulation.ExtraSpacing = ExtraSpacing;
+        //            GridPopulation.SpawnGrid(PopulationCount, this.transform);
+        //        }
+        //PhenotypeEvaluator.GridLevelObjects = GridPopulation;
 
         GeneticAlgorithm = new
             InteractiveGeneticAlgorithm(population, PhenotypeEvaluator, selection, crossover, mutation);
@@ -416,7 +330,7 @@ public class StealthLevelIEMono : MonoBehaviour
             GenerationSelecitons.Clear();
 
             GeneticAlgorithm.EndCurrentGeneration();
-            GridPopulation.PrepareForNewGeneration();
+            //GridPopulation.PrepareForNewGeneration();
             GeneticAlgorithm.EvolveOneGeneration();
             //Evaluates fitness but also manifest the level
             // in the unity scene
@@ -440,7 +354,7 @@ public class StealthLevelIEMono : MonoBehaviour
         {
             GameObject.DestroyImmediate(child.gameObject);
         }
-        this.GridPopulation = null;
+        //this.GridPopulation = null;
         this.GeneticAlgorithm = null;
     }
 

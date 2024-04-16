@@ -7,10 +7,10 @@ using UnityEngine;
 [CustomEditor(typeof(StealthLevelIEMono))]
 public class StealthLevelIEEditor : Editor
 {
-    private bool showMetaproperties;
-    private bool showFundamental;
-    private bool showLayout;
-    private bool showLogging;
+    private bool showMetaproperties = true;
+    private bool showFundamental = true;
+    private bool showLayout = true;
+    private bool showLogging = true;
 
     private GUIStyle _bolded = GUIStyle.none;
     private SerializedObject so;
@@ -106,6 +106,10 @@ public class StealthLevelIEEditor : Editor
             if (showLayout)
             {
                 ie.ExtraSpacing = EditorGUILayout.Vector2Field("Extra Spacing: ", ie.ExtraSpacing);
+                serializedObject.Update();
+                var ppl = so.FindProperty("PopulationPhenotypeLayout");
+                EditorGUILayout.PropertyField(ppl);
+                so.ApplyModifiedProperties();
             }
             showLogging = EditorGUILayout.Foldout(showLogging, "Logging");
             if (showLogging)
