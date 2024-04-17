@@ -26,13 +26,15 @@ public abstract class LevelChromosomeBase : ChromosomeBase
 
     [SerializeField] public List<MeasureResult> Measurements;
     [SerializeField] public List<float> AestheticProperties;
+    [SerializeField] public Graph<Vector2> EnemyRoadmap;
 
     public override IChromosome Clone()
     {
         //var clone =new LevelChromosome(Length, PhenotypeGenerator);
         var clone = (LevelChromosomeBase)base.Clone();
-        clone.Measurements = Measurements;
-        clone.AestheticProperties = AestheticProperties;
+        clone.Measurements = this.Measurements;
+        clone.AestheticProperties = this.AestheticProperties;
+        clone.EnemyRoadmap = this.EnemyRoadmap;
         return clone;
     }
 

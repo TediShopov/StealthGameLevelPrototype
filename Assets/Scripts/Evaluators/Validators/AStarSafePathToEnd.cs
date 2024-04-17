@@ -52,8 +52,7 @@ namespace StealthLevelEvaluation
         public override void Init(GameObject phenotype)
         {
             IsValidator = true;
-            var roadmap = phenotype.GetComponentInChildren<FloodfilledRoadmapGenerator>();
-            Grid grid = roadmap.Grid;
+            Grid grid = phenotype.GetComponentInChildren<Grid>();
             var character = phenotype.GetComponentInChildren<CharacterController2D>().gameObject;
             StartCoord = (Vector2Int)grid.WorldToCell(character.transform.position);
             PlayerCollider = character.GetComponent<Collider2D>();

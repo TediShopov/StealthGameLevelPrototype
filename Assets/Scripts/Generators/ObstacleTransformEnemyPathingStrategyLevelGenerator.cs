@@ -9,6 +9,21 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+/// <summary>
+/// OTEPS is a level generator that encodes level obstacles transform in its layout explicitly
+///  0 --> Used to determined ratio between enemies and obstacles
+/// and the guard pathing strategies implicitly (list of beahviour that pick next node on each
+///  interesection)
+///  Chromomosome Layout
+///  All Real Number from 0...1
+///  0 --> Used to determined ratio between enemies and obstacles
+///  O*0 --> Obstacly type picked from a list
+///  O*1 --> X position
+///  O*2 --> Y position
+///  O*3 --> Scale (lerped from Min and Max obstacle scale properties)
+///  O*4 --> Rotation
+//   E*0 - E*5 --> Enemy behaviours to use in the next intersections
+/// </summary>
 [RequireComponent(typeof(FloodfilledRoadmapGenerator))]
 [RequireComponent(typeof(DiscretePathGenerator))]
 [RequireComponent(typeof(IFutureLevel))]
@@ -66,6 +81,7 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator : LevelPhenotyp
         roadmap.Init(to);
         roadmap.DoMeasure(to);
         chromosome.Measurements.Add(roadmap.Result);
+        chromosome.EnemyRoadmap = RoadmapGenerator.RoadMap;
 
         //Use the generated roadmap to assign guard paths
         AssignPaths(geneIndex, roadmap.RoadMap);
