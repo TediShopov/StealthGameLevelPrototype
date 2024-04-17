@@ -91,7 +91,7 @@ public class StealthLevelIEMono : MonoBehaviour
     //public int Rows = 5; // Number of rows in the grid
     //public int Columns = 5; // Number of columns in the grid
 
-    public int PopulationCount;
+    //public int PopulationCount;
     public int AimedGenerations = 10;
 
     [Range(0, 1)]

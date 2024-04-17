@@ -53,7 +53,7 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
         Debug.Log("Generation of phenotype finished");
     }
 
-    private void AttachChromosome(LevelChromosomeBase chromosome)
+    protected void AttachChromosome(LevelChromosomeBase chromosome)
     {
         LevelChromosome = chromosome;
         LevelChromosomeMono chromosomeMono = Data.AddComponent<LevelChromosomeMono>();

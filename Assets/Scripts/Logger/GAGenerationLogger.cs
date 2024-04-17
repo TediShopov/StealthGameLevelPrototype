@@ -73,7 +73,7 @@ public class GAGenerationLogger
     public string GetDefaultName()
     {
         return $"GEN_{InteractiveGeneticMono.AimedGenerations}" +
-            $"_POP{InteractiveGeneticMono.PopulationCount}" +
+            $"_POP{InteractiveGeneticMono.GeneticAlgorithm.Population.MaxSize}" +
             $"_SZ{InteractiveGeneticMono.LevelProperties.LevelSize}_IndividualTimes";
     }
 

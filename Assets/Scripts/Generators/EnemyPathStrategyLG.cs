@@ -45,17 +45,18 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
         RoadmapGenerator.ObstacleLayerMask = LevelProperties.ObstacleLayerMask;
         RoadmapGenerator.BoundaryLayerMask = LevelProperties.BoundaryLayerMask;
 
-        LevelChromosome = chromosome;
         CreateLevelStructure(to);
+
         //Setup chromosome
-        LevelChromosomeMono chromosomeMono = Data.AddComponent<LevelChromosomeMono>();
-        chromosomeMono.Chromosome = (LevelChromosome)chromosome;
+        AttachChromosome(chromosome);
 
         int geneIndex = GenerateLevelContent(chromosome);
+
         PlaceBoundaryVisualPrefabs();
 
         Physics2D.SyncTransforms();
 
+        //Copy grid components of the level prototype.
         var otherGrid = Data.AddComponent<Grid>();
         otherGrid.cellSize = this.GetComponent<Grid>().cellSize;
         otherGrid.cellSwizzle = this.GetComponent<Grid>().cellSwizzle;
@@ -210,57 +211,4 @@ public class EnemyPathStrategyLG : LevelPhenotypeGenerator
             throw new System.ArgumentException("Cannot nest composite colliders");
         }
     }
-
-    //    public void MergeCollidersIntoACompositeCollider(CompositeCollider2D toBeComposite, List<Collider2D> colliderToMerge)
-    //    {
-    //        if (colliderToMerge.Count <= 1) return;
-    //        List<Collider2D> rest = colliderToMerge.Where(x => x != toBeComposite).ToList();
-    //
-    //        foreach (var r in rest)
-    //        {
-    //            var rb = r.GetComponent<Rigidbody2D>();
-    //            if (rb)
-    //                DestroyImmediate(rb);
-    //            r.usedByComposite = true;
-    //            //Change the parent to be the parent with the RB2D but do not change position
-    //            r.gameObject.transform.SetParent(toBeComposite.transform, true);
-    //            EditorUtility.SetDirty(r.gameObject);
-    //        }
-    //        EditorUtility.SetDirty(To.gameObject);
-    //    }
-    //
-    //    public void SpawnObstacleAndMerge(ref int geneIndex, BoxCollider2D box, GameObject Obstacles)
-    //    {
-    //        var obst = SpawnObstacle(ref geneIndex, box, Obstacles);
-    //        Physics2D.SyncTransforms();
-    //        ContactFilter2D filter = new ContactFilter2D
-    //        {
-    //            useDepth = false,
-    //            useLayerMask = true,
-    //            useTriggers = false,
-    //            useOutsideDepth = false,
-    //            layerMask = LevelProperties.ObstacleLayerMask
-    //        };
-    //
-    //        List<Collider2D> overlappingCollider = new List<Collider2D>();
-    //        Physics2D.OverlapCollider(
-    //            obst.GetComponent<Collider2D>(),
-    //            filter,
-    //            overlappingCollider
-    //            );
-    //        //overlappingCollider = overlappingCollider.Where(x => x.gameObject.transform.parent == Obstacles).ToList();
-    //
-    //        if (overlappingCollider.Count >= 2)
-    //        {
-    //            GameObject gm = new GameObject("Composite");
-    //            gm.transform.SetParent(To.transform);
-    //            var rb = gm.AddComponent<Rigidbody2D>();
-    //            var comp = gm.AddComponent<CompositeCollider2D>();
-    //            EditorUtility.SetDirty(gm);
-    //
-    //            //MergeCollidersIntoACompositeCollider(comp, overlappingCollider);
-    //        }
-    //
-    //        return;
-    //    }
 }

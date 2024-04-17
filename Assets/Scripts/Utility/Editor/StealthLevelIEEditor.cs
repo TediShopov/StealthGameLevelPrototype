@@ -82,7 +82,7 @@ public class StealthLevelIEEditor : Editor
             showMetaproperties = EditorGUILayout.Foldout(showMetaproperties, "Metaproperties");
             if (showMetaproperties)
             {
-                ie.PopulationCount = EditorGUILayout.IntField("Population Count", ie.PopulationCount);
+                //ie.PopulationCount = EditorGUILayout.IntField("Population Count", ie.PopulationCount);
 
                 ie.AimedGenerations = EditorGUILayout.IntField("Generaiton", ie.AimedGenerations);
 
