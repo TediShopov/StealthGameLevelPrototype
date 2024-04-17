@@ -13,7 +13,7 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(DiscretePathGenerator))]
 [RequireComponent(typeof(IFutureLevel))]
 [ExecuteInEditMode]
-public class EnemyPathStrategyLG : LevelPhenotypeGenerator
+public class ObstacleTransformEnemyPathingStrategyLevelGenerator : LevelPhenotypeGenerator
 {
     public const int ObstaccleGeneLength = 5;
     public const int EnemyGeneLength = 5;
