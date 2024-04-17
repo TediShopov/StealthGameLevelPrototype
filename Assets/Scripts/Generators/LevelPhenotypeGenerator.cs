@@ -61,7 +61,7 @@ public abstract class LevelPhenotypeGenerator : LevelGeneratorBase
     {
         LevelChromosome = chromosome;
         LevelChromosomeMono chromosomeMono = Data.AddComponent<LevelChromosomeMono>();
-        chromosomeMono.Chromosome = (OTEPSLevelChromosome)chromosome;
+        chromosomeMono.Chromosome = chromosome;
     }
 
     protected virtual int GenerateLevelContent(LevelChromosomeBase chromosome)

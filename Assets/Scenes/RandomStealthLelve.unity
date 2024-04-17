@@ -123,6 +123,150 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &697948198
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 697948204}
+  - component: {fileID: 697948203}
+  - component: {fileID: 697948202}
+  - component: {fileID: 697948201}
+  - component: {fileID: 697948200}
+  - component: {fileID: 697948199}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &697948199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 697948198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31955cf081dfd424ab218f918b0892e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  BoundaryLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  _step: 0.2
+  _iter: 50
+  EnableSetLevel: 1
+  EnableDiscreteTimes: 1
+  SetTime: 0
+--- !u!114 &697948200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 697948198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3191f3c3fdbfd334e82c1f214d264ced, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LevelProperties: {fileID: 0}
+  MinObjectScale: 0.2
+  MaxObjectScale: 1
+  VisualBoundWidth: 0
+  RunOnStart: 0
+  IsRandom: 0
+  DisposeNow: 0
+  MinEnemiesSpawned: 1
+  MaxEnemiesSpawned: 3
+  StartingObstacleCount: 3
+  IndexOfChromosome: 0
+  LoydRealaxationRuns: 0
+  SampleGridPoints: {x: 1, y: 1}
+  EnemyCount: 3
+  PathGenerator: {fileID: 697948201}
+  RoadmapGenerator: {fileID: 697948202}
+  FutureLevel: {fileID: 697948199}
+--- !u!114 &697948201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 697948198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03cdefe7d50e1f44495c882f2424a4b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  geneIndex: 0
+--- !u!114 &697948202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 697948198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1eca56f97ff41134aa470027e4ab51eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsValidator: 0
+  _value: 
+  Phenotype: {fileID: 0}
+  RunNow: 0
+  RunOnStart: 0
+  DrawOnSelected: 0
+  ColliderKeys: []
+  DoFloodFill: 0
+  DebugDraw: 1
+  ExtraChecks: 0
+  EnemyBSRadius: 1
+  Colors: []
+  Grid: {fileID: 697948203}
+  ObstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  BoundaryLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+--- !u!156049354 &697948203
+Grid:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 697948198}
+  m_Enabled: 1
+  m_CellSize: {x: 1, y: 1, z: 1}
+  m_CellGap: {x: 0, y: 0, z: 0}
+  m_CellLayout: 0
+  m_CellSwizzle: 0
+--- !u!4 &697948204
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 697948198}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.7289144, y: -0.06547967, z: -0.79044294}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1160438097
 GameObject:
   m_ObjectHideFlags: 0
@@ -337,7 +481,7 @@ MonoBehaviour:
   MutationProb: 0.199
   CrossoverProb: 0.779
   PhenotypeEvaluator: {fileID: 1411282489}
-  Generator: {fileID: 1513753137}
+  Generator: {fileID: 0}
   LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
   PopulationPhenotypeLayout:
     Min: 10
@@ -534,114 +678,3 @@ MonoBehaviour:
   EnableSetLevel: 1
   EnableDiscreteTimes: 1
   SetTime: 0
---- !u!1 &1995238960
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1995238965}
-  - component: {fileID: 1995238964}
-  - component: {fileID: 1995238963}
-  - component: {fileID: 1995238962}
-  - component: {fileID: 1995238961}
-  m_Layer: 0
-  m_Name: VDOEPSLevelGenerator
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1995238961
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1995238960}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31955cf081dfd424ab218f918b0892e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObstacleLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  BoundaryLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
-  _step: 0.2
-  _iter: 50
-  EnableSetLevel: 1
-  EnableDiscreteTimes: 1
-  SetTime: 0
---- !u!156049354 &1995238962
-Grid:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1995238960}
-  m_Enabled: 1
-  m_CellSize: {x: 1, y: 1, z: 1}
-  m_CellGap: {x: 0, y: 0, z: 0}
-  m_CellLayout: 0
-  m_CellSwizzle: 0
---- !u!114 &1995238963
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1995238960}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3191f3c3fdbfd334e82c1f214d264ced, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
-  MinObjectScale: 0.2
-  MaxObjectScale: 1
-  VisualBoundWidth: 0
-  RunOnStart: 0
-  IsRandom: 0
-  DisposeNow: 0
-  MinEnemiesSpawned: 1
-  MaxEnemiesSpawned: 3
-  StartingObstacleCount: 3
-  IndexOfChromosome: 0
-  LoydRealaxationRuns: 0
-  SampleGridPoints: {x: 15, y: 15}
-  EnemyCount: 3
-  PathGenerator: {fileID: 1995238964}
-  FutureLevel: {fileID: 0}
---- !u!114 &1995238964
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1995238960}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03cdefe7d50e1f44495c882f2424a4b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  geneIndex: 0
---- !u!4 &1995238965
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1995238960}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 32.49977, y: 68.92312, z: -0.25824204}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -27,20 +27,28 @@ namespace StealthLevelEvaluation
         //The ratio of occupied and unoccupeid cells
         private float LevelClutterednessRatioResult(GameObject level)
         {
-            var roadmap = level.GetComponentInChildren<FloodfilledRoadmapGenerator>();
-            Grid grid = roadmap.Grid;
-            var LevelGrid = new NativeGrid<bool>(grid, Helpers.GetLevelBounds(level));
-            LevelGrid.SetAll(SetObstacleGrid);
-            int occupied = 0;
-            int unoccupied = 0;
-            LevelGrid.ForEach((x, y) =>
+            try
             {
-                if (LevelGrid.Get(x, y))
-                    occupied++;
-                else
-                    unoccupied++;
-            });
-            return (float)occupied / (float)(occupied + unoccupied);
+                var roadmap = level.GetComponentInChildren<FloodfilledRoadmapGenerator>();
+                Grid grid = roadmap.Grid;
+                var LevelGrid = new NativeGrid<bool>(grid, Helpers.GetLevelBounds(level));
+                LevelGrid.SetAll(SetObstacleGrid);
+                int occupied = 0;
+                int unoccupied = 0;
+                LevelGrid.ForEach((x, y) =>
+                {
+                    if (LevelGrid.Get(x, y))
+                        occupied++;
+                    else
+                        unoccupied++;
+                });
+                return (float)occupied / (float)(occupied + unoccupied);
+            }
+            catch (System.Exception)
+            {
+                Debug.Log("Evaluation did not work properly");
+                return 0;
+            }
         }
 
         protected override float MeasureProperty()

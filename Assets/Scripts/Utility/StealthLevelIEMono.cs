@@ -260,7 +260,7 @@ public class StealthLevelIEMono : MonoBehaviour
         var crossover = new TwoPointCrossover();
         var mutation = new CustomMutators(1, 1, 1);
         //var chromosome = new FloatingPointChromosome(0,1,35,8);
-        var chromosome = new OTEPSLevelChromosome(Generator, RandomSeedGenerator);
+        var chromosome = Generator.GetAdamChromosome(RandomSeedGenerator.Next());
         //var population = new Population(PopulationCount, PopulationCount, chromosome);
         var population = new PopulationPhenotypeLayout(PopulationPhenotypeLayout, this.gameObject, chromosome);
 

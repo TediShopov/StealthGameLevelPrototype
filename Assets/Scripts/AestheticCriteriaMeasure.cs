@@ -29,8 +29,16 @@ namespace StealthLevelEvaluation
 
         protected override string Evaluate()
         {
-            PropertyValue = this.MeasureProperty();
-            return PropertyValue.ToString();
+            try
+            {
+                PropertyValue = this.MeasureProperty();
+                return PropertyValue.ToString();
+            }
+            catch (System.Exception)
+            {
+                PropertyValue = 0;
+                return "-";
+            }
         }
     }
 

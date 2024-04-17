@@ -8,8 +8,15 @@ namespace StealthLevelEvaluation
     {
         protected override float MeasureProperty()
         {
-            var chromo = (LevelChromosomeBase)Phenotype.GetComponentInChildren<LevelChromosomeMono>().Chromosome;
-            return (float)chromo.GetGene(0).Value;
+            try
+            {
+                var chromo = (LevelChromosomeBase)Phenotype.GetComponentInChildren<LevelChromosomeMono>().Chromosome;
+                return (float)chromo.GetGene(0).Value;
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
         }
     }
 }
