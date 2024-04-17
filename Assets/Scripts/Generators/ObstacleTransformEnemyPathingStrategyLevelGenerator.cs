@@ -28,7 +28,8 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(DiscretePathGenerator))]
 [RequireComponent(typeof(IFutureLevel))]
 [ExecuteInEditMode]
-public class ObstacleTransformEnemyPathingStrategyLevelGenerator : LevelPhenotypeGenerator
+public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
+    LevelPhenotypeGenerator
 {
     public const int ObstaccleGeneLength = 5;
     public const int EnemyGeneLength = 5;
@@ -57,6 +58,8 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator : LevelPhenotyp
 
     public override void Generate(LevelChromosomeBase chromosome, GameObject to = null)
     {
+        if (chromosome is not OTEPSLevelChromosome)
+            throw new System.ArgumentException("OTEPS Level generator requries OTEPS level chromosome");
         RoadmapGenerator.ObstacleLayerMask = LevelProperties.ObstacleLayerMask;
         RoadmapGenerator.BoundaryLayerMask = LevelProperties.BoundaryLayerMask;
 
@@ -190,10 +193,10 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator : LevelPhenotyp
             else
             {
                 var otherComposite = (CompositeCollider2D)c;
-                var shapesFromOtherComposite = otherComposite.gameObject.GetComponentsInChildren<Collider2D>()
+                var shapesFroLevelChromosomeBasemOtherComposite = otherComposite.gameObject.GetComponentsInChildren<Collider2D>()
                     .Where(x => x.usedByComposite == true).
                     ToList();
-                foreach (var shape in shapesFromOtherComposite)
+                foreach (var shape in shapesFroLevelChromosomeBasemOtherComposite)
                 {
                     SimpleShapeToCompositeCollider(shape, comp);
                     shape.gameObject.transform.SetParent(comp.transform, true);
@@ -226,5 +229,10 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator : LevelPhenotyp
         {
             throw new System.ArgumentException("Cannot nest composite colliders");
         }
+    }
+
+    public override LevelChromosomeBase GetAdamChromosome(int s)
+    {
+        return new OTEPSLevelChromosome(this, new System.Random(s));
     }
 }

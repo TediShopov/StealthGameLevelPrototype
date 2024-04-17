@@ -141,7 +141,7 @@ public class DiscretePathGenerator : MonoBehaviour, IPathGenerator
 {
     public Graph<Vector2> Roadmap { get; set; }
     public System.Random LevelRandom { get; set; }
-    public LevelChromosome Chromosome;
+    public LevelChromosomeBase Chromosome;
     [HideInInspector] public int geneIndex = 0;
 
     public List<EnemyPathingStategy> Stategies = new List<EnemyPathingStategy>()

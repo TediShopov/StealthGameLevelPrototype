@@ -201,7 +201,7 @@ public class StealthLevelIEMono : MonoBehaviour
         }
     }
 
-    public void SelectChromosome(LevelChromosome chromosome)
+    public void SelectChromosome(LevelChromosomeBase chromosome)
     {
         if (GenerationSelecitons.Contains(chromosome))
         {
@@ -223,7 +223,7 @@ public class StealthLevelIEMono : MonoBehaviour
             var level = Instantiate(Generator, TopLevelsPos,
                 Quaternion.identity, this.transform);
             level.gameObject.name = $"Top {i} - {chromosomes[i].Fitness}";
-            var levelChromosome = (LevelChromosome)chromosomes[i];
+            var levelChromosome = (OTEPSLevelChromosome)chromosomes[i];
             levelChromosome.PhenotypeGenerator.Generate(levelChromosome, level.gameObject);
             ChromoseMeasurementsVisualizer.AttachDataVisualizer(level.gameObject);
         }
@@ -237,7 +237,7 @@ public class StealthLevelIEMono : MonoBehaviour
         Vector3 TopLevelsPos = this.transform.position - new Vector3(0, 30, 0);
         for (int i = 0; i < chromosomes.Count; i++)
         {
-            var levelChromosome = (LevelChromosome)chromosomes[i];
+            var levelChromosome = (OTEPSLevelChromosome)chromosomes[i];
             if (levelChromosome is null || levelChromosome.Measurements is null)
             {
                 int b = 3;
@@ -260,7 +260,7 @@ public class StealthLevelIEMono : MonoBehaviour
         var crossover = new TwoPointCrossover();
         var mutation = new CustomMutators(1, 1, 1);
         //var chromosome = new FloatingPointChromosome(0,1,35,8);
-        var chromosome = new LevelChromosome(Generator, RandomSeedGenerator);
+        var chromosome = new OTEPSLevelChromosome(Generator, RandomSeedGenerator);
         //var population = new Population(PopulationCount, PopulationCount, chromosome);
         var population = new PopulationPhenotypeLayout(PopulationPhenotypeLayout, this.gameObject, chromosome);
 

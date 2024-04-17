@@ -10,15 +10,17 @@ using UnityEngine.Rendering.VirtualTexturing;
 [Serializable]
 internal class LevelChromosomeMono : MonoBehaviour
 {
-    [SerializeField] public LevelChromosome Chromosome;
+    [SerializeField] public LevelChromosomeBase Chromosome;
 }
 
-public class LevelPhenotypeGenerator : LevelGeneratorBase
+public abstract class LevelPhenotypeGenerator : LevelGeneratorBase
 {
     public bool RunOnStart = false;
     public bool IsRandom = false;
-    public int RandomChromosomeSeed;
+
+    //public System.Random RandomSeed;
     public bool DisposeNow = false;
+
     public int MinEnemiesSpawned = 1;
     public int MaxEnemiesSpawned = 3;
     public int StartingObstacleCount = 3;
@@ -26,16 +28,18 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
     protected LevelChromosomeBase LevelChromosome;
     public int IndexOfChromosome;
 
-    public void Awake()
-    {
-        if (RunOnStart)
-        {
-            if (IsRandom)
-                RandomChromosomeSeed = new System.Random().Next();
-            LevelChromosome = new LevelChromosome(StartingObstacleCount * 5 + 4, this, new System.Random(RandomChromosomeSeed));
-            Generate(LevelChromosome, this.gameObject);
-        }
-    }
+    //    public void Awake()
+    //    {
+    //        if (RunOnStart)
+    //        {
+    //            if (IsRandom)
+    //                RandomChromosomeSeed = new System.Random().Next();
+    //            LevelChromosome = new OTEPSLevelChromosome(StartingObstacleCount * 5 + 4, this, new System.Random(RandomChromosomeSeed));
+    //            Generate(LevelChromosome, this.gameObject);
+    //        }
+    //    }
+
+    public abstract LevelChromosomeBase GetAdamChromosome(int seed);
 
     public virtual void Generate(LevelChromosomeBase chromosome, GameObject to = null)
     {
@@ -57,7 +61,7 @@ public class LevelPhenotypeGenerator : LevelGeneratorBase
     {
         LevelChromosome = chromosome;
         LevelChromosomeMono chromosomeMono = Data.AddComponent<LevelChromosomeMono>();
-        chromosomeMono.Chromosome = (LevelChromosome)chromosome;
+        chromosomeMono.Chromosome = (OTEPSLevelChromosome)chromosome;
     }
 
     protected virtual int GenerateLevelContent(LevelChromosomeBase chromosome)

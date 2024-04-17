@@ -3,11 +3,9 @@ using GeneticSharp;
 using System;
 
 [Serializable]
-public class LevelChromosome : LevelChromosomeBase
+public class OTEPSLevelChromosome : LevelChromosomeBase
 {
-    private System.Random ChromosomeRandom = new System.Random();
-
-    public Gene[] GetRandomGenes(int length)
+    public virtual Gene[] GetRandomGenes(int length)
     {
         Gene[] genes = new Gene[length];
         for (int i = 0; i < length; i++)
@@ -17,7 +15,7 @@ public class LevelChromosome : LevelChromosomeBase
         return genes;
     }
 
-    public LevelChromosome(LevelPhenotypeGenerator generatorBase, System.Random random) :
+    public OTEPSLevelChromosome(LevelPhenotypeGenerator generatorBase, System.Random random) :
         this(random.Next(5, 15), generatorBase, random)
     {
         if (random == null)
@@ -31,7 +29,7 @@ public class LevelChromosome : LevelChromosomeBase
         this.ReplaceGenes(0, GetRandomGenes(Length));
     }
 
-    public LevelChromosome(int entityLength, LevelPhenotypeGenerator generatorBase = null, System.Random random = null) :
+    public OTEPSLevelChromosome(int entityLength, LevelPhenotypeGenerator generatorBase = null, System.Random random = null) :
         base(entityLength * 5 + 1, generatorBase)
     {
         if (random == null)
@@ -47,7 +45,7 @@ public class LevelChromosome : LevelChromosomeBase
 
     public override IChromosome CreateNew()
     {
-        return new LevelChromosome(Length / 5, PhenotypeGenerator, ChromosomeRandom);
+        return new OTEPSLevelChromosome(Length / 5, PhenotypeGenerator, ChromosomeRandom);
     }
 
     public override Gene GenerateGene(int geneIndex)

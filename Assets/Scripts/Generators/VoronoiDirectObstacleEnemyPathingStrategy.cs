@@ -1,203 +1,154 @@
+using GeneticSharp;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-//[RequireComponent(typeof(FloodfilledRoadmapGenerator))]
+public class VDOPESLevelChromosome : LevelChromosomeBase
+{
+    public override Gene GenerateGene(int geneIndex)
+    {
+        return new Gene(RandomizationProvider.Current.GetInt(0, 2));
+    }
+
+    public override string ToString()
+    {
+        return string.Join(string.Empty, GetGenes().Select(g => g.Value.ToString()).ToArray());
+    }
+
+    public VDOPESLevelChromosome(int length,
+        VoronoiDirectObstacleEnemyPathingStrategy generatorBase = null, System.Random random = null) :
+        base(length, generatorBase)
+    {
+        if (random == null)
+            ChromosomeRandom = new System.Random();
+        else
+            ChromosomeRandom = random;
+    }
+
+    public override IChromosome CreateNew()
+    {
+        return new VDOPESLevelChromosome(
+            this.Length,
+            (VoronoiDirectObstacleEnemyPathingStrategy)this.PhenotypeGenerator,
+            ChromosomeRandom);
+    }
+
+    public override int GetHashCode()
+    {
+        int hash = 0;
+        Gene[] genes = GetGenes();
+        foreach (Gene gene in genes)
+        {
+            float number = (float)gene.Value;
+            int scaledNumber = Mathf.RoundToInt(number / 0.0001f);
+            hash ^= (hash << 5) ^ (hash >> 3) ^ scaledNumber;
+        }
+        return hash;
+    }
+}
+
 [RequireComponent(typeof(DiscretePathGenerator))]
 [RequireComponent(typeof(IFutureLevel))]
 [ExecuteInEditMode]
 public class VoronoiDirectObstacleEnemyPathingStrategy : LevelPhenotypeGenerator
 {
-    //    public int EnemyCount => 3;
-    //    //[HideInInspector] public FloodfilledRoadmapGenerator RoadmapGenerator;
-    //    [HideInInspector] public DiscretePathGenerator PathGenerator;
-    //    public DiscreteRecalculatingFutureLevel FutureLevel;
-    //
-    //    public void Awake()
-    //    {
-    //        RoadmapGenerator = GetComponent<FloodfilledRoadmapGenerator>();
-    //        PathGenerator = GetComponent<DiscretePathGenerator>();
-    //    }
-    //
-    //    public int GetObstaclesToSpawn(ref int geneIndex)
-    //    {
-    //        float obstacleToEnemyRatio = GetGeneValue(geneIndex);
-    //        geneIndex++;
-    //        //Both obstacle and enemies need 5 genes to represent an entity
-    //        int obstacleCount = Mathf.CeilToInt(
-    //        Mathf.Lerp(NecessaryObstacles, EntityCount - 1, obstacleToEnemyRatio));
-    //        return obstacleCount;
-    //    }
-    //
-    //    public override void Generate(LevelChromosomeBase chromosome, GameObject to = null)
-    //    {
-    //        RoadmapGenerator.ObstacleLayerMask = LevelProperties.ObstacleLayerMask;
-    //        RoadmapGenerator.BoundaryLayerMask = LevelProperties.BoundaryLayerMask;
-    //
-    //        CreateLevelStructure(to);
-    //
-    //        //Setup chromosome
-    //        AttachChromosome(chromosome);
-    //
-    //        int geneIndex = GenerateLevelContent(chromosome);
-    //
-    //        PlaceBoundaryVisualPrefabs();
-    //
-    //        Physics2D.SyncTransforms();
-    //
-    //        //Copy grid components of the level prototype.
-    //        var otherGrid = Data.AddComponent<Grid>();
-    //        otherGrid.cellSize = this.GetComponent<Grid>().cellSize;
-    //        otherGrid.cellSwizzle = this.GetComponent<Grid>().cellSwizzle;
-    //        otherGrid.cellLayout = this.GetComponent<Grid>().cellLayout;
-    //
-    //        var roadmap = RoadmapGenerator.PrototypeComponent(Data);
-    //        roadmap.Init(to);
-    //        roadmap.DoMeasure(to);
-    //        chromosome.Measurements.Add(roadmap.Result);
-    //
-    //        //Use the generated roadmap to assign guard paths
-    //        AssignPaths(geneIndex, roadmap.RoadMap);
-    //
-    //        //Initialize the future level
-    //        //CopyComponent(FutureLevel, To).Init(To);
-    //        var futurePrototype = FutureLevel.PrototypeComponent(Data);
-    //        futurePrototype.Init();
-    //
-    //        Debug.Log("Generation of phenotype finished");
-    //    }
-    //
-    //    public void AssignPaths(int geneIndex, Graph<Vector2> roadmap)
-    //    {
-    //        LevelRandom = new System.Random();
-    //        PathGenerator.geneIndex = geneIndex;
-    //        PathGenerator.Init(To);
-    //        PathGenerator.Roadmap = roadmap;
-    //        PathGenerator.LevelRandom = LevelRandom;
-    //        PatrolEnemyMono[] enemyPaths = To.GetComponentsInChildren<PatrolEnemyMono>();
-    //        List<List<Vector2>> paths = PathGenerator.GeneratePaths(EnemyCount);
-    //        for (int i = 0; i < EnemyCount; i++)
-    //        {
-    //            enemyPaths[i].InitPatrol(paths[i]);
-    //        }
-    //        geneIndex = PathGenerator.geneIndex;
-    //    }
-    //
-    //    protected override int GenerateLevelContent(LevelChromosomeBase chromosome)
-    //    {
-    //        int geneIndex = 0;
-    //        int ObstacleCount = GetObstaclesToSpawn(ref geneIndex);
-    //        EnemyCount = EntityCount - ObstacleCount;
-    //        var Obstacles = new GameObject("Obstacles");
-    //        Obstacles.transform.SetParent(Contents.transform);
-    //
-    //        //Test for off by oen errors
-    //        for (int i = 0; i < ObstacleCount; i++)
-    //        {
-    //            SpawnObstacle(ref geneIndex, LevelBounds, Obstacles);
-    //        }
-    //
-    //        MergeObstacles(Obstacles);
-    //
-    //        //Read enemy counts and spawn enemies
-    //
-    //        for (int i = 0; i < EnemyCount; i++)
-    //        {
-    //            Instantiate(LevelProperties.EnemyPrefab, Contents.transform);
-    //        }
-    //
-    //        //Enemy Behaviour
-    //        Physics2D.SyncTransforms();
-    //        return geneIndex;
-    //    }
-    //
-    //    public void MergeObstacles(GameObject Obstacles)
-    //    {
-    //        var colliders = Obstacles.GetComponentsInChildren<Collider2D>().ToList();
-    //        ContactFilter2D filter = new ContactFilter2D
-    //        {
-    //            useDepth = false,
-    //            useLayerMask = true,
-    //            useTriggers = false,
-    //            useOutsideDepth = false,
-    //            layerMask = LevelProperties.ObstacleLayerMask
-    //        };
-    //        for (int i = 0; i < colliders.Count; i++)
-    //        {
-    //            var overlapCollider = colliders[i];
-    //            List<Collider2D> overlappingCollider = new List<Collider2D>();
-    //            Physics2D.OverlapCollider(
-    //                overlapCollider,
-    //                filter,
-    //                overlappingCollider
-    //                );
-    //            overlappingCollider.Add(overlapCollider);
-    //            if (overlappingCollider.Count >= 2)
-    //            {
-    //                GameObject gm = new GameObject("Composite");
-    //                gm.transform.SetParent(Obstacles.transform);
-    //                var rb = gm.AddComponent<Rigidbody2D>();
-    //                rb.bodyType = RigidbodyType2D.Static;
-    //                var comp = gm.AddComponent<CompositeCollider2D>();
-    //                gm.layer = LayerMask.NameToLayer("Obstacle");
-    //
-    //                comp.geometryType = CompositeCollider2D.GeometryType.Polygons;
-    //                comp.generationType = CompositeCollider2D.GenerationType.Manual;
-    //                colliders.RemoveAll(x => overlappingCollider.Contains(x));
-    //
-    //                AddShapesToCompositeObject(overlappingCollider, comp);
-    //                Physics2D.SyncTransforms();
-    //                colliders.Add(comp);
-    //                Physics2D.SyncTransforms();
-    //            }
-    //        }
-    //    }
-    //
-    //    private static void AddShapesToCompositeObject
-    //        (List<Collider2D> overlappingCollider, CompositeCollider2D comp)
-    //    {
-    //        foreach (var c in overlappingCollider)
-    //        {
-    //            if (c is not CompositeCollider2D)
-    //                SimpleShapeToCompositeCollider(c, comp);
-    //            else
-    //            {
-    //                var otherComposite = (CompositeCollider2D)c;
-    //                var shapesFromOtherComposite = otherComposite.gameObject.GetComponentsInChildren<Collider2D>()
-    //                    .Where(x => x.usedByComposite == true).
-    //                    ToList();
-    //                foreach (var shape in shapesFromOtherComposite)
-    //                {
-    //                    SimpleShapeToCompositeCollider(shape, comp);
-    //                    shape.gameObject.transform.SetParent(comp.transform, true);
-    //                }
-    //                Physics2D.SyncTransforms();
-    //                DestroyImmediate(otherComposite.gameObject);
-    //            }
-    //        }
-    //        comp.GenerateGeometry();
-    //    }
-    //
-    //    private static void SimpleShapeToCompositeCollider(Collider2D c, CompositeCollider2D comp)
-    //    {
-    //        if (c is not CompositeCollider2D)
-    //        {
-    //            //A simple shape
-    //            //Remove rigidbody as only final composite collider needs to have it
-    //            var rigidbody = c.gameObject.GetComponent<Rigidbody2D>();
-    //            if (rigidbody)
-    //                DestroyImmediate(rigidbody);
-    //
-    //            //Have the shape be used from the composite collider
-    //            var collider = c.gameObject.GetComponent<Collider2D>();
-    //            collider.usedByComposite = true;
-    //
-    //            //Set the parent shape
-    //            c.gameObject.transform.SetParent(comp.gameObject.transform);
-    //        }
-    //        else
-    //        {
-    //            throw new System.ArgumentException("Cannot nest composite colliders");
-    //        }
-    //    }
+    public int LoydRealaxationRuns = 0;
+    public Vector2Int SampleGridPoints = Vector2Int.one;
+    public int EnemyCount = 3;
+    [HideInInspector] public DiscretePathGenerator PathGenerator;
+    public DiscreteRecalculatingFutureLevel FutureLevel;
+
+    public void Awake()
+    {
+        PathGenerator = GetComponent<DiscretePathGenerator>();
+    }
+
+    public override LevelChromosomeBase GetAdamChromosome(int s)
+    {
+        return new VDOPESLevelChromosome(SampleGridPoints.x * SampleGridPoints.y, this, new System.Random(s));
+    }
+
+    public override void Generate(LevelChromosomeBase chromosome, GameObject to = null)
+    {
+        if (chromosome is not VDOPESLevelChromosome)
+            throw new System.ArgumentException("VDOEPS Level generator requries VDOEPS level chromosome");
+
+        CreateLevelStructure(to);
+
+        //Setup chromosome
+        AttachChromosome(chromosome);
+
+        int geneIndex = GenerateLevelContent(chromosome);
+
+        PlaceBoundaryVisualPrefabs();
+
+        Physics2D.SyncTransforms();
+
+        //Copy grid components of the level prototype.
+        var otherGrid = Data.AddComponent<Grid>();
+        otherGrid.cellSize = this.GetComponent<Grid>().cellSize;
+        otherGrid.cellSwizzle = this.GetComponent<Grid>().cellSwizzle;
+        otherGrid.cellLayout = this.GetComponent<Grid>().cellLayout;
+
+        //        var roadmap = RoadmapGenerator.PrototypeComponent(Data);
+        //        roadmap.Init(to);
+        //        roadmap.DoMeasure(to);
+        //        chromosome.Measurements.Add(roadmap.Result);
+
+        //Use the generated roadmap to assign guard paths
+        AssignPaths(geneIndex, chromosome.EnemyRoadmap);
+
+        //Initialize the future level
+        //CopyComponent(FutureLevel, To).Init(To);
+        var futurePrototype = FutureLevel.PrototypeComponent(Data);
+        futurePrototype.Init();
+
+        Debug.Log("Generation of phenotype finished");
+    }
+
+    public void GenerateVoronoiObstacles()
+    {
+    }
+
+    public void AssignPaths(int geneIndex, Graph<Vector2> roadmap)
+    {
+        LevelRandom = new System.Random();
+        PathGenerator.geneIndex = geneIndex;
+        PathGenerator.Init(To);
+        PathGenerator.Roadmap = roadmap;
+        PathGenerator.LevelRandom = LevelRandom;
+        PatrolEnemyMono[] enemyPaths = To.GetComponentsInChildren<PatrolEnemyMono>();
+        List<List<Vector2>> paths = PathGenerator.GeneratePaths(EnemyCount);
+        for (int i = 0; i < EnemyCount; i++)
+        {
+            enemyPaths[i].InitPatrol(paths[i]);
+        }
+        geneIndex = PathGenerator.geneIndex;
+    }
+
+    protected override int GenerateLevelContent(LevelChromosomeBase chromosome)
+    {
+        int geneIndex = 0;
+
+        var Obstacles = new GameObject("Obstacles");
+        Obstacles.transform.SetParent(Contents.transform);
+
+        //Test for off by oen errors
+        //        for (int i = 0; i < ObstacleCount; i++)
+        //        {
+        //            SpawnObstacle(ref geneIndex, LevelBounds, Obstacles);
+        //        }
+
+        //Read enemy counts and spawn enemies
+
+        for (int i = 0; i < EnemyCount; i++)
+        {
+            Instantiate(LevelProperties.EnemyPrefab, Contents.transform);
+        }
+
+        //Enemy Behaviour
+        Physics2D.SyncTransforms();
+        return geneIndex;
+    }
 }

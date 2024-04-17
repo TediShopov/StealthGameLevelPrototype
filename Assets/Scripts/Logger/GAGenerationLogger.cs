@@ -57,7 +57,7 @@ public class GAGenerationLogger
     private string GetHeader(IList<Generation> generationsToOutput)
     {
         StringBuilder header = new StringBuilder();
-        var bestInfo = (LevelChromosome)GA.BestChromosome;
+        var bestInfo = (OTEPSLevelChromosome)GA.BestChromosome;
         header.Append($"Chromosome Hash,");
         foreach (var e in bestInfo.Measurements)
         {
@@ -104,7 +104,7 @@ public class GAGenerationLogger
             foreach (var c in gen.Chromosomes)
             {
                 values += $"{c.GetHashCode()},";
-                List<MeasureResult> info = ((LevelChromosome)c).Measurements;
+                List<MeasureResult> info = ((OTEPSLevelChromosome)c).Measurements;
                 if (info != null)
                 {
                     foreach (var e in info)

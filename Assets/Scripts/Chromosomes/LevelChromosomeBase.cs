@@ -12,6 +12,8 @@ using UnityEngine;
 [Serializable]
 public abstract class LevelChromosomeBase : ChromosomeBase
 {
+    public System.Random ChromosomeRandom;
+
     protected LevelChromosomeBase(int length, LevelPhenotypeGenerator generator) : base(length)
     {
         PhenotypeGenerator = generator;

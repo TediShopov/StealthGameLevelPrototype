@@ -10,7 +10,7 @@ using static UnityEngine.GraphicsBuffer;
 public class InteractiveEvalutation : MonoBehaviour
 {
     private StealthLevelIEMono IEMono;
-    private LevelChromosome Chromosome;
+    private LevelChromosomeBase Chromosome;
     private bool _isSelected = false;
 
     public void Awake()

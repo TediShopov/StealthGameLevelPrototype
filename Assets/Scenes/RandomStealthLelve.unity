@@ -371,7 +371,7 @@ GameObject:
   - component: {fileID: 1513753142}
   - component: {fileID: 1513753141}
   m_Layer: 0
-  m_Name: PhenotypeGenerator
+  m_Name: OTEPSLevelGenerator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -410,7 +410,6 @@ MonoBehaviour:
   VisualBoundWidth: 0.5
   RunOnStart: 0
   IsRandom: 0
-  RandomChromosomeSeed: 0
   DisposeNow: 0
   MinEnemiesSpawned: 1
   MaxEnemiesSpawned: 3
@@ -433,57 +432,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03cdefe7d50e1f44495c882f2424a4b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Chromosome:
-    PhenotypeGenerator: {fileID: 1513753137}
-    Measurements:
-    - Name: RoadmapFloofill
-      Category: 0
-      Value: '-'
-      Time: 7
-    - Name: ZoneCount
-      Category: 3
-      Value: 0.5333334
-      Time: 0
-    - Name: LevelClutterednessEvaluator
-      Category: 3
-      Value: 0.751385
-      Time: 1
-    - Name: EnemyObstacleRatioEvaluator
-      Category: 3
-      Value: 0.9500365
-      Time: 0
-    - Name: AStartPathEvalution
-      Category: 1
-      Value: 0
-      Time: 0
-    - Name: AStarSafePathToEnd
-      Category: 1
-      Value: 1
-      Time: 1
-    - Name: StartEndDestinationObserveTime
-      Category: 1
-      Value: '-'
-      Time: -1
-    - Name: RRTBWD
-      Category: 2
-      Value: '-'
-      Time: -1
-    - Name: PathZoneUniqueness
-      Category: 2
-      Value: '-'
-      Time: -1
-    - Name: RiskMeasure
-      Category: 2
-      Value: '-'
-      Time: -1
-    - Name: Fitness
-      Category: 4
-      Value: 0.5
-      Time: 0
-    AestheticProperties:
-    - 0.53333336
-    - 0.75138503
-    - 0.9500365
   geneIndex: 40
 --- !u!114 &1513753139
 MonoBehaviour:
@@ -586,3 +534,114 @@ MonoBehaviour:
   EnableSetLevel: 1
   EnableDiscreteTimes: 1
   SetTime: 0
+--- !u!1 &1995238960
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1995238965}
+  - component: {fileID: 1995238964}
+  - component: {fileID: 1995238963}
+  - component: {fileID: 1995238962}
+  - component: {fileID: 1995238961}
+  m_Layer: 0
+  m_Name: VDOEPSLevelGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1995238961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1995238960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31955cf081dfd424ab218f918b0892e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  BoundaryLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  _step: 0.2
+  _iter: 50
+  EnableSetLevel: 1
+  EnableDiscreteTimes: 1
+  SetTime: 0
+--- !u!156049354 &1995238962
+Grid:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1995238960}
+  m_Enabled: 1
+  m_CellSize: {x: 1, y: 1, z: 1}
+  m_CellGap: {x: 0, y: 0, z: 0}
+  m_CellLayout: 0
+  m_CellSwizzle: 0
+--- !u!114 &1995238963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1995238960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3191f3c3fdbfd334e82c1f214d264ced, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
+  MinObjectScale: 0.2
+  MaxObjectScale: 1
+  VisualBoundWidth: 0
+  RunOnStart: 0
+  IsRandom: 0
+  DisposeNow: 0
+  MinEnemiesSpawned: 1
+  MaxEnemiesSpawned: 3
+  StartingObstacleCount: 3
+  IndexOfChromosome: 0
+  LoydRealaxationRuns: 0
+  SampleGridPoints: {x: 15, y: 15}
+  EnemyCount: 3
+  PathGenerator: {fileID: 1995238964}
+  FutureLevel: {fileID: 0}
+--- !u!114 &1995238964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1995238960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03cdefe7d50e1f44495c882f2424a4b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  geneIndex: 0
+--- !u!4 &1995238965
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1995238960}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 32.49977, y: 68.92312, z: -0.25824204}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
