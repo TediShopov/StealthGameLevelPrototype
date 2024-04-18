@@ -9,6 +9,8 @@ using UnityEngine;
 using CGALDotNet.Geometry;
 using CGALDotNetGeometry.Shapes;
 using PlasticGui;
+using UnityEngine.U2D;
+using UnityEditor;
 
 public class VDOPESLevelChromosome : LevelChromosomeBase
 {
@@ -61,6 +63,113 @@ public class VDOPESLevelChromosome : LevelChromosomeBase
     }
 }
 
+//Visualizes the outtput of CGAL delanay traingulation
+public class DelanayTrinagulationUnityMono : MonoBehaviour
+{
+    public DelaunayTriangulation2<EEK> Triangulation2;
+    public UnityEngine.Vector2 VoronoiFacePosition;
+
+    public void DrawVoronoiFaceIndex(int i)
+    {
+        if (i <= 0 || i > Triangulation2.TriangleCount) return;
+        // each voronoi face corrsponds to DT vertex
+        //Get dt vertex at i
+
+        TriVertex2 triVertex2 = new TriVertex2();
+        Triangulation2.GetVertex(i, out triVertex2);
+
+        var triangles = new Triangle2d[Triangulation2.TriangleCount];
+        Triangulation2.GetTriangles(triangles, Triangulation2.TriangleCount);
+
+        var relatedTriangles = triangles.
+            Where(x => x.A == triVertex2.Point
+            || x.B == triVertex2.Point
+            || x.C == triVertex2.Point)
+            .ToList();
+
+        int iter = 1;
+        foreach (var triangle in relatedTriangles)
+        {
+            Segment2d a = new Segment2d(triangle.A, triangle.B);
+            Segment2d b = new Segment2d(triangle.C, triangle.B);
+            Segment2d c = new Segment2d(triangle.A, triangle.C);
+            DrawLabelelLine(a, iter.ToString(), Color.red);
+            DrawLabelelLine(b, iter.ToString(), Color.red);
+            DrawLabelelLine(c, iter.ToString(), Color.red);
+
+            iter += 1;
+            Gizmos.color = Color.magenta;
+            UnityEngine.Vector2 ceneter = ToGlobalUnity(triangle.CircumCircle.Center);
+            Gizmos.DrawSphere(new Vector3(ceneter.x, ceneter.y, -1), 0.1f);
+
+            //Gizmos.DrawWireSphere(ceneter, (float)triangle.CircumRadius);
+        }
+    }
+
+    public void OnDrawGizmos()
+    {
+        if (Triangulation2 == null) return;
+        int iter = 0;
+
+        foreach (Segment2d seg in Triangulation2.GetVoronoiSegments())
+        {
+            DrawLabelelLine(seg, iter.ToString(), Color.white);
+            iter += 1;
+        }
+
+        iter = 0;
+        Triangle2d[] triangles = new Triangle2d[Triangulation2.TriangleCount];
+        Triangulation2.GetTriangles(triangles, Triangulation2.TriangleCount);
+        foreach (var triangle in triangles)
+        {
+            Segment2d a = new Segment2d(triangle.A, triangle.B);
+            Segment2d b = new Segment2d(triangle.C, triangle.B);
+            Segment2d c = new Segment2d(triangle.A, triangle.C);
+            DrawLabelelLine(a, iter.ToString(), Color.green);
+            DrawLabelelLine(b, iter.ToString(), Color.green);
+            DrawLabelelLine(c, iter.ToString(), Color.green);
+
+            iter += 1;
+            Gizmos.color = Color.green;
+            UnityEngine.Vector2 ceneter = ToGlobalUnity(triangle.CircumCircle.Center);
+            Gizmos.DrawSphere(new Vector3(ceneter.x, ceneter.y, -1), 0.1f);
+
+            //Gizmos.DrawWireSphere(ceneter, (float)triangle.CircumRadius);
+        }
+
+        Point2d pointingAt = new Point2d(VoronoiFacePosition.x, VoronoiFacePosition.y);
+        TriVertex2 vertex;
+        if (Triangulation2.LocateVertex(pointingAt, 2.0f, out vertex))
+            DrawVoronoiFaceIndex(vertex.Index);
+    }
+
+    public UnityEngine.Vector2 ToUnity(Point2d d)
+    {
+        return new UnityEngine.Vector2((float)d.x, (float)d.y);
+    }
+
+    public UnityEngine.Vector2 ToGlobalUnity(Point2d d)
+    {
+        return this.transform.TransformPoint(ToUnity(d));
+    }
+
+    public void DrawLabelelLine(Segment2d seg, string label, Color color)
+    {
+        UnityEngine.Vector2 start = ToUnity(seg.A);
+        UnityEngine.Vector2 end = ToUnity(seg.B);
+
+        //Transform to local
+        start = this.transform.TransformPoint(start);
+        end = this.transform.TransformPoint(end);
+
+        Gizmos.color = color;
+        Handles.Label(UnityEngine.Vector2.MoveTowards(start, end, 0.5f), label);
+        Gizmos.DrawSphere(start, 0.2f);
+        Gizmos.DrawSphere(end, 0.2f);
+        Gizmos.DrawLine(start, end);
+    }
+}
+
 [RequireComponent(typeof(FloodfilledRoadmapGenerator))]
 [RequireComponent(typeof(DiscretePathGenerator))]
 [RequireComponent(typeof(IFutureLevel))]
@@ -102,23 +211,28 @@ public class VoronoiDirectObstacleEnemyPathingStrategy : LevelPhenotypeGenerator
         //Setup chromosome
         AttachChromosome(chromosome);
 
-        var roadmap = RoadmapGenerator.PrototypeComponent(Data);
-        roadmap.Init(to);
-        //        chromosome.Measurements.Add(roadmap.Result);
+        //TODO- this is here as roadmap geenrator requires a graphs
+        //Copy grid components of the level prototype.
+        var otherGrid = Data.AddComponent<Grid>();
+        otherGrid.cellSize = this.GetComponent<Grid>().cellSize;
+        otherGrid.cellSwizzle = this.GetComponent<Grid>().cellSwizzle;
+        otherGrid.cellLayout = this.GetComponent<Grid>().cellLayout;
+
+        //        var roadmap = RoadmapGenerator.PrototypeComponent(Data);
+        //        roadmap.Init(to);
+        //        //        chromosome.Measurements.Add(roadmap.Result);
         GenerateVoronoiObstacles();
-        roadmap.RoadMap = CurrentRoadMap;
+        //        roadmap.RoadMap = CurrentRoadMap;
+
+        //Attach debug visualizer.
+        var vis = Data.AddComponent<DelanayTrinagulationUnityMono>();
+        vis.Triangulation2 = triangulation;
 
         int geneIndex = GenerateLevelContent(chromosome);
 
         PlaceBoundaryVisualPrefabs();
 
         Physics2D.SyncTransforms();
-
-        //Copy grid components of the level prototype.
-        var otherGrid = Data.AddComponent<Grid>();
-        otherGrid.cellSize = this.GetComponent<Grid>().cellSize;
-        otherGrid.cellSwizzle = this.GetComponent<Grid>().cellSwizzle;
-        otherGrid.cellLayout = this.GetComponent<Grid>().cellLayout;
 
         //Use the generated roadmap to assign guard paths
         //AssignPaths(geneIndex, chromosome.EnemyRoadmap);
@@ -261,10 +375,26 @@ public class VoronoiDirectObstacleEnemyPathingStrategy : LevelPhenotypeGenerator
         return points;
     }
 
-    public void CreatePolygonAtVoronoiSegment(List<UnityEngine.Vector2> points)
+    public void CreatePolygonObstacle(List<UnityEngine.Vector2> points)
     {
         var poly = new GameObject("Poly");
+
+        //Acquire center of points
+        UnityEngine.Vector2 Center = UnityEngine.Vector2.zero;
+        foreach (var p in points)
+            Center += p;
+        Center /= points.Count;
+
+        poly.transform.position = Center;
+        var sprite = poly.AddComponent<SpriteShapeRenderer>();
+        //var spriteController = poly.AddComponent<shapeControjk>();
         var polygonCollider = poly.AddComponent<PolygonCollider2D>();
+
+        for (int i = 0; i < points.Count; i++)
+        {
+            points[i] -= Center;
+        }
+
         polygonCollider.points = points.ToArray();
         poly.transform.SetParent(Obstacles.transform, true);
     }
@@ -273,21 +403,70 @@ public class VoronoiDirectObstacleEnemyPathingStrategy : LevelPhenotypeGenerator
     {
         int geneIndex = 0;
 
-        var Obstacles = new GameObject("Obstacles");
+        Obstacles = new GameObject("Obstacles");
         Obstacles.transform.SetParent(Contents.transform);
 
         List<UnityEngine.Vector2> polygonPoints = new List<UnityEngine.Vector2>();
-        for (int i = 0; i < chromosome.Length; i++)
+
+        //        TriFace2[] faces = new TriFace2[5];
+        //        triangulation.GetFaces(faces, 5);
+
+        //Get the triangulation index count
+
+        for (int i = 0; i < triangulation.TriangleCount; i++)
         {
-            //bool isObstacle = (bool)chromosome.GetGene(i).Value;
-            TriFace2 face = triangulation.GetFace(i);
-            IEnumerable<TriVertex2> triVertices = face.EnumerateVertices(triangulation);
-            foreach (var triVertex in triVertices)
+            //Get gene
+            bool isObstacle = i % 10 == 0;
+            if (isObstacle)
             {
-                polygonPoints.Add(new UnityEngine.Vector2((float)triVertex.Point.x, (float)triVertex.Point.y));
+                //IEnumerable<TriVertex2> triVertices = triangulation.GetFace(i).EnumerateVertices(triangulation);
+                for (int j = 0; j < 3; j++)
+                {
+                    //Local level coordinates
+                    UnityEngine.Vector2 unityPoint =
+                        new UnityEngine.Vector2(
+                            (float)triangulation.GetTriangle(i)[j].x,
+                        (float)triangulation.GetTriangle(i)[j].y);
+
+                    //Global coordinates
+                    unityPoint = To.transform.TransformPoint(unityPoint);
+
+                    //Add to coordinates
+
+                    polygonPoints.Add(unityPoint);
+                }
+                //                foreach (var triVertex in triangulation.GetTriangle(i))
+                //                {
+                //                    //Local level coordinates
+                //                    UnityEngine.Vector2 unityPoint =
+                //                        new UnityEngine.Vector2((float)triVertex.Point.x, (float)triVertex.Point.y);
+                //
+                //                    //Global coordinates
+                //                    unityPoint = To.transform.TransformPoint(unityPoint);
+                //
+                //                    //Add to coordinates
+                //                    polygonPoints.Add(unityPoint);
+                //                }
+                CreatePolygonObstacle(polygonPoints);
             }
+
             polygonPoints.Clear();
         }
+
+        //For each triangle face (structure that known neighborus)
+        //add to polygon points
+
+        //        for (int i = 0; i < chromosome.Length; i++)
+        //        {
+        //            //bool isObstacle = (bool)chromosome.GetGene(i).Value;
+        //            TriFace2 face = triangulation.GetFace(i);
+        //            IEnumerable<TriVertex2> triVertices = face.EnumerateVertices(triangulation);
+        //            foreach (var triVertex in triVertices)
+        //            {
+        //                polygonPoints.Add(new UnityEngine.Vector2((float)triVertex.Point.x, (float)triVertex.Point.y));
+        //            }
+        //            polygonPoints.Clear();
+        //        }
 
         //Test for off by oen errors
         //        for (int i = 0; i < ObstacleCount; i++)
