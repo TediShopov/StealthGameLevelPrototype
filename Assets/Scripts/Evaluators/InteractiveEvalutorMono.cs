@@ -94,7 +94,11 @@ public class InteractiveEvalutorMono : EvaluatorMono
         //Attaching fitness evaluation information to the object itself
 
         if (Evaluators.Any(x => x.IsTerminating))
+        {
             eval = 0.5f;
+            levelObject.name += " Infeasible";
+            levelObject.name += $" Fitness {eval}";
+        }
         else
         {
             if (DoObjectiveDifficultyEvaluation)
@@ -111,6 +115,8 @@ public class InteractiveEvalutorMono : EvaluatorMono
                 }
                 eval *= 10;
             }
+            levelObject.name += " Feasible";
+            levelObject.name += $" Fitness {eval}";
         }
 
         levelChromosome.Measurements.Add(new MeasureResult()

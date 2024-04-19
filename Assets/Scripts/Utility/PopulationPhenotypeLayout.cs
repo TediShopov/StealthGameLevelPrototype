@@ -111,6 +111,15 @@ public class GridObjectLayout
         currentIndex = -1;
     }
 
+    private string ResetPhenotypeGameObjectName(GameObject gameObject)
+    {
+        if (gameObject == null) return "";
+        string gameobjectName = gameObject.name;
+        int indexOfFirstWhiteSpace = gameobjectName.IndexOf(" ");
+        if (indexOfFirstWhiteSpace == -1) return gameobjectName;
+        return gameobjectName.Substring(0, indexOfFirstWhiteSpace);
+    }
+
     //Once a new population has been started the gameobject generated must be cleared
     private void DisposeOldPopulation()
     {
@@ -123,6 +132,7 @@ public class GridObjectLayout
             {
                 GameObject.DestroyImmediate(child.gameObject);
             }
+            item.name = ResetPhenotypeGameObjectName(item);
         }
     }
 }
