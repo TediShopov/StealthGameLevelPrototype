@@ -26,6 +26,8 @@ public class PopulationPhenotypeLayout : Population
     public PopulationPhenotypeLayout(PopulationPhenotypeLayout other, GameObject gameObj, IChromosome adam)
         : base(other.Min, other.Max, adam)
     {
+        this.Min = other.Min;
+        this.Max = other.Max;
         CreationDate = DateTime.Now;
         this.ExtraSpacing = other.ExtraSpacing;
         this.IEGameObject = gameObj;

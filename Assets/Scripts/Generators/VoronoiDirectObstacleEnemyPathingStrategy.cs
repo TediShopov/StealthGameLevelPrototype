@@ -11,6 +11,7 @@ using CGALDotNetGeometry.Shapes;
 using PlasticGui;
 using UnityEngine.U2D;
 using UnityEditor;
+using CGALDotNet.Hulls;
 
 public class VDOPESLevelChromosome : LevelChromosomeBase
 {
@@ -111,32 +112,32 @@ public class DelanayTrinagulationUnityMono : MonoBehaviour
         if (Triangulation2 == null) return;
         int iter = 0;
 
-        foreach (Segment2d seg in Triangulation2.GetVoronoiSegments())
-        {
-            DrawLabelelLine(seg, iter.ToString(), Color.white);
-            iter += 1;
-        }
-
-        iter = 0;
-        Triangle2d[] triangles = new Triangle2d[Triangulation2.TriangleCount];
-        Triangulation2.GetTriangles(triangles, Triangulation2.TriangleCount);
-        foreach (var triangle in triangles)
-        {
-            Segment2d a = new Segment2d(triangle.A, triangle.B);
-            Segment2d b = new Segment2d(triangle.C, triangle.B);
-            Segment2d c = new Segment2d(triangle.A, triangle.C);
-            DrawLabelelLine(a, iter.ToString(), Color.green);
-            DrawLabelelLine(b, iter.ToString(), Color.green);
-            DrawLabelelLine(c, iter.ToString(), Color.green);
-
-            iter += 1;
-            Gizmos.color = Color.green;
-            UnityEngine.Vector2 ceneter = ToGlobalUnity(triangle.CircumCircle.Center);
-            Gizmos.DrawSphere(new Vector3(ceneter.x, ceneter.y, -1), 0.1f);
-
-            //Gizmos.DrawWireSphere(ceneter, (float)triangle.CircumRadius);
-        }
-
+        //        foreach (Segment2d seg in Triangulation2.GetVoronoiSegments())
+        //        {
+        //            DrawLabelelLine(seg, iter.ToString(), Color.white);
+        //            iter += 1;
+        //        }
+        //
+        //        iter = 0;
+        //        Triangle2d[] triangles = new Triangle2d[Triangulation2.TriangleCount];
+        //        Triangulation2.GetTriangles(triangles, Triangulation2.TriangleCount);
+        //        foreach (var triangle in triangles)
+        //        {
+        //            Segment2d a = new Segment2d(triangle.A, triangle.B);
+        //            Segment2d b = new Segment2d(triangle.C, triangle.B);
+        //            Segment2d c = new Segment2d(triangle.A, triangle.C);
+        //            DrawLabelelLine(a, iter.ToString(), Color.green);
+        //            DrawLabelelLine(b, iter.ToString(), Color.green);
+        //            DrawLabelelLine(c, iter.ToString(), Color.green);
+        //
+        //            iter += 1;
+        //            Gizmos.color = Color.green;
+        //            UnityEngine.Vector2 ceneter = ToGlobalUnity(triangle.CircumCircle.Center);
+        //            Gizmos.DrawSphere(new Vector3(ceneter.x, ceneter.y, -1), 0.1f);
+        //
+        //            //Gizmos.DrawWireSphere(ceneter, (float)triangle.CircumRadius);
+        //        }
+        //
         Point2d pointingAt = new Point2d(VoronoiFacePosition.x, VoronoiFacePosition.y);
         TriVertex2 vertex;
         if (Triangulation2.LocateVertex(pointingAt, 2.0f, out vertex))
@@ -221,7 +222,7 @@ public class VoronoiDirectObstacleEnemyPathingStrategy : LevelPhenotypeGenerator
         //        var roadmap = RoadmapGenerator.PrototypeComponent(Data);
         //        roadmap.Init(to);
         //        //        chromosome.Measurements.Add(roadmap.Result);
-        GenerateVoronoiObstacles();
+        GenerateVoronoiObstacles(otherGrid);
         //        roadmap.RoadMap = CurrentRoadMap;
 
         //Attach debug visualizer.
@@ -248,15 +249,16 @@ public class VoronoiDirectObstacleEnemyPathingStrategy : LevelPhenotypeGenerator
     public List<UnityEngine.Vector2> Points = new List<UnityEngine.Vector2>();
     private DelaunayTriangulation2<EEK> triangulation;
 
-    public void GenerateVoronoiObstacles()
+    public void GenerateVoronoiObstacles(Grid grid)
     {
         CurrentRoadMap = new Graph<UnityEngine.Vector2>();
         int width = SampleGridPoints.x;
         int height = SampleGridPoints.y;
 
-        var points = CreateBoundaryPoints(width, height, Mathf.CeilToInt((float)Radius));
-        FillPoints(points, width, height, Radius, Samples);
-        ExpandPoints(points, width, height, Mathf.CeilToInt((float)Radius));
+        //        var points = CreateBoundaryPoints(width, height, Mathf.CeilToInt((float)Radius));
+        //        FillPoints(points, width, height, Radius, Samples);
+        //        ExpandPoints(points, width, height, Mathf.CeilToInt((float)Radius));
+        var points = GridBasedPoints(width, height, grid);
 
         for (int i = 0; i < points.Count; i++)
         {
@@ -290,6 +292,27 @@ public class VoronoiDirectObstacleEnemyPathingStrategy : LevelPhenotypeGenerator
                     Points.Add(end);
             }
         }
+    }
+
+    public List<Point2d> GridBasedPoints(int w, int h, Grid grid)
+    {
+        var points = new List<Point2d>();
+        for (int i = 0; i < w; i++)
+        {
+            for (int j = 0; j < h; j++)
+            {
+                Vector3 cellCenter = grid.CellToWorld(new Vector3Int(i, j, 0));
+                //Randmoize a value inside the cell
+                Vector3 localRandomPos = new Vector3(
+                    UnityEngine.Random.Range(-grid.cellSize.x / 2.0f, grid.cellSize.x / 2.0f),
+                    UnityEngine.Random.Range(-grid.cellSize.y / 2.0f, grid.cellSize.y / 2.0f),
+                    0
+                    );
+
+                points.Add(new Point2d(cellCenter.x + localRandomPos.x, cellCenter.y + localRandomPos.y));
+            }
+        }
+        return points;
     }
 
     public void AssignPaths(int geneIndex, Graph<UnityEngine.Vector2> roadmap)
@@ -335,6 +358,58 @@ public class VoronoiDirectObstacleEnemyPathingStrategy : LevelPhenotypeGenerator
         return false;
     }
 
+    public List<UnityEngine.Vector2> GetPointsOfVoronoiRegion(int i)
+    {
+        if (i <= 0 || i > triangulation.TriangleCount) return new List<UnityEngine.Vector2>();
+        // each voronoi face corrsponds to DT vertex
+        //Get dt vertex at i
+
+        TriVertex2 triVertex2 = new TriVertex2();
+        triangulation.GetVertex(i, out triVertex2);
+
+        var triangles = new Triangle2d[triangulation.TriangleCount];
+        triangulation.GetTriangles(triangles, triangulation.TriangleCount);
+
+        var relatedTriangles = triangles.
+            Where(x => x.A == triVertex2.Point
+            || x.B == triVertex2.Point
+            || x.C == triVertex2.Point)
+            .ToList();
+
+        int iter = 1;
+
+        var CGALPoints = new List<Point2d>();
+        foreach (var triangle in relatedTriangles)
+        {
+            var center = triangle.CircumCircle.Center;
+            if (center.x > SampleGridPoints.x || center.y > SampleGridPoints.y)
+                return new List<UnityEngine.Vector2>();
+            if (center.x < 0 || center.y < 0)
+                return new List<UnityEngine.Vector2>();
+            CGALPoints.Add(triangle.CircumCircle.Center);
+        }
+        if (relatedTriangles.Count < 3)
+            return new List<UnityEngine.Vector2>();
+
+        ConvexHull2<EEK> convexHull2 = new ConvexHull2<EEK>();
+        var hull = convexHull2.CreateHull(CGALPoints.ToArray(), CGALPoints.Count, HULL_METHOD.DEFAULT);
+        var pointsToReturn = new Point2d[hull.Count];
+        hull.GetPoints(pointsToReturn, hull.Count);
+        if (hull.IsValid())
+            return pointsToReturn.Select(x => ToGlobalUnity(x)).ToList();
+        return new List<UnityEngine.Vector2>();
+    }
+
+    public UnityEngine.Vector2 ToUnity(Point2d d)
+    {
+        return new UnityEngine.Vector2((float)d.x, (float)d.y);
+    }
+
+    public UnityEngine.Vector2 ToGlobalUnity(Point2d d)
+    {
+        return this.transform.TransformPoint(ToUnity(d));
+    }
+
     private List<Point2d> ExpandPoints(List<Point2d> points, int width, int height, int radius)
     {
         points.Add(new Point2d(-radius, -radius));
@@ -377,6 +452,7 @@ public class VoronoiDirectObstacleEnemyPathingStrategy : LevelPhenotypeGenerator
 
     public void CreatePolygonObstacle(List<UnityEngine.Vector2> points)
     {
+        if (points.Count == 0) return;
         var poly = new GameObject("Poly");
 
         //Acquire center of points
@@ -413,41 +489,13 @@ public class VoronoiDirectObstacleEnemyPathingStrategy : LevelPhenotypeGenerator
 
         //Get the triangulation index count
 
-        for (int i = 0; i < triangulation.TriangleCount; i++)
+        for (int i = 0; i < triangulation.IndiceCount; i++)
         {
             //Get gene
-            bool isObstacle = i % 10 == 0;
+            bool isObstacle = i % 1 == 0;
             if (isObstacle)
             {
-                //IEnumerable<TriVertex2> triVertices = triangulation.GetFace(i).EnumerateVertices(triangulation);
-                for (int j = 0; j < 3; j++)
-                {
-                    //Local level coordinates
-                    UnityEngine.Vector2 unityPoint =
-                        new UnityEngine.Vector2(
-                            (float)triangulation.GetTriangle(i)[j].x,
-                        (float)triangulation.GetTriangle(i)[j].y);
-
-                    //Global coordinates
-                    unityPoint = To.transform.TransformPoint(unityPoint);
-
-                    //Add to coordinates
-
-                    polygonPoints.Add(unityPoint);
-                }
-                //                foreach (var triVertex in triangulation.GetTriangle(i))
-                //                {
-                //                    //Local level coordinates
-                //                    UnityEngine.Vector2 unityPoint =
-                //                        new UnityEngine.Vector2((float)triVertex.Point.x, (float)triVertex.Point.y);
-                //
-                //                    //Global coordinates
-                //                    unityPoint = To.transform.TransformPoint(unityPoint);
-                //
-                //                    //Add to coordinates
-                //                    polygonPoints.Add(unityPoint);
-                //                }
-                CreatePolygonObstacle(polygonPoints);
+                CreatePolygonObstacle(GetPointsOfVoronoiRegion(i));
             }
 
             polygonPoints.Clear();

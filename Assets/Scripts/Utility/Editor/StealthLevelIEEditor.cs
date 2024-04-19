@@ -13,12 +13,11 @@ public class StealthLevelIEEditor : Editor
     private bool showLogging = true;
 
     private GUIStyle _bolded = GUIStyle.none;
-    private SerializedObject so;
     private SerializedProperty SerializedPreferences;
 
     private void OnEnable()
     {
-        so = new SerializedObject(target);
+        SerializedPreferences = serializedObject.FindProperty("UserPreferences");
     }
 
     private void ArrayGUI(SerializedObject obj, string name)
@@ -42,14 +41,9 @@ public class StealthLevelIEEditor : Editor
         //base.OnInspectorGUI();
 
         serializedObject.Update();
-        SerializedPreferences = so.FindProperty("UserPreferences");
-        ArrayGUI(so, "UserPreferences");
+        EditorGUILayout.PropertyField(SerializedPreferences, true);
+
         //EditorGUILayout.PropertyField(SerializedPreferences, true);
-        bool appleid = serializedObject.ApplyModifiedProperties();
-        if (appleid)
-        {
-            Debug.Log("Applied");
-        }
         if (ie != null && ie.IsRunning)
         {
             //Additional info for the running algorithm
@@ -107,9 +101,9 @@ public class StealthLevelIEEditor : Editor
             {
                 ie.ExtraSpacing = EditorGUILayout.Vector2Field("Extra Spacing: ", ie.ExtraSpacing);
                 serializedObject.Update();
-                var ppl = so.FindProperty("PopulationPhenotypeLayout");
+                var ppl = serializedObject.FindProperty("PopulationPhenotypeLayout");
                 EditorGUILayout.PropertyField(ppl);
-                so.ApplyModifiedProperties();
+                serializedObject.ApplyModifiedProperties();
             }
             showLogging = EditorGUILayout.Foldout(showLogging, "Logging");
             if (showLogging)
@@ -126,6 +120,10 @@ public class StealthLevelIEEditor : Editor
                 }
             }
 
+            if (GUILayout.Button("Reset Weights"))
+            {
+                ie.UserPreferences = ie.PreferencesDefault;
+            }
             if (GUILayout.Button("Randmozise Seed"))
             {
                 ie.RandomizeSeed();
