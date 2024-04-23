@@ -5,7 +5,7 @@ using UnityEngine;
 public class Patrol : IPredictableThreat
 {
     public DefaultEnemyProperties AestheticProperties;
-    private BacktrackPatrolPath Route;
+    private IPatrolPath Route;
 
     private FutureTransform Transform = new FutureTransform
     {
@@ -57,12 +57,27 @@ public class Patrol : IPredictableThreat
         //Path should be valid
         if (path != null && path.Count >= 2)
         {
+            for (int i = 0; i < path.Count - 1; i++)
+            {
+                for (int j = i + 1; j < path.Count; j++)
+                {
+                    if (path[i] == path[j])
+                    {
+                        List<Vector2> cyclicSubPath = new List<Vector2>();
+                        for (int k = i; k <= j; k++)
+                            cyclicSubPath.Add(path[k]);
+
+                        Route = new CyclicPatrolPath(cyclicSubPath);
+                        return;
+                    }
+                }
+            }
+
             Route = new BacktrackPatrolPath(path);
+            //If paths begging and end point are the same
+            //route is cyclic
         }
         //Otherwise treated as static
-
-        //If paths begging and end point are the same
-        //route is cyclic
 
         //If no of the above the rotue is backtracking
     }
@@ -96,7 +111,7 @@ public class Patrol : IPredictableThreat
     }
 
     public FutureTransform GetPathOrientedTransform(
-        BacktrackPatrolPath path)
+        IPatrolPath path)
     {
         FutureTransform futureTransform = new FutureTransform();
 

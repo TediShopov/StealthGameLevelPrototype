@@ -82,8 +82,6 @@ public class PatrolEnemyMono : MonoBehaviour, IPredictableThreat
 
     private void FixedUpdate()
     {
-        //        if (Patrol == null) return;
-        //        this.TimeMove(UnityEngine.Time.fixedDeltaTime);
     }
 
     //    public void DrawAllSegmentes()
@@ -111,6 +109,7 @@ public class PatrolEnemyMono : MonoBehaviour, IPredictableThreat
     //            return length * EnemyProperties.Speed;
     //        }
     //        return 0;
+
     //    }
 
     //Given a patrol path return the position and the direction facing the direction

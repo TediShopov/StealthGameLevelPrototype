@@ -3,45 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IPatrolPath : ICopyable<IPatrolPath>
-{
-    public List<Vector2> GetPath();
-
-    public void Reset();
-
-    public void MoveAlong(float displacement);
-
-    public float GetTotalLength();
-
-    public float GetSegmentLength(float rel);
-
-    public Vector2 GetCurrent();
-
-    public Tuple<Vector2, Vector2> GetSegment();
-
-    public Tuple<Vector2, Vector2> GetSegment(float rel);
-}
-
-public interface ICopyable<T>
-{
-    //public void Copy(T other);
-
-    public T Copy();
-}
-
-public class BacktrackPatrolPath : IPatrolPath
+//Cyclic path has to have first and last point to be the same as a requiremnt to be made
+//
+public class CyclicPatrolPath : IPatrolPath
 {
     //Operates as an index, but is continous
     //E.g 1.6f would represent 60% of segments from element 1 to elements 2
     private float relPathPostion = 0;
 
-    public bool TraverseForward = true;
     private List<Vector2> Path;
 
     public List<Vector2> GetPath()
     { return new List<Vector2>(Path); }
 
-    public BacktrackPatrolPath(List<Vector2> path, float startPos = 0)
+    public CyclicPatrolPath(List<Vector2> path, float startPos = 0)
     {
         if (path == null) throw new ArgumentNullException("Path cannot be null");
         if (path.Count <= 1) throw new ArgumentException("Pats need to be defined by at least 2 points");
@@ -52,39 +27,27 @@ public class BacktrackPatrolPath : IPatrolPath
     public void Reset()
     {
         relPathPostion = 0;
-        TraverseForward = true;
     }
 
-    public BacktrackPatrolPath(BacktrackPatrolPath other)
+    public CyclicPatrolPath(CyclicPatrolPath other)
     {
         this.Copy(other);
     }
 
-    public void Copy(BacktrackPatrolPath other)
+    public void Copy(CyclicPatrolPath other)
     {
         this.relPathPostion = other.relPathPostion;
-        this.TraverseForward = other.TraverseForward;
         this.Path = new List<Vector2>(other.Path);
     }
 
     public IPatrolPath Copy()
     {
-        return new BacktrackPatrolPath(this);
-    }
-
-    public int GetNextIndex(int current)
-    {
-        int next = TraverseForward ? current + 1 : current - 1;
-        if (next >= Path.Count || next < 0)
-        {
-            next = TraverseForward ? current - 1 : current + 1;
-        }
-        return next;
+        return new CyclicPatrolPath(this);
     }
 
     private int GetIndex(float rel)
     {
-        return TraverseForward ? Mathf.FloorToInt(rel) : Mathf.CeilToInt(rel);
+        return Mathf.FloorToInt(rel);
     }
 
     private Tuple<int, int> GetSegmentIndices(float rel)
@@ -96,19 +59,10 @@ public class BacktrackPatrolPath : IPatrolPath
             return null;
         }
 
-        var tempTraverse = TraverseForward;
-        if (rel % 1 == 0)
-        {
-            from = GetIndex(rel);
-            to = GetNextIndex(from);
-        }
-        else
-        {
-            from = GetIndex(TraverseForward ? Mathf.FloorToInt(rel) : Mathf.CeilToInt(rel));
-            //to = GetNextIndex(TraverseForward ? Mathf.CeilToInt(rel) : Mathf.FloorToInt(rel));
-            to = GetNextIndex(from);
-        }
-        TraverseForward = tempTraverse;
+        from = GetIndex(rel);
+        to = from + 1;
+        if (to >= Path.Count)
+            to = 0;
         return new Tuple<int, int>(from, to);
     }
 
@@ -146,10 +100,6 @@ public class BacktrackPatrolPath : IPatrolPath
     public Vector2 GetCurrent()
     {
         Tuple<Vector2, Vector2> segment = GetSegment(relPathPostion);
-        if (segment == null)
-        {
-            int b = 3;
-        }
         float segmentCompletion = Math.Abs(relPathPostion - GetIndex(relPathPostion));
         return Vector2.Lerp(segment.Item1, segment.Item2, segmentCompletion);
     }
@@ -162,20 +112,20 @@ public class BacktrackPatrolPath : IPatrolPath
         }
 
         Tuple<int, int> currentSegment = GetSegmentIndices(relPathPostion);
-        float distanceToSegmentEnd = Vector2.Distance(GetCurrent(), Path[currentSegment.Item2]);
+        float distanceToSegmentEnd = Vector2.Distance(
+            GetCurrent(),
+            Path[currentSegment.Item2]);
         while (displacement >= distanceToSegmentEnd)
         {
             //Travel to the end of the segment
             displacement -= distanceToSegmentEnd;
             relPathPostion = currentSegment.Item2;
-            if (currentSegment.Item2 >= Path.Count - 1 || currentSegment.Item2 <= 0)
-                TraverseForward = !TraverseForward;
             //Update current segment and distance to segmente end
             currentSegment = GetSegmentIndices(relPathPostion);
             distanceToSegmentEnd = Vector2.Distance(GetCurrent(), Path[currentSegment.Item2]);
         }
         float f = displacement / Vector2.Distance(Path[currentSegment.Item1], Path[currentSegment.Item2]);
-        relPathPostion += TraverseForward ? f : -f;
+        relPathPostion += f;
     }
 
     public float GetTotalLength()
