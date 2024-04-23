@@ -35,6 +35,20 @@ public class StealthLevelIEEditor : Editor
         }
     }
 
+    public float AverageDistanceChangeInPreferenceModel(
+        List<float> OldUserPreferences,
+        List<float> NewUserPreferences
+        )
+    {
+        float avgDitance = 0;
+        for (int i = 0; i < OldUserPreferences.Count; i++)
+        {
+            avgDitance += Mathf.Abs(NewUserPreferences[i] - OldUserPreferences[i]);
+        }
+        avgDitance /= (float)OldUserPreferences.Count;
+        return avgDitance;
+    }
+
     public override void OnInspectorGUI()
     {
         StealthLevelIEMono ie = (StealthLevelIEMono)target;
@@ -47,6 +61,27 @@ public class StealthLevelIEEditor : Editor
         if (ie != null && ie.IsRunning)
         {
             //Additional info for the running algorithm
+
+            //Show how much the synthetic user module has changed
+            if (ie.UserPreferencesOverGenerations is not null)
+            {
+                int lastIndex = ie.UserPreferencesOverGenerations.Count - 1;
+                if (ie.UserPreferencesOverGenerations.Count >= 1)
+                {
+                    float distanceChagenSinceLast = AverageDistanceChangeInPreferenceModel(
+                        ie.UserPreferencesOverGenerations[lastIndex].Item2,
+                        ie.UserPreferences
+                        );
+                    float distanceChangeSinceFirst = AverageDistanceChangeInPreferenceModel(
+                        ie.UserPreferencesOverGenerations[0].Item2,
+                        ie.UserPreferences
+                        );
+                    EditorGUILayout.LabelField
+                        ($"Average Prefference Change: {distanceChagenSinceLast} / {ie.Step}");
+                    EditorGUILayout.LabelField
+                        ($"Average Prefference Change: {distanceChangeSinceFirst}");
+                }
+            }
 
             //Todo visualizer user subject preference evaluator
             serializedObject.ApplyModifiedProperties();

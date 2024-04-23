@@ -127,6 +127,7 @@ public class StealthLevelIEMono : MonoBehaviour
     public InteractiveGeneticAlgorithm GeneticAlgorithm;
     public Vector2 ExtraSpacing;
 
+    [HideInInspector] public List<Tuple<int, List<float>>> UserPreferencesOverGenerations;
     [SerializeField] public List<float> UserPreferences;
     public List<LevelChromosomeBase> GenerationSelecitons;
     public List<List<LevelChromosomeBase>> InteractiveSelections;
@@ -185,11 +186,15 @@ public class StealthLevelIEMono : MonoBehaviour
 
     public void ApplyChangesToPreferenceModel()
     {
-        if (GenerationSelecitons.Count <= 0) return;
+        if (GenerationSelecitons.Count == 0) return;
         var avgGenerationProps = AverageLevelPreferences(
             this.GeneticAlgorithm.Population.CurrentGeneration.Chromosomes.Select(x => (LevelChromosomeBase)x).ToList());
 
         var avgSelectionProps = AverageLevelPreferences(GenerationSelecitons);
+        this.UserPreferencesOverGenerations.Add(
+            new Tuple<int, List<float>>(
+                this.GeneticAlgorithm.Population.CurrentGeneration.Number,
+                new List<float>(UserPreferences)));
 
         for (int i = 0; i < avgSelectionProps.Count; i++)
         {
@@ -329,6 +334,7 @@ public class StealthLevelIEMono : MonoBehaviour
             PhenotypeEvaluator.IE = this;
             this.GenerationSelecitons = new List<LevelChromosomeBase>();
             this.InteractiveSelections = new List<List<LevelChromosomeBase>>();
+            this.UserPreferencesOverGenerations = new List<Tuple<int, List<float>>>();
             GeneticAlgorithm.State = GeneticAlgorithmState.Started;
             GeneticAlgorithm.Population.CreateInitialGeneration();
             GeneticAlgorithm.EvaluateFitness();
