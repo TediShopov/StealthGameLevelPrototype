@@ -17,6 +17,17 @@ public class PatrolEnemyMono : MonoBehaviour, IPredictableThreat
     public FieldOfView FieldOfView;
     private Rigidbody2D _rigidBody2D;
 
+    //Flag if enemy mono will sync the transform and the rigidbody to
+    //the ones from the patrol in the simulation
+    public bool IsPaused = false;
+
+    //Checkbox used as button to assign new patrol
+    //from path points in the editor
+    public bool AssignManualPath;
+
+    //Checkbox used as button to assign enemy as static
+    public bool SetStaticTransform;
+
     public float Time => Patrol.Time;
 
     public Patrol GetPatrol()
@@ -37,10 +48,36 @@ public class PatrolEnemyMono : MonoBehaviour, IPredictableThreat
         return new Patrol(this.Patrol);
     }
 
+    //Assume that manual changes to patrol points are made
+    // and use them to construct new patrol class
+    public void AssignPathPointsFromEditor()
+    {
+        Patrol = new Patrol(EnemyProperties, PathPoints);
+    }
+
     public void InitPatrol(List<Vector2> points)
     {
         PathPoints = points;
         Patrol = new Patrol(EnemyProperties, points);
+    }
+
+    public void Update()
+    {
+        if (AssignManualPath)
+        {
+            AssignPathPointsFromEditor();
+            AssignManualPath = false;
+        }
+        if (SetStaticTransform)
+        {
+            FutureTransform InitialTransformFromEditor;
+            InitialTransformFromEditor.Position = _rigidBody2D.position;
+            InitialTransformFromEditor.Direction =
+                Helpers.GetVectorFromAngle(this.transform.rotation.z);
+
+            Patrol = new Patrol(EnemyProperties, InitialTransformFromEditor);
+            SetStaticTransform = false;
+        }
     }
 
     private void FixedUpdate()
@@ -81,6 +118,7 @@ public class PatrolEnemyMono : MonoBehaviour, IPredictableThreat
 
     public void TimeMove(float deltaTime)
     {
+        if (IsPaused) return;
         Patrol.TimeMove(deltaTime);
         _rigidBody2D.position =
             GetTransform().Position;

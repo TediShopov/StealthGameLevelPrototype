@@ -19,7 +19,7 @@ public class BacktrackPatrolPath
     {
         if (path == null) throw new ArgumentNullException("Path cannot be null");
         if (path.Count <= 1) throw new ArgumentException("Pats need to be defined by at least 2 points");
-        Path = path;
+        Path = new List<Vector2>(path);
         relPathPostion = startPos;
     }
 

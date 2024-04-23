@@ -19,6 +19,13 @@ public class Patrol : IPredictableThreat
         return copy;
     }
 
+    //Use only when the there is no route setup
+    //as route will override the transform
+    public void SetStaticTransform(FutureTransform ft)
+    {
+        this.Transform = ft;
+    }
+
     public Patrol(Patrol other)
     {
         this.AestheticProperties = other.AestheticProperties;
@@ -58,6 +65,14 @@ public class Patrol : IPredictableThreat
         //route is cyclic
 
         //If no of the above the rotue is backtracking
+    }
+
+    public Patrol(
+        DefaultEnemyProperties props,
+        FutureTransform initialTransform)
+    {
+        this.AestheticProperties = props;
+        this.SetStaticTransform(initialTransform);
     }
 
     public Patrol(
