@@ -24,7 +24,8 @@ public class Patrol : IPredictableThreat
         this.AestheticProperties = other.AestheticProperties;
         //Route creation strategy
 
-        Route = new BacktrackPatrolPath(other.Route);
+        if (other.Route != null)
+            this.Route = other.Route.Copy();
         this.Time = other.Time;
         this.Transform = other.Transform;
         this.AestheticProperties = other.AestheticProperties;
@@ -116,10 +117,10 @@ public class Patrol : IPredictableThreat
 
     public void TimeMove(float deltaTime)
     {
+        Time += deltaTime;
         if (Route == null) return;
         //Move a constant speed along a route
         Route.MoveAlong(deltaTime * AestheticProperties.Speed);
-        Time += deltaTime;
 
         //Get the position along the route and direction
         //heading to the next path point

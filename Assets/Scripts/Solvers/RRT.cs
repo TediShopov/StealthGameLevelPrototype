@@ -183,6 +183,7 @@ public class RRT : IRapidlyEpxploringRandomTree<Vector3>
         {
             _kdTree.AddKDNode(KDTree.ToFloatArray(newPoint));
             TreeNode<Vector3> newStateNode = new TreeNode<Vector3>(newPoint);
+            //TODO check if tree already contains this
             _stateToTreeNode.Add(newPoint, newStateNode);
             _stateToTreeNode[nearestPoint].AddChild(newStateNode);
             return newStateNode;

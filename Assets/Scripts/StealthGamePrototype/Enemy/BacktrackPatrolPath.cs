@@ -41,6 +41,11 @@ public class BacktrackPatrolPath
         this.Path = new List<Vector2>(other.Path);
     }
 
+    public BacktrackPatrolPath Copy()
+    {
+        return new BacktrackPatrolPath(this);
+    }
+
     public int GetNextIndex(int current)
     {
         int next = TraverseForward ? current + 1 : current - 1;
@@ -73,8 +78,9 @@ public class BacktrackPatrolPath
         }
         else
         {
-            from = TraverseForward ? Mathf.FloorToInt(rel) : Mathf.CeilToInt(rel);
-            to = TraverseForward ? Mathf.CeilToInt(rel) : Mathf.FloorToInt(rel);
+            from = GetIndex(TraverseForward ? Mathf.FloorToInt(rel) : Mathf.CeilToInt(rel));
+            //to = GetNextIndex(TraverseForward ? Mathf.CeilToInt(rel) : Mathf.FloorToInt(rel));
+            to = GetNextIndex(from);
         }
         TraverseForward = tempTraverse;
         return new Tuple<int, int>(from, to);
@@ -83,10 +89,17 @@ public class BacktrackPatrolPath
     public Tuple<Vector2, Vector2> GetSegment(float rel)
     {
         Tuple<int, int> indices = GetSegmentIndices(rel);
-        if (indices != null)
-            return new Tuple<Vector2, Vector2>(Path[indices.Item1], Path[indices.Item2]);
-        else
-            return null;
+        try
+        {
+            if (indices != null)
+                return new Tuple<Vector2, Vector2>(Path[indices.Item1], Path[indices.Item2]);
+            else
+                return null;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     public Tuple<Vector2, Vector2> GetSegment()

@@ -71,13 +71,13 @@ public class PatrolPath : MonoBehaviour, IFutureTransform
 
     public void DrawAllSegmentes()
     {
-        if (BacktrackPatrolPath == null) return;
-        var pathCount = BacktrackPatrolPath.GetPath().Count;
-        for (int i = 0; i <= pathCount - 1; i++)
-        {
-            var seg = BacktrackPatrolPath.GetSegment(i);
-            Gizmos.DrawLine(seg.Item1, seg.Item2);
-        }
+        //        if (BacktrackPatrolPath == null) return;
+        //        var pathCount = BacktrackPatrolPath.GetPath().Count;
+        //        for (int i = 0; i <= pathCount - 1; i++)
+        //        {
+        //            var seg = BacktrackPatrolPath.GetSegment(i);
+        //            Gizmos.DrawLine(seg.Item1, seg.Item2);
+        //        }
     }
 
     public void OnDrawGizmosSelected()

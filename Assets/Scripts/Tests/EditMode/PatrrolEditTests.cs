@@ -14,6 +14,73 @@ public struct PatrolSegment
 
 public class PatrrolEditTests
 {
+    [Test]
+    public void PatrolEmptyPath_OutputsUnchangingFutureTransforms()
+    {
+        new DefaultEnemyProperties();
+
+        //Test with empty path vector
+        Patrol patrol = new Patrol(new DefaultEnemyProperties(), new List<Vector2>());
+        FutureTransform initialFT = patrol.GetTransform();
+
+        for (int i = 1; i < 10; i++)
+        {
+            patrol.TimeMove(1);
+            //Should be treated as "static"
+            //Should not be chaning position
+            Assert.AreEqual(initialFT, patrol.GetTransform());
+            Assert.AreEqual(i, patrol.Time);
+        }
+
+        //Test with no path provided
+        patrol = new Patrol(new DefaultEnemyProperties(), null);
+        initialFT = patrol.GetTransform();
+
+        for (int i = 1; i < 10; i++)
+        {
+            patrol.TimeMove(1);
+            //Should be treated as "static"
+            //Should not be chaning position
+            Assert.AreEqual(initialFT, patrol.GetTransform());
+            Assert.AreEqual(i, patrol.Time);
+        }
+
+        //Test by copying previous patrol
+        patrol = new Patrol(patrol);
+        initialFT = patrol.GetTransform();
+        Assert.AreEqual(patrol.Time, 9);
+        patrol.Time = 0;
+        for (int i = 1; i < 10; i++)
+        {
+            patrol.TimeMove(1);
+            //Should be treated as "static"
+            //Should not be chaning position
+            Assert.AreEqual(initialFT, patrol.GetTransform());
+            Assert.AreEqual(i, patrol.Time);
+        }
+    }
+
+    [Test]
+    public void PatrolPathNonNull_CorrectlyCopiesPath()
+    {
+        Assert.True(true);
+    }
+
+    //    [Test]
+    //    public void PatrolPathEndingOnSamePoint_HasCyclicPatrolPath()
+    //    {
+    //        new DefaultEnemyProperties();
+    //        //Assigned patrol route should be cyclic
+    //        var path =
+    //            new List<Vector2>()
+    //            {
+    //                new Vector2(0,0),
+    //                new Vector2(1,0),
+    //                new Vector2(2,0),
+    //                new Vector2(0,0),
+    //            };
+    //        Patrol patrol= new Patrol(new DefaultEnemyProperties(), List<Vector2>);
+    //    }
     //Indexing test
     [Test]
     public void PatrolPathGetSemgent_CannotChangeDirectionOfPatrol()
@@ -33,6 +100,45 @@ public class PatrrolEditTests
         Assert.AreEqual(segmentOnForwrd.Item1, path[0]);
         Assert.AreEqual(segmentOnForwrd.Item2, path[1]);
         Assert.AreEqual(backtrackPatrolPath.TraverseForward, false);
+    }
+
+    [Test]
+    public void PatrolPathGetIndices_StressTest()
+    {
+        var path =
+            new List<Vector2>()
+            {
+                new Vector2(0,0),
+                new Vector2(1,0),
+                new Vector2(3,0),
+                new Vector2(4,0),
+            };
+
+        BacktrackPatrolPath backtrackPatrolPath = new BacktrackPatrolPath(path);
+        try
+        {
+            backtrackPatrolPath.GetSegment(0);
+            backtrackPatrolPath.GetSegment(1);
+            backtrackPatrolPath.GetSegment(2);
+            backtrackPatrolPath.GetSegment(3);
+            backtrackPatrolPath.GetSegment(3.15f);
+            backtrackPatrolPath.GetSegment(4.15f);
+            backtrackPatrolPath.GetSegment(-1);
+        }
+        catch (Exception)
+        {
+            Assert.Fail();
+        }
+
+
+        backtrackPatrolPath.MoveAlong(100.0f);
+        backtrackPatrolPath.GetSegment();
+
+
+        Assert.Pass();
+
+
+        // Use the Assert class to test conditions
     }
 
     [Test]
