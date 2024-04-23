@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2946327264321161414}
   - component: {fileID: 6192551288286212373}
   m_Layer: 0
-  m_Name: RRTBaseTest
+  m_Name: RRTBaseTest 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

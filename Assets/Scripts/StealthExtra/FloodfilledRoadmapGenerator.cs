@@ -51,8 +51,9 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
     {
         if (DoFloodFill)
         {
-            //Init();
-            FloodRegions();
+            Init(Helpers.SearchForTagUpHierarchy(this.gameObject, "Level"));
+            Evaluate();
+            //FloodRegions();
             //return Physics2D.Linecast(a, b, ObstacleLayerMask);
             DoFloodFill = false;
         }
@@ -450,6 +451,7 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
     protected override string Evaluate()
     {
         Profiler.BeginSample(GetName());
+        RoadMap = new Graph<Vector2>();
         FloodRegions();
         if (RoadMap.adjacencyList.Count <= 0) return "-";
         int totalRecursion = 0;

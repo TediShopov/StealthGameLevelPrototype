@@ -150,16 +150,7 @@ public class RRT : IRapidlyEpxploringRandomTree<Vector3>
     public virtual TreeNode<Vector3> DoStep()
     {
         Vector3 target = GetRandomState();
-        var nearestNode = KDTree.NearestNeighbor(_kdTree, KDTree.ToFloatArray(target));
-        var nearestPoint = (Vector3)nearestNode;
-
-        Vector3 newPoint = Steer((Vector3)nearestPoint, target);
-
-        if (!IsColliding((Vector3)nearestPoint, newPoint))
-        {
-            return AddToTreeStates(newPoint, nearestPoint);
-        }
-        return null;
+        return DoStep(target);
     }
 
     //Tries to reach a predetermined state
@@ -179,6 +170,8 @@ public class RRT : IRapidlyEpxploringRandomTree<Vector3>
 
     private TreeNode<Vector3> AddToTreeStates(Vector3 newPoint, Vector3 nearestPoint)
     {
+        if (_stateToTreeNode.ContainsKey(newPoint) == true)
+            return null;
         if (_stateToTreeNode.ContainsKey(nearestPoint))
         {
             _kdTree.AddKDNode(KDTree.ToFloatArray(newPoint));
