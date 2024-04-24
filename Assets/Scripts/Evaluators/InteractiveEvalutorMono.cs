@@ -27,16 +27,18 @@ public class InteractiveEvalutorMono : EvaluatorMono
     {
         //Find all measurement of type properties
         var PropertyEvaluators = evals.Where(x => x.GetCategory() == MeasurementType.PROPERTIES)
-            .Select(x => (LevelPropertiesEvaluator)x)
+            .Select(x => ((LevelPropertiesEvaluator)x).PropertyValue)
             .ToList();
-        if (chromo.AestheticProperties == null)
-            chromo.AestheticProperties = new List<float>();
+        chromo.AestheticProperties = new PropertyMeasurements(PropertyEvaluators);
 
-        chromo.AestheticProperties.Clear();
-        foreach (var propertyEvaluator in PropertyEvaluators)
-        {
-            chromo.AestheticProperties.Add(propertyEvaluator.PropertyValue);
-        }
+        //        if (chromo.AestheticProperties == null)
+        //            chromo.AestheticProperties = new List<float>();
+
+        //        chromo.AestheticProperties.Clear();
+        //        foreach (var propertyEvaluator in PropertyEvaluators)
+        //        {
+        //            chromo.AestheticProperties.Add(propertyEvaluator.PropertyValue);
+        //        }
     }
 
     public override double Evaluate(IChromosome chromosome)

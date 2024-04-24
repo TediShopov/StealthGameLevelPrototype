@@ -5,6 +5,54 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+//Given all the generation phenotypes and user selection amongst them
+//shifts the weights to user selected important properties
+public class DynamicUserPreferenceModel
+{
+    public float Step = 0.2f;
+    private List<List<float>> PreferencesForGeneration;
+
+    public DynamicUserPreferenceModel(int measureCount)
+    {
+        PreferencesForGeneration = new List<List<float>>();
+        PreferencesForGeneration.Add(GetDefault(measureCount));
+    }
+
+    public void Alter(PropertyMeasurements averageOfGeneration, PropertyMeasurements averageOfselection)
+    {
+        List<float> newPreferences = new List<float>(PreferencesForGeneration.Last());
+        for (int i = 0; i < averageOfselection.Count; i++)
+        {
+            var changeInWeight = Step *
+                (averageOfselection[i] - averageOfGeneration[i]);
+
+            newPreferences[i] = newPreferences[i] + changeInWeight;
+        }
+        Normalize(newPreferences);
+        PreferencesForGeneration.Add(newPreferences);
+    }
+
+    public List<float> GetDefault(int measures)
+    {
+        var equalWeightProperties = new List<float>();
+        for (int i = 0; i < measures; i++)
+        {
+            equalWeightProperties.Add(1.0f);
+        }
+        Normalize(equalWeightProperties);
+        return equalWeightProperties;
+    }
+
+    public void Normalize(List<float> weights)
+    {
+        float sum = weights.Sum();
+        for (int i = 0; i < weights.Count; i++)
+        {
+            weights[i] = weights[i] / sum;
+        }
+    }
+}
+
 public class StealthLevelIEMono : MonoBehaviour
 {
     //public int Rows = 5; // Number of rows in the grid
@@ -94,21 +142,21 @@ public class StealthLevelIEMono : MonoBehaviour
             chromosomes
             .Select(x => ((LevelChromosomeBase)x).AestheticProperties)
             .ToList();
-
-        List<float> avgProperties = new List<float>(allValidProperties.First());
-
-        try
-        {
-            for (int i = 0; i < avgProperties.Count; i++)
-            {
-                avgProperties[i] = allValidProperties.Average(x => x[i]);
-            }
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-        return avgProperties;
+        return PropertyMeasurements.Average(allValidProperties);
+        //        List<float> avgProperties = new List<float>(allValidProperties.First());
+        //
+        //        try
+        //        {
+        //            for (int i = 0; i < avgProperties.Count; i++)
+        //            {
+        //                avgProperties[i] = allValidProperties.Average(x => x[i]);
+        //            }
+        //        }
+        //        catch (Exception)
+        //        {
+        //            throw;
+        //        }
+        //        return avgProperties;
     }
 
     public void Awake()

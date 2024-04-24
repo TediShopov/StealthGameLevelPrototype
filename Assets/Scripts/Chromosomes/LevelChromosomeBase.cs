@@ -23,7 +23,8 @@ public abstract class LevelChromosomeBase : ChromosomeBase
     {
         PhenotypeGenerator = generator;
         Measurements = new List<MeasureResult>();
-        AestheticProperties = new List<float>();
+        //AestheticProperties =  new List<float>();
+        AestheticProperties = new PropertyMeasurements(0);
     }
 
     public LevelPhenotypeGenerator PhenotypeGenerator;
@@ -32,7 +33,7 @@ public abstract class LevelChromosomeBase : ChromosomeBase
     public GameObject Phenotype { get; set; }
 
     [SerializeField] public List<MeasureResult> Measurements;
-    [SerializeField] public List<float> AestheticProperties;
+    [SerializeField] public PropertyMeasurements AestheticProperties;
     [SerializeField] public Graph<Vector2> EnemyRoadmap;
 
     public override IChromosome Clone()
@@ -92,7 +93,7 @@ public class PropertyMeasurements : List<float>
         }
     }
 
-    public PropertyMeasurements Average(
+    public static PropertyMeasurements Average(
         IList<PropertyMeasurements> measurementInstances)
     {
         if (measurementInstances == null
@@ -110,6 +111,17 @@ public class PropertyMeasurements : List<float>
             averageMeasurement += propertyMeasuremnts;
         }
         averageMeasurement.DividceEach(measurementInstances.Count);
+        return averageMeasurement;
+    }
+
+    public static PropertyMeasurements Average(
+      PropertyMeasurements one, PropertyMeasurements two)
+    {
+        PropertyMeasurements averageMeasurement =
+            new PropertyMeasurements(one.Count);
+        averageMeasurement += one;
+        averageMeasurement += two;
+        averageMeasurement.DividceEach(2);
         return averageMeasurement;
     }
 

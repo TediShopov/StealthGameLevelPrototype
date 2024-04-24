@@ -33,19 +33,19 @@ public class StealthLevelIEEditor : Editor
         }
     }
 
-    public float AverageDistanceChangeInPreferenceModel(
-        List<float> OldUserPreferences,
-        List<float> NewUserPreferences
-        )
-    {
-        float avgDitance = 0;
-        for (int i = 0; i < OldUserPreferences.Count; i++)
-        {
-            avgDitance += Mathf.Abs(NewUserPreferences[i] - OldUserPreferences[i]);
-        }
-        avgDitance /= (float)OldUserPreferences.Count;
-        return avgDitance;
-    }
+    //    public float AverageDistanceChangeInPreferenceModel(
+    //        List<float> OldUserPreferences,
+    //        List<float> NewUserPreferences
+    //        )
+    //    {
+    //        float avgDitance = 0;
+    //        for (int i = 0; i < OldUserPreferences.Count; i++)
+    //        {
+    //            avgDitance += Mathf.Abs(NewUserPreferences[i] - OldUserPreferences[i]);
+    //        }
+    //        avgDitance /= (float)OldUserPreferences.Count;
+    //        return avgDitance;
+    //    }
 
     public override void OnInspectorGUI()
     {
@@ -66,18 +66,29 @@ public class StealthLevelIEEditor : Editor
                 int lastIndex = ie.UserPreferencesOverGenerations.Count - 1;
                 if (ie.UserPreferencesOverGenerations.Count >= 1)
                 {
-                    float distanceChagenSinceLast = AverageDistanceChangeInPreferenceModel(
-                        ie.UserPreferencesOverGenerations[lastIndex].Item2,
-                        ie.UserPreferences
-                        );
-                    float distanceChangeSinceFirst = AverageDistanceChangeInPreferenceModel(
-                        ie.UserPreferencesOverGenerations[0].Item2,
-                        ie.UserPreferences
-                        );
-                    EditorGUILayout.LabelField
-                        ($"Average Prefference Change: {distanceChagenSinceLast} / {ie.Step}");
-                    EditorGUILayout.LabelField
-                        ($"Average Prefference Change: {distanceChangeSinceFirst}");
+                    //                    PropertyMeasurements.Average(
+                    //                        ie.UserPreferencesOverGenerations[lastIndex].Item2,
+                    //                        ie.UserPreferences
+                    //                        );
+                    //
+                    //                    PropertyMeasurements.Average(
+                    //                        ie.UserPreferencesOverGenerations[lastIndex].Item2,
+                    //                        ie.UserPreferences
+                    //                        );
+                    //
+                    //                    ie.UserPreferences.AveragePropertyDistance(ie.UserPreferencesOverGenerations[0].Item2);
+                    //                    ie.UserPreferences.AveragePropertyDistance(ie.UserPreferencesOverGenerations[lastIndex].Item2);
+
+                    //                    float distanceChagenSinceLast = AverageDistanceChangeInPreferenceModel(
+                    //                        );
+                    //                    float distanceChangeSinceFirst = AverageDistanceChangeInPreferenceModel(
+                    //                        ie.UserPreferencesOverGenerations[0].Item2,
+                    //                        ie.UserPreferences
+                    //                        );
+                    //                    EditorGUILayout.LabelField
+                    //                        ($"Average Prefference Change: {distanceChagenSinceLast} / {ie.Step}");
+                    //                    EditorGUILayout.LabelField
+                    //                        ($"Average Prefference Change: {distanceChangeSinceFirst}");
                 }
             }
 
