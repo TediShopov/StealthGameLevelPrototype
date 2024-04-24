@@ -21,6 +21,17 @@ public class InteractiveEvalutorMono : EvaluatorMono
     public bool DoObjectiveDifficultyEvaluation;
     public StealthLevelIEMono IE;
 
+    public int GetCountOfLevelProperties()
+    {
+        var evaluatorsInPrefab = EvaluatorHolder.GetComponents<MeasureMono>();
+
+        var countOfPropertyEvaluators =
+            evaluatorsInPrefab
+            .Where(x => x.GetCategory() == MeasurementType.PROPERTIES)
+            .Count();
+        return countOfPropertyEvaluators;
+    }
+
     public void AppendAestheticMeasureToObject(
         LevelChromosomeBase chromo,
         MeasureMono[] evals)

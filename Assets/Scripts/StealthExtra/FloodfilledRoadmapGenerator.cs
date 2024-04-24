@@ -439,7 +439,6 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
     public override void Init(GameObject phenotype)
     {
         ColliderKeys = new List<Collider2D>();
-        Profiler.BeginSample("Enemy Roadmap Init");
         _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
         this.Grid = GetComponent<Grid>();
 

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Profiling;
 using UnityEngine.UIElements;
 
 /// <summary>
@@ -65,6 +66,7 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         RoadmapGenerator.ObstacleLayerMask = LevelProperties.ObstacleLayerMask;
         RoadmapGenerator.BoundaryLayerMask = LevelProperties.BoundaryLayerMask;
 
+        Profiler.BeginSample("Manifest Geometry");
         CreateLevelStructure(to);
 
         //Setup chromosome
@@ -76,6 +78,7 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
 
         Physics2D.SyncTransforms();
 
+        Profiler.EndSample();
         //Copy grid components of the level prototype.
         var otherGrid = Data.AddComponent<Grid>();
         otherGrid.cellSize = this.GetComponent<Grid>().cellSize;
@@ -88,8 +91,10 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         chromosome.Measurements.Add(roadmap.Result);
         chromosome.EnemyRoadmap = RoadmapGenerator.RoadMap;
 
+        Profiler.BeginSample("Assign Paths");
         //Use the generated roadmap to assign guard paths
         AssignPaths(geneIndex, roadmap.RoadMap);
+        Profiler.EndSample();
 
         //Initialize the future level
         //CopyComponent(FutureLevel, To).Init(To);

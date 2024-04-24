@@ -16,6 +16,8 @@ GameObject:
   - component: {fileID: 4089842469340156337}
   - component: {fileID: 189648958137871072}
   - component: {fileID: 2554645654625111976}
+  - component: {fileID: -5230390712176300074}
+  - component: {fileID: -5256902185985165243}
   m_Layer: 0
   m_Name: MeasureOnly
   m_TagString: Untagged
@@ -165,6 +167,50 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f2a184ccb7aa6a9499f0fd1330d45419, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsValidator: 0
+  _value: 
+  Phenotype: {fileID: 0}
+  RunNow: 0
+  RunOnStart: 0
+  DrawOnSelected: 0
+  PropertyValue: 0
+--- !u!114 &-5230390712176300074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4520497855799095119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a72bf110fab13344bdcea70a88b0922, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsValidator: 0
+  _value: 
+  Phenotype: {fileID: 0}
+  RunNow: 0
+  RunOnStart: 0
+  DrawOnSelected: 0
+  PropertyValue: 0
+  Data:
+    Grid: {fileID: 0}
+    ObstacleLayerMask:
+      serializedVersion: 2
+      m_Bits: 64
+    _debugEnenmies: []
+--- !u!114 &-5256902185985165243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4520497855799095119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afb3c4b8eee8b8049a69ee526af03aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   IsValidator: 0

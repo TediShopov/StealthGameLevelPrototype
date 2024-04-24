@@ -1,5 +1,3 @@
-using PlasticPipe.PlasticProtocol.Messages;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -14,21 +12,17 @@ public struct RelativeFovData
 }
 
 namespace StealthLevelEvaluation
+
 {
-    public class RelativeFOVOverlap : MeasureMono
+    public class RelativeFOVOverlap : LevelPropertiesEvaluator
     {
         public RelativeFovData Data;
-
-        //        public void Awake()
-        //        {
-        //            if (Phenotype == null)
-        //                Init(Helpers.SearchForTagUpHierarchy(this.gameObject, "Level"), "RelativeFOV");
-        //        }
 
         public override string GetName() => "RelativeFOVOverlap";
 
         public override void Init(GameObject phenotype)
         {
+            base.Init(phenotype);
             Data.ObstacleLayerMask = LayerMask.GetMask("Obstacle");
             if (Phenotype != null)
                 Data.Grid = Phenotype.GetComponentInChildren<Grid>();
@@ -36,24 +30,14 @@ namespace StealthLevelEvaluation
                 throw new System.ArgumentException("No valid grid component in level");
         }
 
-        //        public override void Init(GameObject phenotype)
+        //        private void DebugDrawDiscreteBounds(Bounds bounds, Color color)
         //        {
-        //            Init(phenotype, "Relative FOV Overlap");
+        //            Gizmos.color = color;
+        //            foreach (var cells in DiscretBoundsCells(bounds))
+        //            {
+        //                Gizmos.DrawSphere(Data.Grid.GetCellCenterWorld(cells), 0.1f);
+        //            }
         //        }
-
-        //        public RelativeFOVOverlap(GameObject level) : base(level, "Average realtive overlapping areas", 0)
-        //        {
-        //            Data.Grid = Phenotype.GetComponentInChildren<Grid>(false);
-        //        }
-
-        private void DebugDrawDiscreteBounds(Bounds bounds, Color color)
-        {
-            Gizmos.color = color;
-            foreach (var cells in DiscretBoundsCells(bounds))
-            {
-                Gizmos.DrawSphere(Data.Grid.GetCellCenterWorld(cells), 0.1f);
-            }
-        }
 
         private List<Vector3Int> DiscretBoundsCells(Bounds bounds)
         {
@@ -71,53 +55,10 @@ namespace StealthLevelEvaluation
             return worldPositions;
         }
 
-        //        public override void OnSelected()
-        //        {
-        //            if (Data._debugEnenmies is null) return;
-        //            if (Data.Grid is null) return;
-        //            for (int i = 0; i < Data._debugEnenmies.Length - 1; i++)
-        //            {
-        //                for (int j = i + 1; j < Data._debugEnenmies.Length; j++)
-        //                {
-        //                    var e = Data._debugEnenmies[i];
-        //                    var othere = Data._debugEnenmies[j];
-        //                    float VD = e.EnemyProperties.ViewDistance;
-        //                    float FOV = e.EnemyProperties.FOV;
-        //                    Bounds bounds = FieldOfView.GetFovBounds(
-        //                        e.GetFutureTransform(0),
-        //                    e.EnemyProperties.ViewDistance,
-        //                    e.EnemyProperties.FOV);
-        //                    Bounds otherBounds = FieldOfView.GetFovBounds(
-        //                        othere.GetFutureTransform(0),
-        //                        othere.EnemyProperties.ViewDistance,
-        //                        othere.EnemyProperties.FOV);
-        //                    if (bounds.Intersects(otherBounds))
-        //                    {
-        //                        var overlapp = Helpers.IntersectBounds(bounds, otherBounds);
-        //                        DebugDrawDiscreteBounds(overlapp, Color.magenta);
-        //                        List<Vector3Int> visibleCoordinates =
-        //                            DiscretBoundsCells(overlapp)
-        //                            .Where(x =>
-        //                            {
-        //                                var pos = Data.Grid.GetCellCenterWorld(x);
-        //                                bool one = FieldOfView.TestCollision(pos, e.GetFutureTransform(0), FOV, VD, Data.ObstacleLayerMask);
-        //                                bool other = FieldOfView.TestCollision(pos, othere.GetFutureTransform(0), FOV, VD, Data.ObstacleLayerMask);
-        //                                if (one && other)
-        //                                {
-        //                                    Gizmos.color = Color.green;
-        //                                    Gizmos.DrawSphere(pos, 0.1f);
-        //                                }
-        //                                return one && other;
-        //                            }).ToList();
-        //                    }
-        //                }
-        //            }
-        //        }
-
         private float VD;
         private float FOV;
 
-        protected override string Evaluate()
+        protected override float MeasureProperty()
         {
             //Get Future level instance
             var futureLevel = Phenotype.GetComponentInChildren<IFutureLevel>(false);
@@ -135,7 +76,7 @@ namespace StealthLevelEvaluation
 
             float avgRelOverlapp = accumulatedOverlapp / maxTime;
 
-            return avgRelOverlapp.ToString();
+            return avgRelOverlapp;
         }
 
         private HashSet<Vector3Int> VisibleCells(Bounds bounds, FutureTransform ft)
@@ -189,50 +130,6 @@ namespace StealthLevelEvaluation
                                 float relativeOverlappArea = estimatedOverlappArea / maxOverlappArea;
                                 accumulatedOverlapp += relativeOverlappArea;
                             }
-                        }
-                    }
-                }
-            }
-            return accumulatedOverlapp; ;
-        }
-
-        private float OveralpRealtiveToSectionArea(IFutureLevel futureLevel, float maxTime, float maxOverlappArea)
-        {
-            List<BacktrackPatrolPath> simulatedPaths = Data._debugEnenmies
-                .Select(x => new BacktrackPatrolPath(x.BacktrackPatrolPath)).ToList();
-
-            float accumulatedOverlapp = 0;
-            for (float time = 0; time <= maxTime; time += futureLevel.Step)
-            {
-                //Move all paths
-                simulatedPaths.ForEach(x => x.MoveAlong(futureLevel.Step * Data._debugEnenmies[0].EnemyProperties.Speed));
-                for (int i = 0; i < Data._debugEnenmies.Length - 1; i++)
-                {
-                    FutureTransform enemyFT = PatrolPath.GetPathOrientedTransform(simulatedPaths[i]);
-                    Bounds bounds = FieldOfView.GetFovBounds(enemyFT, VD, FOV);
-                    for (int j = i + 1; j < Data._debugEnenmies.Length; j++)
-                    {
-                        FutureTransform otherEnemyFT = PatrolPath.GetPathOrientedTransform(simulatedPaths[j]);
-                        Bounds otherBounds = FieldOfView.GetFovBounds(otherEnemyFT, VD, FOV);
-                        if (bounds.Intersects(otherBounds))
-                        {
-                            Profiler.BeginSample("Bounds intersecting");
-                            var overlapp = Helpers.IntersectBounds(bounds, otherBounds);
-                            Profiler.EndSample();
-                            Profiler.BeginSample("Cell visibility checking");
-                            List<Vector3Int> visibleCoordinates =
-                                DiscretBoundsCells(overlapp)
-                                .Where(x =>
-                                {
-                                    var pos = Data.Grid.GetCellCenterWorld(x);
-                                    bool one = FieldOfView.TestCollision(pos, enemyFT, FOV, VD, Data.ObstacleLayerMask);
-                                    bool other = FieldOfView.TestCollision(pos, otherEnemyFT, FOV, VD, Data.ObstacleLayerMask);
-                                    return one && other;
-                                }).ToList();
-                            Profiler.EndSample();
-                            float estimatedOverlappArea = visibleCoordinates.Count * (Data.Grid.cellSize.x * Data.Grid.cellSize.y);
-                            float relativeOverlappArea = estimatedOverlappArea / maxOverlappArea;
-                            accumulatedOverlapp += relativeOverlappArea;
                         }
                     }
                 }

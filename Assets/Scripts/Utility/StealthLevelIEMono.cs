@@ -190,7 +190,8 @@ public class StealthLevelIEMono : MonoBehaviour
             PhenotypeEvaluator.IE = this;
             this.GenerationSelecitons = new List<LevelChromosomeBase>();
             this.InteractiveSelections = new List<List<LevelChromosomeBase>>();
-            UserPreferences = new DynamicUserPreferenceModel(3);
+            UserPreferences =
+                new DynamicUserPreferenceModel(PhenotypeEvaluator.GetCountOfLevelProperties());
             GeneticAlgorithm.State = GeneticAlgorithmState.Started;
             GeneticAlgorithm.Population.CreateInitialGeneration();
             GeneticAlgorithm.EvaluateFitness();
