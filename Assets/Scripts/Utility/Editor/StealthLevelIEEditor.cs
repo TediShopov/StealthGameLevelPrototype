@@ -72,19 +72,6 @@ public class StealthLevelIEEditor : Editor
                     currentWeights.AveragePropertyDistance(first);
 
                 EditorGUILayout.LabelField
-                    //    public float AverageDistanceChangeInPreferenceModel(
-                    //        List<float> OldUserPreferences,
-                    //        List<float> NewUserPreferences
-                    //        )
-                    //    {
-                    //        float avgDitance = 0;
-                    //        for (int i = 0; i < OldUserPreferences.Count; i++)
-                    //        {
-                    //            avgDitance += Mathf.Abs(NewUserPreferences[i] - OldUserPreferences[i]);
-                    //        }
-                    //        avgDitance /= (float)OldUserPreferences.Count;
-                    //        return avgDitance;
-                    //    }
                     ($"Average Prefference Change: {distanceChangeSinceLast} / {ie.Step}");
                 EditorGUILayout.LabelField
                     ($"Average Prefference Change: {distanceChangeSinceFirst}");
@@ -120,6 +107,8 @@ public class StealthLevelIEEditor : Editor
             {
                 //ie.PopulationCount = EditorGUILayout.IntField("Population Count", ie.PopulationCount);
 
+                ie.SyntheticGenerations = EditorGUILayout.IntField("Synthetic Generaitons ",
+                    ie.SyntheticGenerations);
                 ie.AimedGenerations = EditorGUILayout.IntField("Generaiton", ie.AimedGenerations);
 
                 ie.CrossoverProb = EditorGUILayout.Slider("Crossover", ie.CrossoverProb, 0.0f, 1.0f);

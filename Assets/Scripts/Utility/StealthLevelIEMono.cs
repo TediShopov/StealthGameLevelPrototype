@@ -66,6 +66,8 @@ public class StealthLevelIEMono : MonoBehaviour
     //public int PopulationCount;
     public int AimedGenerations = 10;
 
+    public int SyntheticGenerations = 5;
+
     [Range(0, 1)]
     public float CrossoverProb = 10;
 
@@ -156,9 +158,6 @@ public class StealthLevelIEMono : MonoBehaviour
     {
         if (GeneticAlgorithm.State == GeneticAlgorithmState.Started)
         {
-            //If interaction has occurred
-
-            //NormalizeUserPreferences();
             ApplyChangesToPreferenceModel();
 
             InteractiveSelections.Add(GenerationSelecitons);
@@ -170,6 +169,21 @@ public class StealthLevelIEMono : MonoBehaviour
             //Evaluates fitness but also manifest the level
             // in the unity scene
             GeneticAlgorithm.EvaluateFitness();
+
+            for (int i = 0; i < SyntheticGenerations; i++)
+            {
+                ApplyChangesToPreferenceModel();
+
+                InteractiveSelections.Add(GenerationSelecitons);
+                GenerationSelecitons.Clear();
+
+                GeneticAlgorithm.EndCurrentGeneration();
+                GeneticAlgorithm.EvolveOneGeneration();
+
+                //Evaluates fitness but also manifest the level
+                // in the unity scene
+                GeneticAlgorithm.EvaluateFitness();
+            }
         }
         else
         {

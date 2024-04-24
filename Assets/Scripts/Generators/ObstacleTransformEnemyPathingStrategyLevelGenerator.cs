@@ -2,6 +2,7 @@ using Codice.CM.SEIDInfo;
 using PlasticPipe.Certificates;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -58,6 +59,7 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
 
     public override void Generate(LevelChromosomeBase chromosome, GameObject to = null)
     {
+        Stopwatch stopwatch = Stopwatch.StartNew();
         if (chromosome is not OTEPSLevelChromosome)
             throw new System.ArgumentException("OTEPS Level generator requries OTEPS level chromosome");
         RoadmapGenerator.ObstacleLayerMask = LevelProperties.ObstacleLayerMask;
@@ -94,7 +96,18 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         var futurePrototype = FutureLevel.PrototypeComponent(Data);
         futurePrototype.Init();
 
-        Debug.Log("Generation of phenotype finished");
+        stopwatch.Stop();
+        chromosome.Measurements.Add(
+            new StealthLevelEvaluation.MeasureResult
+            {
+                Type = typeof(ObstacleTransformEnemyPathingStrategyLevelGenerator),
+                Time = stopwatch.ElapsedMilliseconds,
+                Value = "Level Generation",
+                Category = MeasurementType.INITIALIZATION
+            }
+            );
+
+        UnityEngine.Debug.Log("Generation of phenotype finished");
     }
 
     public void AssignPaths(int geneIndex, Graph<Vector2> roadmap)
