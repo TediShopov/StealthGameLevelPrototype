@@ -1,8 +1,10 @@
 using Codice.CM.Common.Tree;
 using StealthLevelEvaluation;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Graphs;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -32,6 +34,9 @@ public class AStar
     }
 
     public NativeGrid<bool> LevelGrid;
+
+    private Func<Node, Node, float> MovementCost;
+
     private Dictionary<Vector2Int, Node> PositionToNode = new Dictionary<Vector2Int, Node>();
 
     private float Heuristic(Node node, Node goal)
@@ -52,9 +57,13 @@ public class AStar
         return path;
     }
 
-    public AStar(NativeGrid<bool> levelGrid)
+    //    public AStar(NativeGrid<bool> levelGrid)
+    //    {
+    //        LevelGrid = levelGrid;
+    //    }
+    public AStar(Func<Node, Node, float> movementCostFunc)
     {
-        LevelGrid = levelGrid;
+        this.MovementCost = movementCostFunc;
     }
 
     public List<Node> Run(Node start, Node goal)
@@ -142,23 +151,23 @@ public class AStar
         return neighborNodes;
     }
 
-    private float MovementCost(Node a, Node b)
-    {
-        // Check if the neighbor is outside the grid or unwalkable (replace 1 with your unwalkable value)
-        if (!IsWalkable(b.Rows, b.Cols))
-        {
-            return Mathf.Infinity; // Set a high cost for unwalkable or out-of-bounds nodes
-        }
-
-        // If both nodes are walkable, return a uniform movement cost (adjust as needed)
-        return 1.0f;
-    }
-
-    private bool IsWalkable(int row, int col)
-    {
-        // Check if coordinates are within grid boundaries and the grid value indicates walkable terrain
-        return (LevelGrid.IsInGrid(row, col) && LevelGrid.Get(row, col) == true);
-    }
+    //    private float MovementCost(Node a, Node b)
+    //    {
+    //        // Check if the neighbor is outside the grid or unwalkable (replace 1 with your unwalkable value)
+    //        if (!IsWalkable(b.Rows, b.Cols))
+    //        {
+    //            return Mathf.Infinity; // Set a high cost for unwalkable or out-of-bounds nodes
+    //        }
+    //
+    //        // If both nodes are walkable, return a uniform movement cost (adjust as needed)
+    //        return 1.0f;
+    //    }
+    //
+    //    private bool IsWalkable(int row, int col)
+    //    {
+    //        // Check if coordinates are within grid boundaries and the grid value indicates walkable terrain
+    //        return (LevelGrid.IsInGrid(row, col) && LevelGrid.Get(row, col) == true);
+    //    }
 }
 
 namespace StealthLevelEvaluation
@@ -207,7 +216,7 @@ namespace StealthLevelEvaluation
 
         protected override string Evaluate()
         {
-            AStar aStar = new AStar(LevelGrid);
+            AStar aStar = new AStar(this.MovementCost);
             Vector2Int startNativeCoord = LevelGrid.GetNativeCoord(StartCoord);
             Vector2Int goalNativeCoord = LevelGrid.GetNativeCoord(GoalCoord);
             AStar.Node start = new AStar.Node(startNativeCoord);
@@ -220,6 +229,24 @@ namespace StealthLevelEvaluation
             }
             Debug.Log($"Path count from A* is: {Path.Count}");
             return 0.0f.ToString();
+        }
+
+        private float MovementCost(AStar.Node a, AStar.Node b)
+        {
+            // Check if the neighbor is outside the grid or unwalkable (replace 1 with your unwalkable value)
+            if (!IsWalkable(b.Rows, b.Cols))
+            {
+                return Mathf.Infinity; // Set a high cost for unwalkable or out-of-bounds nodes
+            }
+
+            // If both nodes are walkable, return a uniform movement cost (adjust as needed)
+            return 1.0f;
+        }
+
+        private bool IsWalkable(int row, int col)
+        {
+            // Check if coordinates are within grid boundaries and the grid value indicates walkable terrain
+            return (LevelGrid.IsInGrid(row, col) && LevelGrid.Get(row, col) == true);
         }
 
         public void DrawLevelGrid()

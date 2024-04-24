@@ -33,7 +33,7 @@ namespace StealthLevelEvaluation
 
         protected override string Evaluate()
         {
-            AStar aStar = new AStar(LevelGrid);
+            AStar aStar = new AStar(this.MovementCost);
             Vector2Int startNativeCoord = LevelGrid.GetNativeCoord(StartCoord);
             Vector2Int goalNativeCoord = LevelGrid.GetNativeCoord(GoalCoord);
             AStar.Node start = new AStar.Node(startNativeCoord);
@@ -70,6 +70,24 @@ namespace StealthLevelEvaluation
             }
             LevelGrid = new NativeGrid<bool>(grid, Helpers.GetLevelBounds(phenotype));
             LevelGrid.SetAll(SetSafeGridCells);
+        }
+
+        private float MovementCost(AStar.Node a, AStar.Node b)
+        {
+            // Check if the neighbor is outside the grid or unwalkable (replace 1 with your unwalkable value)
+            if (!IsWalkable(b.Rows, b.Cols))
+            {
+                return Mathf.Infinity; // Set a high cost for unwalkable or out-of-bounds nodes
+            }
+
+            // If both nodes are walkable, return a uniform movement cost (adjust as needed)
+            return 1.0f;
+        }
+
+        private bool IsWalkable(int row, int col)
+        {
+            // Check if coordinates are within grid boundaries and the grid value indicates walkable terrain
+            return (LevelGrid.IsInGrid(row, col) && LevelGrid.Get(row, col) == true);
         }
 
         public bool SetSafeGridCells(int row, int col, NativeGrid<bool> ngrid)

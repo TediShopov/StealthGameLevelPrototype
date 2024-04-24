@@ -53,20 +53,36 @@ public interface IPrototypable<T>
     T PrototypeComponent(GameObject to);
 }
 
+public interface IClusterable
+{
+    //Runs the level simulation in discrete timesteps and log each
+    // time a guards oversee a certain cell.
+    //Return normalized values
+    NativeGrid<float> PredicableThreatHeatmap(Grid grid);
+}
+
 [ExecuteAlways]
 [RequireComponent(typeof(Grid))]
-public class DiscreteRecalculatingFutureLevel : MonoBehaviour, IFutureLevel, IPrototypable<IFutureLevel>
-
+public class DiscreteRecalculatingFutureLevel :
+    MonoBehaviour,
+    IFutureLevel,
+    IPrototypable<IFutureLevel>,
+    IClusterable
 {
     public LayerMask ObstacleLayerMask;
     public LayerMask BoundaryLayerMask;
     private Collider2D _boundary;
+
+    private NativeGrid<float> _clusteredThreats;
+
+    public NativeGrid<float> GetThreatHeatmap() => new NativeGrid<float>(_clusteredThreats);
 
     //public PatrolPath[] EnemyPatrolPaths;
     public IPredictableThreat[] DynamicThreats;
 
     [SerializeField] protected float _step = 0.2f;
     [SerializeField] protected float _iter = 50;
+    private Grid _grid;
 
     public float Step => _step;
 
@@ -104,8 +120,11 @@ public class DiscreteRecalculatingFutureLevel : MonoBehaviour, IFutureLevel, IPr
     {
         Profiler.BeginSample("Continuos Representation");
         var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
+        _grid = level.GetComponentInChildren<Grid>();
+
         SolutionPaths = new List<List<Vector3>>();
         DynamicThreats = level.GetComponentsInChildren<IPredictableThreat>();
+        _clusteredThreats = PredicableThreatHeatmap(_grid);
         //EnemyPatrolPaths = GetEnemyPatrolPaths();
         //enemyPaths[i].BacktrackPatrolPath = new BacktrackPatrolPath(paths[i]);
         StartCoroutine(RefreshLevelSolutionObjects());
@@ -121,7 +140,6 @@ public class DiscreteRecalculatingFutureLevel : MonoBehaviour, IFutureLevel, IPr
         //TODO redo logic
         if (step == float.MaxValue) step = Step;
         HashSet<Vector2Int> cells = new HashSet<Vector2Int>();
-
         var simulation = new DynamicLevelSimulation(
             DynamicThreats, timeFrom, timeTo, step);
 
@@ -268,6 +286,23 @@ public class DiscreteRecalculatingFutureLevel : MonoBehaviour, IFutureLevel, IPr
 
     public virtual void OnDrawGizmosSelected()
     {
+        if (_clusteredThreats != null)
+        {
+            _clusteredThreats.ForEach(
+                (x, y) =>
+                {
+                    Vector3 pos = _grid.GetCellCenterWorld(
+                    _clusteredThreats.GetUnityCoord(x, y));
+                    float value = _clusteredThreats.Get(x, y);
+                    float reverse = 1 - value;
+
+                    //Gizmos.color = new Color(reverse, reverse, reverse, 0.5f);
+                    //Gizmos.color = new Color(0, 0, 0, value);
+                    Gizmos.color = new Color(reverse, reverse, reverse, 0.5f);
+                    Gizmos.DrawCube(pos, _grid.cellSize);
+                }
+                );
+        }
         if (EnableSetLevel == false) return;
         if (SolutionPaths == null) return;
         foreach (var path in SolutionPaths)
@@ -290,5 +325,51 @@ public class DiscreteRecalculatingFutureLevel : MonoBehaviour, IFutureLevel, IPr
         other._iter = this._iter;
         other._step = this._step;
         return other;
+    }
+
+    public NativeGrid<float> PredicableThreatHeatmap(Grid grid)
+    {
+        NativeGrid<float> nativeGrid = new NativeGrid<float>(grid, GetBounds());
+        //Sets all initial values to 0
+        nativeGrid.SetAll((x, y, g) => 0);
+
+        var simulation = new DynamicLevelSimulation(
+            DynamicThreats, 0, GetMaxSimulationTime(), Step);
+
+        while (!simulation.IsFinished)
+        {
+            foreach (var threat in simulation.Threats)
+            {
+                Bounds threatBounds = threat.GetBounds();
+                var gridBound = new BoundsInt();
+                gridBound.min = grid.WorldToCell(threatBounds.min);
+                gridBound.max = grid.WorldToCell(threatBounds.max);
+                for (int y = gridBound.min.y; y < gridBound.max.y; y++)
+                {
+                    for (int x = gridBound.min.x; x < gridBound.max.x; x++)
+                    {
+                        Vector3 worldPos = grid.GetCellCenterWorld(
+                            new Vector3Int(x, y));
+
+                        if (threat.TestThreat(worldPos))
+                        {
+                            //Index of the same element in the native grid
+                            Vector2Int nativeCoord = nativeGrid
+                                .GetNativeCoord(new Vector2Int(x, y));
+                            nativeGrid.Set(nativeCoord.x, nativeCoord.y,
+                                nativeGrid.Get(nativeCoord.x, nativeCoord.y) + 1);
+                        }
+                    }
+                }
+            }
+            simulation.Progress();
+        }
+
+        nativeGrid.SetAll((x, y, g) =>
+        {
+            return g.Get(x, y) / (float)Iterations;
+        });
+
+        return nativeGrid;
     }
 }
