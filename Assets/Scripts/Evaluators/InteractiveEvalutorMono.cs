@@ -113,7 +113,8 @@ public class InteractiveEvalutorMono : EvaluatorMono
             {
                 for (int i = 0; i < levelChromosome.AestheticProperties.Count; i++)
                 {
-                    eval += levelChromosome.AestheticProperties[i] * IE.UserPreferences[i];
+                    eval += levelChromosome.AestheticProperties[i]
+                        * IE.UserPreferences.Current()[i];
                 }
                 eval *= 10;
             }

@@ -1565,3 +1565,30 @@ Preference Model,0.3229334,0.3941573,0.2829094,
 
 
 Chromosome Hash,RoadmapFloofill Evaluation,RoadmapFloofill Time,ZoneCount Evaluation,ZoneCount Time,LevelClutterednessEvaluator Evaluation,LevelClutterednessEvaluator Time,EnemyObstacleRatioEvaluator Evaluation,EnemyObstacleRatioEvaluator Time,AStartPathEvalution Evaluation,AStartPathEvalution Time,AStarSafePathToEnd Evaluation,AStarSafePathToEnd Time,StartEndDestinationObserveTime Evaluation,StartEndDestinationObserveTime Time,RRTBWD Evaluation,RRTBWD Time,PathZoneUniqueness Evaluation,PathZoneUniqueness Time,RiskMeasure Evaluation,RiskMeasure Time,Fitness Evaluation,Fitness Time,
+Chromosome Hash,RoadmapFloofill Evaluation,RoadmapFloofill Time,ZoneCount Evaluation,ZoneCount Time,LevelClutterednessEvaluator Evaluation,LevelClutterednessEvaluator Time,EnemyObstacleRatioEvaluator Evaluation,EnemyObstacleRatioEvaluator Time,AStartPathEvalution Evaluation,AStartPathEvalution Time,AStarSafePathToEnd Evaluation,AStarSafePathToEnd Time,StartEndDestinationObserveTime Evaluation,StartEndDestinationObserveTime Time,RRTBWD Evaluation,RRTBWD Time,PathZoneUniqueness Evaluation,PathZoneUniqueness Time,RiskMeasure Evaluation,RiskMeasure Time,Fitness Evaluation,Fitness Time,
+
+Preference Model,0.3392556,0.359273,0.3014714,
+-792136583,-,18,0.4666667,0,0.6945983,2,0.5567238,0,0,4,0,1,0,0,0.7142857,493,5,2,0.05109442,0.3024089,0.6673336,0.1265428,0.04460292,5,5.72662956694651,0,
+-1005245174,-,5,0.4,0,0.7368421,1,0.2376493,0,0,0,0,0,0,0,0.7142857,410,1,0,0.4458641,0.1209798,0.2520535,0.1528352,0.2992488,6,4.58163811509722,0,
+-2007958129,-,5,0.3333333,0,0.8088643,1,0.1161422,0,0,0,0,4,0,0,-,-1,-,-1,-,-1,0.5,0,
+1004972087,-,7,0.5333334,0,0.716759,1,0.5705947,0,0,30,-,-1,-,-1,-,-1,-,-1,-,-1,0.5,0,
+1073040957,-,5,0.2666667,0,0.7541551,1,0.2049364,0,0,0,0,3,0,0,-,-1,-,-1,-,-1,0.5,0,
+-467728153,-,6,0.6666667,0,0.6578947,1,0.8728344,0,0,0,-,-1,-,-1,-,-1,-,-1,-,-1,0.5,0,
+-2066563184,-,17,0.4666667,0,0.6045706,1,0.7554379,0,0,0,-,-1,-,-1,-,-1,-,-1,-,-1,0.5,0,
+629138220,-,5,0.3333333,0,0.8240997,1,0.02755755,0,0,40,-,-1,-,-1,-,-1,-,-1,-,-1,0.5,0,
+2049572354,-,5,0.5333334,0,0.6087258,1,0.8308787,0,0,0,0,0,0,0,-,-1,-,-1,-,-1,0.5,0,
+571974702,-,5,0.2666667,0,0.7091413,1,0.200746,0,0,26,-,-1,-,-1,-,-1,-,-1,-,-1,0.5,0,
+
+Preference Model,0.3392556,0.359273,0.3014714,
+-792136583,-,18,0.4666667,0,0.6945983,2,0.5567238,0,0,4,0,1,0,0,0.7142857,493,5,2,0.05109442,0.3024089,0.6673336,0.1265428,0.04460292,5,5.72662956694651,0,
+-792136583,-,18,0.4666667,0,0.6945983,2,0.5567238,0,0,4,0,1,0,0,0.7142857,493,5,2,0.05109442,0.3024089,0.6673336,0.1265428,0.04460292,5,5.72662956694651,0,
+1353483330,-,5,0.4666667,0,0.6364266,1,0.5567238,0,0,0,0,0,0,0,0,2966,0,0,,0,5.54051720597053,0,
+1148280113,-,5,0.4,0,0.7915512,1,0.2376493,0,0,0,0,1,0,0,0.7142857,478,4,0,1.686675,0.4547895,0.5541543,1.046494,0.414027,4,4.86761881758031,0,
+1148280113,-,9,0.4,0,0.7908587,1,0.2376493,0,0,0,0,1,0,0,0.7142857,352,3,0,0.2652828,1.298625,5.610353,0.2336541,144.3717,4,4.86519372111178,0,
+602109715,-,5,0.4,0,0.7368421,1,0.2376493,0,0,0,0,6,0,0,0.5,1067,1,0,59.10661,0.1327458,0.1473908,0.1966141,0.06995355,6,4.67602680344032,0,
+1353483330,-,5,0.4666667,0,0.6295014,1,0.5567238,0,0,0,0,1,0,0,-,-1,-,-1,-,-1,0.5,0,
+-1167071965,-,6,0.5333334,0,0.6945983,1,0.5705947,0,0,24,-,-1,-,-1,-,-1,-,-1,-,-1,0.5,0,
+-1099168983,-,5,0.2666667,0,0.7541551,1,0.2049364,0,0,0,0,2,0,0,-,-1,-,-1,-,-1,0.5,0,
+613082995,-,5,0.2666667,0,0.7112188,1,0.200746,0,0,27,-,-1,-,-1,-,-1,-,-1,-,-1,0.5,0,
+
+

@@ -10,7 +10,12 @@ using UnityEngine;
 public class DynamicUserPreferenceModel
 {
     public float Step = 0.2f;
-    private List<List<float>> PreferencesForGeneration;
+    public List<List<float>> PreferencesForGeneration;
+
+    public List<float> Current()
+    {
+        return this.PreferencesForGeneration.Last();
+    }
 
     public DynamicUserPreferenceModel(int measureCount)
     {
@@ -18,7 +23,7 @@ public class DynamicUserPreferenceModel
         PreferencesForGeneration.Add(GetDefault(measureCount));
     }
 
-    public void Alter(PropertyMeasurements averageOfGeneration, PropertyMeasurements averageOfselection)
+    public void Alter(List<float> averageOfGeneration, List<float> averageOfselection)
     {
         List<float> newPreferences = new List<float>(PreferencesForGeneration.Last());
         for (int i = 0; i < averageOfselection.Count; i++)
@@ -99,12 +104,9 @@ public class StealthLevelIEMono : MonoBehaviour
 
     public float Step;
 
-    //public bool LogIndividualExecutions = false;
-    //public int LogExecutionTimes = 0;
     public int TopNLevels = 5;
 
-    [SerializeField] public List<float> UserPreferences;
-    [HideInInspector] public List<Tuple<int, List<float>>> UserPreferencesOverGenerations;
+    public DynamicUserPreferenceModel UserPreferences;
 
     public event EventHandler FinishIESetup;
 
@@ -121,19 +123,7 @@ public class StealthLevelIEMono : MonoBehaviour
             this.GeneticAlgorithm.Population.CurrentGeneration.Chromosomes.Select(x => (LevelChromosomeBase)x).ToList());
 
         var avgSelectionProps = AverageLevelPreferences(GenerationSelecitons);
-        this.UserPreferencesOverGenerations.Add(
-            new Tuple<int, List<float>>(
-                this.GeneticAlgorithm.Population.CurrentGeneration.Number,
-                new List<float>(UserPreferences)));
-
-        for (int i = 0; i < avgSelectionProps.Count; i++)
-        {
-            var changeInWeight = Step *
-                (avgSelectionProps[i] - avgGenerationProps[i]);
-
-            UserPreferences[i] = UserPreferences[i] + changeInWeight;
-            UserPreferences[i] = Mathf.Clamp01(UserPreferences[i]);
-        }
+        UserPreferences.Alter(avgGenerationProps, avgSelectionProps);
     }
 
     public List<float> AverageLevelPreferences(List<LevelChromosomeBase> chromosomes)
@@ -143,20 +133,6 @@ public class StealthLevelIEMono : MonoBehaviour
             .Select(x => ((LevelChromosomeBase)x).AestheticProperties)
             .ToList();
         return PropertyMeasurements.Average(allValidProperties);
-        //        List<float> avgProperties = new List<float>(allValidProperties.First());
-        //
-        //        try
-        //        {
-        //            for (int i = 0; i < avgProperties.Count; i++)
-        //            {
-        //                avgProperties[i] = allValidProperties.Average(x => x[i]);
-        //            }
-        //        }
-        //        catch (Exception)
-        //        {
-        //            throw;
-        //        }
-        //        return avgProperties;
     }
 
     public void Awake()
@@ -182,7 +158,7 @@ public class StealthLevelIEMono : MonoBehaviour
         {
             //If interaction has occurred
 
-            NormalizeUserPreferences();
+            //NormalizeUserPreferences();
             ApplyChangesToPreferenceModel();
 
             InteractiveSelections.Add(GenerationSelecitons);
@@ -200,19 +176,10 @@ public class StealthLevelIEMono : MonoBehaviour
             PhenotypeEvaluator.IE = this;
             this.GenerationSelecitons = new List<LevelChromosomeBase>();
             this.InteractiveSelections = new List<List<LevelChromosomeBase>>();
-            this.UserPreferencesOverGenerations = new List<Tuple<int, List<float>>>();
+            UserPreferences = new DynamicUserPreferenceModel(3);
             GeneticAlgorithm.State = GeneticAlgorithmState.Started;
             GeneticAlgorithm.Population.CreateInitialGeneration();
             GeneticAlgorithm.EvaluateFitness();
-        }
-    }
-
-    public void NormalizeUserPreferences()
-    {
-        float sum = UserPreferences.Sum();
-        for (int i = 0; i < UserPreferences.Count; i++)
-        {
-            UserPreferences[i] = UserPreferences[i] / sum;
         }
     }
 
@@ -223,7 +190,7 @@ public class StealthLevelIEMono : MonoBehaviour
 
     public void RefreshPreferencesWeight()
     {
-        UserPreferences = PreferencesDefault;
+        UserPreferences = new DynamicUserPreferenceModel(3);
     }
 
     public void Run()
@@ -271,9 +238,7 @@ public class StealthLevelIEMono : MonoBehaviour
         var selection = new RouletteWheelSelection();
         var crossover = new TwoPointCrossover();
         var mutation = new CustomMutators(1, 1, 1);
-        //var chromosome = new FloatingPointChromosome(0,1,35,8);
         var chromosome = Generator.GetAdamChromosome(RandomSeedGenerator.Next());
-        //var population = new Population(PopulationCount, PopulationCount, chromosome);
         var population = new PopulationPhenotypeLayout(PopulationPhenotypeLayout, this.gameObject, chromosome);
 
         GeneticAlgorithm = new

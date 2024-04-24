@@ -11,11 +11,11 @@ public class StealthLevelIEEditor : Editor
     private bool showLogging = true;
 
     private GUIStyle _bolded = GUIStyle.none;
-    private SerializedProperty SerializedPreferences;
+    //private SerializedProperty SerializedPreferences;
 
     private void OnEnable()
     {
-        SerializedPreferences = serializedObject.FindProperty("UserPreferences");
+        //SerializedPreferences = serializedObject.FindProperty("UserPreferences");
     }
 
     private void ArrayGUI(SerializedObject obj, string name)
@@ -33,27 +33,20 @@ public class StealthLevelIEEditor : Editor
         }
     }
 
-    //    public float AverageDistanceChangeInPreferenceModel(
-    //        List<float> OldUserPreferences,
-    //        List<float> NewUserPreferences
-    //        )
-    //    {
-    //        float avgDitance = 0;
-    //        for (int i = 0; i < OldUserPreferences.Count; i++)
-    //        {
-    //            avgDitance += Mathf.Abs(NewUserPreferences[i] - OldUserPreferences[i]);
-    //        }
-    //        avgDitance /= (float)OldUserPreferences.Count;
-    //        return avgDitance;
-    //    }
-
     public override void OnInspectorGUI()
     {
         StealthLevelIEMono ie = (StealthLevelIEMono)target;
         //base.OnInspectorGUI();
 
         serializedObject.Update();
-        EditorGUILayout.PropertyField(SerializedPreferences, true);
+        if (ie.UserPreferences is not null)
+        {
+            foreach (var weight in ie.UserPreferences.Current())
+            {
+                EditorGUILayout.LabelField(weight.ToString());
+            }
+        }
+        //        EditorGUILayout.PropertyField(SerializedPreferences, true);
 
         //EditorGUILayout.PropertyField(SerializedPreferences, true);
         if (ie != null && ie.IsRunning)
@@ -61,35 +54,40 @@ public class StealthLevelIEEditor : Editor
             //Additional info for the running algorithm
 
             //Show how much the synthetic user module has changed
-            if (ie.UserPreferencesOverGenerations is not null)
+            if (ie.UserPreferences is not null
+                && ie.UserPreferences.PreferencesForGeneration.Count > 1)
             {
-                int lastIndex = ie.UserPreferencesOverGenerations.Count - 1;
-                if (ie.UserPreferencesOverGenerations.Count >= 1)
-                {
-                    //                    PropertyMeasurements.Average(
-                    //                        ie.UserPreferencesOverGenerations[lastIndex].Item2,
-                    //                        ie.UserPreferences
-                    //                        );
-                    //
-                    //                    PropertyMeasurements.Average(
-                    //                        ie.UserPreferencesOverGenerations[lastIndex].Item2,
-                    //                        ie.UserPreferences
-                    //                        );
-                    //
-                    //                    ie.UserPreferences.AveragePropertyDistance(ie.UserPreferencesOverGenerations[0].Item2);
-                    //                    ie.UserPreferences.AveragePropertyDistance(ie.UserPreferencesOverGenerations[lastIndex].Item2);
+                int lastIndex = ie.UserPreferences.PreferencesForGeneration.Count - 1;
+                //Turns the weight to property measures
+                var currentWeights =
+                    new PropertyMeasurements(ie.UserPreferences.PreferencesForGeneration[lastIndex]);
+                var first =
+                    new PropertyMeasurements(ie.UserPreferences.PreferencesForGeneration[0]);
+                var previous =
+                    new PropertyMeasurements(ie.UserPreferences.PreferencesForGeneration[lastIndex - 1]);
 
-                    //                    float distanceChagenSinceLast = AverageDistanceChangeInPreferenceModel(
-                    //                        );
-                    //                    float distanceChangeSinceFirst = AverageDistanceChangeInPreferenceModel(
-                    //                        ie.UserPreferencesOverGenerations[0].Item2,
-                    //                        ie.UserPreferences
-                    //                        );
-                    //                    EditorGUILayout.LabelField
-                    //                        ($"Average Prefference Change: {distanceChagenSinceLast} / {ie.Step}");
-                    //                    EditorGUILayout.LabelField
-                    //                        ($"Average Prefference Change: {distanceChangeSinceFirst}");
-                }
+                var distanceChangeSinceLast =
+                    currentWeights.AveragePropertyDistance(previous);
+                var distanceChangeSinceFirst =
+                    currentWeights.AveragePropertyDistance(first);
+
+                EditorGUILayout.LabelField
+                    //    public float AverageDistanceChangeInPreferenceModel(
+                    //        List<float> OldUserPreferences,
+                    //        List<float> NewUserPreferences
+                    //        )
+                    //    {
+                    //        float avgDitance = 0;
+                    //        for (int i = 0; i < OldUserPreferences.Count; i++)
+                    //        {
+                    //            avgDitance += Mathf.Abs(NewUserPreferences[i] - OldUserPreferences[i]);
+                    //        }
+                    //        avgDitance /= (float)OldUserPreferences.Count;
+                    //        return avgDitance;
+                    //    }
+                    ($"Average Prefference Change: {distanceChangeSinceLast} / {ie.Step}");
+                EditorGUILayout.LabelField
+                    ($"Average Prefference Change: {distanceChangeSinceFirst}");
             }
 
             //Todo visualizer user subject preference evaluator
@@ -166,7 +164,7 @@ public class StealthLevelIEEditor : Editor
 
             if (GUILayout.Button("Reset Weights"))
             {
-                ie.UserPreferences = ie.PreferencesDefault;
+                ie.RefreshPreferencesWeight();
             }
             if (GUILayout.Button("Randmozise Seed"))
             {
