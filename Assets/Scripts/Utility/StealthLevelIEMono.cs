@@ -120,11 +120,16 @@ public class StealthLevelIEMono : MonoBehaviour
 
     public void ApplyChangesToPreferenceModel()
     {
-        if (GenerationSelecitons.Count == 0) return;
-        var avgGenerationProps = AverageLevelPreferences(
-            this.GeneticAlgorithm.Population.CurrentGeneration.Chromosomes.Select(x => (LevelChromosomeBase)x).ToList());
-
         var avgSelectionProps = AverageLevelPreferences(GenerationSelecitons);
+
+        var avgGenerationProps = AverageLevelPreferences(
+            this.GeneticAlgorithm.Population.CurrentGeneration.Chromosomes
+            .Select(x => (LevelChromosomeBase)x)
+            .Where(x => GenerationSelecitons.Contains(x) == false) //Must not be contained by selections
+            .ToList());
+
+        if (GenerationSelecitons.Count == 0) return;
+
         UserPreferences.Alter(avgGenerationProps, avgSelectionProps);
     }
 
