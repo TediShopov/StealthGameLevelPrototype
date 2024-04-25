@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public interface IPatrolPath : ICopyable<IPatrolPath>
@@ -91,6 +92,12 @@ public class BacktrackPatrolPath : IPatrolPath
     {
         int from = -1;
         int to = -1;
+
+        if (rel < 0.0001f)
+        {
+            rel = 0;
+        }
+
         if (rel < 0 || rel >= Path.Count)
         {
             return null;
@@ -130,11 +137,7 @@ public class BacktrackPatrolPath : IPatrolPath
 
     public Tuple<Vector2, Vector2> GetSegment()
     {
-        Tuple<int, int> indices = GetSegmentIndices(relPathPostion);
-        if (indices != null)
-            return new Tuple<Vector2, Vector2>(Path[indices.Item1], Path[indices.Item2]);
-        else
-            return null;
+        return GetSegment(relPathPostion);
     }
 
     public float GetSegmentLength(float rel)
@@ -148,6 +151,7 @@ public class BacktrackPatrolPath : IPatrolPath
         Tuple<Vector2, Vector2> segment = GetSegment(relPathPostion);
         if (segment == null)
         {
+            Debug.LogWarning($"RelPathPos: {relPathPostion} {this.Path.Count}");
             int b = 3;
         }
         float segmentCompletion = Math.Abs(relPathPostion - GetIndex(relPathPostion));
@@ -174,8 +178,12 @@ public class BacktrackPatrolPath : IPatrolPath
             currentSegment = GetSegmentIndices(relPathPostion);
             distanceToSegmentEnd = Vector2.Distance(GetCurrent(), Path[currentSegment.Item2]);
         }
-        float f = displacement / Vector2.Distance(Path[currentSegment.Item1], Path[currentSegment.Item2]);
-        relPathPostion += TraverseForward ? f : -f;
+        float distanceSegment = Vector2.Distance(Path[currentSegment.Item1], Path[currentSegment.Item2]);
+        if (distanceSegment > 0.0f)
+        {
+            float f = displacement / distanceSegment;
+            relPathPostion += TraverseForward ? f : -f;
+        }
     }
 
     public float GetTotalLength()

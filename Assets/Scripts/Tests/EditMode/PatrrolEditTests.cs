@@ -15,6 +15,46 @@ public struct PatrolSegment
 public class PatrrolEditTests
 {
     [Test]
+    public void BacktrackPatrolLandingExactlyOnEnd()
+    {
+        var e = new DefaultEnemyProperties();
+        e.Speed = 1.5f;
+        var path =
+            new List<Vector2>()
+            {
+                new Vector2(4.80f, -3.60f),
+                new Vector2(0.00f,-2.40f),
+                new Vector2(-4.40f, 4.80f),
+                new Vector2(2.80f, 4.40f),
+            };
+
+        BacktrackPatrolPath backtrackPatrolPath = new BacktrackPatrolPath(path);
+        float timePassed = 0.0f;
+
+        try
+        {
+            while (timePassed < 25.0f)
+            {
+                if (timePassed > 5.8f)
+                {
+                    int c = 3;
+                }
+                backtrackPatrolPath.MoveAlong(0.2f * e.Speed);
+                timePassed += 0.2f;
+            }
+        }
+        catch (Exception)
+        {
+            int c = 3;
+            throw;
+        }
+        //backtrackPatrolPath.GetSegment();
+
+        Assert.Pass();
+        //Assert.AreEqual(backtrackPatrolPath.TraverseForward, false);
+    }
+
+    [Test]
     public void PatrolEmptyPath_OutputsUnchangingFutureTransforms()
     {
         new DefaultEnemyProperties();
@@ -130,13 +170,10 @@ public class PatrrolEditTests
             Assert.Fail();
         }
 
-
         backtrackPatrolPath.MoveAlong(100.0f);
         backtrackPatrolPath.GetSegment();
 
-
         Assert.Pass();
-
 
         // Use the Assert class to test conditions
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 //Cyclic path has to have first and last point to be the same as a requiremnt to be made
@@ -126,6 +127,10 @@ public class CyclicPatrolPath : IPatrolPath
         }
         float f = displacement / Vector2.Distance(Path[currentSegment.Item1], Path[currentSegment.Item2]);
         relPathPostion += f;
+        if (relPathPostion < 0.0f)
+        {
+            int b = 3;
+        }
     }
 
     public float GetTotalLength()
