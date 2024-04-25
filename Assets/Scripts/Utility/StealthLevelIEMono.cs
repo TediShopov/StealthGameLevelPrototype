@@ -6,6 +6,143 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public interface IObserver<T>
+{
+    void Update(T sub);
+}
+
+// Declares a subject interface
+public interface ISubject<T>
+{
+    void Attach(IObserver<T> observer);
+
+    void Detach(IObserver<T> observer);
+
+    void Notify(T subject);
+}
+
+public interface IPreferenceModel<T> : ISubject<IPreferenceModel<T>>
+{
+    IList<float> Weights { get; }
+
+    //public void AddObjectToEvalaute(IAestheticMeasurable<T> measurabel);
+    //Serves as an update to the model. All measurables change their values
+    public void AlterPreferences(
+        IAestheticMeasurable<T> selected,
+        IEnumerable<IAestheticMeasurable<T>> notSelected);
+}
+
+public interface IAestheticMeasurable<T> : IObserver<IPreferenceModel<T>>
+{
+    float AestheticScore { get; set; }
+
+    PropertyMeasurements GetMeasurements();
+}
+
+public class UserPreferenceModel : List<float>, IPreferenceModel<LevelChromosomeBase>
+{
+    private List<IObserver<IPreferenceModel<LevelChromosomeBase>>> Observers;
+    private IList<float> _weights;
+    public float Step;
+
+    public IList<float> Weights
+    {
+        get { return _weights; }
+        set { _weights = value; }
+    }
+
+    public void AlterPreferences(
+        IAestheticMeasurable<LevelChromosomeBase> selected,
+        IEnumerable<IAestheticMeasurable<LevelChromosomeBase>> notSelected)
+    {
+        var avgUnselectedProps =
+            PropertyMeasurements.Average(notSelected.Select(x => x.GetMeasurements()).ToList());
+
+        float maxAS = 0;
+        Mathf.Max(selected.AestheticScore, maxAS);
+        foreach (var item in notSelected)
+        {
+            Mathf.Max(item.AestheticScore, maxAS);
+        }
+        float prevDistanceToBest =
+            MathF.Abs(maxAS - selected.AestheticScore);
+        float distanceToBestAestheticScore =
+            MathF.Abs(maxAS - selected.AestheticScore);
+
+        const int maxIterations = 100;
+        for (int z = 0; z < maxIterations; z++)
+        {
+            //Apply a single step in all weights
+            for (int i = 0; i < avgUnselectedProps.Count; i++)
+            {
+                var changeInWeight = Step *
+                    (selected.GetMeasurements()[i] - avgUnselectedProps[i]);
+
+                this.Weights[i] = this.Weights[i] + changeInWeight;
+            }
+            //Reeavalute the AESTHETIC SCORE
+            //Send message to all observer
+            //All aesthetic measurables must update their scores
+            Normalize(this.Weights);
+            Notify(this);
+
+            maxAS = 0;
+            Mathf.Max(selected.AestheticScore, maxAS);
+            foreach (var item in notSelected)
+            {
+                Mathf.Max(item.AestheticScore, maxAS);
+            }
+            //Update distance to best aesthetic score
+            prevDistanceToBest = distanceToBestAestheticScore;
+            distanceToBestAestheticScore =
+                MathF.Abs(maxAS - selected.AestheticScore);
+
+            if (distanceToBestAestheticScore < prevDistanceToBest)
+            {
+                //Preference model is no longer gaining progress
+                break;
+            }
+
+            if (Mathf.Approximately(distanceToBestAestheticScore, 0))
+            {
+                //If selected item has the highest aesthetic score
+                break;
+            }
+        }
+        //Normalize(this.Weights);
+    }
+
+    public void Normalize(IList<float> weights)
+    {
+        float sum = weights.Sum();
+        for (int i = 0; i < weights.Count; i++)
+        {
+            weights[i] = weights[i] / sum;
+        }
+    }
+
+    public void Attach(IObserver<IPreferenceModel<LevelChromosomeBase>> observer)
+    {
+        if (Observers == null)
+            Observers = new List<IObserver<IPreferenceModel<LevelChromosomeBase>>>();
+        Observers.Add(observer);
+    }
+
+    public void Detach(IObserver<IPreferenceModel<LevelChromosomeBase>> observer)
+    {
+        if (Observers.Contains(observer))
+            Observers.Remove(observer);
+    }
+
+    public void Notify(IPreferenceModel<LevelChromosomeBase> subject)
+    {
+        foreach (var item in Observers)
+        {
+            item.Update(this);
+        }
+    }
+}
+
 //Given all the generation phenotypes and user selection amongst them
 //shifts the weights to user selected important properties
 public class DynamicUserPreferenceModel
@@ -104,19 +241,6 @@ public class DynamicUserPreferenceModel
         }
         Normalize(newPreferences);
         PreferencesForGeneration.Add(newPreferences);
-    }
-
-    public bool SelectedHasBetterScoreThanUnselected(
-        LevelChromosomeBase selected, List<LevelChromosomeBase> unselected)
-    {
-        var selectedAS = CurrentAestheticMapping[selected];
-        foreach (var level in unselected)
-        {
-            var unselectedAS = CurrentAestheticMapping[level];
-            if (selectedAS < unselectedAS)
-                return false;
-        }
-        return true;
     }
 
     public static float CalculateAestheticScore(

@@ -5,13 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[System.Serializable]
-public struct UserPreferenceModel
-{
-    public float OverallPathRisk;
-    public float SuccessChance;
-    public float PathUniqeness;
-}
+//[System.Serializable]
+//public struct UserPreferenceModel
+//{
+//    public float OverallPathRisk;
+//    public float SuccessChance;
+//    public float PathUniqeness;
+//}
 
 public class InteractiveEvalutorMono : EvaluatorMono
 {
