@@ -19,7 +19,8 @@ public class InteractiveEvalutorMono : EvaluatorMono
     public LevelProperties LevelProperties;
 
     public bool DoObjectiveDifficultyEvaluation;
-    public StealthLevelIEMono IE;
+    public UserPreferenceModel UserPreferenceModel;
+    //public StealthLevelIEMono IE;
 
     public int GetCountOfLevelProperties()
     {
@@ -87,7 +88,8 @@ public class InteractiveEvalutorMono : EvaluatorMono
         }
         levelChromosome.Measurements.AddRange(newMeasurement);
 
-        Vector2 placement = new Vector2(IE.ExtraSpacing.x / 1.5f, 0);
+        Vector2 placement = new Vector2(15, 0);
+        //Vector2 placement = new Vector2(IE.ExtraSpacing.x / 1.5f, 0);
 
         //Attach mono behaviour to visualize the measurements
         ChromoseMeasurementsVisualizer.AttachDataVisualizer(
@@ -108,7 +110,11 @@ public class InteractiveEvalutorMono : EvaluatorMono
 
         if (Evaluators.Any(x => x.IsTerminating))
         {
-            eval = 0.5f;
+            if (levelChromosome.AestheticProperties is not null)
+            {
+                eval = levelChromosome.GetAestheticScore(UserPreferenceModel);
+            }
+            eval *= 10;
             levelObject.name += " Infeasible";
             levelObject.name += $" Fitness {eval}";
         }
@@ -122,7 +128,11 @@ public class InteractiveEvalutorMono : EvaluatorMono
             }
             else
             {
-                eval = levelChromosome.AestheticScore;
+                if (levelChromosome.AestheticProperties is not null)
+                {
+                    eval = levelChromosome.GetAestheticScore(UserPreferenceModel);
+                }
+                //eval = levelChromosome.AestheticScore;
                 //                for (int i = 0; i < levelChromosome.AestheticProperties.Count; i++)
                 //                {
                 //                    eval += levelChromosome.AestheticProperties[i]

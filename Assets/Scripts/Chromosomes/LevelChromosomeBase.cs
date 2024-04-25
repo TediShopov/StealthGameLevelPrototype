@@ -45,7 +45,6 @@ public abstract class LevelChromosomeBase : ChromosomeBase,
         var clone = (LevelChromosomeBase)base.Clone();
         clone.Measurements = this.Measurements;
         clone.AestheticProperties = this.AestheticProperties;
-        clone.AestheticScore = this.AestheticScore;
         clone.EnemyRoadmap = this.EnemyRoadmap;
         return clone;
     }
@@ -76,10 +75,10 @@ public abstract class LevelChromosomeBase : ChromosomeBase,
         return AestheticProperties;
     }
 
-    public void Update(IPreferenceModel<LevelChromosomeBase> sub)
-    {
-        UpdateAestheticScore(sub, GetMeasurements());
-    }
+    //    public void Update(IPreferenceModel<LevelChromosomeBase> sub)
+    //    {
+    //        UpdateAestheticScore(sub, GetMeasurements());
+    //    }'E
 
     public float UpdateAestheticScore(IPreferenceModel<LevelChromosomeBase> model, PropertyMeasurements properties)
     {
@@ -97,6 +96,12 @@ public abstract class LevelChromosomeBase : ChromosomeBase,
             aestheticScore += aestheticMeasurements[i] * weights[i];
         }
         return aestheticScore;
+    }
+
+    public float GetAestheticScore(IPreferenceModel<LevelChromosomeBase> model)
+    {
+        AestheticScore = CalculateAestheticScore(model.Weights, GetMeasurements());
+        return AestheticScore;
     }
 }
 
