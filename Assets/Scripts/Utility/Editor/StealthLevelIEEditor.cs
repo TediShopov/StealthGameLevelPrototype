@@ -41,7 +41,7 @@ public class StealthLevelIEEditor : Editor
         serializedObject.Update();
         if (ie.UserPreferences is not null)
         {
-            foreach (var weight in ie.UserPreferences.Current())
+            foreach (var weight in ie.UserPreferences.Weights)
             {
                 EditorGUILayout.LabelField(weight.ToString());
             }
@@ -54,21 +54,21 @@ public class StealthLevelIEEditor : Editor
             //Additional info for the running algorithm
 
             //Show how much the synthetic user module has changed
-            if (ie.UserPreferences is not null
-                && ie.UserPreferences.PreferencesForGeneration.Count > 1)
-            {
-                int lastIndex = ie.UserPreferences.PreferencesForGeneration.Count - 1;
-
-                var distanceChangeSinceLast =
-                    ie.UserPreferences.AveragePropertyDistance(lastIndex, lastIndex - 1);
-                var distanceChangeSinceFirst =
-                    ie.UserPreferences.AveragePropertyDistance(lastIndex, 0);
-
-                EditorGUILayout.LabelField
-                    ($"Average Prefference Change: {distanceChangeSinceLast} / {ie.Step}");
-                EditorGUILayout.LabelField
-                    ($"Average Prefference Change: {distanceChangeSinceFirst}");
-            }
+            //            if (ie.UserPreferences is not null
+            //                && ie.UserPreferences.PreferencesForGeneration.Count > 1)
+            //            {
+            //                int lastIndex = ie.UserPreferences.PreferencesForGeneration.Count - 1;
+            //
+            //                var distanceChangeSinceLast =
+            //                    ie.UserPreferences.AveragePropertyDistance(lastIndex, lastIndex - 1);
+            //                var distanceChangeSinceFirst =
+            //                    ie.UserPreferences.AveragePropertyDistance(lastIndex, 0);
+            //
+            //                EditorGUILayout.LabelField
+            //                    ($"Average Prefference Change: {distanceChangeSinceLast} / {ie.Step}");
+            //                EditorGUILayout.LabelField
+            //                    ($"Average Prefference Change: {distanceChangeSinceFirst}");
+            //            }
 
             //Todo visualizer user subject preference evaluator
             serializedObject.ApplyModifiedProperties();

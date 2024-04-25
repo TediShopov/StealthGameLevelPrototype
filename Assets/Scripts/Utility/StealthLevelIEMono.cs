@@ -4,6 +4,7 @@ using PlasticPipe.PlasticProtocol.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public interface IObserver<T>
@@ -37,9 +38,11 @@ public interface IAestheticMeasurable<T> : IObserver<IPreferenceModel<T>>
     float AestheticScore { get; set; }
 
     PropertyMeasurements GetMeasurements();
+
+    public float UpdateAestheticScore(IPreferenceModel<T> model, PropertyMeasurements properties);
 }
 
-public class UserPreferenceModel : List<float>, IPreferenceModel<LevelChromosomeBase>
+public class UserPreferenceModel : IPreferenceModel<LevelChromosomeBase>
 {
     private List<IObserver<IPreferenceModel<LevelChromosomeBase>>> Observers;
     private IList<float> _weights;
@@ -51,6 +54,22 @@ public class UserPreferenceModel : List<float>, IPreferenceModel<LevelChromosome
         set { _weights = value; }
     }
 
+    public UserPreferenceModel(int preferencesCount)
+    {
+        this.Weights = GetDefault(preferencesCount);
+    }
+
+    public List<float> GetDefault(int measures)
+    {
+        var equalWeightProperties = new List<float>();
+        for (int i = 0; i < measures; i++)
+        {
+            equalWeightProperties.Add(1.0f);
+        }
+        Normalize(equalWeightProperties);
+        return equalWeightProperties;
+    }
+
     public void AlterPreferences(
         IAestheticMeasurable<LevelChromosomeBase> selected,
         IEnumerable<IAestheticMeasurable<LevelChromosomeBase>> notSelected)
@@ -59,7 +78,7 @@ public class UserPreferenceModel : List<float>, IPreferenceModel<LevelChromosome
             PropertyMeasurements.Average(notSelected.Select(x => x.GetMeasurements()).ToList());
 
         float maxAS = 0;
-        Mathf.Max(selected.AestheticScore, maxAS);
+        maxAS = Mathf.Max(selected.AestheticScore, maxAS);
         foreach (var item in notSelected)
         {
             Mathf.Max(item.AestheticScore, maxAS);
@@ -87,7 +106,7 @@ public class UserPreferenceModel : List<float>, IPreferenceModel<LevelChromosome
             Notify(this);
 
             maxAS = 0;
-            Mathf.Max(selected.AestheticScore, maxAS);
+            maxAS = Mathf.Max(selected.AestheticScore, maxAS);
             foreach (var item in notSelected)
             {
                 Mathf.Max(item.AestheticScore, maxAS);
@@ -125,7 +144,10 @@ public class UserPreferenceModel : List<float>, IPreferenceModel<LevelChromosome
     {
         if (Observers == null)
             Observers = new List<IObserver<IPreferenceModel<LevelChromosomeBase>>>();
+        if (Observers.Contains(observer))
+            return;
         Observers.Add(observer);
+        observer.Update(this);
     }
 
     public void Detach(IObserver<IPreferenceModel<LevelChromosomeBase>> observer)
@@ -145,175 +167,175 @@ public class UserPreferenceModel : List<float>, IPreferenceModel<LevelChromosome
 
 //Given all the generation phenotypes and user selection amongst them
 //shifts the weights to user selected important properties
-public class DynamicUserPreferenceModel
-{
-    public float Step = 0.2f;
-    public List<List<float>> PreferencesForGeneration;
-
-    public List<float> Current()
-    {
-        return this.PreferencesForGeneration.Last();
-    }
-
-    public DynamicUserPreferenceModel(int measureCount)
-    {
-        PreferencesForGeneration = new List<List<float>>();
-        PreferencesForGeneration.Add(GetDefault(measureCount));
-    }
-
-    private Dictionary<LevelChromosomeBase, float> CurrentAestheticMapping;
-
-    //Returns the max aesthetic score
-    public float UpdateAestheticMeasures(
-        List<float> weights,
-        List<LevelChromosomeBase> selected,
-        List<LevelChromosomeBase> unselected)
-    {
-        if (CurrentAestheticMapping is null)
-        {
-            CurrentAestheticMapping = new Dictionary<LevelChromosomeBase, float>();
-        }
-        float maxAs = 0;
-
-        foreach (var level in selected)
-        {
-            float AS = CalculateAestheticScore(weights, level.AestheticProperties);
-            maxAs = MathF.Max(maxAs, AS);
-            CurrentAestheticMapping[level] = AS;
-        }
-        foreach (var level in unselected)
-        {
-            float AS = CalculateAestheticScore(weights, level.AestheticProperties);
-            maxAs = MathF.Max(maxAs, AS);
-            CurrentAestheticMapping[level] = AS;
-        }
-        return maxAs;
-    }
-
-    public void Alter(List<LevelChromosomeBase> selected, List<LevelChromosomeBase> unselected)
-    {
-        var avgSelectedProps = AverageLevelPreferences(selected);
-        var avgUnselectedProps = AverageLevelPreferences(unselected);
-
-        CurrentAestheticMapping = new Dictionary<LevelChromosomeBase, float>();
-
-        float maxAestheticScore =
-            UpdateAestheticMeasures(this.Current(), selected, unselected);
-
-        List<float> newPreferences = new List<float>(PreferencesForGeneration.Last());
-
-        float prevDistanceToBest =
-            MathF.Abs(maxAestheticScore - CurrentAestheticMapping[selected[0]]);
-        float distanceToBestAestheticScore =
-            MathF.Abs(maxAestheticScore - CurrentAestheticMapping[selected[0]]);
-
-        const int maxIterations = 100;
-        for (int z = 0; z < maxIterations; z++)
-        {
-            //Apply a single step in all weights
-            for (int i = 0; i < avgSelectedProps.Count; i++)
-            {
-                var changeInWeight = Step *
-                    (avgSelectedProps[i] - avgUnselectedProps[i]);
-
-                newPreferences[i] = newPreferences[i] + changeInWeight;
-            }
-            //Reeavalute the AESTHETIC SCORE
-            maxAestheticScore = UpdateAestheticMeasures(newPreferences, selected, unselected);
-
-            //Update distance to best aesthetic score
-
-            prevDistanceToBest = distanceToBestAestheticScore;
-            distanceToBestAestheticScore =
-                MathF.Abs(maxAestheticScore - CurrentAestheticMapping[selected[0]]);
-
-            if (distanceToBestAestheticScore < prevDistanceToBest)
-            {
-                //Preference model is no longer gaining progress
-                break;
-            }
-
-            if (Mathf.Approximately(distanceToBestAestheticScore, 0))
-            {
-                //If selected item has the highest aesthetic score
-                break;
-            }
-        }
-        Normalize(newPreferences);
-        PreferencesForGeneration.Add(newPreferences);
-    }
-
-    public static float CalculateAestheticScore(
-        List<float> weights,
-        PropertyMeasurements aestheticMeasurements)
-    {
-        float aestheticScore = 0;
-        for (int i = 0; i < aestheticMeasurements.Count; i++)
-        {
-            aestheticScore += aestheticMeasurements[i] * weights[i];
-        }
-        return aestheticScore;
-    }
-
-    public float CalculateAestheticScore(
-        PropertyMeasurements aestheticMeasurements)
-    {
-        return CalculateAestheticScore(this.Current(), aestheticMeasurements);
-    }
-
-    public List<float> AverageLevelPreferences(List<LevelChromosomeBase> chromosomes)
-    {
-        var allValidProperties =
-            chromosomes
-            .Select(x => x.AestheticProperties)
-            .ToList();
-        return PropertyMeasurements.Average(allValidProperties);
-    }
-
-    public List<float> GetDefault(int measures)
-    {
-        var equalWeightProperties = new List<float>();
-        for (int i = 0; i < measures; i++)
-        {
-            equalWeightProperties.Add(1.0f);
-        }
-        Normalize(equalWeightProperties);
-        return equalWeightProperties;
-    }
-
-    public float AveragePropertyDistance(int genIndex, int genIndexOther)
-    {
-        return AveragePropertyDistance(
-            PreferencesForGeneration[genIndex],
-            PreferencesForGeneration[genIndexOther]
-            );
-    }
-
-    public static float AveragePropertyDistance(
-        List<float> one,
-        List<float> two
-        )
-
-    {
-        if (one.Count != two.Count) return 0.0f;
-        float avgDitance = 0;
-        for (int i = 0; i < one.Count; i++)
-        {
-            avgDitance += MathF.Abs(one[i] - two[i]);
-        }
-        avgDitance /= (float)one.Count;
-        return avgDitance;
-    }
-
-    public void Normalize(List<float> weights)
-    {
-        float sum = weights.Sum();
-        for (int i = 0; i < weights.Count; i++)
-        {
-            weights[i] = weights[i] / sum;
-        }
-    }
-}
+//public class DynamicUserPreferenceModel
+//{
+//    public float Step = 0.2f;
+//    public List<List<float>> PreferencesForGeneration;
+//
+//    public List<float> Current()
+//    {
+//        return this.PreferencesForGeneration.Last();
+//    }
+//
+//    public DynamicUserPreferenceModel(int measureCount)
+//    {
+//        PreferencesForGeneration = new List<List<float>>();
+//        PreferencesForGeneration.Add(GetDefault(measureCount));
+//    }
+//
+//    private Dictionary<LevelChromosomeBase, float> CurrentAestheticMapping;
+//
+//    //Returns the max aesthetic score
+//    public float UpdateAestheticMeasures(
+//        List<float> weights,
+//        List<LevelChromosomeBase> selected,
+//        List<LevelChromosomeBase> unselected)
+//    {
+//        if (CurrentAestheticMapping is null)
+//        {
+//            CurrentAestheticMapping = new Dictionary<LevelChromosomeBase, float>();
+//        }
+//        float maxAs = 0;
+//
+//        foreach (var level in selected)
+//        {
+//            float AS = CalculateAestheticScore(weights, level.AestheticProperties);
+//            maxAs = MathF.Max(maxAs, AS);
+//            CurrentAestheticMapping[level] = AS;
+//        }
+//        foreach (var level in unselected)
+//        {
+//            float AS = CalculateAestheticScore(weights, level.AestheticProperties);
+//            maxAs = MathF.Max(maxAs, AS);
+//            CurrentAestheticMapping[level] = AS;
+//        }
+//        return maxAs;
+//    }
+//
+//    public void Alter(List<LevelChromosomeBase> selected, List<LevelChromosomeBase> unselected)
+//    {
+//        var avgSelectedProps = AverageLevelPreferences(selected);
+//        var avgUnselectedProps = AverageLevelPreferences(unselected);
+//
+//        CurrentAestheticMapping = new Dictionary<LevelChromosomeBase, float>();
+//
+//        float maxAestheticScore =
+//            UpdateAestheticMeasures(this.Current(), selected, unselected);
+//
+//        List<float> newPreferences = new List<float>(PreferencesForGeneration.Last());
+//
+//        float prevDistanceToBest =
+//            MathF.Abs(maxAestheticScore - CurrentAestheticMapping[selected[0]]);
+//        float distanceToBestAestheticScore =
+//            MathF.Abs(maxAestheticScore - CurrentAestheticMapping[selected[0]]);
+//
+//        const int maxIterations = 100;
+//        for (int z = 0; z < maxIterations; z++)
+//        {
+//            //Apply a single step in all weights
+//            for (int i = 0; i < avgSelectedProps.Count; i++)
+//            {
+//                var changeInWeight = Step *
+//                    (avgSelectedProps[i] - avgUnselectedProps[i]);
+//
+//                newPreferences[i] = newPreferences[i] + changeInWeight;
+//            }
+//            //Reeavalute the AESTHETIC SCORE
+//            maxAestheticScore = UpdateAestheticMeasures(newPreferences, selected, unselected);
+//
+//            //Update distance to best aesthetic score
+//
+//            prevDistanceToBest = distanceToBestAestheticScore;
+//            distanceToBestAestheticScore =
+//                MathF.Abs(maxAestheticScore - CurrentAestheticMapping[selected[0]]);
+//
+//            if (distanceToBestAestheticScore < prevDistanceToBest)
+//            {
+//                //Preference model is no longer gaining progress
+//                break;
+//            }
+//
+//            if (Mathf.Approximately(distanceToBestAestheticScore, 0))
+//            {
+//                //If selected item has the highest aesthetic score
+//                break;
+//            }
+//        }
+//        Normalize(newPreferences);
+//        PreferencesForGeneration.Add(newPreferences);
+//    }
+//
+////    public static float CalculateAestheticScore(
+////        List<float> weights,
+////        PropertyMeasurements aestheticMeasurements)
+////    {
+////        float aestheticScore = 0;
+////        for (int i = 0; i < aestheticMeasurements.Count; i++)
+////        {
+////            aestheticScore += aestheticMeasurements[i] * weights[i];
+////        }
+////        return aestheticScore;
+////    }
+////
+////    public float CalculateAestheticScore(
+////        PropertyMeasurements aestheticMeasurements)
+////    {
+////        return CalculateAestheticScore(this.Current(), aestheticMeasurements);
+////    }
+//
+//    public List<float> AverageLevelPreferences(List<LevelChromosomeBase> chromosomes)
+//    {
+//        var allValidProperties =
+//            chromosomes
+//            .Select(x => x.AestheticProperties)
+//            .ToList();
+//        return PropertyMeasurements.Average(allValidProperties);
+//    }
+//
+//    public List<float> GetDefault(int measures)
+//    {
+//        var equalWeightProperties = new List<float>();
+//        for (int i = 0; i < measures; i++)
+//        {
+//            equalWeightProperties.Add(1.0f);
+//        }
+//        Normalize(equalWeightProperties);
+//        return equalWeightProperties;
+//    }
+//
+//    public float AveragePropertyDistance(int genIndex, int genIndexOther)
+//    {
+//        return AveragePropertyDistance(
+//            PreferencesForGeneration[genIndex],
+//            PreferencesForGeneration[genIndexOther]
+//            );
+//    }
+//
+//    public static float AveragePropertyDistance(
+//        List<float> one,
+//        List<float> two
+//        )
+//
+//    {
+//        if (one.Count != two.Count) return 0.0f;
+//        float avgDitance = 0;
+//        for (int i = 0; i < one.Count; i++)
+//        {
+//            avgDitance += MathF.Abs(one[i] - two[i]);
+//        }
+//        avgDitance /= (float)one.Count;
+//        return avgDitance;
+//    }
+//
+//    public void Normalize(List<float> weights)
+//    {
+//        float sum = weights.Sum();
+//        for (int i = 0; i < weights.Count; i++)
+//        {
+//            weights[i] = weights[i] / sum;
+//        }
+//    }
+//}
 
 public class StealthLevelIEMono : MonoBehaviour
 {
@@ -365,7 +387,8 @@ public class StealthLevelIEMono : MonoBehaviour
 
     public int TopNLevels = 5;
 
-    public DynamicUserPreferenceModel UserPreferences;
+    //public DynamicUserPreferenceModel UserPreferences;
+    public UserPreferenceModel UserPreferences;
 
     public event EventHandler FinishIESetup;
 
@@ -377,6 +400,7 @@ public class StealthLevelIEMono : MonoBehaviour
 
     public void ApplyChangesToPreferenceModel()
     {
+        UserPreferences.Step = Step;
         List<LevelChromosomeBase> unselected =
             this.GeneticAlgorithm.Population.CurrentGeneration.Chromosomes
             .Select(x => (LevelChromosomeBase)x)
@@ -385,7 +409,8 @@ public class StealthLevelIEMono : MonoBehaviour
 
         if (GenerationSelecitons.Count == 0) return;
 
-        UserPreferences.Alter(GenerationSelecitons, unselected);
+        UserPreferences.AlterPreferences(GenerationSelecitons[0], unselected);
+        //UserPreferences.Alter(GenerationSelecitons, unselected);
     }
 
     public void Awake()
@@ -420,10 +445,15 @@ public class StealthLevelIEMono : MonoBehaviour
             //Evaluates fitness but also manifest the level
             // in the unity scene
             GeneticAlgorithm.EvaluateFitness();
+            foreach (var item in GeneticAlgorithm.Population.CurrentGeneration.Chromosomes)
+            {
+                var level = (LevelChromosomeBase)item;
+                UserPreferences.Attach(level);
+            }
 
             for (int i = 0; i < SyntheticGenerations; i++)
             {
-                ApplyChangesToPreferenceModel();
+                //ApplyChangesToPreferenceModel();
 
                 InteractiveSelections.Add(GenerationSelecitons);
                 GenerationSelecitons.Clear();
@@ -434,6 +464,11 @@ public class StealthLevelIEMono : MonoBehaviour
                 //Evaluates fitness but also manifest the level
                 // in the unity scene
                 GeneticAlgorithm.EvaluateFitness();
+                foreach (var item in GeneticAlgorithm.Population.CurrentGeneration.Chromosomes)
+                {
+                    var level = (LevelChromosomeBase)item;
+                    UserPreferences.Attach(level);
+                }
             }
         }
         else
@@ -441,11 +476,18 @@ public class StealthLevelIEMono : MonoBehaviour
             PhenotypeEvaluator.IE = this;
             this.GenerationSelecitons = new List<LevelChromosomeBase>();
             this.InteractiveSelections = new List<List<LevelChromosomeBase>>();
+            //            UserPreferences =
+            //                new DynamicUserPreferenceModel(PhenotypeEvaluator.GetCountOfLevelProperties());
             UserPreferences =
-                new DynamicUserPreferenceModel(PhenotypeEvaluator.GetCountOfLevelProperties());
+                new UserPreferenceModel(PhenotypeEvaluator.GetCountOfLevelProperties());
             GeneticAlgorithm.State = GeneticAlgorithmState.Started;
             GeneticAlgorithm.Population.CreateInitialGeneration();
             GeneticAlgorithm.EvaluateFitness();
+            foreach (var item in GeneticAlgorithm.Population.CurrentGeneration.Chromosomes)
+            {
+                var level = (LevelChromosomeBase)item;
+                UserPreferences.Attach(level);
+            }
         }
     }
 
@@ -456,7 +498,9 @@ public class StealthLevelIEMono : MonoBehaviour
 
     public void RefreshPreferencesWeight()
     {
-        UserPreferences = new DynamicUserPreferenceModel(3);
+        UserPreferences =
+            new UserPreferenceModel(PhenotypeEvaluator.GetCountOfLevelProperties());
+        //UserPreferences = new DynamicUserPreferenceModel(3);
     }
 
     public void Run()

@@ -122,11 +122,12 @@ public class InteractiveEvalutorMono : EvaluatorMono
             }
             else
             {
-                for (int i = 0; i < levelChromosome.AestheticProperties.Count; i++)
-                {
-                    eval += levelChromosome.AestheticProperties[i]
-                        * IE.UserPreferences.Current()[i];
-                }
+                eval = levelChromosome.AestheticScore;
+                //                for (int i = 0; i < levelChromosome.AestheticProperties.Count; i++)
+                //                {
+                //                    eval += levelChromosome.AestheticProperties[i]
+                //                        * IE.UserPreferences.Weights[i];
+                //                }
                 eval *= 10;
             }
             levelObject.name += " Feasible";

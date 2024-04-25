@@ -86,7 +86,7 @@ public class GAGenerationLogger
     {
         string preferences = "";
         preferences += "Preference Model,";
-        foreach (float weight in InteractiveGeneticMono.UserPreferences.Current())
+        foreach (float weight in InteractiveGeneticMono.UserPreferences.Weights)
             preferences += weight + ",";
         return preferences;
     }

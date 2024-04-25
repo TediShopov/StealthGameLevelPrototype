@@ -15,7 +15,8 @@ using UnityEngine.Experimental.AI;
 // as to allow easy change and iteration via mono scirpts in the unity editor.
 
 [Serializable]
-public abstract class LevelChromosomeBase : ChromosomeBase
+public abstract class LevelChromosomeBase : ChromosomeBase,
+    IAestheticMeasurable<LevelChromosomeBase>
 {
     public System.Random ChromosomeRandom;
 
@@ -32,6 +33,8 @@ public abstract class LevelChromosomeBase : ChromosomeBase
     //The decoded game object - could be null if not generated
     public GameObject Phenotype { get; set; }
 
+    public float AestheticScore { get; set; }
+
     [SerializeField] public List<MeasureResult> Measurements;
     [SerializeField] public PropertyMeasurements AestheticProperties;
     [SerializeField] public Graph<Vector2> EnemyRoadmap;
@@ -42,6 +45,7 @@ public abstract class LevelChromosomeBase : ChromosomeBase
         var clone = (LevelChromosomeBase)base.Clone();
         clone.Measurements = this.Measurements;
         clone.AestheticProperties = this.AestheticProperties;
+        clone.AestheticScore = this.AestheticScore;
         clone.EnemyRoadmap = this.EnemyRoadmap;
         return clone;
     }
@@ -65,6 +69,34 @@ public abstract class LevelChromosomeBase : ChromosomeBase
             return true;
         }
         return false;
+    }
+
+    public PropertyMeasurements GetMeasurements()
+    {
+        return AestheticProperties;
+    }
+
+    public void Update(IPreferenceModel<LevelChromosomeBase> sub)
+    {
+        UpdateAestheticScore(sub, GetMeasurements());
+    }
+
+    public float UpdateAestheticScore(IPreferenceModel<LevelChromosomeBase> model, PropertyMeasurements properties)
+    {
+        AestheticScore = CalculateAestheticScore(model.Weights, properties);
+        return AestheticScore;
+    }
+
+    public static float CalculateAestheticScore(
+        IList<float> weights,
+        PropertyMeasurements aestheticMeasurements)
+    {
+        float aestheticScore = 0;
+        for (int i = 0; i < aestheticMeasurements.Count; i++)
+        {
+            aestheticScore += aestheticMeasurements[i] * weights[i];
+        }
+        return aestheticScore;
     }
 }
 
