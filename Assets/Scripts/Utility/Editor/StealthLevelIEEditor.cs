@@ -58,18 +58,11 @@ public class StealthLevelIEEditor : Editor
                 && ie.UserPreferences.PreferencesForGeneration.Count > 1)
             {
                 int lastIndex = ie.UserPreferences.PreferencesForGeneration.Count - 1;
-                //Turns the weight to property measures
-                var currentWeights =
-                    new PropertyMeasurements(ie.UserPreferences.PreferencesForGeneration[lastIndex]);
-                var first =
-                    new PropertyMeasurements(ie.UserPreferences.PreferencesForGeneration[0]);
-                var previous =
-                    new PropertyMeasurements(ie.UserPreferences.PreferencesForGeneration[lastIndex - 1]);
 
                 var distanceChangeSinceLast =
-                    currentWeights.AveragePropertyDistance(previous);
+                    ie.UserPreferences.AveragePropertyDistance(lastIndex, lastIndex - 1);
                 var distanceChangeSinceFirst =
-                    currentWeights.AveragePropertyDistance(first);
+                    ie.UserPreferences.AveragePropertyDistance(lastIndex, 0);
 
                 EditorGUILayout.LabelField
                     ($"Average Prefference Change: {distanceChangeSinceLast} / {ie.Step}");
