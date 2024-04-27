@@ -412,11 +412,14 @@ namespace GeneticSharp.Domain
             try
             {
                 GeneratePhenotypeForAll();
-                var chromosomesWithoutFitness = Population.CurrentGeneration.Chromosomes.Where(c => !c.Fitness.HasValue).ToList();
 
-                for (int i = 0; i < chromosomesWithoutFitness.Count; i++)
+                var allChromomsome = Population.CurrentGeneration.Chromosomes;
+
+                //var chromosomesWithoutFitness = Population.CurrentGeneration.Chromosomes.Where(c => !c.Fitness.HasValue).ToList();
+
+                for (int i = 0; i < allChromomsome.Count; i++)
                 {
-                    var c = chromosomesWithoutFitness[i];
+                    var c = allChromomsome[i];
 
                     TaskExecutor.Add(() =>
                     {

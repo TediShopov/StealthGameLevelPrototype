@@ -145,10 +145,17 @@ public class StealthLevelIEMono : MonoBehaviour
 
     public void NameAllPhenotypeGameobjects()
     {
+        Vector2 placement = new Vector2(5, 5);
         foreach (var chromosome in this.GeneticAlgorithm.Population.CurrentGeneration.Chromosomes)
         {
-            this.Generator.ClearName((LevelChromosomeBase)chromosome);
-            this.Generator.AppendFitnessToName((LevelChromosomeBase)chromosome);
+            var levelChromosome = chromosome as LevelChromosomeBase;
+            //Attach mono behaviour to visualize the measurements
+            ChromoseMeasurementsVisualizer.AttachDataVisualizer(
+                levelChromosome.Phenotype,
+                new Vector2(5, 5));
+            //Clear objects name and replace it with new fitnessj
+            this.Generator.ClearName(levelChromosome);
+            this.Generator.AppendFitnessToName(levelChromosome);
         }
     }
 
@@ -249,6 +256,14 @@ public class StealthLevelIEMono : MonoBehaviour
 
     private void Ga_GenerationRan(object sender, EventArgs e)
     {
+        //Clear all measurements ran before current generations
+        foreach (var chromosome in this.GeneticAlgorithm.Population.CurrentGeneration.Chromosomes)
+        {
+            var levelChromosome = chromosome as LevelChromosomeBase;
+            levelChromosome.Measurements =
+                new List<StealthLevelEvaluation.MeasureResult>();
+        }
+
         NameAllPhenotypeGameobjects();
         Debug.Log($"{GeneticAlgorithm.GenerationsNumber} Generation Ran");
     }

@@ -90,13 +90,7 @@ public class InteractiveEvalutorMono : EvaluatorMono
         }
         levelChromosome.Measurements.AddRange(newMeasurement);
 
-        Vector2 placement = new Vector2(15, 0);
         //Vector2 placement = new Vector2(IE.ExtraSpacing.x / 1.5f, 0);
-
-        //Attach mono behaviour to visualize the measurements
-        ChromoseMeasurementsVisualizer.AttachDataVisualizer(
-            levelObject.gameObject,
-            placement);
 
         Transform data = levelObject.transform.Find("Data");
         if (data is not null)
@@ -104,11 +98,7 @@ public class InteractiveEvalutorMono : EvaluatorMono
             AppendAestheticMeasureToObject(levelChromosome, Evaluators);
         }
 
-        //TODO Apply a proper fitness formula
-
         double eval = 0;
-
-        //Attaching fitness evaluation information to the object itself
 
         if (Evaluators.Any(x => x.IsTerminating))
         {

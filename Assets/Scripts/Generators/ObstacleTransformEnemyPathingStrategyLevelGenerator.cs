@@ -107,7 +107,7 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
             {
                 Type = typeof(ObstacleTransformEnemyPathingStrategyLevelGenerator),
                 Time = stopwatch.ElapsedMilliseconds,
-                Value = "Level Generation",
+                Value = "-",
                 Category = MeasurementType.INITIALIZATION
             }
             );
