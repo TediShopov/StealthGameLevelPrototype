@@ -1,11 +1,83 @@
 using JetBrains.Annotations;
 using Mono.Cecil;
+using PlasticPipe.PlasticProtocol.Messages;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering.VirtualTexturing;
 
 //GENOTYPE desciprtion:
+public class LevelObstalceData
+{
+    public LevelObstalceData(List<Vector2> obstaclePoints)
+    {
+        if (obstaclePoints.Count <= 2)
+        {
+            throw new System.ArgumentException(
+                $"Obstacle polygon cannot be created with P{obstaclePoints.Count}");
+        }
+        PolygonData = obstaclePoints;
+        Position = Vector3.zero;
+        Rotaiton = 0;
+        Scale = 1;
+    }
+
+    public Vector2 Position;
+    public float Rotaiton = 0;
+    public float Scale = 1;
+    private List<Vector2> PolygonData = new List<Vector2>();
+}
+
+public interface IStealthLevelPhenotype
+{
+    //This are the bounds of the level in 2d
+    Bounds GetBounds();
+
+    Vector2 StartPosition { get; }
+    Vector2 GoalPosition { get; }
+
+    //Obstacles info
+    List<LevelObstalceData> GetObstacles();
+
+    void AddObstacle(LevelObstalceData obstacle);
+
+    //Dynamic threats of the level
+    List<IPredictableThreat> GetThreats();
+}
+
+public class StealthLevel : IStealthLevelPhenotype
+{
+    public StealthLevel(Bounds bounds)
+    {
+        this.Bounds = bounds;
+        this.Obstacles = new List<LevelObstalceData>();
+        this.Threats = new List<IPredictableThreat>();
+    }
+
+    public Vector2 StartPosition { get; set; }
+    public Vector2 GoalPosition { get; set; }
+
+    public Bounds GetBounds() => Bounds;
+
+    public List<LevelObstalceData> GetObstacles() => Obstacles;
+
+    public List<IPredictableThreat> GetThreats() => Threats;
+
+    public void AddObstacle(LevelObstalceData obstacle)
+    {
+        this.Obstacles.Add(obstacle);
+    }
+
+    private Bounds Bounds;
+    private List<LevelObstalceData> Obstacles;
+    private List<IPredictableThreat> Threats;
+}
+
+public interface ILevelPhenotypeGenerator
+{
+    IStealthLevelPhenotype GeneratePhenotype(LevelChromosomeBase levelChromosome);
+}
 
 [Serializable]
 internal class LevelChromosomeMono : MonoBehaviour
@@ -27,6 +99,7 @@ public abstract class LevelPhenotypeGenerator : LevelGeneratorBase
 
     protected LevelChromosomeBase LevelChromosome;
     public int IndexOfChromosome;
+    public Sprite Sprite;
 
     //    public void Awake()
     //    {
@@ -38,6 +111,82 @@ public abstract class LevelPhenotypeGenerator : LevelGeneratorBase
     //            Generate(LevelChromosome, this.gameObject);
     //        }
     //    }
+    protected LevelObstalceData SpawnSquareData(ref int geneIndex, IStealthLevelPhenotype level)
+    {
+        //Get Obstacle Variant
+        int prefabIndex =
+            (int)(GetGeneValue(geneIndex) * LevelProperties.ObstaclePrefabs.Count) + 1;
+        GameObject ObstaclePrefabVariant = LevelProperties.ObstaclePrefabs[prefabIndex - 1];
+
+        Bounds bounds = level.GetBounds();
+        float x = Mathf.Lerp(bounds.min.x, bounds.max.x, GetGeneValue(geneIndex + 1));
+        float y = Mathf.Lerp(bounds.min.y, bounds.max.y, GetGeneValue(geneIndex + 2));
+        float rot = Mathf.Lerp(0, 360, GetGeneValue(geneIndex + 3));
+        float scl = Mathf.Lerp(MinObjectScale, MaxObjectScale, GetGeneValue(geneIndex + 4));
+
+        List<Vector2> squarePoints = new List<Vector2>
+        {
+            new Vector2(-0.5f,-0.5f),
+            new Vector2(0.5f,-0.5f),
+            new Vector2(0.5f,0.5f),
+            new Vector2(-0.5f,0.5f),
+        };
+        LevelObstalceData squareObstacle = new LevelObstalceData(squarePoints);
+        squareObstacle.Position = new Vector2(x, y);
+        squareObstacle.Scale = scl;
+        squareObstacle.Rotaiton = rot;
+
+        geneIndex += 5;
+        level.AddObstacle(squareObstacle);
+        return squareObstacle;
+    }
+
+    public override IStealthLevelPhenotype GeneratePhenotype(LevelChromosomeBase levelChromosome)
+    {
+        Bounds levelBounds = new Bounds(
+            new Vector2(0, 0),
+            LevelProperties.LevelSize);
+
+        StealthLevel stealthLevel = new StealthLevel(levelBounds);
+
+        int geneIndex = 0;
+        int ObstaclesSpawned = (levelChromosome.Length - 4) / 5;
+
+        //Test for off by oen errors
+        for (int i = 0; i < ObstaclesSpawned; i++)
+        {
+            SpawnSquareData(ref geneIndex, stealthLevel);
+        }
+        return stealthLevel;
+        //        //Read enemy counts and spawn enemies
+        //        int enemyCount = Mathf.CeilToInt(
+        //            Mathf.Lerp(
+        //                MinEnemiesSpawned,
+        //                MaxEnemiesSpawned,
+        //                geneIndex));
+        //
+        //        for (int i = 0; i < enemyCount; i++)
+        //        {
+        //            Instantiate(LevelProperties.EnemyPrefab, To.transform);
+        //        }
+        //
+        //        //Enemy Behaviour
+        //
+        //        var pathGenerator =
+        //            To.GetComponentInChildren<PathGeneratorClass>();
+        //
+        //        //Enemy path geenerator seed
+        //        int pathSeed = Mathf.CeilToInt(
+        //            GetGeneValue(geneIndex)
+        //            * GetGeneValue(geneIndex + 1)
+        //            * GetGeneValue(geneIndex + 2)
+        //            * GetGeneValue(geneIndex + 3));
+        //        geneIndex += 4;
+        //        pathGenerator.LevelRandom = new System.Random(pathSeed);
+        //
+        //        Physics2D.SyncTransforms();
+        //        return geneIndex;
+    }
 
     public abstract LevelChromosomeBase GetAdamChromosome(int seed);
 

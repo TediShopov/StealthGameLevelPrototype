@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 //Class used to proved utility functions for generating
 //standartizes level structure
-public class LevelGeneratorBase : MonoBehaviour
+public class LevelGeneratorBase : MonoBehaviour, ILevelPhenotypeGenerator
 {
     public LevelProperties LevelProperties;
 
@@ -175,5 +175,10 @@ public class LevelGeneratorBase : MonoBehaviour
         var topSide = Instantiate(LevelProperties.BoundaryViualPrefab, CompositeVisualBoundary.transform);
         topSide.transform.localPosition = new Vector3(0, y, 0);
         topSide.transform.localScale = new Vector3(length + HalfBoundWidth, VisualBoundWidth, 0);
+    }
+
+    public virtual IStealthLevelPhenotype GeneratePhenotype(LevelChromosomeBase levelChromosome)
+    {
+        throw new NotImplementedException();
     }
 }

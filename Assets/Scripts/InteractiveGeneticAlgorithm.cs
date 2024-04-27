@@ -121,7 +121,7 @@ namespace GeneticSharp.Domain
 
         /// <summary>
         /// Gets or sets the selection operator.
-        /// </summary>
+        /// </summary>chromosomesWithoutFitness
         public ISelection Selection { get; set; }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace GeneticSharp.Domain
         /// </summary>
         public ITermination Termination { get; set; }
 
-        /// <summary>
+        /// <summary>chromosomesWithoutFitness
         /// Gets the generations number.
         /// </summary>
         /// <value>The generations number.</value>

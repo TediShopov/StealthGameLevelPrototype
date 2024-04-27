@@ -66,19 +66,31 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         RoadmapGenerator.ObstacleLayerMask = LevelProperties.ObstacleLayerMask;
         RoadmapGenerator.BoundaryLayerMask = LevelProperties.BoundaryLayerMask;
 
-        Profiler.BeginSample("Manifest Geometry");
         CreateLevelStructure(to);
 
-        //Setup chromosome
         AttachChromosome(chromosome);
-
-        int geneIndex = GenerateLevelContent(chromosome);
 
         PlaceBoundaryVisualPrefabs();
 
-        Physics2D.SyncTransforms();
+        IStealthLevelPhenotype stealthLevel = GeneratePhenotype(chromosome);
+        //GENERATE LEVEL CONTENT
+        //Spawn game object from obstacle data
+        foreach (var obstalceData in stealthLevel.GetObstacles())
+        {
+            GameObject obstacle = new GameObject("SquareObstacle");
+            obstacle.transform.position = obstalceData.Position;
+            obstacle.transform.rotation = Quaternion.Euler(0, 0, obstalceData.Rotaiton);
+            obstacle.transform.localScale = new Vector3(obstalceData.Scale, obstalceData.Scale);
 
-        Profiler.EndSample();
+            obstacle.transform.SetParent(Contents.transform, false);
+            obstacle.layer = LayerMask.NameToLayer("Obstacle");
+
+            obstacle.AddComponent<BoxCollider2D>();
+            var renderer = obstacle.AddComponent<SpriteRenderer>();
+            renderer.enabled = true;
+            renderer.sprite = this.Sprite;
+        }
+
         //Copy grid components of the level prototype.
         var otherGrid = Data.AddComponent<Grid>();
         otherGrid.cellSize = this.GetComponent<Grid>().cellSize;
@@ -91,29 +103,78 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         chromosome.Measurements.Add(roadmap.Result);
         chromosome.EnemyRoadmap = RoadmapGenerator.RoadMap;
 
-        Profiler.BeginSample("Assign Paths");
-        //Use the generated roadmap to assign guard paths
-        AssignPaths(geneIndex, roadmap.RoadMap);
-        Profiler.EndSample();
-
         //Initialize the future level
         //CopyComponent(FutureLevel, To).Init(To);
         var futurePrototype = FutureLevel.PrototypeComponent(Data);
         futurePrototype.Init();
 
-        stopwatch.Stop();
-        chromosome.Measurements.Add(
-            new StealthLevelEvaluation.MeasureResult
-            {
-                Type = typeof(ObstacleTransformEnemyPathingStrategyLevelGenerator),
-                Time = stopwatch.ElapsedMilliseconds,
-                Value = "-",
-                Category = MeasurementType.INITIALIZATION
-            }
-            );
-
-        UnityEngine.Debug.Log("Generation of phenotype finished");
+        //        chromosome.Measurements.Add(
+        //            new StealthLevelEvaluation.MeasureResult
+        //            {
+        //                Type = typeof(ObstacleTransformEnemyPathingStrategyLevelGenerator),
+        //                Time = stopwatch.ElapsedMilliseconds,
+        //                Value = "-",
+        //                Category = MeasurementType.INITIALIZATION
+        //            }
+        //            );
     }
+
+    //    public override void Generate(LevelChromosomeBase chromosome, GameObject to = null)
+    //    {
+    //        Stopwatch stopwatch = Stopwatch.StartNew();
+    //        if (chromosome is not OTEPSLevelChromosome)
+    //            throw new System.ArgumentException("OTEPS Level generator requries OTEPS level chromosome");
+    //        RoadmapGenerator.ObstacleLayerMask = LevelProperties.ObstacleLayerMask;
+    //        RoadmapGenerator.BoundaryLayerMask = LevelProperties.BoundaryLayerMask;
+    //
+    //        Profiler.BeginSample("Manifest Geometry");
+    //        CreateLevelStructure(to);
+    //
+    //        //Setup chromosome
+    //        AttachChromosome(chromosome);
+    //
+    //        int geneIndex = GenerateLevelContent(chromosome);
+    //
+    //        PlaceBoundaryVisualPrefabs();
+    //
+    //        Physics2D.SyncTransforms();
+    //
+    //        Profiler.EndSample();
+    //        //Copy grid components of the level prototype.
+    //        var otherGrid = Data.AddComponent<Grid>();
+    //        otherGrid.cellSize = this.GetComponent<Grid>().cellSize;
+    //        otherGrid.cellSwizzle = this.GetComponent<Grid>().cellSwizzle;
+    //        otherGrid.cellLayout = this.GetComponent<Grid>().cellLayout;
+    //
+    //        var roadmap = RoadmapGenerator.PrototypeComponent(Data);
+    //        roadmap.Init(to);
+    //        roadmap.DoMeasure(to);
+    //        chromosome.Measurements.Add(roadmap.Result);
+    //        chromosome.EnemyRoadmap = RoadmapGenerator.RoadMap;
+    //
+    //        Profiler.BeginSample("Assign Paths");
+    //        //Use the generated roadmap to assign guard paths
+    //        AssignPaths(geneIndex, roadmap.RoadMap);
+    //        Profiler.EndSample();
+    //
+    //        //Initialize the future level
+    //        //CopyComponent(FutureLevel, To).Init(To);
+    //        var futurePrototype = FutureLevel.PrototypeComponent(Data);
+    //        futurePrototype.Init();
+    //
+    //        stopwatch.Stop();
+    //        chromosome.Measurements.Add(
+    //            new StealthLevelEvaluation.MeasureResult
+    //            {
+    //                Type = typeof(ObstacleTransformEnemyPathingStrategyLevelGenerator),
+    //                Time = stopwatch.ElapsedMilliseconds,
+    //                Value = "-",
+    //                Category = MeasurementType.INITIALIZATION
+    //            }
+    //            );
+    //
+    //        UnityEngine.Debug.Log("Generation of phenotype finished");
+    //    }
 
     public void AssignPaths(int geneIndex, Graph<Vector2> roadmap)
     {
