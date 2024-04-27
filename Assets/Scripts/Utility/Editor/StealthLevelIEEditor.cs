@@ -46,6 +46,10 @@ public class StealthLevelIEEditor : Editor
                 EditorGUILayout.LabelField(weight.ToString());
             }
         }
+
+        ie.LevelManifestor =
+            (LevelManifestor)EditorGUILayout.ObjectField(ie.LevelManifestor, typeof(LevelManifestor), true);
+
         //        EditorGUILayout.PropertyField(SerializedPreferences, true);
 
         //EditorGUILayout.PropertyField(SerializedPreferences, true);

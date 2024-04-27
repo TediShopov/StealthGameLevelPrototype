@@ -27,6 +27,7 @@ public class StealthLevelIEMono : MonoBehaviour
     public List<LevelChromosomeBase> GenerationSelecitons;
 
     public LevelPhenotypeGenerator Generator;
+    public LevelManifestor LevelManifestor;
 
     public InteractiveGeneticAlgorithm GeneticAlgorithm;
 
@@ -228,6 +229,7 @@ public class StealthLevelIEMono : MonoBehaviour
         var mutation = new CustomMutators(1, 1, 1);
         var chromosome = Generator.GetAdamChromosome(RandomSeedGenerator.Next());
         var population = new PopulationPhenotypeLayout(PopulationPhenotypeLayout, this.gameObject, chromosome);
+        population.LevelManifestor = this.LevelManifestor;
 
         GeneticAlgorithm = new
             InteractiveGeneticAlgorithm(population, PhenotypeEvaluator, selection, crossover, mutation);
@@ -271,7 +273,7 @@ public class StealthLevelIEMono : MonoBehaviour
     private void Ga_TerminationReached(object sender, EventArgs e)
     {
         List<IChromosome> chromosomes = GetTopLevelsFitness();
-        ManifestTopLevels(chromosomes);
+        //ManifestTopLevels(chromosomes);
     }
 
     private List<IChromosome> GetTopLevelsFitness()
@@ -295,21 +297,21 @@ public class StealthLevelIEMono : MonoBehaviour
         return topN;
     }
 
-    private void ManifestTopLevels(List<IChromosome> chromosomes)
-    {
-        //Start with y down
-        Vector3 TopLevelsPos = this.transform.position - new Vector3(0, 30, 0);
-        for (int i = 0; i < chromosomes.Count; i++)
-        {
-            TopLevelsPos += new Vector3(25, 0, 0);
-            var level = Instantiate(Generator, TopLevelsPos,
-                Quaternion.identity, this.transform);
-            level.gameObject.name = $"Top {i} - {chromosomes[i].Fitness}";
-            var levelChromosome = (OTEPSLevelChromosome)chromosomes[i];
-            levelChromosome.PhenotypeGenerator.Generate(levelChromosome, level.gameObject);
-            ChromoseMeasurementsVisualizer.AttachDataVisualizer(level.gameObject);
-        }
-    }
+    //    private void ManifestTopLevels(List<IChromosome> chromosomes)
+    //    {
+    //        //Start with y down
+    //        Vector3 TopLevelsPos = this.transform.position - new Vector3(0, 30, 0);
+    //        for (int i = 0; i < chromosomes.Count; i++)
+    //        {
+    //            TopLevelsPos += new Vector3(25, 0, 0);
+    //            var level = Instantiate(Generator, TopLevelsPos,
+    //                Quaternion.identity, this.transform);
+    //            level.gameObject.name = $"Top {i} - {chromosomes[i].Fitness}";
+    //            var levelChromosome = (OTEPSLevelChromosome)chromosomes[i];
+    //            levelChromosome.PhenotypeGenerator.Generate(levelChromosome, level.gameObject);
+    //            ChromoseMeasurementsVisualizer.AttachDataVisualizer(level.gameObject);
+    //        }
+    //    }
 }
 
 internal class CustomMutators : MutationBase

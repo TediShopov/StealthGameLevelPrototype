@@ -16,6 +16,7 @@ public class PopulationPhenotypeLayout : Population
     public Vector2 ExtraSpacing;
     public GridObjectLayout GridLayout = null;
     public GameObject IEGameObject;
+    public ILevelManifestor LevelManifestor;
 
     public PopulationPhenotypeLayout()
         : base(10, 20, null)
@@ -51,6 +52,9 @@ public class PopulationPhenotypeLayout : Population
         {
             LevelChromosomeBase levelChromosome = (LevelChromosomeBase)chromosome;
             levelChromosome.Phenotype = GridLayout.GetNextLevelObject();
+            levelChromosome.ActualLevelPhenotype =
+                levelChromosome.PhenotypeGenerator.GeneratePhenotype(levelChromosome);
+            this.LevelManifestor.Manifest(levelChromosome, levelChromosome.Phenotype);
         }
 
         base.CreateNewGeneration(chromosomes);

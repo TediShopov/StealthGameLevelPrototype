@@ -6,6 +6,10 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Profiling;
 
+public class FloodfillRoadmapGeneratorBase
+{
+}
+
 [ExecuteInEditMode]
 [RequireComponent(typeof(Grid))]
 public class FloodfilledRoadmapGenerator : MeasureMono,

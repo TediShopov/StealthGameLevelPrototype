@@ -29,6 +29,7 @@ public abstract class LevelChromosomeBase : ChromosomeBase,
     }
 
     public LevelPhenotypeGenerator PhenotypeGenerator;
+    public IStealthLevelPhenotype ActualLevelPhenotype;
 
     //The decoded game object - could be null if not generated
     public GameObject Phenotype { get; set; }

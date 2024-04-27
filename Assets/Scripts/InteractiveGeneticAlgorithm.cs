@@ -398,8 +398,8 @@ namespace GeneticSharp.Domain
                 if (chromo is LevelChromosomeBase)
                 {
                     var unityManifestableChromo = chromo as LevelChromosomeBase;
-                    unityManifestableChromo.
-                        PhenotypeGenerator.Generate(unityManifestableChromo, unityManifestableChromo.Phenotype);
+                    unityManifestableChromo.ActualLevelPhenotype =
+                        unityManifestableChromo.PhenotypeGenerator.GeneratePhenotype(unityManifestableChromo);
                 }
             }
         }
