@@ -143,6 +143,15 @@ public class StealthLevelIEMono : MonoBehaviour
         }
     }
 
+    public void NameAllPhenotypeGameobjects()
+    {
+        foreach (var chromosome in this.GeneticAlgorithm.Population.CurrentGeneration.Chromosomes)
+        {
+            this.Generator.ClearName((LevelChromosomeBase)chromosome);
+            this.Generator.AppendFitnessToName((LevelChromosomeBase)chromosome);
+        }
+    }
+
     private void RefereshPreferenceAndTracker()
     {
         UserPreferences =
@@ -218,6 +227,8 @@ public class StealthLevelIEMono : MonoBehaviour
         GeneticAlgorithm.MutationProbability = MutationProb;
         GeneticAlgorithm.CrossoverProbability = CrossoverProb;
         GeneticAlgorithm.Termination = new GenerationNumberTermination(AimedGenerations);
+        //Assign events
+        GeneticAlgorithm.AfterEvaluationStep += Ga_AfterEvaluation;
         GeneticAlgorithm.GenerationRan += Ga_GenerationRan;
         GeneticAlgorithm.TerminationReached += Ga_TerminationReached;
 
@@ -231,8 +242,14 @@ public class StealthLevelIEMono : MonoBehaviour
         }
     }
 
+    private void Ga_AfterEvaluation(object sender, EventArgs e)
+    {
+        NameAllPhenotypeGameobjects();
+    }
+
     private void Ga_GenerationRan(object sender, EventArgs e)
     {
+        NameAllPhenotypeGameobjects();
         Debug.Log($"{GeneticAlgorithm.GenerationsNumber} Generation Ran");
     }
 

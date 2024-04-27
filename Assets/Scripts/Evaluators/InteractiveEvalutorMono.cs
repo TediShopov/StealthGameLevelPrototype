@@ -56,10 +56,12 @@ public class InteractiveEvalutorMono : EvaluatorMono
     public override double Evaluate(IChromosome chromosome)
     {
         LevelChromosomeBase levelChromosome = CheckValidLevelChromosome(chromosome);
+
         var levelObject = levelChromosome.Phenotype;
 
-        //Run the generators --> the game object is now tagged as level
-        levelChromosome.PhenotypeGenerator.Generate(levelChromosome, levelObject);
+        ////Run the generators --> the game object is now tagged as level
+
+        //levelChromosome.PhenotypeGenerator.Generate(levelChromosome, levelObject);
 
         var evaluator = Instantiate(EvaluatorHolder, levelObject.transform);
         //Get all evaluators from  the prefab
@@ -115,8 +117,6 @@ public class InteractiveEvalutorMono : EvaluatorMono
                 eval = levelChromosome.GetAestheticScore(UserPreferenceModel);
             }
             eval *= 10;
-            levelObject.name += " Infeasible";
-            levelObject.name += $" Fitness {eval}";
         }
         else
         {
@@ -140,16 +140,16 @@ public class InteractiveEvalutorMono : EvaluatorMono
                 //                }
                 eval *= 10;
             }
-            levelObject.name += " Feasible";
-            levelObject.name += $" Fitness {eval}";
         }
-
         levelChromosome.Measurements.Add(new MeasureResult()
         {
             Name = "Fitness",
             Category = MeasurementType.OVERALLFITNESS,
             Value = eval.ToString()
         });
+
+        //Apend to name
+
         return eval;
     }
 }

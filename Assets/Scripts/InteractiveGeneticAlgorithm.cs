@@ -86,6 +86,11 @@ namespace GeneticSharp.Domain
         public event EventHandler TerminationReached;
 
         /// <summary>
+        /// Occurs when evaluation of all objects has been performed.
+        /// </summary>
+        public event EventHandler AfterEvaluationStep;
+
+        /// <summary>
         /// Occurs when stopped.
         /// </summary>
         public event EventHandler Stopped;
@@ -385,6 +390,20 @@ namespace GeneticSharp.Domain
         {
         }
 
+        //Manifest or generates all the chromoses in this generation in the unity scene
+        public void GeneratePhenotypeForAll()
+        {
+            foreach (var chromo in Population.CurrentGeneration.Chromosomes)
+            {
+                if (chromo is LevelChromosomeBase)
+                {
+                    var unityManifestableChromo = chromo as LevelChromosomeBase;
+                    unityManifestableChromo.
+                        PhenotypeGenerator.Generate(unityManifestableChromo, unityManifestableChromo.Phenotype);
+                }
+            }
+        }
+
         /// <summary>
         /// Evaluates the fitness.
         /// </summary>
@@ -392,6 +411,7 @@ namespace GeneticSharp.Domain
         {
             try
             {
+                GeneratePhenotypeForAll();
                 var chromosomesWithoutFitness = Population.CurrentGeneration.Chromosomes.Where(c => !c.Fitness.HasValue).ToList();
 
                 for (int i = 0; i < chromosomesWithoutFitness.Count; i++)
@@ -416,7 +436,9 @@ namespace GeneticSharp.Domain
             }
 
             Population.CurrentGeneration.Chromosomes
-                = Population.CurrentGeneration.Chromosomes.OrderByDescending(c => c.Fitness.Value).ToList();
+               = Population.CurrentGeneration.Chromosomes.OrderByDescending(c => c.Fitness.Value).ToList();
+            var handle = AfterEvaluationStep;
+            handle?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>

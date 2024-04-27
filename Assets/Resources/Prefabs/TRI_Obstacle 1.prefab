@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 6228754912093341014}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.1}
-  m_LocalScale: {x: 2.630991, y: 2.630991, z: 0}
+  m_LocalScale: {x: 2.9619946, y: 2.9619946, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -191,7 +191,7 @@ MonoBehaviour:
       spriteIndex: 0
       corner: 1
       m_CornerMode: 1
-  m_SpriteShape: {fileID: 0}
+  m_SpriteShape: {fileID: 11400000, guid: 6a3e4505bf686274b95228107d5b5e29, type: 2}
   m_FillPixelPerUnit: 100
   m_StretchTiling: 1
   m_SplineDetail: 8

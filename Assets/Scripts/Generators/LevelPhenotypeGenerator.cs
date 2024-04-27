@@ -64,6 +64,34 @@ public abstract class LevelPhenotypeGenerator : LevelGeneratorBase
         chromosomeMono.Chromosome = chromosome;
     }
 
+    public void ClearName(LevelChromosomeBase chromosome)
+    {
+        if (chromosome == null || chromosome.Phenotype == null)
+            return;
+
+        GameObject levelGameObject = chromosome.Phenotype;
+        levelGameObject.name = "";
+    }
+
+    public void AppendToName(LevelChromosomeBase chromosome, string text)
+    {
+        if (chromosome == null || chromosome.Phenotype == null)
+            return;
+
+        GameObject levelGameObject = chromosome.Phenotype;
+        levelGameObject.name += text;
+    }
+
+    public void AppendFitnessToName(LevelChromosomeBase chromosome)
+    {
+        if (chromosome == null || chromosome.Phenotype == null)
+            return;
+        if (chromosome.Fitness.HasValue)
+        {
+            chromosome.Phenotype.name += $"Fitness: {chromosome.Fitness}";
+        }
+    }
+
     protected virtual int GenerateLevelContent(LevelChromosomeBase chromosome)
     {
         int geneIndex = 0;
@@ -132,7 +160,7 @@ public abstract class LevelPhenotypeGenerator : LevelGeneratorBase
     protected GameObject SpawnObstacle(ref int geneIndex, BoxCollider2D box, GameObject Obstacles)
     {
         //Get Obstacle Variant
-        int prefabIndex = (int)(GetGeneValue(geneIndex) * LevelProperties.ObstaclePrefabs.Count + 1);
+        int prefabIndex = (int)(GetGeneValue(geneIndex) * LevelProperties.ObstaclePrefabs.Count) + 1;
         GameObject ObstaclePrefabVariant = LevelProperties.ObstaclePrefabs[prefabIndex - 1];
 
         float x = Mathf.Lerp(box.bounds.min.x, box.bounds.max.x, GetGeneValue(geneIndex + 1));
