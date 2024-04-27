@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering.VirtualTexturing;
+using UnityEngine.U2D;
 
 //GENOTYPE desciprtion:
 public class LevelObstalceData
@@ -26,7 +27,7 @@ public class LevelObstalceData
     public Vector2 Position;
     public float Rotaiton = 0;
     public float Scale = 1;
-    private List<Vector2> PolygonData = new List<Vector2>();
+    public List<Vector2> PolygonData = new List<Vector2>();
 }
 
 public interface IStealthLevelPhenotype
@@ -111,12 +112,40 @@ public abstract class LevelPhenotypeGenerator : LevelGeneratorBase
     //            Generate(LevelChromosome, this.gameObject);
     //        }
     //    }
-    protected LevelObstalceData SpawnSquareData(ref int geneIndex, IStealthLevelPhenotype level)
+
+    public List<Vector2> SquarePoints = new List<Vector2>
+    {
+            new Vector2(-0.5f,-0.5f),
+            new Vector2(0.5f,-0.5f),
+            new Vector2(0.5f,0.5f),
+            new Vector2(-0.5f,0.5f)
+    };
+
+    public List<Vector2> TrianglePoints = new List<Vector2>
+    {
+            new Vector2(0,0.5f),
+            new Vector2(-0.25f, 0),
+            new Vector2(0.25f,0),
+    };
+
+    protected LevelObstalceData SpawnObstacleFromListData(ref int geneIndex, IStealthLevelPhenotype level)
     {
         //Get Obstacle Variant
         int prefabIndex =
-            (int)(GetGeneValue(geneIndex) * LevelProperties.ObstaclePrefabs.Count) + 1;
-        GameObject ObstaclePrefabVariant = LevelProperties.ObstaclePrefabs[prefabIndex - 1];
+            (int)(GetGeneValue(geneIndex) * LevelProperties.ObstaclePrefabs.Count);
+        //It is possible to retrieve points on the spline of the sprite shape controller.
+        //However that is harder to do https://forum.unity.com/threads/tell-us-about-your-experience-with-sprite-shape.686305/page-3#post-6083610
+        //        List<Vector2> polygonPoints = new List<Vector2>();
+        //        var controller = LevelProperties.ObstaclePrefabs[prefabIndex].GetComponent<PolygonCollider2D>();
+        //        Spline spline = controller.spline;
+        //        for (int i = 0; i < spline.GetPointCount(); i++)
+        //        {
+        //            polygonPoints.Add(spline.GetPosition(i));
+        //        }
+        List<Vector2> polygonPoints;
+        if (prefabIndex == 0)
+            polygonPoints = SquarePoints;
+        else polygonPoints = TrianglePoints;
 
         Bounds bounds = level.GetBounds();
         float x = Mathf.Lerp(bounds.min.x, bounds.max.x, GetGeneValue(geneIndex + 1));
@@ -124,14 +153,7 @@ public abstract class LevelPhenotypeGenerator : LevelGeneratorBase
         float rot = Mathf.Lerp(0, 360, GetGeneValue(geneIndex + 3));
         float scl = Mathf.Lerp(MinObjectScale, MaxObjectScale, GetGeneValue(geneIndex + 4));
 
-        List<Vector2> squarePoints = new List<Vector2>
-        {
-            new Vector2(-0.5f,-0.5f),
-            new Vector2(0.5f,-0.5f),
-            new Vector2(0.5f,0.5f),
-            new Vector2(-0.5f,0.5f),
-        };
-        LevelObstalceData squareObstacle = new LevelObstalceData(squarePoints);
+        LevelObstalceData squareObstacle = new LevelObstalceData(polygonPoints);
         squareObstacle.Position = new Vector2(x, y);
         squareObstacle.Scale = scl;
         squareObstacle.Rotaiton = rot;
@@ -155,37 +177,9 @@ public abstract class LevelPhenotypeGenerator : LevelGeneratorBase
         //Test for off by oen errors
         for (int i = 0; i < ObstaclesSpawned; i++)
         {
-            SpawnSquareData(ref geneIndex, stealthLevel);
+            SpawnObstacleFromListData(ref geneIndex, stealthLevel);
         }
         return stealthLevel;
-        //        //Read enemy counts and spawn enemies
-        //        int enemyCount = Mathf.CeilToInt(
-        //            Mathf.Lerp(
-        //                MinEnemiesSpawned,
-        //                MaxEnemiesSpawned,
-        //                geneIndex));
-        //
-        //        for (int i = 0; i < enemyCount; i++)
-        //        {
-        //            Instantiate(LevelProperties.EnemyPrefab, To.transform);
-        //        }
-        //
-        //        //Enemy Behaviour
-        //
-        //        var pathGenerator =
-        //            To.GetComponentInChildren<PathGeneratorClass>();
-        //
-        //        //Enemy path geenerator seed
-        //        int pathSeed = Mathf.CeilToInt(
-        //            GetGeneValue(geneIndex)
-        //            * GetGeneValue(geneIndex + 1)
-        //            * GetGeneValue(geneIndex + 2)
-        //            * GetGeneValue(geneIndex + 3));
-        //        geneIndex += 4;
-        //        pathGenerator.LevelRandom = new System.Random(pathSeed);
-        //
-        //        Physics2D.SyncTransforms();
-        //        return geneIndex;
     }
 
     public abstract LevelChromosomeBase GetAdamChromosome(int seed);

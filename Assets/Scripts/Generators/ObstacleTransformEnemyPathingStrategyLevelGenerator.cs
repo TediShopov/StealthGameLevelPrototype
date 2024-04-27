@@ -9,6 +9,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
+using UnityEngine.U2D;
 using UnityEngine.UIElements;
 
 /// <summary>
@@ -41,6 +42,7 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
     [HideInInspector] public FloodfilledRoadmapGenerator RoadmapGenerator;
     [HideInInspector] public DiscretePathGenerator PathGenerator;
     public DiscreteRecalculatingFutureLevel FutureLevel;
+    public SpriteShape SpriteShape;
 
     public void Awake()
     {
@@ -56,6 +58,37 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         int obstacleCount = Mathf.CeilToInt(
         Mathf.Lerp(NecessaryObstacles, EntityCount - 1, obstacleToEnemyRatio));
         return obstacleCount;
+    }
+
+    public override IStealthLevelPhenotype GeneratePhenotype(LevelChromosomeBase levelChromosome)
+    {
+        Bounds levelBounds = new Bounds(
+            new Vector2(0, 0),
+            LevelProperties.LevelSize);
+
+        StealthLevel stealthLevel = new StealthLevel(levelBounds);
+
+        int geneIndex = 0;
+        int ObstaclesSpawned = (levelChromosome.Length - 4) / 5;
+
+        //Test for off by oen errors
+        for (int i = 0; i < ObstaclesSpawned; i++)
+        {
+            SpawnObstacleFromListData(ref geneIndex, stealthLevel);
+        }
+        return stealthLevel;
+    }
+
+    private void CreateSpline(Spline spline, List<Vector2> points)
+    {
+        if (points.Count < 2)
+            return;
+
+        spline.Clear();
+        for (int i = 0; i < points.Count; i++)
+        {
+            spline.InsertPointAt(i, points[i]);
+        }
     }
 
     public override void Generate(LevelChromosomeBase chromosome, GameObject to = null)
@@ -77,7 +110,7 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         //Spawn game object from obstacle data
         foreach (var obstalceData in stealthLevel.GetObstacles())
         {
-            GameObject obstacle = new GameObject("SquareObstacle");
+            GameObject obstacle = new GameObject("PolygonObstacle");
             obstacle.transform.position = obstalceData.Position;
             obstacle.transform.rotation = Quaternion.Euler(0, 0, obstalceData.Rotaiton);
             obstacle.transform.localScale = new Vector3(obstalceData.Scale, obstalceData.Scale);
@@ -85,11 +118,17 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
             obstacle.transform.SetParent(Contents.transform, false);
             obstacle.layer = LayerMask.NameToLayer("Obstacle");
 
-            obstacle.AddComponent<BoxCollider2D>();
-            var renderer = obstacle.AddComponent<SpriteRenderer>();
+            var polygonCollider = obstacle.AddComponent<PolygonCollider2D>();
+            polygonCollider.points = obstalceData.PolygonData.ToArray();
+
+            var renderer = obstacle.AddComponent<SpriteShapeRenderer>();
+            renderer.color = new Color(0, 0, 0);
+
+            var spriteControll = obstacle.AddComponent<SpriteShapeController>();
+            this.CreateSpline(spriteControll.spline, obstalceData.PolygonData);
             renderer.enabled = true;
-            renderer.sprite = this.Sprite;
         }
+        Physics2D.SyncTransforms();
 
         //Copy grid components of the level prototype.
         var otherGrid = Data.AddComponent<Grid>();
