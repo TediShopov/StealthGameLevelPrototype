@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5684448429466627126}
   - component: {fileID: -2704249602867331223}
   - component: {fileID: 5676149760887294591}
+  - component: {fileID: -7519814351799553506}
   m_Layer: 0
   m_Name: NewEvaluatior
   m_TagString: Untagged
@@ -51,6 +52,7 @@ MonoBehaviour:
   Phenotype: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
+  DrawOnSelected: 0
   StartCoord: {x: 0, y: 0}
   GoalCoord: {x: 0, y: 0}
   PlayerCollider: {fileID: 0}
@@ -74,6 +76,7 @@ MonoBehaviour:
   Phenotype: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
+  DrawOnSelected: 0
   ObstacleLayerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -90,5 +93,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae0c960289b63c549a40492c8ec92f4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FitnessValue: 0
-  DoEval: 0
+--- !u!114 &-7519814351799553506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4520497855799095119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84f781d8c43b0cd4d87b4a6132d5c6e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsValidator: 0
+  _value: 
+  Phenotype: {fileID: 0}
+  RunNow: 0
+  RunOnStart: 0
+  DrawOnSelected: 0
+  PropertyValue: 0
+  LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}

@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace StealthLevelEvaluation
 {
+    [ExecuteInEditMode]
     public class LevelClutterednessEvaluator : LevelPropertiesEvaluator
     {
         //public LevelProperties LevelProperties;
@@ -14,10 +15,21 @@ namespace StealthLevelEvaluation
             base.Init(phenotype);
         }
 
+        public void FixedUpdate()
+        {
+            if (RunNow)
+            {
+                this.PropertyValue = LevelClutterednessRatioResult(Phenotype);
+                //this.Value = PropertyValue.ToString();
+                Debug.Log("Ran from fixed update");
+                RunNow = false;
+            }
+        }
+
         public bool SetObstacleGrid(int row, int col, NativeGrid<bool> ngrid)
         {
             //Return true if box cast did not collide with any obstacle
-            return !Physics2D.OverlapBox(
+            return Physics2D.OverlapBox(
                 ngrid.GetWorldPosition(row, col),
                 ngrid.Grid.cellSize, 0,
                 LevelProperties.ObstacleLayerMask
@@ -42,7 +54,13 @@ namespace StealthLevelEvaluation
                     else
                         unoccupied++;
                 });
-                return (float)occupied / (float)(occupied + unoccupied);
+                float percentOccupationPerSquare =
+                    (float)occupied / (float)(occupied + unoccupied);
+
+                //Max allowed occupation percentage = 50%
+                return Mathf.Clamp(percentOccupationPerSquare, 0, 0.5f);
+
+                //return Mathf.Lerp(0, )
             }
             catch (System.Exception)
             {

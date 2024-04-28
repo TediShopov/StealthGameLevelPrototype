@@ -119,8 +119,6 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
     public int SetCellColliderIndex(int row, int col, NativeGrid<int> ngrid)
     {
         Collider2D[] collidersAtCell = GetStaticColliderAt(LevelGrid.GetWorldPosition(row, col));
-        if (collidersAtCell.Length >= 2)
-            return 1;
         if (collidersAtCell.Length <= 0)
             return -1;
         return GetColliderIndex(collidersAtCell.First());
