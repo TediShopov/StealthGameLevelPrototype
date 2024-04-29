@@ -55,7 +55,7 @@ public class ChromoseMeasurementsVisualizer : MonoBehaviour
         string allEvals = "";
         MeasurementType previousMeasurementType = MeasurementType.INITIALIZATION;
         allEvals += "---" + GetCategoryString(previousMeasurementType) + "---" + "\n";
-        foreach (var evaluation in levelChromosome.Measurements)
+        foreach (var evaluation in levelChromosome.Measurements.Values)
         {
             if (evaluation.Category != previousMeasurementType)
             {

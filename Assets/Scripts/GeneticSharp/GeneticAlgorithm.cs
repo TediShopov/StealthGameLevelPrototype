@@ -74,9 +74,8 @@ namespace GeneticSharp
         private readonly object m_lock = new object();
         private GeneticAlgorithmState m_state;
         private readonly Stopwatch m_stopwatch = new Stopwatch();
+
         #endregion Fields
-
-
 
         #region Constructors
 

@@ -256,14 +256,14 @@ public class StealthLevelIEMono : MonoBehaviour
 
     private void Ga_GenerationRan(object sender, EventArgs e)
     {
-        //Clear all measurements ran before current generations
-        foreach (var chromosome in this.GeneticAlgorithm.Population.CurrentGeneration.Chromosomes)
-        {
-            var levelChromosome = chromosome as LevelChromosomeBase;
-            levelChromosome.Measurements =
-                new List<StealthLevelEvaluation.MeasureResult>();
-        }
-
+        //        //Clear all measurements ran before current generations
+        //        foreach (var chromosome in this.GeneticAlgorithm.Population.CurrentGeneration.Chromosomes)
+        //        {
+        //            var levelChromosome = chromosome as LevelChromosomeBase;
+        //            levelChromosome.Measurements =
+        //                new List<StealthLevelEvaluation.MeasureResult>();
+        //        }
+        //
         NameAllPhenotypeGameobjects();
         Debug.Log($"{GeneticAlgorithm.GenerationsNumber} Generation Ran");
     }

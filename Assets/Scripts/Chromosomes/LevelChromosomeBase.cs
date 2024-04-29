@@ -11,6 +11,17 @@ using System.Security.Claims;
 using UnityEngine;
 using UnityEngine.Experimental.AI;
 
+public interface IEngagementMeasurable
+{
+    public float EngagementScore { get; set; }
+}
+
+public interface ILevelChromosome :
+    IEngagementMeasurable,
+    IAestheticMeasurable<ILevelChromosome>
+{
+}
+
 //Level chromosome base holds a reference to the phenotype/level generator
 // as to allow easy change and iteration via mono scirpts in the unity editor.
 
@@ -23,7 +34,7 @@ public abstract class LevelChromosomeBase : ChromosomeBase,
     protected LevelChromosomeBase(int length, LevelPhenotypeGenerator generator) : base(length)
     {
         PhenotypeGenerator = generator;
-        Measurements = new List<MeasureResult>();
+        Measurements = new Dictionary<string, MeasureResult>();
         //AestheticProperties =  new List<float>();
         AestheticProperties = new PropertyMeasurements(0);
     }
@@ -36,9 +47,14 @@ public abstract class LevelChromosomeBase : ChromosomeBase,
     public float AestheticScore { get; set; }
     public float EngagementScore { get; set; }
 
-    [SerializeField] public List<MeasureResult> Measurements;
+    [SerializeField] public Dictionary<string, MeasureResult> Measurements;
     [SerializeField] public PropertyMeasurements AestheticProperties;
     [SerializeField] public Graph<Vector2> EnemyRoadmap;
+
+    public void AddOrReplace(MeasureResult res)
+    {
+        this.Measurements[res.Name] = res;
+    }
 
     public override IChromosome Clone()
     {

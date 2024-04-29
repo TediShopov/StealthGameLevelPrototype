@@ -88,7 +88,7 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         var roadmap = RoadmapGenerator.PrototypeComponent(Data);
         roadmap.Init(to);
         roadmap.DoMeasure(to);
-        chromosome.Measurements.Add(roadmap.Result);
+        chromosome.AddOrReplace(roadmap.Result);
         chromosome.EnemyRoadmap = RoadmapGenerator.RoadMap;
 
         Profiler.BeginSample("Assign Paths");
@@ -102,12 +102,14 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         futurePrototype.Init();
 
         stopwatch.Stop();
-        chromosome.Measurements.Add(
+
+        chromosome.AddOrReplace(
             new StealthLevelEvaluation.MeasureResult
             {
                 Type = typeof(ObstacleTransformEnemyPathingStrategyLevelGenerator),
                 Time = stopwatch.ElapsedMilliseconds,
                 Value = "-",
+                Name = "GenerationAggregated",
                 Category = MeasurementType.INITIALIZATION
             }
             );

@@ -57,12 +57,12 @@ public class GAGenerationLogger
     private string GetHeader(IList<Generation> generationsToOutput)
     {
         StringBuilder header = new StringBuilder();
-        var bestInfo = (OTEPSLevelChromosome)GA.BestChromosome;
+        var bestInfo = (LevelChromosomeBase)GA.Population.CurrentGeneration.Chromosomes.First();
         header.Append($"Chromosome Hash,");
         foreach (var e in bestInfo.Measurements)
         {
-            header.Append($"{e.Name} Evaluation,");
-            header.Append($"{e.Name} Time,");
+            header.Append($"{e.Value.Name} Evaluation,");
+            header.Append($"{e.Value.Time} Time,");
         }
         header.Remove(header.Length - 1, 0);
         return header.ToString();
@@ -104,7 +104,8 @@ public class GAGenerationLogger
             foreach (var c in gen.Chromosomes)
             {
                 values += $"{c.GetHashCode()},";
-                List<MeasureResult> info = ((OTEPSLevelChromosome)c).Measurements;
+                List<MeasureResult> info =
+                    ((OTEPSLevelChromosome)c).Measurements.Values.ToList();
                 if (info != null)
                 {
                     foreach (var e in info)

@@ -234,117 +234,6 @@ namespace GeneticSharp.Domain
 
         #region Methods
 
-        /// <summary>
-        /// Starts the genetic algorithm using population, fitness, selection, crossover, mutation and termination configured.
-        /// </summary>
-        //        public void Start()
-        //        {
-        //            lock (m_lock)
-        //            {
-        //                State = GeneticAlgorithmState.Started;
-        //                m_stopwatch.Restart();
-        //                Population.CreateInitialGeneration();
-        //                m_stopwatch.Stop();
-        //                TimeEvolving = m_stopwatch.Elapsed;
-        //            }
-        //
-        //            Resume();
-        //        }
-
-        /// <summary>
-        /// Resumes the last evolution of the genetic algorithm.
-        /// <remarks>
-        /// If genetic algorithm was not explicit Stop (calling Stop method), you will need provide a new extended Termination.
-        /// </remarks>
-        /// </summary>
-        //        public void Resume()
-        //        {
-        //            try
-        //            {
-        //                lock (m_lock)
-        //                {
-        //                    m_stopRequested = false;
-        //                }
-        //
-        //                if (Population.GenerationsNumber == 0)
-        //                {
-        //                    throw new InvalidOperationException("Attempt to resume a genetic algorithm which was not yet started.");
-        //                }
-        //
-        //                if (Population.GenerationsNumber > 1)
-        //                {
-        //                    if (Termination.HasReached(this))
-        //                    {
-        //                        throw new InvalidOperationException("Attempt to resume a genetic algorithm with a termination ({0}) already reached. Please, specify a new termination or extend the current one.".With(Termination));
-        //                    }
-        //
-        //                    State = GeneticAlgorithmState.Resumed;
-        //                }
-        //
-        //                //                if (EndCurrentGeneration())
-        //                //                {
-        //                //                    return;
-        //                //                }
-        //                EvaluateFitness();
-        //                if (EndCurrentGeneration())
-        //                {
-        //                    return;
-        //                }
-        //
-        //
-        //                bool terminationConditionReached = false;
-        //
-        //                do
-        //                {
-        //                    if (m_stopRequested)
-        //                    {
-        //                        break;
-        //                    }
-        //
-        //                    m_stopwatch.Restart();
-        //                    //terminationConditionReached = EvolveOneGeneration();
-        //
-        //                    //Evolve all the levels first
-        //                    EvolveOneGeneration();
-        //                    //Evaluate their initial fitness, also manifest the levels
-        //                    EvaluateFitness();
-        //                    //Allow user to interactive select a level
-        //                    IntectiveEvalutionStep();
-        //                    //
-        //                    terminationConditionReached = EndCurrentGeneration();
-        //
-        //                    m_stopwatch.Stop();
-        //                    TimeEvolving += m_stopwatch.Elapsed;
-        //                }
-        //                while (!terminationConditionReached);
-        //            }
-        //            catch
-        //            {
-        //                State = GeneticAlgorithmState.Stopped;
-        //                throw;
-        //            }
-        //        }
-        //
-        //        /// <summary>
-        //        /// Stops the genetic algorithm..
-        //        /// </summary>
-        //        public void Stop()
-        //        {
-        //            if (Population.GenerationsNumber == 0)
-        //            {
-        //                throw new InvalidOperationException("Attempt to stop a genetic algorithm which was not yet started.");
-        //            }
-        //
-        //            lock (m_lock)
-        //            {
-        //                m_stopRequested = true;
-        //            }
-        //        }
-
-        /// <summary>
-        /// Evolve one generation.
-        /// </summary>
-        /// <returns>True if termination has been reached, otherwise false.</returns>
         public void EvolveOneGeneration()
         {
             var parents = SelectParents();
@@ -423,15 +312,16 @@ namespace GeneticSharp.Domain
 
                     TaskExecutor.Add(() =>
                     {
-                        if (c.Fitness.HasValue)
-                        {
-                            InteractiveEvalutorMono f = (InteractiveEvalutorMono)Fitness;
-                            c.Fitness = f.Reevaluate(c);
-                        }
-                        else
-                        {
-                            RunEvaluateFitness(c);
-                        }
+                        RunEvaluateFitness(c);
+                        //                        if (c.Fitness.HasValue)
+                        //                        {
+                        //                            InteractiveEvalutorMono f = (InteractiveEvalutorMono)Fitness;
+                        //                            c.Fitness = f.Reevaluate(c);
+                        //                        }
+                        //                        else
+                        //                        {
+                        //                            RunEvaluateFitness(c);
+                        //                        }
                     });
                 }
 

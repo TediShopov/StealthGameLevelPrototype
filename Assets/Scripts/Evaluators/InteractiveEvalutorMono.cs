@@ -42,100 +42,7 @@ public class InteractiveEvalutorMono : EvaluatorMono
             .Select(x => ((LevelPropertiesEvaluator)x).PropertyValue)
             .ToList();
         chromo.AestheticProperties = new PropertyMeasurements(PropertyEvaluators);
-
-        //        if (chromo.AestheticProperties == null)
-        //            chromo.AestheticProperties = new List<float>();
-
-        //        chromo.AestheticProperties.Clear();
-        //        foreach (var propertyEvaluator in PropertyEvaluators)
-        //        {
-        //            chromo.AestheticProperties.Add(propertyEvaluator.PropertyValue);
-        //        }
     }
-
-    //    //Given a chromosme that is level chromosome
-    //    //and has a fitness value
-    //    public double Reevaluate(IChromosome chromosome, List<MeasurementType> TypeToEval)
-    //    {
-    //        LevelChromosomeBase levelChromosome = CheckValidLevelChromosome(chromosome);
-    //        var levelObject = levelChromosome.Phenotype;
-    //
-    //        ////Run the generators --> the game object is now tagged as level
-    //        var evaluator = Instantiate(EvaluatorHolder, levelObject.transform);
-    //        //Get all evaluators from  the prefab
-    //        MeasureMono[] Evaluators = evaluator.GetComponents<MeasureMono>();
-    //
-    //        //Order so level properties are measured first, followed by validators and
-    //        // difficulty estimation
-    //        Evaluators = Evaluators
-    //            .Where(x => TypeToEval.Contains(x.GetCategory()))
-    //            .OrderByDescending(x => x.GetCategory() == MeasurementType.PROPERTIES)
-    //            .ThenByDescending(x => x.IsValidator)
-    //            .ToArray();
-    //
-    //        foreach (var e in Evaluators)
-    //        {
-    //            e.Init(levelObject.gameObject);
-    //            e.DoMeasure(levelObject.gameObject);
-    //            if (e.IsTerminating)
-    //                break;
-    //        }
-    //
-    //        var newMeasurement = Evaluators.Select(x => x.Result).ToArray();
-    //        //Replace old values with new ones
-    //        foreach (var m in newMeasurement)
-    //        {
-    //            MeasureResult? oldMeasure =
-    //                levelChromosome.Measurements.FirstOrDefault(x => x.Name.Equals(m.Name));
-    //            if (oldMeasure.HasValue)
-    //                oldMeasure = m;
-    //            else
-    //                levelChromosome.Measurements.Add(m);
-    //        }
-    //        Transform data = levelObject.transform.Find("Data");
-    //        if (data is not null)
-    //        {
-    //            AppendAestheticMeasureToObject(levelChromosome, Evaluators);
-    //        }
-    //
-    //        double eval = 0;
-    //
-    //        if (Evaluators.Any(x => x.IsTerminating))
-    //        {
-    //            if (levelChromosome.AestheticProperties is not null)
-    //            {
-    //                eval = levelChromosome.GetAestheticScore(UserPreferenceModel);
-    //            }
-    //            eval *= 10;
-    //        }
-    //        else
-    //        {
-    //            if (DoObjectiveDifficultyEvaluation)
-    //            {
-    //                var riskMeasure = levelObject.GetComponentInChildren<RiskMeasure>();
-    //                var pathUniqueness = levelObject.GetComponentInChildren<PathZoneUniqueness>();
-    //                var solver = levelObject.GetComponentInChildren<RRTSolverDifficultyEvaluation>();
-    //            }
-    //            else
-    //            {
-    //                if (levelChromosome.AestheticProperties is not null)
-    //                {
-    //                    eval = levelChromosome.GetAestheticScore(UserPreferenceModel);
-    //                }
-    //                eval *= 10;
-    //            }
-    //        }
-    //        levelChromosome.Measurements.Add(new MeasureResult()
-    //        {
-    //            Name = "Fitness",
-    //            Category = MeasurementType.OVERALLFITNESS,
-    //            Value = eval.ToString()
-    //        });
-    //
-    //        //Apend to name
-    //
-    //        return eval;
-    //    }
 
     public override double Evaluate(IChromosome chromosome)
     {
@@ -144,8 +51,6 @@ public class InteractiveEvalutorMono : EvaluatorMono
         var levelObject = levelChromosome.Phenotype;
 
         ////Run the generators --> the game object is now tagged as level
-
-        //levelChromosome.PhenotypeGenerator.Generate(levelChromosome, levelObject);
 
         var evaluator = Instantiate(EvaluatorHolder, levelObject.transform);
         //Get all evaluators from  the prefab
@@ -167,14 +72,11 @@ public class InteractiveEvalutorMono : EvaluatorMono
                 break;
         }
 
-        var newMeasurement = Evaluators.Select(x => x.Result).ToArray();
-        if (levelChromosome.Measurements == null)
+        var newMeasurements = Evaluators.Select(x => x.Result).ToArray();
+        foreach (var newMeasure in newMeasurements)
         {
-            levelChromosome.Measurements = new List<MeasureResult>();
+            levelChromosome.Measurements[newMeasure.Name] = newMeasure;
         }
-        levelChromosome.Measurements.AddRange(newMeasurement);
-
-        //Vector2 placement = new Vector2(IE.ExtraSpacing.x / 1.5f, 0);
 
         Transform data = levelObject.transform.Find("Data");
         if (data is not null)
@@ -192,12 +94,13 @@ public class InteractiveEvalutorMono : EvaluatorMono
         //Combine engagment score and aesthetic score
         float eval = levelChromosome.AestheticScore + levelChromosome.EngagementScore;
 
-        levelChromosome.Measurements.Add(new MeasureResult()
-        {
-            Name = "Fitness",
-            Category = MeasurementType.OVERALLFITNESS,
-            Value = eval.ToString()
-        });
+        levelChromosome.AddOrReplace(
+            new MeasureResult()
+            {
+                Name = "Fitness",
+                Category = MeasurementType.OVERALLFITNESS,
+                Value = eval.ToString()
+            });
 
         //Apend to name
 
