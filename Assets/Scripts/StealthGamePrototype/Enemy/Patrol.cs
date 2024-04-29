@@ -13,6 +13,9 @@ public class Patrol : IPredictableThreat
         Direction = Vector2.right,
     };
 
+    public IPatrolPath GetPath()
+    { return Route; }
+
     public IPredictableThreat Copy()
     {
         var copy = new Patrol(this);

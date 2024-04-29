@@ -69,6 +69,26 @@ public class Helpers : MonoBehaviour
         return hit.collider != null;
     }
 
+    public static float CalculateStandardDeviation(IEnumerable<float> values)
+    {
+        float mean = values.Average();
+        float varience =
+            values.Sum(x => Mathf.Pow(x - mean, 2)) / (values.Count() - 1);
+        return Mathf.Sqrt(varience); // Standard deviation
+    }
+
+    public static float CalculateRelativeVariance(IEnumerable<float> values)
+    {
+        float mean = values.Average();
+        float standardDeviation = CalculateStandardDeviation(values);
+        if (mean == 0)
+        {
+            throw new ArgumentException("The mean cannot be zero when calculating relative variance.");
+        }
+        float coefficientOfVariation = (standardDeviation / mean);
+        return coefficientOfVariation;
+    }
+
     public static Bounds GetLevelBounds(GameObject obj)
     {
         var _boundary = Physics2D.OverlapPoint(obj.transform.position, LayerMask.GetMask("Boundary"));

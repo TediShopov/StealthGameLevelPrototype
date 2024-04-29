@@ -33,13 +33,21 @@ public class ZoneAreaVarience : LevelPropertiesEvaluator
                 zoneIdToArea[zoneId] = 1;
         });
 
-        //Remove the area count of the surrounding zone
-        zoneIdToArea.Remove(0);
-        float per = Mathf.InverseLerp(0, MaxRelativeVarience, (float)CalculateRelativeVariance());
-        return per;
-
-        //return Mathf.Lerp(0, 3.0f, MaxRelativeVarience);
-        //return (float)CalculateRelativeVariance();
+        //More that three zones are needed as zone from bondary
+        // is going to be excluded
+        if (zoneIdToArea.Count > 2)
+        {
+            //Remove the area count of the boundary zone
+            zoneIdToArea.Remove(0);
+            return Mathf.InverseLerp(
+                0,
+                MaxRelativeVarience,
+                Helpers.CalculateRelativeVariance(zoneIdToArea.Values.Select(x => (float)x)));
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     public static double CalculateStandardDeviation(Dictionary<int, int> dict)

@@ -117,13 +117,17 @@ public class PatrolEnemyMono : MonoBehaviour, IPredictableThreat
 
     public void TimeMove(float deltaTime)
     {
-        if (IsPaused) return;
-        Patrol.TimeMove(deltaTime);
-        _rigidBody2D.position =
-            GetTransform().Position;
-        this.transform.position = _rigidBody2D.position;
-        transform.rotation =
-            Quaternion.Euler(0, 0, Helpers.GetAngleFromVectorFloat(GetTransform().Direction));
+        try
+        {
+            if (IsPaused) return;
+            Patrol.TimeMove(deltaTime);
+            _rigidBody2D.position =
+                GetTransform().Position;
+            this.transform.position = _rigidBody2D.position;
+            transform.rotation =
+                Quaternion.Euler(0, 0, Helpers.GetAngleFromVectorFloat(GetTransform().Direction));
+        }
+        catch (Exception e) { }
     }
 
     public FutureTransform GetTransform()
