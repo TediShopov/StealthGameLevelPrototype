@@ -1,4 +1,5 @@
 using CGALDotNet.Processing;
+using CGALDotNetGeometry.Numerics;
 using PlasticGui;
 using StealthLevelEvaluation;
 using System;
@@ -95,6 +96,8 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
     //Transforms the unity grid to c# binary represenetaion of the level
     public NativeGrid<int> LevelGrid;
 
+    public StealthLevel Level;
+
     public void Awake()
     {
         Grid = new UnboundedGrid(new Vector2(), 0.5f);
@@ -177,14 +180,18 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
         return superNode;
     }
 
+    //    public int SetCellColliderIndex(int row, int col, NativeGrid<int> ngrid)
+    //    {
+    //        Collider2D[] collidersAtCell = GetStaticColliderAt(LevelGrid.GetWorldPosition(row, col));
+    //        if (collidersAtCell.Length >= 2)
+    //            return 1;
+    //        if (collidersAtCell.Length <= 0)
+    //            return -1;
+    //        return GetColliderIndex(collidersAtCell.First());
+    //    }
     public int SetCellColliderIndex(int row, int col, NativeGrid<int> ngrid)
     {
-        Collider2D[] collidersAtCell = GetStaticColliderAt(LevelGrid.GetWorldPosition(row, col));
-        if (collidersAtCell.Length >= 2)
-            return 1;
-        if (collidersAtCell.Length <= 0)
-            return -1;
-        return GetColliderIndex(collidersAtCell.First());
+        return Level.GetPolygonIndexAt(LevelGrid.GetWorldPosition(row, col));
     }
 
     public void FloodRegions()
@@ -273,7 +280,8 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
     public bool CannotTraverse(Vector2 a, Vector2 b)
     {
         //return Physics2D.CircleCast(a, EnemyBSRadius, (b - a).normalized, Vector2.Distance(b, a), ObstacleLayerMask);
-        return Physics2D.Linecast(a, b, ObstacleLayerMask);
+        //return Physics2D.Linecast(a, b, ObstacleLayerMask);
+        return Level.IsStaticCollision(a, b);
     }
 
     public Vector2 RemoveRedundantNodesInConnection(Vector2 start, Vector2 end, ref int recursionCount, List<Vector2> visited)
@@ -411,24 +419,24 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
             LevelGrid.Get(x.Item1, x.Item2) == -1);
     }
 
-    private Collider2D[] GetStaticColliderAt(Vector3 worldPosition)
-    {
-        Vector2 position2D = new Vector2(worldPosition.x, worldPosition.y);
-        //Vector2 halfBoxSize = Grid.cellSize * 0.5f;
-        Vector2 halfBoxSize = new Vector2(Grid.cellSize * 0.5f, Grid.cellSize * 0.5f);
-
-        // Perform a BoxCast to check for obstacles in the area
-        RaycastHit2D[] hit = Physics2D.BoxCastAll(
-            origin: position2D,
-            size: halfBoxSize,
-            angle: 0f,
-            direction: Vector2.zero,
-            distance: 1.0f,
-            layerMask: ObstacleLayerMask
-        );
-
-        return hit.Select(x => x.collider).ToArray();
-    }
+    //    private Collider2D[] GetStaticColliderAt(Vector3 worldPosition)
+    //    {
+    //        Vector2 position2D = new Vector2(worldPosition.x, worldPosition.y);
+    //        //Vector2 halfBoxSize = Grid.cellSize * 0.5f;
+    //        Vector2 halfBoxSize = new Vector2(Grid.cellSize * 0.5f, Grid.cellSize * 0.5f);
+    //
+    //        // Perform a BoxCast to check for obstacles in the area
+    //        RaycastHit2D[] hit = Physics2D.BoxCastAll(
+    //            origin: position2D,
+    //            size: halfBoxSize,
+    //            angle: 0f,
+    //            direction: Vector2.zero,
+    //            distance: 1.0f,
+    //            layerMask: ObstacleLayerMask
+    //        );
+    //
+    //        return hit.Select(x => x.collider).ToArray();
+    //    }
 
     //        int rows = _gridMax.y - _gridMin.y;
     //        int cols = _gridMax.x - _gridMin.x;
@@ -457,6 +465,26 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
         });
     }
 
+    private void DebugDrawLevelPolygons()
+    {
+        if (Level == null) return;
+        foreach (var poly in Level.ObstaclePolygons)
+        {
+            Point2d[] points = new Point2d[poly.Count];
+            poly.GetPoints(points, poly.Count);
+            for (int i = 0; i < poly.Count - 1; i++)
+            {
+                Vector2 A = new Vector2((float)points[i].x, (float)points[i].y);
+                Vector2 B = new Vector2((float)points[i + 1].x, (float)points[i + 1].y);
+
+                A = this.transform.TransformPoint(A);
+                B = this.transform.TransformPoint(B);
+
+                Gizmos.DrawLine(A, B);
+            }
+        }
+    }
+
     private void DebugSimplifiedConnections()
     {
         Gizmos.color = Color.red;
@@ -470,6 +498,7 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
 
     private void OnDrawGizmosSelected()
     {
+        DebugDrawLevelPolygons();
         if (DebugDraw)
         {
             if (LevelGrid == null) return;
@@ -513,6 +542,7 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
     protected override string Evaluate()
     {
         Profiler.BeginSample(GetName());
+        BoundaryCells = new Queue<Tuple<int, int>>();
         RoadMap = new Graph<Vector2>();
         FloodRegions();
         if (RoadMap.adjacencyList.Count <= 0) return "-";

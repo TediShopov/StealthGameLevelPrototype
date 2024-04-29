@@ -1,9 +1,15 @@
+using CGALDotNet;
+using CGALDotNet.Hulls;
+using CGALDotNet.Polygons;
+using CGALDotNetGeometry.Numerics;
+using CGALDotNetGeometry.Shapes;
 using JetBrains.Annotations;
 using Mono.Cecil;
 using PlasticPipe.PlasticProtocol.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Rendering.VirtualTexturing;
 using UnityEngine.U2D;
@@ -54,7 +60,10 @@ public class StealthLevel : IStealthLevelPhenotype
         this.Bounds = bounds;
         this.Obstacles = new List<LevelObstalceData>();
         this.Threats = new List<IPredictableThreat>();
+        this.ObstaclePolygons = new List<Polygon2<EEK>>();
     }
+
+    public List<Polygon2<EEK>> ObstaclePolygons;
 
     public Vector2 StartPosition { get; set; }
     public Vector2 GoalPosition { get; set; }
@@ -65,9 +74,72 @@ public class StealthLevel : IStealthLevelPhenotype
 
     public List<IPredictableThreat> GetThreats() => Threats;
 
+    public bool IsStaticCollision(Vector3 from, Vector3 to)
+    {
+        Segment2d lineSegment;
+        lineSegment.A = new Point2d(from.x, from.y);
+        lineSegment.B = new Point2d(to.x, to.y);
+        foreach (var obstacle in ObstaclePolygons)
+        {
+            Segment2d[] segments = new Segment2d[obstacle.Count];
+            obstacle.GetSegments(segments, obstacle.Count);
+            foreach (var seg in segments)
+            {
+                if (lineSegment.Intersects(seg))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public int GetPolygonIndexAt(Vector2 vecPoint)
+    {
+        Point2d point = new Point2d(vecPoint.x, vecPoint.y);
+        for (int i = 0; i < ObstaclePolygons.Count; i++)
+        {
+            if (ObstaclePolygons[i].ContainsPoint(point, true))
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public void AddObstacle(LevelObstalceData obstacle)
     {
         this.Obstacles.Add(obstacle);
+
+        var polygonToAdd = new Polygon2<EEK>(
+            obstacle.PolygonData.Select(p => new Point2d(p.x, p.y))
+            .ToArray());
+        polygonToAdd.Scale(obstacle.Scale);
+        polygonToAdd.Rotate(new Degree(obstacle.Rotaiton));
+        polygonToAdd.Translate(
+            new Point2d(obstacle.Position.x, obstacle.Position.y));
+        ObstaclePolygons.Add(polygonToAdd);
+
+        //        //Get the instance object.
+        //        var instance = PolygonBoolean2<EEK>.Instance;
+        //
+        //
+        //        var overlappingPolygons = ObstaclePolygons
+        //            .Where(p =>instance.DoIntersect(polygonToAdd, p));
+        //
+        //
+        //        var res = new List<PolygonWithHoles2<EEK>>();
+        //        if (overlappingPolygons.Count() > 0)
+        //        {
+        //            ConvexHull2<EEK>.Instance.CreateHull(polygonToAdd.Po);
+        //            if (instance.Join(polygonToAdd, overlappingPolygons.First(),res))
+        //            {
+        //                ConvexHull2<EEK>.Instance.CreateHull(res.All());
+        //
+        //
+        //            }
+        //
+        //
+        //        }
+        //
     }
 
     private Bounds Bounds;
