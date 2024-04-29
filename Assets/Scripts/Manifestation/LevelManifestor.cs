@@ -236,6 +236,7 @@ public class LevelManifestor : MonoBehaviour, ILevelManifestor
         //        otherGrid.cellSize = this.GetComponent<Grid>().cellSize;
         //        otherGrid.cellSwizzle = this.GetComponent<Grid>().cellSwizzle;
         //        otherGrid.cellLayout = this.GetComponent<Grid>().cellLayout;
+        Data.AddComponent<FloodfilledRoadmapGenerator>();
 
         UnityEngine.Debug.Log("Generation of phenotype finished");
     }

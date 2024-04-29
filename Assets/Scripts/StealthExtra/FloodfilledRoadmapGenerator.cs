@@ -1,10 +1,66 @@
 using CGALDotNet.Processing;
+using PlasticGui;
 using StealthLevelEvaluation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Profiling;
+
+public class UnboundedGrid
+{
+    public Vector2 Origin { get; private set; }
+    public float cellSize { get; set; }
+
+    public UnboundedGrid(Vector2 origin, float cellSize)
+    {
+        Origin = origin;
+        this.cellSize = cellSize;
+    }
+
+    public UnboundedGrid(Grid grid)
+    {
+        Origin = grid.transform.position;
+        this.cellSize = grid.cellSize.x;
+    }
+
+    // Converts grid coordinates to world coordinates
+    public Vector3 GetCellCenterWorld(Vector3Int coord)
+    {
+        float worldX = Origin.x + coord.x * cellSize;
+        float worldY = Origin.y + coord.y * cellSize;
+        return new Vector2(worldX, worldY);
+    }
+
+    // Converts grid coordinates to world coordinates
+    public Vector3 GetCellCenterWorld(int gridX, int gridY)
+    {
+        float worldX = Origin.x + gridX * cellSize;
+        float worldY = Origin.y + gridY * cellSize;
+        return new Vector2(worldX, worldY);
+    }
+
+    // Converts world coordinates to grid coordinates
+    public Vector3Int WorldToCell(Vector2 worldPos)
+    {
+        int gridX = Mathf.FloorToInt((worldPos.x - Origin.x) / cellSize);
+        int gridY = Mathf.FloorToInt((worldPos.y - Origin.y) / cellSize);
+        return new Vector3Int(gridX, gridY, 0);
+    }
+
+    // Checks if a given world position is within certain bounds
+    public bool IsWithinGrid(Vector2 worldPos, Vector2 bounds)
+    {
+        return (worldPos.x >= Origin.x && worldPos.x <= Origin.x + bounds.x * cellSize) &&
+               (worldPos.y >= Origin.y && worldPos.y <= Origin.y + bounds.y * cellSize);
+    }
+
+    // Computes the Euclidean distance between two grid points
+    public float DistanceBetween(Vector2Int gridPos1, Vector2Int gridPos2)
+    {
+        return Vector2Int.Distance(gridPos1, gridPos2);
+    }
+}
 
 public class FloodfillRoadmapGeneratorBase
 {
@@ -27,7 +83,7 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
     ///    [HideInInspector] public Grid Grid;
     ///    [HideInInspector] public LayerMask ObstacleLayerMask;
     ///    [HideInInspector] public LayerMask BoundaryLayerMask;
-    public Grid Grid;
+    public UnboundedGrid Grid;
 
     public LayerMask ObstacleLayerMask;
     public LayerMask BoundaryLayerMask;
@@ -41,14 +97,15 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
 
     public void Awake()
     {
-        Grid = GetComponent<Grid>();
-        //        Colors = new List<Color>();
-        //        Colors.Add(new Color(1, 0, 0, 0.2f));
-        //        Colors.Add(new Color(0, 1, 0, 0.2f));
-        //        Colors.Add(new Color(0, 0, 1, 0.2f));
-        //        Colors.Add(new Color(1, 1, 0, 0.2f));
-        //        Colors.Add(new Color(1, 0, 1, 0.2f));
-        //        Colors.Add(new Color(0, 1, 1, 0.2f));
+        Grid = new UnboundedGrid(new Vector2(), 0.5f);
+        //Grid = GetComponent<Grid>();
+        Colors = new List<Color>();
+        Colors.Add(new Color(1, 0, 0, 0.2f));
+        Colors.Add(new Color(0, 1, 0, 0.2f));
+        Colors.Add(new Color(0, 0, 1, 0.2f));
+        Colors.Add(new Color(1, 1, 0, 0.2f));
+        Colors.Add(new Color(1, 0, 1, 0.2f));
+        Colors.Add(new Color(0, 1, 1, 0.2f));
     }
 
     public void Update()
@@ -189,7 +246,7 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
     public Vector3 GetLowerLeft(int col, int row)
     {
         return LevelGrid.GetWorldPosition(row, col)
-            + new Vector3(-Grid.cellSize.x / 2.0f, -Grid.cellSize.y / 2.0f, 0);
+            + new Vector3(-Grid.cellSize / 2.0f, -Grid.cellSize / 2.0f, 0);
     }
 
     //}
@@ -357,7 +414,8 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
     private Collider2D[] GetStaticColliderAt(Vector3 worldPosition)
     {
         Vector2 position2D = new Vector2(worldPosition.x, worldPosition.y);
-        Vector2 halfBoxSize = Grid.cellSize * 0.5f;
+        //Vector2 halfBoxSize = Grid.cellSize * 0.5f;
+        Vector2 halfBoxSize = new Vector2(Grid.cellSize * 0.5f, Grid.cellSize * 0.5f);
 
         // Perform a BoxCast to check for obstacles in the area
         RaycastHit2D[] hit = Physics2D.BoxCastAll(
@@ -392,9 +450,9 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
                 Gizmos.color = GetColorForValue(LevelGrid.Get(row, col));
                 Vector3 worldPosition = Grid.GetCellCenterWorld(LevelGrid.GetUnityCoord(row, col));
                 worldPosition.z = 0;
-                Vector3 cellsize = Grid.cellSize;
+                Vector3 cellsize = new Vector3(Grid.cellSize, Grid.cellSize, Grid.cellSize);
                 cellsize.z = 1;
-                Gizmos.DrawCube(worldPosition, Grid.cellSize);
+                Gizmos.DrawCube(worldPosition, cellsize);
             }
         });
     }
@@ -404,7 +462,7 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
         Gizmos.color = Color.red;
         foreach (var sc in _debugSimplifiedConnections)
         {
-            Vector3 cellsize = Grid.cellSize;
+            Vector3 cellsize = new Vector3(Grid.cellSize, Grid.cellSize, Grid.cellSize);
             cellsize.z = 1;
             Gizmos.DrawLine(sc.Item1, sc.Item2);
         }
@@ -444,7 +502,8 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
     {
         ColliderKeys = new List<Collider2D>();
         _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
-        this.Grid = GetComponent<Grid>();
+        this.Grid = new UnboundedGrid(this.GetComponent<Grid>());
+        //this.Grid = GetComponent<Grid>();
 
         LevelGrid = new NativeGrid<int>(this.Grid, Helpers.GetLevelBounds(gameObject));
 
