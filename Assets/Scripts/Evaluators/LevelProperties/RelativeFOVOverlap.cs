@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.Profiling;
 
@@ -8,12 +9,13 @@ public struct RelativeFovData
 {
     public Grid Grid;
     public LayerMask ObstacleLayerMask;
-    public PatrolPath[] _debugEnenmies;
+    public PatrolEnemyMono[] _debugEnenmies;
 }
 
 namespace StealthLevelEvaluation
 
 {
+    [ExecuteInEditMode]
     public class RelativeFOVOverlap : LevelPropertiesEvaluator
     {
         public RelativeFovData Data;
@@ -55,86 +57,126 @@ namespace StealthLevelEvaluation
             return worldPositions;
         }
 
-        private float VD;
-        private float FOV;
-
         protected override float MeasureProperty()
         {
             //Get Future level instance
             var futureLevel = Phenotype.GetComponentInChildren<IFutureLevel>(false);
-            Data._debugEnenmies = Phenotype.GetComponentsInChildren<PatrolPath>();
+            Data._debugEnenmies = Phenotype.GetComponentsInChildren<PatrolEnemyMono>();
             NativeGrid<bool> native = new NativeGrid<bool>(Data.Grid, Helpers.GetLevelBounds(Phenotype));
             native.SetAll((x, y, n) => false);
-
-            VD = Data._debugEnenmies[0].EnemyProperties.ViewDistance;
-            FOV = Data._debugEnenmies[0].EnemyProperties.FOV;
-            //Formula: angel in radians multipled by radius on the power of 2
-            float maxOverlappArea = Mathf.Deg2Rad * FOV * VD * VD;
-            float accumulatedOverlapp = 0;
-            float maxTime = futureLevel.GetMaxSimulationTime();
-            Helpers.LogExecutionTime(() => accumulatedOverlapp = OverlapRelativeToDiscreteMaxFOV(futureLevel, maxTime, maxOverlappArea), "New Overlapp");
-
-            float avgRelOverlapp = accumulatedOverlapp / maxTime;
-
-            return avgRelOverlapp;
+            if (Data._debugEnenmies.Length < 2)
+            {
+                return 0;
+            }
+            float relOverlapp = OverlapRelativeToDiscreteMaxFOV(futureLevel);
+            return Mathf.Clamp01(relOverlapp);
         }
 
-        private HashSet<Vector3Int> VisibleCells(Bounds bounds, FutureTransform ft)
+        private HashSet<Vector3Int> VisibleCells(IPredictableThreat threat)
         {
+            Bounds bounds = threat.GetBounds();
             HashSet<Vector3Int> enemyOneVisibleCoordinates = DiscretBoundsCells(bounds)
                 .Where(x =>
                 {
                     var pos = Data.Grid.GetCellCenterWorld(x);
-                    return FieldOfView.TestCollision(pos, ft, FOV, VD, Data.ObstacleLayerMask);
+                    return threat.TestThreat(pos);
                 }).ToHashSet();
             return enemyOneVisibleCoordinates;
         }
 
-        private float OverlapRelativeToDiscreteMaxFOV(IFutureLevel futureLevel, float maxTime, float maxOverlappArea)
+        private float OverlapRelativeToDiscreteMaxFOV(IFutureLevel futureLevel)
         {
-            List<BacktrackPatrolPath> simulatedPaths = Data._debugEnenmies
-                .Select(x => new BacktrackPatrolPath(x.BacktrackPatrolPath)).ToList();
-            float accumulatedOverlapp = 0;
-            for (float time = 0; time <= maxTime; time += futureLevel.Step)
+            IPredictableThreat[] threats = futureLevel.DynamicThreats;
+            var simulation =
+                new DynamicLevelSimulation(
+                    threats, 0, futureLevel.GetMaxSimulationTime(), futureLevel.Step);
+
+            float cellArea = (Data.Grid.cellSize.x * Data.Grid.cellSize.y);
+            float accumulatedOverlap = 0;
+            while (simulation.IsFinished == false)
             {
-                //Move all paths
-                simulatedPaths.ForEach(x => x.MoveAlong(futureLevel.Step * Data._debugEnenmies[0].EnemyProperties.Speed));
-                for (int i = 0; i < Data._debugEnenmies.Length - 1; i++)
+                //For each enemy pair
+                for (int i = 0; i < threats.Length - 1; i++)
                 {
-                    FutureTransform enemyFT = PatrolPath.GetPathOrientedTransform(simulatedPaths[i]);
-                    Bounds bounds = FieldOfView.GetFovBounds(enemyFT, VD, FOV);
-                    HashSet<Vector3Int> enemyOneVisibleCoordinates = VisibleCells(bounds, enemyFT);
+                    Bounds boundOfThreat = threats[i].GetBounds();
+                    HashSet<Vector3Int> enemyOneThreatCells =
+                        VisibleCells(threats[i]);
+                    float maxOverlappArea = enemyOneThreatCells.Count * cellArea;
 
-                    for (int j = i + 1; j < Data._debugEnenmies.Length; j++)
+                    for (int j = i + 1; j < threats.Length; j++)
                     {
-                        FutureTransform otherEnemyFT = PatrolPath.GetPathOrientedTransform(simulatedPaths[j]);
-                        Bounds otherBounds = FieldOfView.GetFovBounds(otherEnemyFT, VD, FOV);
-                        if (bounds.Intersects(otherBounds))
+                        Bounds otherBounds = threats[j].GetBounds();
+                        if (boundOfThreat.Intersects(otherBounds) == false)
                         {
-                            Profiler.BeginSample("Bounds intersecting");
-                            var overlapp = Helpers.IntersectBounds(bounds, otherBounds);
-                            Profiler.EndSample();
-                            Profiler.BeginSample("Cell visibility checking");
+                            continue;
+                        }
+                        HashSet<Vector3Int> enemyTwoThreatCells =
+                            VisibleCells(threats[j]);
 
-                            HashSet<Vector3Int> enemyTwoVisibleCoordinates = VisibleCells(otherBounds, otherEnemyFT);
+                        //HashSet<Vector3Int> visibleCoordinates = new HashSet<Vector3Int>(enemyOneThreatCells);
+                        var visibleCoordinates = enemyOneThreatCells.Intersect(enemyTwoThreatCells).ToHashSet();
+                        //visibleCoordinates.IntersectWith(enemyTwoThreatCells);
 
-                            HashSet<Vector3Int> visibleCoordinates = new HashSet<Vector3Int>(enemyOneVisibleCoordinates);
-                            visibleCoordinates.IntersectWith(enemyTwoVisibleCoordinates);
-
-                            Profiler.EndSample();
-                            float cellArea = (Data.Grid.cellSize.x * Data.Grid.cellSize.y);
-                            maxOverlappArea = Mathf.Max(enemyOneVisibleCoordinates.Count * cellArea, enemyTwoVisibleCoordinates.Count * cellArea);
-                            if (maxOverlappArea != 0)
-                            {
-                                float estimatedOverlappArea = visibleCoordinates.Count * cellArea;
-                                float relativeOverlappArea = estimatedOverlappArea / maxOverlappArea;
-                                accumulatedOverlapp += relativeOverlappArea;
-                            }
+                        maxOverlappArea = Mathf.Max(enemyOneThreatCells.Count * cellArea,
+                            enemyTwoThreatCells.Count * cellArea);
+                        if (maxOverlappArea != 0)
+                        {
+                            float estimatedOverlappArea = visibleCoordinates.Count * cellArea;
+                            float relativeOverlappArea = estimatedOverlappArea / maxOverlappArea;
+                            accumulatedOverlap += relativeOverlappArea;
                         }
                     }
                 }
+                simulation.Progress();
             }
-            return accumulatedOverlapp; ;
+            return accumulatedOverlap / futureLevel.Iterations / threats.Count();
         }
+
+        //        private float OverlapRelativeToDiscreteMaxFOV(IFutureLevel futureLevel, float maxTime, float maxOverlappArea)
+        //        {
+        //            List<BacktrackPatrolPath> simulatedPaths = Data._debugEnenmies
+        //                .Select(x => new BacktrackPatrolPath(x.BacktrackPatrolPath)).ToList();
+        //            float accumulatedOverlapp = 0;
+        //            for (float time = 0; time <= maxTime; time += futureLevel.Step)
+        //            {
+        //                //Move all paths
+        //                simulatedPaths.ForEach(x => x.MoveAlong(futureLevel.Step * Data._debugEnenmies[0].EnemyProperties.Speed));
+        //                for (int i = 0; i < Data._debugEnenmies.Length - 1; i++)
+        //                {
+        //                    FutureTransform enemyFT = PatrolPath.GetPathOrientedTransform(simulatedPaths[i]);
+        //                    Bounds bounds = FieldOfView.GetFovBounds(enemyFT, VD, FOV);
+        //                    HashSet<Vector3Int> enemyOneVisibleCoordinates = VisibleCells(bounds, enemyFT);
+        //
+        //                    for (int j = i + 1; j < Data._debugEnenmies.Length; j++)
+        //                    {
+        //                        FutureTransform otherEnemyFT = PatrolPath.GetPathOrientedTransform(simulatedPaths[j]);
+        //                        Bounds otherBounds = FieldOfView.GetFovBounds(otherEnemyFT, VD, FOV);
+        //                        if (bounds.Intersects(otherBounds))
+        //                        {
+        //                            Profiler.BeginSample("Bounds intersecting");
+        //                            var overlapp = Helpers.IntersectBounds(bounds, otherBounds);
+        //                            Profiler.EndSample();
+        //                            Profiler.BeginSample("Cell visibility checking");
+        //
+        //                            HashSet<Vector3Int> enemyTwoVisibleCoordinates = VisibleCells(otherBounds, otherEnemyFT);
+        //
+        //                            HashSet<Vector3Int> visibleCoordinates = new HashSet<Vector3Int>(enemyOneVisibleCoordinates);
+        //                            visibleCoordinates.IntersectWith(enemyTwoVisibleCoordinates);
+        //
+        //                            Profiler.EndSample();
+        //                            float cellArea = (Data.Grid.cellSize.x * Data.Grid.cellSize.y);
+        //                            maxOverlappArea = Mathf.Max(enemyOneVisibleCoordinates.Count * cellArea, enemyTwoVisibleCoordinates.Count * cellArea);
+        //                            if (maxOverlappArea != 0)
+        //                            {
+        //                                float estimatedOverlappArea = visibleCoordinates.Count * cellArea;
+        //                                float relativeOverlappArea = estimatedOverlappArea / maxOverlappArea;
+        //                                accumulatedOverlapp += relativeOverlappArea;
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //            return accumulatedOverlapp; ;
+        //        }
     }
 }

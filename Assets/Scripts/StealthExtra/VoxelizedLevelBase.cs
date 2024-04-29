@@ -6,6 +6,7 @@ using UnityEngine;
 
 public interface IFutureLevel
 {
+    IPredictableThreat[] DynamicThreats { get; }
     public float Step { get; }
     public float Iterations { get; }
 
@@ -37,6 +38,8 @@ public class VoxelizedLevelBase : MonoBehaviour, IFutureLevel
     public float Step => Step;
 
     public float Iterations => Iterations;
+
+    public IPredictableThreat[] DynamicThreats => throw new System.NotImplementedException();
 
     public float GetMaxSimulationTime() => Step * Iterations;
 

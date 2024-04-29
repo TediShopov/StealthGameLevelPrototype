@@ -230,7 +230,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.2, y: 0.2}
   m_EdgeRadius: 0
 --- !u!114 &5922416480227771764
 MonoBehaviour:
@@ -247,6 +247,9 @@ MonoBehaviour:
   EnemyProperties: {fileID: 11400000, guid: 27a67ad91ca35a34489dffb723d5bcae, type: 2}
   PathPoints: []
   FieldOfView: {fileID: 5922416480671266964}
+  IsPaused: 0
+  AssignManualPath: 0
+  SetStaticTransform: 0
 --- !u!1 &5922416480671266963
 GameObject:
   m_ObjectHideFlags: 0
