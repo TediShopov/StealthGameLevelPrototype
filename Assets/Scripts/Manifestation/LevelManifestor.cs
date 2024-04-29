@@ -232,12 +232,11 @@ public class LevelManifestor : MonoBehaviour, ILevelManifestor
 
         Profiler.EndSample();
         //Copy grid components of the level prototype.
-        var otherGrid = Data.AddComponent<Grid>();
-        otherGrid.cellSize = this.GetComponent<Grid>().cellSize;
-        otherGrid.cellSwizzle = this.GetComponent<Grid>().cellSwizzle;
-        otherGrid.cellLayout = this.GetComponent<Grid>().cellLayout;
+        //        var otherGrid = Data.AddComponent<Grid>();
+        //        otherGrid.cellSize = this.GetComponent<Grid>().cellSize;
+        //        otherGrid.cellSwizzle = this.GetComponent<Grid>().cellSwizzle;
+        //        otherGrid.cellLayout = this.GetComponent<Grid>().cellLayout;
 
-        Profiler.EndSample();
         UnityEngine.Debug.Log("Generation of phenotype finished");
     }
 
