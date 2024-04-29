@@ -83,6 +83,7 @@ public class UserPreferenceModel : IPreferenceModel<LevelChromosomeBase>
         IAestheticMeasurable<LevelChromosomeBase> selected,
         IEnumerable<IAestheticMeasurable<LevelChromosomeBase>> notSelected)
     {
+        if (notSelected.Count() <= 0) return;
         var avgUnselectedProps =
             PropertyMeasurements.Average(notSelected.Select(x => x.GetMeasurements()).ToList());
 

@@ -223,7 +223,7 @@ public class StealthLevelIEMono : MonoBehaviour
     {
         GAGenerationLogger = null;
         RandomSeedGenerator = new System.Random(Seed);
-        var selection = new RouletteWheelSelection();
+        var selection = new TournamentSelection(3);
         var crossover = new TwoPointCrossover();
         var mutation = new CustomMutators(1, 1, 1);
         var chromosome = Generator.GetAdamChromosome(RandomSeedGenerator.Next());

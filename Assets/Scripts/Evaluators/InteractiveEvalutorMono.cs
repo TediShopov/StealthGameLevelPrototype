@@ -53,6 +53,90 @@ public class InteractiveEvalutorMono : EvaluatorMono
         //        }
     }
 
+    //    //Given a chromosme that is level chromosome
+    //    //and has a fitness value
+    //    public double Reevaluate(IChromosome chromosome, List<MeasurementType> TypeToEval)
+    //    {
+    //        LevelChromosomeBase levelChromosome = CheckValidLevelChromosome(chromosome);
+    //        var levelObject = levelChromosome.Phenotype;
+    //
+    //        ////Run the generators --> the game object is now tagged as level
+    //        var evaluator = Instantiate(EvaluatorHolder, levelObject.transform);
+    //        //Get all evaluators from  the prefab
+    //        MeasureMono[] Evaluators = evaluator.GetComponents<MeasureMono>();
+    //
+    //        //Order so level properties are measured first, followed by validators and
+    //        // difficulty estimation
+    //        Evaluators = Evaluators
+    //            .Where(x => TypeToEval.Contains(x.GetCategory()))
+    //            .OrderByDescending(x => x.GetCategory() == MeasurementType.PROPERTIES)
+    //            .ThenByDescending(x => x.IsValidator)
+    //            .ToArray();
+    //
+    //        foreach (var e in Evaluators)
+    //        {
+    //            e.Init(levelObject.gameObject);
+    //            e.DoMeasure(levelObject.gameObject);
+    //            if (e.IsTerminating)
+    //                break;
+    //        }
+    //
+    //        var newMeasurement = Evaluators.Select(x => x.Result).ToArray();
+    //        //Replace old values with new ones
+    //        foreach (var m in newMeasurement)
+    //        {
+    //            MeasureResult? oldMeasure =
+    //                levelChromosome.Measurements.FirstOrDefault(x => x.Name.Equals(m.Name));
+    //            if (oldMeasure.HasValue)
+    //                oldMeasure = m;
+    //            else
+    //                levelChromosome.Measurements.Add(m);
+    //        }
+    //        Transform data = levelObject.transform.Find("Data");
+    //        if (data is not null)
+    //        {
+    //            AppendAestheticMeasureToObject(levelChromosome, Evaluators);
+    //        }
+    //
+    //        double eval = 0;
+    //
+    //        if (Evaluators.Any(x => x.IsTerminating))
+    //        {
+    //            if (levelChromosome.AestheticProperties is not null)
+    //            {
+    //                eval = levelChromosome.GetAestheticScore(UserPreferenceModel);
+    //            }
+    //            eval *= 10;
+    //        }
+    //        else
+    //        {
+    //            if (DoObjectiveDifficultyEvaluation)
+    //            {
+    //                var riskMeasure = levelObject.GetComponentInChildren<RiskMeasure>();
+    //                var pathUniqueness = levelObject.GetComponentInChildren<PathZoneUniqueness>();
+    //                var solver = levelObject.GetComponentInChildren<RRTSolverDifficultyEvaluation>();
+    //            }
+    //            else
+    //            {
+    //                if (levelChromosome.AestheticProperties is not null)
+    //                {
+    //                    eval = levelChromosome.GetAestheticScore(UserPreferenceModel);
+    //                }
+    //                eval *= 10;
+    //            }
+    //        }
+    //        levelChromosome.Measurements.Add(new MeasureResult()
+    //        {
+    //            Name = "Fitness",
+    //            Category = MeasurementType.OVERALLFITNESS,
+    //            Value = eval.ToString()
+    //        });
+    //
+    //        //Apend to name
+    //
+    //        return eval;
+    //    }
+
     public override double Evaluate(IChromosome chromosome)
     {
         LevelChromosomeBase levelChromosome = CheckValidLevelChromosome(chromosome);
@@ -98,39 +182,16 @@ public class InteractiveEvalutorMono : EvaluatorMono
             AppendAestheticMeasureToObject(levelChromosome, Evaluators);
         }
 
-        double eval = 0;
+        if (levelChromosome.AestheticProperties is not null)
+        {
+            levelChromosome.AestheticScore =
+                levelChromosome.GetAestheticScore(UserPreferenceModel);
+        }
+        AssigneEngagementScore(levelChromosome);
 
-        if (Evaluators.Any(x => x.IsTerminating))
-        {
-            if (levelChromosome.AestheticProperties is not null)
-            {
-                eval = levelChromosome.GetAestheticScore(UserPreferenceModel);
-            }
-            eval *= 10;
-        }
-        else
-        {
-            if (DoObjectiveDifficultyEvaluation)
-            {
-                var riskMeasure = levelObject.GetComponentInChildren<RiskMeasure>();
-                var pathUniqueness = levelObject.GetComponentInChildren<PathZoneUniqueness>();
-                var solver = levelObject.GetComponentInChildren<RRTSolverDifficultyEvaluation>();
-            }
-            else
-            {
-                if (levelChromosome.AestheticProperties is not null)
-                {
-                    eval = levelChromosome.GetAestheticScore(UserPreferenceModel);
-                }
-                //eval = levelChromosome.AestheticScore;
-                //                for (int i = 0; i < levelChromosome.AestheticProperties.Count; i++)
-                //                {
-                //                    eval += levelChromosome.AestheticProperties[i]
-                //                        * IE.UserPreferences.Weights[i];
-                //                }
-                eval *= 10;
-            }
-        }
+        //Combine engagment score and aesthetic score
+        float eval = levelChromosome.AestheticScore + levelChromosome.EngagementScore;
+
         levelChromosome.Measurements.Add(new MeasureResult()
         {
             Name = "Fitness",
@@ -141,6 +202,54 @@ public class InteractiveEvalutorMono : EvaluatorMono
         //Apend to name
 
         return eval;
+    }
+
+    public double Reevaluate(IChromosome chromosome)
+    {
+        LevelChromosomeBase levelChromosome = CheckValidLevelChromosome(chromosome);
+        var levelObject = levelChromosome.Phenotype;
+
+        //Keep old measuremens
+        float oldAS = levelChromosome.AestheticScore;
+        if (levelChromosome.AestheticProperties is not null)
+        {
+            levelChromosome.AestheticScore =
+                levelChromosome.GetAestheticScore(UserPreferenceModel);
+        }
+
+        var evaluator = Instantiate(EvaluatorHolder, levelObject.transform);
+        //Combine engagment score and aesthetic score
+        float oldFitness = (float)levelChromosome.Fitness;
+        float eval = levelChromosome.AestheticScore + levelChromosome.EngagementScore;
+
+        if (Mathf.Approximately(eval, (float)levelChromosome.Fitness) == false)
+        {
+            Debug.Log($"Aesthetic score changed with {levelChromosome.AestheticScore - oldAS}");
+            Debug.Log($"Fitness changed with {eval - levelChromosome.Fitness}");
+        }
+        //`MeasureResult? t = levelChromosome.Measurements
+        //    .FirstOrDefault(x => x.Category == MeasurementType.OVERALLFITNESS);
+        //if(t.HasValue)
+        //    t.GetValueOrDefault() = levelChromosome.Fitness.ToString();
+        return eval;
+    }
+
+    private void AssigneEngagementScore(LevelChromosomeBase chromosomeBase)
+    {
+        try
+        {
+            var levelObject = chromosomeBase.Phenotype;
+            var riskMeasure = levelObject.GetComponentInChildren<RiskMeasure>();
+            var pathUniqueness = levelObject.GetComponentInChildren<PathZoneUniqueness>();
+            var solver = levelObject.GetComponentInChildren<RRTSolverDifficultyEvaluation>();
+
+            chromosomeBase.EngagementScore =
+                solver.Chance * riskMeasure.RiskMeasures.Min() * pathUniqueness.SeenPaths.Count();
+        }
+        catch (System.Exception)
+        {
+            chromosomeBase.EngagementScore = 0;
+        }
     }
 }
 

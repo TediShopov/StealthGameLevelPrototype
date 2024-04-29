@@ -34,6 +34,7 @@ public abstract class LevelChromosomeBase : ChromosomeBase,
     public GameObject Phenotype { get; set; }
 
     public float AestheticScore { get; set; }
+    public float EngagementScore { get; set; }
 
     [SerializeField] public List<MeasureResult> Measurements;
     [SerializeField] public PropertyMeasurements AestheticProperties;
@@ -45,6 +46,8 @@ public abstract class LevelChromosomeBase : ChromosomeBase,
         var clone = (LevelChromosomeBase)base.Clone();
         clone.Measurements = this.Measurements;
         clone.AestheticProperties = this.AestheticProperties;
+        clone.AestheticScore = this.AestheticScore;
+        clone.EngagementScore = this.EngagementScore;
         clone.EnemyRoadmap = this.EnemyRoadmap;
         return clone;
     }

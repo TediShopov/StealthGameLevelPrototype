@@ -423,7 +423,15 @@ namespace GeneticSharp.Domain
 
                     TaskExecutor.Add(() =>
                     {
-                        RunEvaluateFitness(c);
+                        if (c.Fitness.HasValue)
+                        {
+                            InteractiveEvalutorMono f = (InteractiveEvalutorMono)Fitness;
+                            c.Fitness = f.Reevaluate(c);
+                        }
+                        else
+                        {
+                            RunEvaluateFitness(c);
+                        }
                     });
                 }
 
@@ -461,6 +469,19 @@ namespace GeneticSharp.Domain
                 throw new FitnessException(Fitness, "Error executing Fitness.Evaluate for chromosome: {0}".With(ex.Message), ex);
             }
         }
+
+        //        private void RunChangeAestheticScore(object chromosome)
+        //        {
+        //            var c = chromosome as IChromosome;
+        //            try
+        //            {
+        //                c.Fitness = Fitness.Evaluate(c);
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                throw new FitnessException(Fitness, "Error executing Fitness.Evaluate for chromosome: {0}".With(ex.Message), ex);
+        //            }
+        //        }
 
         /// <summary>
         /// Selects the parents.
