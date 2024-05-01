@@ -141,7 +141,7 @@ public class UserPreferenceModel : IPreferenceModel<LevelChromosomeBase>
 
     public void Normalize(IList<float> weights)
     {
-        float sum = weights.Sum();
+        float sum = weights.Sum(x => Mathf.Abs(x));
         for (int i = 0; i < weights.Count; i++)
         {
             weights[i] = weights[i] / sum;

@@ -122,14 +122,16 @@ public class StealthLevelIEMono : MonoBehaviour
             SetUserPreferencesToDefault();
         }
 
-        GeneticSharp.RandomizationProvider.Current = new NativeRandom(Seed);
-
         //Normalize the user preferences
         UserPreferences.Normalize(UserPreferences.Weights);
 
+        PhenotypeEvaluator.UserPreferenceModel = UserPreferences;
+
+        GeneticSharp.RandomizationProvider.Current = new NativeRandom(Seed);
+
         //Attach tracker that keeps track of the weight of the user preference model
         //and their changes throughout the generations
-        AttackUserPreferenceLogger();
+        AttachUserPreferenceLogger();
 
         //Clear selections
         this.GenerationSelecitons = new List<LevelChromosomeBase>();
@@ -195,7 +197,7 @@ public class StealthLevelIEMono : MonoBehaviour
                 new UserPreferenceModel(PhenotypeEvaluator.GetCountOfLevelProperties());
     }
 
-    private void AttackUserPreferenceLogger()
+    private void AttachUserPreferenceLogger()
     {
         PreferenceTracker = new UserPrefereneceTracker(this.GeneticAlgorithm);
         UserPreferences.Attach(PreferenceTracker);
@@ -208,16 +210,17 @@ public class StealthLevelIEMono : MonoBehaviour
 
     public void RefreshPreferencesWeight()
     {
-        UserPreferences =
-            new UserPreferenceModel(PhenotypeEvaluator.GetCountOfLevelProperties());
-    }
+        //Validate and change the preference model to default if needed
+        if (IsValidUserPreferenceModel
+            (UserPreferences, PhenotypeEvaluator.GetCountOfLevelProperties()) == false)
+        {
+            SetUserPreferencesToDefault();
+        }
+        //Normalize the user preferences
+        UserPreferences.Normalize(UserPreferences.Weights);
 
-    //    public void Run()
-    //    {
-    //        SetupGA();
-    //        GeneticAlgorithm.Population.CreateInitialGeneration();
-    //        GeneticAlgorithm.State = GeneticAlgorithmState.Started;
-    //    }
+        PhenotypeEvaluator.UserPreferenceModel = UserPreferences;
+    }
 
     public void RunWithSyntheticModel()
     {

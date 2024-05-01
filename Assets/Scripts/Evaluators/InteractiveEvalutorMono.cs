@@ -64,12 +64,16 @@ public class InteractiveEvalutorMono : EvaluatorMono
             .ThenByDescending(x => x.IsValidator)
             .ToArray();
 
+        bool infeasible = false;
         foreach (var e in Evaluators)
         {
             e.Init(levelObject.gameObject);
             e.DoMeasure(levelObject.gameObject);
             if (e.IsTerminating)
+            {
+                infeasible = true;
                 break;
+            }
         }
 
         var newMeasurements = Evaluators.Select(x => x.Result).ToArray();
@@ -91,9 +95,12 @@ public class InteractiveEvalutorMono : EvaluatorMono
         }
         AssigneEngagementScore(levelChromosome);
 
-        //Combine engagment score and aesthetic score
-        float eval = levelChromosome.AestheticScore + levelChromosome.EngagementScore;
-
+        float eval = -100;
+        if (infeasible == false)
+        {
+            //Combine engagment score and aesthetic score
+            eval = levelChromosome.AestheticScore + levelChromosome.EngagementScore;
+        }
         levelChromosome.AddOrReplace(
             new MeasureResult()
             {
@@ -101,9 +108,6 @@ public class InteractiveEvalutorMono : EvaluatorMono
                 Category = MeasurementType.OVERALLFITNESS,
                 Value = eval.ToString()
             });
-
-        //Apend to name
-
         return eval;
     }
 

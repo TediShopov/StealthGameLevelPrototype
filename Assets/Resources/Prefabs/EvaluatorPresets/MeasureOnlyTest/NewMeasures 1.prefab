@@ -11,9 +11,8 @@ GameObject:
   - component: {fileID: 4520497855799095118}
   - component: {fileID: 3884739938021490184}
   - component: {fileID: -6840705847998759930}
-  - component: {fileID: 6804691756500018758}
-  - component: {fileID: 809994744366530489}
   - component: {fileID: 7709382548690047557}
+  - component: {fileID: 649578765979696708}
   m_Layer: 0
   m_Name: NewMeasures 1
   m_TagString: Untagged
@@ -75,48 +74,6 @@ MonoBehaviour:
   RunOnStart: 0
   DrawOnSelected: 0
   PropertyValue: 0
---- !u!114 &6804691756500018758
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4520497855799095119}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd576524742d3cb4496f156d59409d4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsValidator: 0
-  _value: 
-  Phenotype: {fileID: 0}
-  RunNow: 0
-  RunOnStart: 0
-  DrawOnSelected: 0
-  PropertyValue: 0
---- !u!114 &809994744366530489
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4520497855799095119}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb646418e2bdd4c488a9e5ef286046fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsValidator: 0
-  _value: 
-  Phenotype: {fileID: 0}
-  RunNow: 0
-  RunOnStart: 0
-  DrawOnSelected: 0
-  PropertyValue: 0
-  EnemySize: {x: 1, y: 1}
-  LevelProperties: {fileID: 11400000, guid: 74af1cf329fc6b244b7cf57e34f4f0ff, type: 2}
-  ExpectedPercentageOfEnemyOccupiedSpace: 0.05
-  MaxEnemies: 0
 --- !u!114 &7709382548690047557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,3 +86,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae0c960289b63c549a40492c8ec92f4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &649578765979696708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4520497855799095119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad1973ff3d699f449b4aff28915382ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsValidator: 1
+  _value: 
+  Phenotype: {fileID: 0}
+  RunNow: 0
+  RunOnStart: 0
+  DrawOnSelected: 0
+  ObstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  FutureLevel: {fileID: 0}
