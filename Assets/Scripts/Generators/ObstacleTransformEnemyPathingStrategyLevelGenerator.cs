@@ -1,11 +1,13 @@
 using Codice.CM.SEIDInfo;
 using PlasticPipe.Certificates;
+using StealthLevelEvaluation;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Unity.Plastic.Newtonsoft.Json.Serialization;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -75,6 +77,49 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         if (chromosome is not OTEPSLevelChromosome)
             throw new System.ArgumentException("OTEPS Level generator requries OTEPS level chromosome");
 
+        chromosome.Phenotype = new LevelPhenotype();
+        int geneIndex = 0;
+
+        MeasureResult geomtry = MeasureResultFromStep("Geometry Construction",
+            () => { geneIndex = GenerateGeometry(chromosome, to); });
+
+        MeasureResult roadmap = MeasureResultFromStep("Roadmap",
+            () => { AssignRoadmToPhenotype(chromosome, to); });
+
+        MeasureResult paths = MeasureResultFromStep("Path Assignment",
+            () => { AssignPaths(geneIndex, chromosome.Phenotype.Roadmap); });
+
+        MeasureResult future = MeasureResultFromStep("Level Future",
+             () => { CalculateLevelFuture(); });
+
+        chromosome.AddOrReplace(geomtry);
+        chromosome.AddOrReplace(roadmap);
+        chromosome.AddOrReplace(paths);
+        chromosome.AddOrReplace(future);
+
+        //Add extra visualizer to provide disegner insight
+        // into ediot view
+        this.Data.AddComponent<RoadmapVisualizer>();
+
+        UnityEngine.Debug.Log("Generation of phenotype finished");
+    }
+
+    private void CalculateLevelFuture()
+    {
+        //Initialize the future level
+        var futurePrototype = FutureLevel.PrototypeComponent(Data);
+        futurePrototype.Init();
+    }
+
+    private void AssignRoadmToPhenotype(LevelChromosomeBase chromosome, GameObject to)
+    {
+        RoadmapGenerator.Generate(to);
+        chromosome.Phenotype.Roadmap = RoadmapGenerator.RoadMap;
+        chromosome.Phenotype.Zones = RoadmapGenerator.LevelGrid;
+    }
+
+    private int GenerateGeometry(LevelChromosomeBase chromosome, GameObject to)
+    {
         CreateLevelStructure(to);
 
         //Setup chromosome
@@ -85,34 +130,17 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         PlaceBoundaryVisualPrefabs();
 
         Physics2D.SyncTransforms();
+        return geneIndex;
+    }
 
-        chromosome.Phenotype = new LevelPhenotype();
-
-        RoadmapGenerator.Generate(to);
-        chromosome.Phenotype.Roadmap = RoadmapGenerator.RoadMap;
-        chromosome.Phenotype.Zones = RoadmapGenerator.LevelGrid;
-
-        //Use the generated roadmap to assign guard paths
-        AssignPaths(geneIndex, RoadmapGenerator.RoadMap);
-
-        this.Data.AddComponent<RoadmapVisualizer>();
-
-        //Initialize the future level
-        var futurePrototype = FutureLevel.PrototypeComponent(Data);
-        futurePrototype.Init();
-
-        //        chromosome.AddOrReplace(
-        //            new StealthLevelEvaluation.MeasureResult
-        //            {
-        //                Type = typeof(ObstacleTransformEnemyPathingStrategyLevelGenerator),
-        //                Time = stopwatch.ElapsedMilliseconds,
-        //                Value = "-",
-        //                Name = "GenerationAggregated",
-        //                Category = MeasurementType.INITIALIZATION
-        //            }
-        //            );
-
-        UnityEngine.Debug.Log("Generation of phenotype finished");
+    public MeasureResult MeasureResultFromStep(string stepName, Action action)
+    {
+        var toReturn = new MeasureResult();
+        toReturn.Name = stepName;
+        toReturn.Category = MeasurementType.INITIALIZATION;
+        toReturn.Parent = null;
+        toReturn.Time = Helpers.TrackExecutionTime(action.Invoke);
+        return toReturn;
     }
 
     public void AssignPaths(int geneIndex, Graph<Vector2> roadmap)
