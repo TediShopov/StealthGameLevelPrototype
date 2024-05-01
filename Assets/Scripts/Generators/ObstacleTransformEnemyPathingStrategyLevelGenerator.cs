@@ -85,20 +85,22 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         otherGrid.cellSwizzle = this.GetComponent<Grid>().cellSwizzle;
         otherGrid.cellLayout = this.GetComponent<Grid>().cellLayout;
 
-        var roadmap = RoadmapGenerator.PrototypeComponent(Data);
-        roadmap.Init(to);
-        roadmap.DoMeasure(to);
-        chromosome.AddOrReplace(roadmap.Result);
-
         chromosome.Phenotype = new LevelPhenotype();
 
+        //var roadmap = RoadmapGenerator.PrototypeComponent(Data);
+        //roadmap.Init(to);
+        RoadmapGenerator.Init(to);
+        RoadmapGenerator.Do();
+        chromosome.AddOrReplace(RoadmapGenerator.Result);
         chromosome.Phenotype.Roadmap = RoadmapGenerator.RoadMap;
         chromosome.Phenotype.Zones = RoadmapGenerator.LevelGrid;
 
         Profiler.BeginSample("Assign Paths");
         //Use the generated roadmap to assign guard paths
-        AssignPaths(geneIndex, roadmap.RoadMap);
+        AssignPaths(geneIndex, RoadmapGenerator.RoadMap);
         Profiler.EndSample();
+
+        this.Data.AddComponent<RoadmapVisualizer>();
 
         //Initialize the future level
         //CopyComponent(FutureLevel, To).Init(To);

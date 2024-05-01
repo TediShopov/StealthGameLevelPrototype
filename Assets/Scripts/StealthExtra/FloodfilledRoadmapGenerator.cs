@@ -18,13 +18,8 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
     public bool DebugDraw;
     public bool ExtraChecks = false;
     public float EnemyBSRadius = 1.0f;
-    public List<Color> Colors;
 
-    ///    [HideInInspector] public Grid Grid;
-    ///    [HideInInspector] public LayerMask ObstacleLayerMask;
-    ///    [HideInInspector] public LayerMask BoundaryLayerMask;
     public UnboundedGrid Grid;
-
     public LayerMask ObstacleLayerMask;
     public LayerMask BoundaryLayerMask;
     public Graph<Vector2> RoadMap = new Graph<Vector2>();
@@ -35,29 +30,17 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
     //Transforms the unity grid to c# binary represenetaion of the level
     public NativeGrid<int> LevelGrid;
 
-    public void Awake()
-    {
-        Grid = new UnboundedGrid(GetComponent<Grid>());
-        //        Colors = new List<Color>();
-        //        Colors.Add(new Color(1, 0, 0, 0.2f));
-        //        Colors.Add(new Color(0, 1, 0, 0.2f));
-        //        Colors.Add(new Color(0, 0, 1, 0.2f));
-        //        Colors.Add(new Color(1, 1, 0, 0.2f));
-        //        Colors.Add(new Color(1, 0, 1, 0.2f));
-        //        Colors.Add(new Color(0, 1, 1, 0.2f));
-    }
-
-    public void Update()
-    {
-        if (DoFloodFill)
-        {
-            Init(Helpers.SearchForTagUpHierarchy(this.gameObject, "Level"));
-            Evaluate();
-            //FloodRegions();
-            //return Physics2D.Linecast(a, b, ObstacleLayerMask);
-            DoFloodFill = false;
-        }
-    }
+    //public void Update()
+    //{
+    //    if (DoFloodFill)
+    //    {
+    //        Init(Helpers.SearchForTagUpHierarchy(this.gameObject, "Level"));
+    //        Evaluate();
+    //        //FloodRegions();
+    //        //return Physics2D.Linecast(a, b, ObstacleLayerMask);
+    //        DoFloodFill = false;
+    //    }
+    //}
 
     public NativeGrid<int> GetFloodGrid()
     { return LevelGrid; }
@@ -287,20 +270,6 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
         }
     }
 
-    public Color GetColorForValue(int index)
-    {
-        if (index >= 0)
-        {
-            int colorIndex = index % Colors.Count;
-            //Circular buffer to assign colors
-            return Colors[colorIndex];
-        }
-        else
-        {
-            return new Color(0, 0, 0);
-        }
-    }
-
     public Queue<Tuple<int, int>> GetInitialBoundaryCells()
     {
         Queue<Tuple<int, int>> cells = new Queue<Tuple<int, int>>();
@@ -312,16 +281,6 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
             }
         });
         return cells;
-        //Queue<Tuple<int, int>> cells = new Queue<Tuple<int, int>>();
-        //for (int row = 0; row < GetRows(); row++)
-        //{
-        //    for (int col = 0; col < GetCols(); col++)
-        //    {
-        //        if (IsBoundaryCell(row, col))
-        //            cells.Enqueue(Tuple.Create(row, col));
-        //    }
-        //}
-        //return cells;
     }
 
     // Use the Assert class to test conditions
@@ -378,52 +337,12 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
 
     #region Debug
 
-    private void DebugDrawGridByIndex()
-    {
-        LevelGrid.ForEach((row, col) =>
-        {
-            if (LevelGrid.Get(row, col) != -1)
-            {
-                Gizmos.color = GetColorForValue(LevelGrid.Get(row, col));
-                Vector3 worldPosition = Grid.GetCellCenterWorld(LevelGrid.GetUnityCoord(row, col));
-                worldPosition.z = 0;
-                Vector3 cellsize = new Vector3(Grid.cellSize, Grid.cellSize, Grid.cellSize);
-                cellsize.z = 1;
-                Gizmos.DrawCube(worldPosition, cellsize);
-            }
-        });
-    }
-
-    private void DebugSimplifiedConnections()
-    {
-        Gizmos.color = Color.red;
-        foreach (var sc in _debugSimplifiedConnections)
-        {
-            Vector3 cellsize = new Vector3(Grid.cellSize, Grid.cellSize, Grid.cellSize);
-            cellsize.z = 1;
-            Gizmos.DrawLine(sc.Item1, sc.Item2);
-        }
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        if (DebugDraw)
-        {
-            if (LevelGrid == null) return;
-            Gizmos.color = Color.blue;
-            DebugDrawGridByIndex();
-            Graph<Vector2>.DebugDrawGraph(RoadMap, Color.red, Color.green, 0.01f);
-            //DebugSimplifiedConnections();
-            //Debug draw nodes with only one connecitons
-        }
-    }
-
     public FloodfilledRoadmapGenerator PrototypeComponent(GameObject to)
     {
         var other = to.AddComponent<FloodfilledRoadmapGenerator>();
         other.ObstacleLayerMask = this.ObstacleLayerMask;
         other.BoundaryLayerMask = this.BoundaryLayerMask;
-        other.Colors = this.Colors;
+        //other.Colors = this.Colors;
         other.DebugDraw = this.DebugDraw;
         other.ExtraChecks = this.ExtraChecks;
         other.EnemyBSRadius = this.EnemyBSRadius;
@@ -435,15 +354,39 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
         return "RoadmapFloofill";
     }
 
+    //    public override void Init(GameObject phenotype)
+    //    {
+    //        ColliderKeys = new List<Collider2D>();
+    //        _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
+    //        this.Grid = new UnboundedGrid(this.GetComponent<Grid>());
+    //        LevelGrid =
+    //            new NativeGrid<int>(this.Grid, Helpers.GetLevelBounds(phenotype.gameObject));
+    //
+    //        LevelGrid.SetAll(SetCellColliderIndex);
+    //    }
     public override void Init(GameObject phenotype)
     {
         ColliderKeys = new List<Collider2D>();
         _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
-        this.Grid = new UnboundedGrid(this.GetComponent<Grid>());
+        this.Grid = new UnboundedGrid(phenotype.transform.position, 0.4f);
         LevelGrid =
-            new NativeGrid<int>(this.Grid, Helpers.GetLevelBounds(gameObject));
+            new NativeGrid<int>(this.Grid, Helpers.GetLevelBounds(phenotype.gameObject));
 
         LevelGrid.SetAll(SetCellColliderIndex);
+    }
+
+    public void Do()
+    {
+        RoadMap = new Graph<Vector2>();
+        FloodRegions();
+        int totalRecursion = 0;
+
+        List<List<Vector2>> subgraphs = FindSubgraphsDFS();
+        foreach (var subgraph in subgraphs)
+        {
+            Vector2 superNode = PickUnvistiedSuperNode(subgraph);
+            RemoveRedundantNodes(superNode, ref totalRecursion, new List<Vector2>());
+        }
     }
 
     protected override string Evaluate()
