@@ -23,7 +23,7 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
     ///    [HideInInspector] public Grid Grid;
     ///    [HideInInspector] public LayerMask ObstacleLayerMask;
     ///    [HideInInspector] public LayerMask BoundaryLayerMask;
-    public Grid Grid;
+    public UnboundedGrid Grid;
 
     public LayerMask ObstacleLayerMask;
     public LayerMask BoundaryLayerMask;
@@ -37,7 +37,7 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
 
     public void Awake()
     {
-        Grid = GetComponent<Grid>();
+        Grid = new UnboundedGrid(GetComponent<Grid>());
         //        Colors = new List<Color>();
         //        Colors.Add(new Color(1, 0, 0, 0.2f));
         //        Colors.Add(new Color(0, 1, 0, 0.2f));
@@ -183,7 +183,7 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
     public Vector3 GetLowerLeft(int col, int row)
     {
         return LevelGrid.GetWorldPosition(row, col)
-            + new Vector3(-Grid.cellSize.x / 2.0f, -Grid.cellSize.y / 2.0f, 0);
+            + new Vector3(-Grid.cellSize / 2.0f, -Grid.cellSize / 2.0f, 0);
     }
 
     //}
@@ -351,7 +351,8 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
     private Collider2D[] GetStaticColliderAt(Vector3 worldPosition)
     {
         Vector2 position2D = new Vector2(worldPosition.x, worldPosition.y);
-        Vector2 halfBoxSize = Grid.cellSize * 0.5f;
+        Vector2 halfBoxSize =
+            new Vector2(Grid.cellSize * 0.5f, Grid.cellSize * 0.5f);
 
         // Perform a BoxCast to check for obstacles in the area
         RaycastHit2D[] hit = Physics2D.BoxCastAll(
@@ -386,9 +387,9 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
                 Gizmos.color = GetColorForValue(LevelGrid.Get(row, col));
                 Vector3 worldPosition = Grid.GetCellCenterWorld(LevelGrid.GetUnityCoord(row, col));
                 worldPosition.z = 0;
-                Vector3 cellsize = Grid.cellSize;
+                Vector3 cellsize = new Vector3(Grid.cellSize, Grid.cellSize, Grid.cellSize);
                 cellsize.z = 1;
-                Gizmos.DrawCube(worldPosition, Grid.cellSize);
+                Gizmos.DrawCube(worldPosition, cellsize);
             }
         });
     }
@@ -398,7 +399,7 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
         Gizmos.color = Color.red;
         foreach (var sc in _debugSimplifiedConnections)
         {
-            Vector3 cellsize = Grid.cellSize;
+            Vector3 cellsize = new Vector3(Grid.cellSize, Grid.cellSize, Grid.cellSize);
             cellsize.z = 1;
             Gizmos.DrawLine(sc.Item1, sc.Item2);
         }
@@ -438,9 +439,9 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
     {
         ColliderKeys = new List<Collider2D>();
         _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
-        this.Grid = GetComponent<Grid>();
-
-        LevelGrid = new NativeGrid<int>(this.Grid, Helpers.GetLevelBounds(gameObject));
+        this.Grid = new UnboundedGrid(this.GetComponent<Grid>());
+        LevelGrid =
+            new NativeGrid<int>(this.Grid, Helpers.GetLevelBounds(gameObject));
 
         LevelGrid.SetAll(SetCellColliderIndex);
     }

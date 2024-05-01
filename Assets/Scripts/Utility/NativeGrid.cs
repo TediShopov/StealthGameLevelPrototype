@@ -13,7 +13,7 @@ using UnityEngine;
 public class NativeGrid<T>
 {
     private T[,] _nativeGrid;
-    public Grid Grid;
+    public UnboundedGrid Grid;
 
     //Extents of the grids in cell count
     public Vector3Int _gridMin { get; set; }
@@ -39,7 +39,15 @@ public class NativeGrid<T>
 
     public NativeGrid(Grid unityGrid, Bounds bounds)
     {
-        this.Grid = unityGrid;
+        this.Grid = new UnboundedGrid(unityGrid);
+        _gridMin = Grid.WorldToCell(bounds.min);
+        _gridMax = Grid.WorldToCell(bounds.max) + new Vector3Int(1, 1, 0);
+        _nativeGrid = new T[GetRows(), GetCols()];
+    }
+
+    public NativeGrid(UnboundedGrid grid, Bounds bounds)
+    {
+        this.Grid = grid;
         _gridMin = Grid.WorldToCell(bounds.min);
         _gridMax = Grid.WorldToCell(bounds.max) + new Vector3Int(1, 1, 0);
         _nativeGrid = new T[GetRows(), GetCols()];

@@ -31,7 +31,7 @@ namespace StealthLevelEvaluation
             //Return true if box cast did not collide with any obstacle
             return Physics2D.OverlapBox(
                 ngrid.GetWorldPosition(row, col),
-                ngrid.Grid.cellSize, 0,
+                new Vector2(ngrid.Grid.cellSize, ngrid.Grid.cellSize), 0,
                 LevelProperties.ObstacleLayerMask
                 );
         }
@@ -42,8 +42,8 @@ namespace StealthLevelEvaluation
             try
             {
                 var roadmap = level.GetComponentInChildren<FloodfilledRoadmapGenerator>();
-                Grid grid = roadmap.Grid;
-                var LevelGrid = new NativeGrid<bool>(grid, Helpers.GetLevelBounds(level));
+                //Grid grid = roadmap.Grid;
+                var LevelGrid = new NativeGrid<bool>(roadmap.Grid, Helpers.GetLevelBounds(level));
                 LevelGrid.SetAll(SetObstacleGrid);
                 int occupied = 0;
                 int unoccupied = 0;
