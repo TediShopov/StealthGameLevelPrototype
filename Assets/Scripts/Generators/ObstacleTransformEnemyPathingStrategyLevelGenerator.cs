@@ -38,7 +38,10 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
     public int NecessaryObstacles = 3;
     public int EnemyCount;
     private int EntityCount => (LevelChromosome.Length - 1) / 5;
-    [HideInInspector] public FloodfilledRoadmapGenerator RoadmapGenerator;
+
+    [SerializeField]
+    public FloodfilledRoadmapGenerator RoadmapGenerator;
+
     [HideInInspector] public DiscretePathGenerator PathGenerator;
     public DiscreteRecalculatingFutureLevel FutureLevel;
 
@@ -46,6 +49,8 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
     {
         RoadmapGenerator = GetComponent<FloodfilledRoadmapGenerator>();
         PathGenerator = GetComponent<DiscretePathGenerator>();
+        if (RoadmapGenerator is null)
+            RoadmapGenerator = new FloodfilledRoadmapGenerator();
     }
 
     public int GetObstaclesToSpawn(ref int geneIndex)
@@ -60,13 +65,16 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
 
     public override void Generate(LevelChromosomeBase chromosome, GameObject to = null)
     {
-        Stopwatch stopwatch = Stopwatch.StartNew();
+        if (RoadmapGenerator is null)
+        {
+            RoadmapGenerator = new FloodfilledRoadmapGenerator();
+            RoadmapGenerator.ObstacleLayerMask = LevelProperties.ObstacleLayerMask;
+            RoadmapGenerator.BoundaryLayerMask = LevelProperties.BoundaryLayerMask;
+        }
+
         if (chromosome is not OTEPSLevelChromosome)
             throw new System.ArgumentException("OTEPS Level generator requries OTEPS level chromosome");
-        RoadmapGenerator.ObstacleLayerMask = LevelProperties.ObstacleLayerMask;
-        RoadmapGenerator.BoundaryLayerMask = LevelProperties.BoundaryLayerMask;
 
-        Profiler.BeginSample("Manifest Geometry");
         CreateLevelStructure(to);
 
         //Setup chromosome
@@ -78,47 +86,31 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
 
         Physics2D.SyncTransforms();
 
-        Profiler.EndSample();
-        //Copy grid components of the level prototype.
-        var otherGrid = Data.AddComponent<Grid>();
-        otherGrid.cellSize = this.GetComponent<Grid>().cellSize;
-        otherGrid.cellSwizzle = this.GetComponent<Grid>().cellSwizzle;
-        otherGrid.cellLayout = this.GetComponent<Grid>().cellLayout;
-
         chromosome.Phenotype = new LevelPhenotype();
 
-        //var roadmap = RoadmapGenerator.PrototypeComponent(Data);
-        //roadmap.Init(to);
-        RoadmapGenerator.Init(to);
-        RoadmapGenerator.Do();
-        chromosome.AddOrReplace(RoadmapGenerator.Result);
+        RoadmapGenerator.Generate(to);
         chromosome.Phenotype.Roadmap = RoadmapGenerator.RoadMap;
         chromosome.Phenotype.Zones = RoadmapGenerator.LevelGrid;
 
-        Profiler.BeginSample("Assign Paths");
         //Use the generated roadmap to assign guard paths
         AssignPaths(geneIndex, RoadmapGenerator.RoadMap);
-        Profiler.EndSample();
 
         this.Data.AddComponent<RoadmapVisualizer>();
 
         //Initialize the future level
-        //CopyComponent(FutureLevel, To).Init(To);
         var futurePrototype = FutureLevel.PrototypeComponent(Data);
         futurePrototype.Init();
 
-        stopwatch.Stop();
-
-        chromosome.AddOrReplace(
-            new StealthLevelEvaluation.MeasureResult
-            {
-                Type = typeof(ObstacleTransformEnemyPathingStrategyLevelGenerator),
-                Time = stopwatch.ElapsedMilliseconds,
-                Value = "-",
-                Name = "GenerationAggregated",
-                Category = MeasurementType.INITIALIZATION
-            }
-            );
+        //        chromosome.AddOrReplace(
+        //            new StealthLevelEvaluation.MeasureResult
+        //            {
+        //                Type = typeof(ObstacleTransformEnemyPathingStrategyLevelGenerator),
+        //                Time = stopwatch.ElapsedMilliseconds,
+        //                Value = "-",
+        //                Name = "GenerationAggregated",
+        //                Category = MeasurementType.INITIALIZATION
+        //            }
+        //            );
 
         UnityEngine.Debug.Log("Generation of phenotype finished");
     }

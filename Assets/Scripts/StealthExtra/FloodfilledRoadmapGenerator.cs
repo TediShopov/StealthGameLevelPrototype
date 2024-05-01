@@ -6,16 +6,11 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-[ExecuteInEditMode]
-[RequireComponent(typeof(Grid))]
-public class FloodfilledRoadmapGenerator : MeasureMono,
-    IPrototypable<FloodfilledRoadmapGenerator>
+public class FloodfilledRoadmapGenerator
 {
     //Dictionary exposed to Unity editor
     [HideInInspector] public List<Collider2D> ColliderKeys;
 
-    public bool DoFloodFill = false;
-    public bool DebugDraw;
     public bool ExtraChecks = false;
     public float EnemyBSRadius = 1.0f;
 
@@ -29,18 +24,6 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
 
     //Transforms the unity grid to c# binary represenetaion of the level
     public NativeGrid<int> LevelGrid;
-
-    //public void Update()
-    //{
-    //    if (DoFloodFill)
-    //    {
-    //        Init(Helpers.SearchForTagUpHierarchy(this.gameObject, "Level"));
-    //        Evaluate();
-    //        //FloodRegions();
-    //        //return Physics2D.Linecast(a, b, ObstacleLayerMask);
-    //        DoFloodFill = false;
-    //    }
-    //}
 
     public NativeGrid<int> GetFloodGrid()
     { return LevelGrid; }
@@ -326,45 +309,7 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
         return hit.Select(x => x.collider).ToArray();
     }
 
-    //        int rows = _gridMax.y - _gridMin.y;
-    //        int cols = _gridMax.x - _gridMin.x;
-    //        for (int row = 0; row < rows; row++)
-    //        {
-    //            for (int col = 0; col < cols; col++)
-    //            {
-    //            }
-    //        }
-
-    #region Debug
-
-    public FloodfilledRoadmapGenerator PrototypeComponent(GameObject to)
-    {
-        var other = to.AddComponent<FloodfilledRoadmapGenerator>();
-        other.ObstacleLayerMask = this.ObstacleLayerMask;
-        other.BoundaryLayerMask = this.BoundaryLayerMask;
-        //other.Colors = this.Colors;
-        other.DebugDraw = this.DebugDraw;
-        other.ExtraChecks = this.ExtraChecks;
-        other.EnemyBSRadius = this.EnemyBSRadius;
-        return other;
-    }
-
-    public override string GetName()
-    {
-        return "RoadmapFloofill";
-    }
-
-    //    public override void Init(GameObject phenotype)
-    //    {
-    //        ColliderKeys = new List<Collider2D>();
-    //        _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
-    //        this.Grid = new UnboundedGrid(this.GetComponent<Grid>());
-    //        LevelGrid =
-    //            new NativeGrid<int>(this.Grid, Helpers.GetLevelBounds(phenotype.gameObject));
-    //
-    //        LevelGrid.SetAll(SetCellColliderIndex);
-    //    }
-    public override void Init(GameObject phenotype)
+    public void Generate(GameObject phenotype)
     {
         ColliderKeys = new List<Collider2D>();
         _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
@@ -373,10 +318,6 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
             new NativeGrid<int>(this.Grid, Helpers.GetLevelBounds(phenotype.gameObject));
 
         LevelGrid.SetAll(SetCellColliderIndex);
-    }
-
-    public void Do()
-    {
         RoadMap = new Graph<Vector2>();
         FloodRegions();
         int totalRecursion = 0;
@@ -388,31 +329,4 @@ public class FloodfilledRoadmapGenerator : MeasureMono,
             RemoveRedundantNodes(superNode, ref totalRecursion, new List<Vector2>());
         }
     }
-
-    protected override string Evaluate()
-    {
-        Profiler.BeginSample(GetName());
-        RoadMap = new Graph<Vector2>();
-        FloodRegions();
-        if (RoadMap.adjacencyList.Count <= 0) return "-";
-        int totalRecursion = 0;
-
-        List<List<Vector2>> subgraphs = FindSubgraphsDFS();
-        foreach (var subgraph in subgraphs)
-        {
-            Vector2 superNode = PickUnvistiedSuperNode(subgraph);
-            RemoveRedundantNodes(superNode, ref totalRecursion, new List<Vector2>());
-        }
-        Profiler.EndSample();
-
-        Debug.Log($"Roadmap nodes: {RoadMap.adjacencyList.Count}");
-        Debug.Log($"Simplified connection count : {_debugSimplifiedConnections.Count}");
-        Debug.Log($"Recursion count is : {totalRecursion}");
-        Debug.Log($"Graph count is : {subgraphs.Count}");
-        return "-";
-    }
-
-    #endregion Debug
-
-    // Start is called before the first frame update
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
-[RequireComponent(typeof(Grid))]
 public class RoadmapVisualizer : MonoBehaviour
 {
     public bool DebugDraw = true;
@@ -13,7 +12,6 @@ public class RoadmapVisualizer : MonoBehaviour
 
     public void Awake()
     {
-        Grid = new UnboundedGrid(GetComponent<Grid>());
         Colors = new List<Color>();
         Colors.Add(new Color(1, 0, 0, 0.2f));
         Colors.Add(new Color(0, 1, 0, 0.2f));
@@ -23,6 +21,8 @@ public class RoadmapVisualizer : MonoBehaviour
         Colors.Add(new Color(0, 1, 1, 0.2f));
         var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
         Phenotype = level.GetComponentInChildren<LevelChromosomeMono>().Chromosome.Phenotype;
+        //        Grid = new UnboundedGrid(GetComponent<Grid>(Phenotype.Zones.Grid));
+        Grid = (Phenotype.Zones.Grid);
     }
 
     // Start is called before the first frame update
@@ -56,17 +56,6 @@ public class RoadmapVisualizer : MonoBehaviour
         });
     }
 
-    //    private void DebugSimplifiedConnections()
-    //    {
-    //        Gizmos.color = Color.red;
-    //        foreach (var sc in _debugSimplifiedConnections)
-    //        {
-    //            Vector3 cellsize = new Vector3(Grid.cellSize, Grid.cellSize, Grid.cellSize);
-    //            cellsize.z = 1;
-    //            Gizmos.DrawLine(sc.Item1, sc.Item2);
-    //        }
-    //    }
-
     private void OnDrawGizmosSelected()
     {
         if (DebugDraw)
@@ -75,8 +64,6 @@ public class RoadmapVisualizer : MonoBehaviour
             Gizmos.color = Color.blue;
             DebugDrawGridByIndex();
             Graph<Vector2>.DebugDrawGraph(Phenotype.Roadmap, Color.red, Color.green, 0.01f);
-            //DebugSimplifiedConnections();
-            //Debug draw nodes with only one connecitons
         }
     }
 }
