@@ -18,34 +18,22 @@ public class StealthLevelIEEditor : Editor
         //SerializedPreferences = serializedObject.FindProperty("UserPreferences");
     }
 
-    private void ArrayGUI(SerializedObject obj, string name)
-    {
-        int no = obj.FindProperty(name + ".Array.size").intValue;
-        EditorGUI.indentLevel = 3;
-        int c = EditorGUILayout.IntField("Size", no);
-        if (c != no)
-            obj.FindProperty(name + ".Array.size").intValue = c;
-
-        for (int i = 0; i < no; i++)
-        {
-            var prop = obj.FindProperty(string.Format("{0}.Array.data[{1}]", name, i));
-            EditorGUILayout.PropertyField(prop);
-        }
-    }
-
     public override void OnInspectorGUI()
     {
         StealthLevelIEMono ie = (StealthLevelIEMono)target;
         //base.OnInspectorGUI();
 
         serializedObject.Update();
-        if (ie.UserPreferences is not null)
-        {
-            foreach (var weight in ie.UserPreferences.Weights)
-            {
-                EditorGUILayout.LabelField(weight.ToString());
-            }
-        }
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("UserPreferences"));
+        serializedObject.ApplyModifiedProperties();
+        //        if (ie.UserPreferences is not null)
+        //        {
+        //
+        //            foreach (var weight in ie.UserPreferences.Weights)
+        //            {
+        //                EditorGUILayout.LabelField(weight.ToString());
+        //            }
+        //        }
         //        EditorGUILayout.PropertyField(SerializedPreferences, true);
 
         //EditorGUILayout.PropertyField(SerializedPreferences, true);
@@ -147,14 +135,12 @@ public class StealthLevelIEEditor : Editor
             }
             if (GUILayout.Button("Setup"))
             {
-                ie.Dispose();
-                ie.SetupGA();
-                ie.DoGeneration();
+                ie.StartGA();
             }
         }
         if (GUILayout.Button("Dispose"))
         {
-            ie.Dispose();
+            ie.EndGA();
         }
     }
 }

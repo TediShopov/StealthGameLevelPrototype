@@ -146,7 +146,7 @@ public abstract class LevelPhenotypeGenerator : LevelGeneratorBase
 
     //!WARNING! uses destroy immediate as mulitple level can be geenrated an
     //disposed in the same frame
-    public void Dispose()
+    public void DisposeOldPopulation()
     {
         var tempList = transform.Cast<Transform>().ToList();
         foreach (var child in tempList)
@@ -196,7 +196,7 @@ public abstract class LevelPhenotypeGenerator : LevelGeneratorBase
     {
         if (DisposeNow)
         {
-            Dispose();
+            DisposeOldPopulation();
             DisposeNow = false;
         }
     }

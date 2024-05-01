@@ -36,16 +36,17 @@ public interface IAestheticMeasurable<T>
     PropertyMeasurements GetMeasurements();
 }
 
+[Serializable]
 public class UserPreferenceModel : IPreferenceModel<LevelChromosomeBase>
 {
     private List<IObserver<IList<float>>> Observers;
-    private IList<float> _weights;
+    [SerializeReference] private List<float> _weights;
     public float Step;
 
     public IList<float> Weights
     {
         get { return _weights; }
-        set { _weights = value; }
+        set { _weights = (List<float>)value; }
     }
 
     public UserPreferenceModel(int preferencesCount)
@@ -131,6 +132,11 @@ public class UserPreferenceModel : IPreferenceModel<LevelChromosomeBase>
 
         Normalize(this.Weights);
         Notify(this.Weights);
+    }
+
+    public void SetToDefault()
+    {
+        this.Weights = GetDefault(Weights.Count);
     }
 
     public void Normalize(IList<float> weights)

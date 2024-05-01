@@ -1,3 +1,4 @@
+using Codice.Client.BaseCommands.Merge;
 using GeneticSharp;
 using GeneticSharp.Domain;
 using PlasticPipe.PlasticProtocol.Messages;
@@ -5,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Unity.Collections;
 using UnityEngine;
 
 public class StealthLevelIEMono : MonoBehaviour
@@ -85,18 +87,58 @@ public class StealthLevelIEMono : MonoBehaviour
     public void Awake()
     {
         InteractiveSelections = new List<List<LevelChromosomeBase>>();
-        Dispose();
+        DisposeOldPopulation();
     }
 
-    public void Dispose()
+    public void DisposeOldPopulation()
     {
         var tempList = this.transform.Cast<Transform>().ToList();
         foreach (var child in tempList)
         {
             GameObject.DestroyImmediate(child.gameObject);
         }
-        //this.GridPopulation = null;
+    }
+
+    public void EndGA()
+    {
         this.GeneticAlgorithm = null;
+        GenerationSelecitons = new List<LevelChromosomeBase>();
+        InteractiveSelections = new List<List<LevelChromosomeBase>>();
+
+        DisposeOldPopulation();
+        RefreshPreferencesWeight();
+    }
+
+    public void StartGA()
+    {
+        this.DisposeOldPopulation();
+
+        this.SetupGA();
+
+        //Validate and change the preference model to default if needed
+        if (IsValidUserPreferenceModel
+            (UserPreferences, PhenotypeEvaluator.GetCountOfLevelProperties()) == false)
+        {
+            SetUserPreferencesToDefault();
+        }
+
+        GeneticSharp.RandomizationProvider.Current = new NativeRandom(Seed);
+
+        //Normalize the user preferences
+        UserPreferences.Normalize(UserPreferences.Weights);
+
+        //Attach tracker that keeps track of the weight of the user preference model
+        //and their changes throughout the generations
+        AttackUserPreferenceLogger();
+
+        //Clear selections
+        this.GenerationSelecitons = new List<LevelChromosomeBase>();
+        this.InteractiveSelections = new List<List<LevelChromosomeBase>>();
+
+        //Startup the interactive evolutionary algoritm
+        GeneticAlgorithm.State = GeneticAlgorithmState.Started;
+        GeneticAlgorithm.Population.CreateInitialGeneration();
+        GeneticAlgorithm.EvaluateFitness();
     }
 
     public void DoGeneration()
@@ -104,21 +146,8 @@ public class StealthLevelIEMono : MonoBehaviour
         if (GeneticAlgorithm.State == GeneticAlgorithmState.Started)
         {
             ApplyChangesToPreferenceModel();
-
-            InteractiveSelections.Add(GenerationSelecitons);
-            GenerationSelecitons.Clear();
-
-            GeneticAlgorithm.EndCurrentGeneration();
-            GeneticAlgorithm.EvolveOneGeneration();
-
-            //Evaluates fitness but also manifest the level
-            // in the unity scene
-            GeneticAlgorithm.EvaluateFitness();
-
             for (int i = 0; i < SyntheticGenerations; i++)
             {
-                //ApplyChangesToPreferenceModel();
-
                 InteractiveSelections.Add(GenerationSelecitons);
                 GenerationSelecitons.Clear();
 
@@ -130,17 +159,10 @@ public class StealthLevelIEMono : MonoBehaviour
                 GeneticAlgorithm.EvaluateFitness();
             }
         }
-        else
-        {
-            RefereshPreferenceAndTracker();
-            this.GenerationSelecitons = new List<LevelChromosomeBase>();
-            this.InteractiveSelections = new List<List<LevelChromosomeBase>>();
-            //            UserPreferences =
-            //                new DynamicUserPreferenceModel(PhenotypeEvaluator.GetCountOfLevelProperties());
-            GeneticAlgorithm.State = GeneticAlgorithmState.Started;
-            GeneticAlgorithm.Population.CreateInitialGeneration();
-            GeneticAlgorithm.EvaluateFitness();
-        }
+    }
+
+    public void DoSyntheticRuns(int number)
+    {
     }
 
     public void NameAllPhenotypeGameobjects()
@@ -159,13 +181,23 @@ public class StealthLevelIEMono : MonoBehaviour
         }
     }
 
-    private void RefereshPreferenceAndTracker()
+    private static bool IsValidUserPreferenceModel(UserPreferenceModel ue, int necessaryWerghtCount)
     {
-        UserPreferences =
-            new UserPreferenceModel(PhenotypeEvaluator.GetCountOfLevelProperties());
+        return ue is not null && ue.Weights.Count == necessaryWerghtCount;
+    }
+
+    private void SetUserPreferencesToDefault()
+    {
+        if (UserPreferences is null)
+            UserPreferences.SetToDefault();
+        else
+            this.UserPreferences =
+                new UserPreferenceModel(PhenotypeEvaluator.GetCountOfLevelProperties());
+    }
+
+    private void AttackUserPreferenceLogger()
+    {
         PreferenceTracker = new UserPrefereneceTracker(this.GeneticAlgorithm);
-        PhenotypeEvaluator.UserPreferenceModel = this.UserPreferences;
-        UserPreferences.Step = this.Step;
         UserPreferences.Attach(PreferenceTracker);
     }
 
@@ -180,22 +212,25 @@ public class StealthLevelIEMono : MonoBehaviour
             new UserPreferenceModel(PhenotypeEvaluator.GetCountOfLevelProperties());
     }
 
-    public void Run()
-    {
-        SetupGA();
-        GeneticAlgorithm.Population.CreateInitialGeneration();
-        GeneticAlgorithm.State = GeneticAlgorithmState.Started;
-    }
+    //    public void Run()
+    //    {
+    //        SetupGA();
+    //        GeneticAlgorithm.Population.CreateInitialGeneration();
+    //        GeneticAlgorithm.State = GeneticAlgorithmState.Started;
+    //    }
 
     public void RunWithSyntheticModel()
     {
         for (int i = 0; i < IndependentRuns; i++)
         {
-            Dispose();
+            DisposeOldPopulation();
             //PhenotypeEvaluator.IE = this;
             PhenotypeEvaluator.UserPreferenceModel = this.UserPreferences;
             this.GenerationSelecitons = new List<LevelChromosomeBase>();
             this.InteractiveSelections = new List<List<LevelChromosomeBase>>();
+
+            GeneticSharp.RandomizationProvider.Current = new NativeRandom(Seed);
+
             SetupGA();
             GeneticAlgorithm.State = GeneticAlgorithmState.Started;
             GeneticAlgorithm.Population.CreateInitialGeneration();
@@ -309,6 +344,77 @@ public class StealthLevelIEMono : MonoBehaviour
             levelChromosome.PhenotypeGenerator.Generate(levelChromosome, level.gameObject);
             ChromoseMeasurementsVisualizer.AttachDataVisualizer(level.gameObject);
         }
+    }
+}
+
+public class NativeRandom : IRandomization
+{
+    private System.Random _random;
+
+    public NativeRandom()
+    {
+        _random = new System.Random();
+    }
+
+    public NativeRandom(int seed)
+    {
+        _random = new System.Random(seed);
+    }
+
+    public double GetDouble()
+    {
+        return _random.NextDouble();
+    }
+
+    public double GetDouble(double min, double max)
+    {
+        // Get a random double between min and max
+        return min + _random.NextDouble() * (max - min);
+    }
+
+    public float GetFloat()
+    {
+        // Convert a random double to float
+        return (float)_random.NextDouble();
+    }
+
+    public float GetFloat(float min, float max)
+    {
+        // Get a random float between min and max
+        return min + (float)(_random.NextDouble() * (max - min));
+    }
+
+    public int GetInt(int min, int max)
+    {
+        // Return a random integer between min (inclusive) and max (exclusive)
+        return _random.Next(min, max);
+    }
+
+    public int[] GetInts(int length, int min, int max)
+    {
+        int[] result = new int[length];
+        for (int i = 0; i < length; i++)
+        {
+            result[i] = GetInt(min, max);
+        }
+        return result;
+    }
+
+    public int[] GetUniqueInts(int length, int min, int max)
+    {
+        // Ensure we have enough range to get unique integers
+        if (max - min < length)
+        {
+            throw new ArgumentException("Range is too small for the requested number of unique integers.");
+        }
+
+        HashSet<int> uniqueInts = new HashSet<int>();
+        while (uniqueInts.Count < length)
+        {
+            uniqueInts.Add(GetInt(min, max));
+        }
+
+        return uniqueInts.ToArray();
     }
 }
 
