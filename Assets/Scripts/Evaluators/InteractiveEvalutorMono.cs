@@ -18,7 +18,7 @@ public class InteractiveEvalutorMono : EvaluatorMono
     //private List<MeasureMono> Evaluators = new List<MeasureMono>();
     public LevelProperties LevelProperties;
 
-    public bool DoObjectiveDifficultyEvaluation;
+    public bool OnlyAesthetic;
     public UserPreferenceModel UserPreferenceModel;
     //public StealthLevelIEMono IE;
 
@@ -68,11 +68,14 @@ public class InteractiveEvalutorMono : EvaluatorMono
         foreach (var e in Evaluators)
         {
             e.Init(levelObject.gameObject);
-            e.DoMeasure(levelObject.gameObject);
-            if (e.IsTerminating)
+
+            if (infeasible == false)
             {
-                infeasible = true;
-                break;
+                e.DoMeasure(levelObject.gameObject);
+                if (e.IsTerminating)
+                {
+                    infeasible = true;
+                }
             }
         }
 
@@ -98,8 +101,15 @@ public class InteractiveEvalutorMono : EvaluatorMono
         float eval = -100;
         if (infeasible == false)
         {
-            //Combine engagment score and aesthetic score
-            eval = levelChromosome.AestheticScore + levelChromosome.EngagementScore;
+            if (OnlyAesthetic)
+            {
+                //Combine engagment score and aesthetic score
+                eval = levelChromosome.AestheticScore;
+            }
+            else
+            {
+                eval = levelChromosome.AestheticScore + levelChromosome.EngagementScore;
+            }
         }
         levelChromosome.AddOrReplace(
             new MeasureResult()
@@ -127,7 +137,15 @@ public class InteractiveEvalutorMono : EvaluatorMono
         var evaluator = Instantiate(EvaluatorHolder, levelObject.transform);
         //Combine engagment score and aesthetic score
         float oldFitness = (float)levelChromosome.Fitness;
-        float eval = levelChromosome.AestheticScore + levelChromosome.EngagementScore;
+        float eval = -100;
+        if (OnlyAesthetic)
+        {
+            eval = levelChromosome.AestheticScore;
+        }
+        else
+        {
+            eval = levelChromosome.AestheticScore + levelChromosome.EngagementScore;
+        }
 
         if (Mathf.Approximately(eval, (float)levelChromosome.Fitness) == false)
         {

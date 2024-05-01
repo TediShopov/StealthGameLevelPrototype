@@ -1,3 +1,4 @@
+using StealthLevelEvaluation;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,7 +24,15 @@ public class MultipleRRTRunner : MonoBehaviour
             var RRT = Instantiate(RRTPrefab, this.transform);
             var rrtVisualizer = RRT.GetComponent<RapidlyExploringRandomTreeVisualizer>();
             rrtVisualizer.Setup();
-            rrtVisualizer.Run();
+            float time =
+                Helpers.TrackExecutionTime(rrtVisualizer.Run);
+            var measurmentChild = new MeasureResult();
+            measurmentChild.Name = "RRT";
+            if (rrtVisualizer.RRT.Succeeded())
+                measurmentChild.Value = "True";
+            else
+                measurmentChild.Value = "False";
+            measurmentChild.Time = time;
         }
     }
 }

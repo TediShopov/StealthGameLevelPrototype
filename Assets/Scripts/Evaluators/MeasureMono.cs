@@ -29,14 +29,80 @@ namespace StealthLevelEvaluation
     }
 
     [Serializable]
-    public struct MeasureResult
+    public class MeasureResult
     {
         public string Name;
+
+        // Method to get the depth of the MeasureResult
+        public int GetDepth()
+        {
+            if (ChildMeasures == null || ChildMeasures.Count == 0)
+            {
+                return 1; // Leaf node
+            }
+
+            int maxDepth = 1;
+            foreach (var child in ChildMeasures)
+            {
+                int childDepth = child.GetDepth();
+                if (childDepth + 1 > maxDepth)
+                {
+                    maxDepth = childDepth + 1;
+                }
+            }
+            return maxDepth;
+        }
+
+        public string GetFullName()
+        {
+            if (IsComposite)
+            {
+                string allNamesCommaSeparated = Name;
+                if (ChildMeasures is null) return allNamesCommaSeparated;
+                for (int i = 0; i < ChildMeasures.Count; i++)
+                {
+                    allNamesCommaSeparated +=
+                        $",{ChildMeasures[i].GetFullName()}({i})";
+                }
+                return allNamesCommaSeparated;
+            }
+            else
+                return Name;
+        }
+
         public MeasurementType Category;
         public Type Type;
         public string Value;
         public double Time;
         public static string DefaultValue = "-";
+        public bool IsComposite => ChildMeasures != null && ChildMeasures.Count > 0;
+        public List<MeasureResult> ChildMeasures;
+
+        public MeasureResult Parent;
+
+        // Method to add a child measure and set the parent
+        public void AddChildMeasure(MeasureResult res)
+        {
+            if (ChildMeasures == null)
+            {
+                ChildMeasures = new List<MeasureResult>();
+            }
+            res.Parent = this; // Set the parent to this instance
+            ChildMeasures.Add(res);
+        }
+
+        // DFS method that accepts a C# Action
+        public void DepthFirstSearch(Action<MeasureResult> action)
+        {
+            action(this); // Apply the action to the current MeasureResult
+            if (ChildMeasures != null)
+            {
+                foreach (var child in ChildMeasures)
+                {
+                    child.DepthFirstSearch(action); // Recurse through child measures
+                }
+            }
+        }
 
         public override string ToString()
         {
@@ -120,17 +186,15 @@ namespace StealthLevelEvaluation
 
         public double Time => _time;
 
-        private MeasureResult? _result;
+        private MeasureResult _result;
 
         public MeasureResult Result
         {
             get
             {
-                if (_result.HasValue)
-                    return _result.Value;
-                else
+                if (_result == null)
                 {
-                    return new MeasureResult()
+                    _result = new MeasureResult()
                     {
                         Name = GetName(),
                         Value = "-",
@@ -139,6 +203,7 @@ namespace StealthLevelEvaluation
                         Type = this.GetType(),
                     };
                 }
+                return _result;
             }
             set { _result = value; }
         }
@@ -162,24 +227,13 @@ namespace StealthLevelEvaluation
         {
             Phenotype = data;
             var measurment = this.Value;
-            if (_result.HasValue == false)
-                _result = new MeasureResult
-                {
-                    Name = GetName(),
-                    Time = _time,
-                    Value = measurment,
-                    Category = GetCategory(),
-                    Type = this.GetType()
-                };
-            else
-            {
-                MeasureResult m = _result.Value;
-                m.Name = GetName();
-                m.Time = Time;
-                m.Category = GetCategory();
-                m.Value = measurment;
-                m.Type = this.GetType();
-            }
+            if (_result == null)
+                _result = new MeasureResult();
+            _result.Name = GetName();
+            _result.Time = Time;
+            _result.Category = GetCategory();
+            _result.Value = measurment;
+            _result.Type = this.GetType();
         }
 
         public virtual MeasurementType GetCategory()

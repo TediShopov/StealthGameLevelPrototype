@@ -312,16 +312,16 @@ namespace GeneticSharp.Domain
 
                     TaskExecutor.Add(() =>
                     {
-                        RunEvaluateFitness(c);
-                        //                        if (c.Fitness.HasValue)
-                        //                        {
-                        //                            InteractiveEvalutorMono f = (InteractiveEvalutorMono)Fitness;
-                        //                            c.Fitness = f.Reevaluate(c);
-                        //                        }
-                        //                        else
-                        //                        {
-                        //                            RunEvaluateFitness(c);
-                        //                        }
+                        //RunEvaluateFitness(c);
+                        if (c.Fitness.HasValue)
+                        {
+                            InteractiveEvalutorMono f = (InteractiveEvalutorMono)Fitness;
+                            c.Fitness = f.Reevaluate(c);
+                        }
+                        else
+                        {
+                            RunEvaluateFitness(c);
+                        }
                     });
                 }
 

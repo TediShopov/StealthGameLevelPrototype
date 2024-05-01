@@ -45,8 +45,8 @@ public class StealthLevelIEEditor : Editor
             if (ie.PreferenceTracker is not null
                 && ie.PreferenceTracker.PerGeneration.Count > 2)
             {
-                EditorGUILayout.LabelField
-                    ($"Average Prefference Change: {ie.PreferenceTracker.ChangeSincePrevious()} / {ie.Step}");
+                //                EditorGUILayout.LabelField
+                //                    ($"Average Prefference Change: {ie.PreferenceTracker.ChangeSincePrevious()} / {ie.Step}");
                 EditorGUILayout.LabelField
                     ($"Average Prefference Change: {ie.PreferenceTracker.TotalChange()}");
             }
@@ -88,7 +88,7 @@ public class StealthLevelIEEditor : Editor
                 ie.CrossoverProb = EditorGUILayout.Slider("Crossover", ie.CrossoverProb, 0.0f, 1.0f);
                 ie.MutationProb = EditorGUILayout.Slider("Mutation", ie.MutationProb, 0.0f, 1.0f);
 
-                ie.Step = EditorGUILayout.Slider("Step", ie.Step, 0, 1);
+                //ie.Step = EditorGUILayout.Slider("Step", ie.Step, 0, 1);
             }
 
             showFundamental = EditorGUILayout.Foldout(showFundamental, "Fundamentals");
@@ -104,7 +104,7 @@ public class StealthLevelIEEditor : Editor
             showLayout = EditorGUILayout.Foldout(showLayout, "Layout");
             if (showLayout)
             {
-                ie.ExtraSpacing = EditorGUILayout.Vector2Field("Extra Spacing: ", ie.ExtraSpacing);
+                // ie.ExtraSpacing = EditorGUILayout.Vector2Field("Extra Spacing: ", ie.ExtraSpacing);
                 serializedObject.Update();
                 var ppl = serializedObject.FindProperty("PopulationPhenotypeLayout");
                 EditorGUILayout.PropertyField(ppl);

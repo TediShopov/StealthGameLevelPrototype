@@ -6,6 +6,7 @@ using UnityEditor;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Diagnostics.Tracing;
 
 public class ChromoseMeasurementsVisualizer : MonoBehaviour
 {
@@ -62,7 +63,14 @@ public class ChromoseMeasurementsVisualizer : MonoBehaviour
                 allEvals += "---" + GetCategoryString(evaluation.Category) + "---" + "\n";
             }
 
-            allEvals += evaluation.ToString();
+            evaluation.DepthFirstSearch(x =>
+            {
+                var whileSpace = new string(' ', (evaluation.GetDepth() - 1) * 3);
+                allEvals += whileSpace + $"{x.Name}: {x.Value}, For: {x.Time} \n";
+            }
+            );
+
+            //allEvals += evaluation.ToString();
             previousMeasurementType = evaluation.Category;
         }
         Handles.Label(this.transform.position, allEvals.ToString());

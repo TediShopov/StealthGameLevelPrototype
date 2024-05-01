@@ -20,7 +20,7 @@ public class UserPrefereneceTracker : IObserver<IList<float>>
     public void Update(IList<float> sub)
     {
         if (GeneticAlgorithm != null)
-            PerGeneration.Add(GeneticAlgorithm.GenerationsNumber, sub);
+            PerGeneration[GeneticAlgorithm.GenerationsNumber] = sub;
     }
 
     public float TotalChange()

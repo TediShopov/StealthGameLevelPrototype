@@ -17,7 +17,7 @@ namespace StealthLevelEvaluation
         //            }
         public override string GetName()
         {
-            return "RiskMeasure";
+            return "MinimalRiskMeasure";
         }
 
         public override void Init(GameObject phenotype)
@@ -38,17 +38,31 @@ namespace StealthLevelEvaluation
             {
                 if (x.RRT.Succeeded())
                 {
-                    var solutionPath =
-                        new SolutionPath(x.RRT.ReconstructPathToSolution());
-                    var riskMeasure = new FieldOfViewRiskMeasure(
-                        solutionPath,
-                        patrols);
+                    MeasureResult childMeasre = new MeasureResult();
+                    float time = Helpers.TrackExecutionTime(() =>
+                    {
+                        var solutionPath =
+                            new SolutionPath(x.RRT.ReconstructPathToSolution());
+                        var riskMeasure = new FieldOfViewRiskMeasure(
+                            solutionPath,
+                            patrols);
 
-                    float overallRisk = riskMeasure.OverallRisk(futureLevel.Step);
-                    RiskMeasures.Add(overallRisk);
+                        float overallRisk = riskMeasure.OverallRisk(futureLevel.Step);
+                        RiskMeasures.Add(overallRisk);
+                        childMeasre.Name = "RiskMeasure";
+                        childMeasre.Value = overallRisk.ToString();
+                    }
+                        );
+
+                    childMeasre.Time = time;
+                    //this.Result.AddChildMeasure(childMeasre);
                 }
             }
-            return string.Join(",", RiskMeasures.ToArray());
+
+            if (RiskMeasures.Count > 0)
+                return RiskMeasures.Min().ToString();
+            return "-";
+            //return string.Join(",", RiskMeasures.ToArray());
         }
     }
 }

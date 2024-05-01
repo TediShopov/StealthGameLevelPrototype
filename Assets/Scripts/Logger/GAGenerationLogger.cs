@@ -57,12 +57,18 @@ public class GAGenerationLogger
     private string GetHeader(IList<Generation> generationsToOutput)
     {
         StringBuilder header = new StringBuilder();
-        var bestInfo = (LevelChromosomeBase)GA.Population.CurrentGeneration.Chromosomes.First();
+        //var bestInfo = (LevelChromosomeBase)GA.Population.CurrentGeneration.Chromosomes.First();
+        var bestInfo = (LevelChromosomeBase)GA.Population.CurrentGeneration.Chromosomes
+            .First();
+
         header.Append($"Chromosome Hash,");
+
         foreach (var e in bestInfo.Measurements)
         {
-            header.Append($"{e.Value.Name} Evaluation,");
-            header.Append($"{e.Value.Time} Time,");
+            e.Value.DepthFirstSearch(x =>
+            {
+                header.Append($"{x.Name}({x.GetDepth()}), {x.Time}({x.GetDepth()}),");
+            });
         }
         header.Remove(header.Length - 1, 0);
         return header.ToString();
@@ -104,19 +110,29 @@ public class GAGenerationLogger
             foreach (var c in gen.Chromosomes)
             {
                 values += $"{c.GetHashCode()},";
-                List<MeasureResult> info =
-                    ((OTEPSLevelChromosome)c).Measurements.Values.ToList();
-                if (info != null)
+
+                foreach (var e in ((LevelChromosomeBase)c).Measurements)
                 {
-                    foreach (var e in info)
+                    e.Value.DepthFirstSearch(x =>
                     {
-                        values += $"{e.Value},";
-                        values += $"{e.Time},";
-                    }
-                    values += "\n";
+                        values += $"{x.Value}, {x.Time},";
+                    });
                 }
+                values += "\n";
+
+                //                List<MeasureResult> info =
+                //                    ((OTEPSLevelChromosome)c).Measurements.Values.ToList();
+                //                if (info != null)
+                //                {
+                //                    foreach (var e in info)
+                //                    {
+                //                        values += $"{e.Value},";
+                //                        values += $"{e.Time},";
+                //                    }
+                //                    values += "\n";
+                //                }
             }
-            values += "\n";
+            //            values += "\n";
         }
         Helpers.SaveToCSV($"Tests/{AlgorithmName}.txt", "\n" + values);
     }

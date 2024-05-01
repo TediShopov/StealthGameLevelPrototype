@@ -11,103 +11,85 @@ using UnityEngine;
 
 public class StealthLevelIEMono : MonoBehaviour
 {
-    //public int Rows = 5; // Number of rows in the grid
-    //public int Columns = 5; // Number of columns in the grid
+    #region GeneticMetaproperties
 
-    //public int PopulationCount;
+    //The max generation after which the algorithm terminated
     public int AimedGenerations = 10;
 
+    //The synthetic generation run after every user selection
     public int SyntheticGenerations = 5;
 
+    //Probability of crossover happening between parents
     [Range(0, 1)]
-    public float CrossoverProb = 10;
+    public float CrossoverProb = 1.0f;
 
-    public Vector2 ExtraSpacing;
+    //Probability of mutations happening in chromosome
+    [Range(0, 1)]
+    public float MutationProb = 0.1f;
+
+    #endregion GeneticMetaproperties
+
+    #region GenticAlgorithmFundamentals
+
+    //Level configuration
+    public LevelProperties LevelProperties;
+
+    //Generates (phenotype) stealth level from chromosome
+    public LevelPhenotypeGenerator Generator;
+
+    //Evaluates the phenotype
+    public InteractiveEvalutorMono PhenotypeEvaluator;
+
+    //Population for both chromosomes and phenotypes
+    //Manges lifetime of phenotypes in unity scene
+    public PopulationPhenotypeLayout PopulationPhenotypeLayout;
+
+    //How many of the top performing level should we keep track of
+    public int TopNLevels = 5;
+
+    #endregion GenticAlgorithmFundamentals
+
+    #region Logging
 
     public GAGenerationLogger GAGenerationLogger;
+    public int IndependentRuns = 5;
+    public int LogEveryGenerations = 5;
+    public bool LogMeasurements = false;
 
-    public List<LevelChromosomeBase> GenerationSelecitons;
+    #endregion Logging
 
-    public LevelPhenotypeGenerator Generator;
+    #region AdaptiveUserModel
 
     public InteractiveGeneticAlgorithm GeneticAlgorithm;
 
-    public int IndependentRuns = 5;
-
-    public List<List<LevelChromosomeBase>> InteractiveSelections;
-
-    public LevelProperties LevelProperties;
-
-    public int LogEveryGenerations = 5;
-
-    [Header("Logging")]
-    public bool LogMeasurements = false;
-
-    [Range(0, 1)]
-    public float MutationProb = 10;
-
-    public InteractiveEvalutorMono PhenotypeEvaluator;
-    public PopulationPhenotypeLayout PopulationPhenotypeLayout;
-    //private GridObjectLayout GridPopulation;
-
-    public System.Random RandomSeedGenerator;
-
-    [Header("Seed")]
-    public int Seed;
-
-    public float Step;
-
-    public int TopNLevels = 5;
-
-    //public DynamicUserPreferenceModel UserPreferences;
+    //Holds the weights of aesthetic function to reward
     public UserPreferenceModel UserPreferences;
 
-    public UserPrefereneceTracker PreferenceTracker;
+    //Hold the user prefferecd - slected chromosomed
+    public List<LevelChromosomeBase> GenerationSelecitons;
+
+    //Hold all the user selections chronologically
+    public List<List<LevelChromosomeBase>> InteractiveSelections;
+
+    #endregion AdaptiveUserModel
+
+    #region Randomness
+
+    public System.Random RandomSeedGenerator;
+    public int Seed;
+
+    #endregion Randomness
+
+    #region Events
 
     public event EventHandler FinishIESetup;
 
+    #endregion Events
+
+    public UserPrefereneceTracker PreferenceTracker;
+
     public bool IsRunning => GeneticAlgorithm != null
         && GeneticAlgorithm.IsRunning;
-
-    public void ApplyChangesToPreferenceModel()
-    {
-        UserPreferences.Step = Step;
-        List<LevelChromosomeBase> unselected =
-            this.GeneticAlgorithm.Population.CurrentGeneration.Chromosomes
-            .Select(x => (LevelChromosomeBase)x)
-            .Where(x => GenerationSelecitons.Contains(x) == false) //Must not be contained by selections
-            .ToList();
-
-        if (GenerationSelecitons.Count == 0) return;
-
-        UserPreferences.AlterPreferences(GenerationSelecitons[0], unselected);
-        //UserPreferences.Alter(GenerationSelecitons, unselected);
-    }
-
-    public void Awake()
-    {
-        InteractiveSelections = new List<List<LevelChromosomeBase>>();
-        DisposeOldPopulation();
-    }
-
-    public void DisposeOldPopulation()
-    {
-        var tempList = this.transform.Cast<Transform>().ToList();
-        foreach (var child in tempList)
-        {
-            GameObject.DestroyImmediate(child.gameObject);
-        }
-    }
-
-    public void EndGA()
-    {
-        this.GeneticAlgorithm = null;
-        GenerationSelecitons = new List<LevelChromosomeBase>();
-        InteractiveSelections = new List<List<LevelChromosomeBase>>();
-
-        DisposeOldPopulation();
-        RefreshPreferencesWeight();
-    }
 
     public void StartGA()
     {
@@ -143,6 +125,69 @@ public class StealthLevelIEMono : MonoBehaviour
         GeneticAlgorithm.EvaluateFitness();
     }
 
+    public void SetupGA()
+    {
+        GAGenerationLogger = null;
+        RandomSeedGenerator = new System.Random(Seed);
+        var selection = new TournamentSelection(3);
+        var crossover = new TwoPointCrossover();
+        var mutation = new CustomMutators(1, 1, 1);
+        var chromosome = Generator.GetAdamChromosome(RandomSeedGenerator.Next());
+        var population = new PopulationPhenotypeLayout(PopulationPhenotypeLayout, this.gameObject, chromosome);
+
+        GeneticAlgorithm = new
+            InteractiveGeneticAlgorithm(population, PhenotypeEvaluator, selection, crossover, mutation);
+        GeneticAlgorithm.MutationProbability = MutationProb;
+        GeneticAlgorithm.CrossoverProbability = CrossoverProb;
+        GeneticAlgorithm.Termination = new GenerationNumberTermination(AimedGenerations);
+        //Assign events
+        GeneticAlgorithm.AfterEvaluationStep += Ga_AfterEvaluation;
+        GeneticAlgorithm.GenerationRan += Ga_GenerationRan;
+        GeneticAlgorithm.TerminationReached += Ga_TerminationReached;
+
+        var handler = FinishIESetup;
+        handler?.Invoke(this, EventArgs.Empty);
+
+        if (this.LogMeasurements && GAGenerationLogger == null)
+        {
+            GAGenerationLogger = new GAGenerationLogger(LogEveryGenerations);
+            GAGenerationLogger.BindTo(this);
+        }
+    }
+
+    public void ApplyChangesToPreferenceModel()
+    {
+        List<LevelChromosomeBase> unselected =
+            this.GeneticAlgorithm.Population.CurrentGeneration.Chromosomes
+            .Select(x => (LevelChromosomeBase)x)
+            .Where(x => GenerationSelecitons.Contains(x) == false) //Must not be contained by selections
+            .ToList();
+
+        if (GenerationSelecitons.Count == 0) return;
+
+        UserPreferences.AlterPreferences(GenerationSelecitons[0], unselected);
+        //UserPreferences.Alter(GenerationSelecitons, unselected);
+    }
+
+    public void EndGA()
+    {
+        this.GeneticAlgorithm = null;
+        GenerationSelecitons = new List<LevelChromosomeBase>();
+        InteractiveSelections = new List<List<LevelChromosomeBase>>();
+
+        DisposeOldPopulation();
+        RefreshPreferencesWeight();
+    }
+
+    public void DisposeOldPopulation()
+    {
+        var tempList = this.transform.Cast<Transform>().ToList();
+        foreach (var child in tempList)
+        {
+            GameObject.DestroyImmediate(child.gameObject);
+        }
+    }
+
     public void DoGeneration()
     {
         if (GeneticAlgorithm.State == GeneticAlgorithmState.Started)
@@ -163,20 +208,18 @@ public class StealthLevelIEMono : MonoBehaviour
         }
     }
 
-    public void DoSyntheticRuns(int number)
-    {
-    }
-
     public void NameAllPhenotypeGameobjects()
     {
         Vector2 placement = new Vector2(5, 5);
         foreach (var chromosome in this.GeneticAlgorithm.Population.CurrentGeneration.Chromosomes)
         {
             var levelChromosome = chromosome as LevelChromosomeBase;
+
             //Attach mono behaviour to visualize the measurements
             ChromoseMeasurementsVisualizer.AttachDataVisualizer(
                 levelChromosome.Phenotype,
                 new Vector2(5, 5));
+
             //Clear objects name and replace it with new fitnessj
             this.Generator.ClearName(levelChromosome);
             this.Generator.AppendFitnessToName(levelChromosome);
@@ -257,36 +300,6 @@ public class StealthLevelIEMono : MonoBehaviour
         }
     }
 
-    public void SetupGA()
-    {
-        GAGenerationLogger = null;
-        RandomSeedGenerator = new System.Random(Seed);
-        var selection = new TournamentSelection(3);
-        var crossover = new TwoPointCrossover();
-        var mutation = new CustomMutators(1, 1, 1);
-        var chromosome = Generator.GetAdamChromosome(RandomSeedGenerator.Next());
-        var population = new PopulationPhenotypeLayout(PopulationPhenotypeLayout, this.gameObject, chromosome);
-
-        GeneticAlgorithm = new
-            InteractiveGeneticAlgorithm(population, PhenotypeEvaluator, selection, crossover, mutation);
-        GeneticAlgorithm.MutationProbability = MutationProb;
-        GeneticAlgorithm.CrossoverProbability = CrossoverProb;
-        GeneticAlgorithm.Termination = new GenerationNumberTermination(AimedGenerations);
-        //Assign events
-        GeneticAlgorithm.AfterEvaluationStep += Ga_AfterEvaluation;
-        GeneticAlgorithm.GenerationRan += Ga_GenerationRan;
-        GeneticAlgorithm.TerminationReached += Ga_TerminationReached;
-
-        var handler = FinishIESetup;
-        handler?.Invoke(this, EventArgs.Empty);
-
-        if (this.LogMeasurements && GAGenerationLogger == null)
-        {
-            GAGenerationLogger = new GAGenerationLogger(LogEveryGenerations);
-            GAGenerationLogger.BindTo(this);
-        }
-    }
-
     private void Ga_AfterEvaluation(object sender, EventArgs e)
     {
         NameAllPhenotypeGameobjects();
@@ -294,14 +307,6 @@ public class StealthLevelIEMono : MonoBehaviour
 
     private void Ga_GenerationRan(object sender, EventArgs e)
     {
-        //        //Clear all measurements ran before current generations
-        //        foreach (var chromosome in this.GeneticAlgorithm.Population.CurrentGeneration.Chromosomes)
-        //        {
-        //            var levelChromosome = chromosome as LevelChromosomeBase;
-        //            levelChromosome.Measurements =
-        //                new List<StealthLevelEvaluation.MeasureResult>();
-        //        }
-        //
         NameAllPhenotypeGameobjects();
         Debug.Log($"{GeneticAlgorithm.GenerationsNumber} Generation Ran");
     }

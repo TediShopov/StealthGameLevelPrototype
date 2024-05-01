@@ -11,6 +11,7 @@ public class RRTSolverDifficultyEvaluation : MeasureMono
     public int DeisredSuccesses;
     public int MaxRRTAttempts;
 
+    public bool TerminateAfterSuccessesReached = true;
     public int Successes;
     public int Attempts;
     public float Chance => (float)Successes / (float)Attempts;
@@ -34,6 +35,14 @@ public class RRTSolverDifficultyEvaluation : MeasureMono
 
     public override void Init(GameObject phenotype)
     {
+        for (int i = 0; i < MaxRRTAttempts; i++)
+        {
+            float time = 0;
+            var measurmentChild = new MeasureResult();
+            measurmentChild.Name = "RRT";
+            measurmentChild.Value = "-";
+            this.Result.AddChildMeasure(measurmentChild);
+        }
     }
 
     private float CalculateDifficultyFindingSolution()
@@ -42,21 +51,34 @@ public class RRTSolverDifficultyEvaluation : MeasureMono
         Successes = 0;
         while (Attempts < MaxRRTAttempts)
         {
-            if (RunRRT())
+            if (RunRRT(Attempts))
                 Successes++;
             Attempts++;
-            if (Successes >= DeisredSuccesses)
-                break;
+            if (TerminateAfterSuccessesReached)
+            {
+                if (Successes >= DeisredSuccesses)
+                    break;
+            }
         }
         return Chance;
     }
 
-    private bool RunRRT()
+    private bool RunRRT(int i)
     {
         var RRT = Instantiate(RRTPrefab, this.transform);
         var rrtVisualizer = RRT.GetComponent<RapidlyExploringRandomTreeVisualizer>();
         rrtVisualizer.Setup();
-        rrtVisualizer.Run();
+
+        var measurmentChild = this.Result.ChildMeasures[i];
+        float time =
+            Helpers.TrackExecutionTime(rrtVisualizer.Run);
+        measurmentChild.Name = "RRT";
+        if (rrtVisualizer.RRT.Succeeded())
+            measurmentChild.Value = "True";
+        else
+            measurmentChild.Value = "False";
+        measurmentChild.Time = time;
+
         return rrtVisualizer.RRT.Succeeded();
     }
 }

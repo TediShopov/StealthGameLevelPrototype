@@ -60,7 +60,7 @@ MonoBehaviour:
       data:
         GoalDistance: 1
         _maxIterations: 3000
-        _steerStep: 1
+        _steerStep: 3
         Iterations: 0
         _stats:
           TotalIterations: 0
