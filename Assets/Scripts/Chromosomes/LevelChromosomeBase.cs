@@ -22,6 +22,27 @@ public interface ILevelChromosome :
 {
 }
 
+[Serializable]
+public class LevelPhenotype
+{
+    public LevelPhenotype()
+    {
+    }
+
+    public LevelPhenotype(LevelPhenotype other)
+    {
+        this.Roadmap = new Graph<Vector2>(other.Roadmap);
+        this.Zones = new NativeGrid<int>(other.Zones);
+        this.Threats = new List<IPredictableThreat>(other.Threats);
+        this.FutureLevel = other.FutureLevel;
+    }
+
+    public Graph<Vector2> Roadmap;
+    public NativeGrid<int> Zones;
+    public List<IPredictableThreat> Threats;
+    public IFutureLevel FutureLevel;
+}
+
 //Level chromosome base holds a reference to the phenotype/level generator
 // as to allow easy change and iteration via mono scirpts in the unity editor.
 
@@ -42,14 +63,15 @@ public abstract class LevelChromosomeBase : ChromosomeBase,
     public LevelPhenotypeGenerator PhenotypeGenerator;
 
     //The decoded game object - could be null if not generated
-    public GameObject Phenotype { get; set; }
+    public LevelPhenotype Phenotype { get; set; }
+
+    public GameObject Manifestation { get; set; }
 
     public float AestheticScore { get; set; }
     public float EngagementScore { get; set; }
 
     [SerializeField] public Dictionary<string, MeasureResult> Measurements;
     [SerializeField] public PropertyMeasurements AestheticProperties;
-    [SerializeField] public Graph<Vector2> EnemyRoadmap;
 
     public void AddOrReplace(MeasureResult res)
     {
@@ -64,7 +86,6 @@ public abstract class LevelChromosomeBase : ChromosomeBase,
         clone.AestheticProperties = this.AestheticProperties;
         clone.AestheticScore = this.AestheticScore;
         clone.EngagementScore = this.EngagementScore;
-        clone.EnemyRoadmap = this.EnemyRoadmap;
         return clone;
     }
 

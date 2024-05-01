@@ -10,7 +10,7 @@ namespace StealthLevelEvaluation
 
         protected override float MeasureProperty()
         {
-            var rdGen = Phenotype.GetComponentInChildren<FloodfilledRoadmapGenerator>();
+            var rdGen = Manifestation.GetComponentInChildren<FloodfilledRoadmapGenerator>();
             if (rdGen == null) return 0;
             //TODO add direct reference to the max possible zone
             return Mathf.InverseLerp(MinZones, MaxZones, rdGen.ColliderKeys.Count);

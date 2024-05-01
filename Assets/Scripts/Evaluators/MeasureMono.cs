@@ -126,7 +126,7 @@ namespace StealthLevelEvaluation
 
         [SerializeField] protected string _value;
         protected double _time;
-        public GameObject Phenotype;
+        public GameObject Manifestation;
 
         public bool RunNow = false;
         public bool RunOnStart = false;
@@ -134,12 +134,12 @@ namespace StealthLevelEvaluation
 
         public void Start()
         {
-            Phenotype = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
-            if (Phenotype != null)
+            Manifestation = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
+            if (Manifestation != null)
             {
                 if (RunOnStart)
                 {
-                    Init(Phenotype);
+                    Init(Manifestation);
                     Evaluate();
                 }
             }
@@ -158,7 +158,7 @@ namespace StealthLevelEvaluation
 
         //        public virtual void Init(GameObject phenotype, string name)
         //        {
-        //            Phenotype = phenotype;
+        //            Manifestation = phenotype;
         //            Name = name;
         //            _value = "";
         //            _evaluted = false;
@@ -225,7 +225,7 @@ namespace StealthLevelEvaluation
 
         public void DoMeasure(GameObject data)
         {
-            Phenotype = data;
+            Manifestation = data;
             var measurment = this.Value;
             if (_result == null)
                 _result = new MeasureResult();

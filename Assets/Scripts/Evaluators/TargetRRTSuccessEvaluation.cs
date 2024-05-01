@@ -30,7 +30,7 @@ using StealthLevelEvaluation;
 //
 //        foreach (var e in Evaluators)
 //        {
-//            e.Phenotype = generator.gameObject;
+//            e.Manifestation = generator.gameObject;
 //            info.FitnessEvaluations.Add(e);
 //            e.Evaluate();
 //        }

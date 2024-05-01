@@ -15,7 +15,7 @@ public class ZoneAreaVarience : LevelPropertiesEvaluator
     public override void Init(GameObject phenotype)
     {
         base.Init(phenotype);
-        Roadmap = Phenotype.GetComponentInChildren<FloodfilledRoadmapGenerator>();
+        Roadmap = Manifestation.GetComponentInChildren<FloodfilledRoadmapGenerator>();
     }
 
     protected override float MeasureProperty()

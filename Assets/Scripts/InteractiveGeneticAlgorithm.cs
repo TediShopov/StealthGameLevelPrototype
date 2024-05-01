@@ -288,7 +288,7 @@ namespace GeneticSharp.Domain
                 {
                     var unityManifestableChromo = chromo as LevelChromosomeBase;
                     unityManifestableChromo.
-                        PhenotypeGenerator.Generate(unityManifestableChromo, unityManifestableChromo.Phenotype);
+                        PhenotypeGenerator.Generate(unityManifestableChromo, unityManifestableChromo.Manifestation);
                 }
             }
         }
@@ -301,7 +301,7 @@ namespace GeneticSharp.Domain
                 if (chromo is LevelChromosomeBase)
                 {
                     var levelChromosome = (LevelChromosomeBase)chromo;
-                    levelChromosome.Phenotype.transform.SetSiblingIndex(i);
+                    levelChromosome.Manifestation.transform.SetSiblingIndex(i);
                 }
             }
         }

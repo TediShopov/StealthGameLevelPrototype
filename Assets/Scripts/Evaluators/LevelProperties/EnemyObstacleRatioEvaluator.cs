@@ -10,7 +10,7 @@ namespace StealthLevelEvaluation
         {
             try
             {
-                var chromo = (LevelChromosomeBase)Phenotype.GetComponentInChildren<LevelChromosomeMono>().Chromosome;
+                var chromo = (LevelChromosomeBase)Manifestation.GetComponentInChildren<LevelChromosomeMono>().Chromosome;
                 return (float)chromo.GetGene(0).Value;
             }
             catch (System.Exception)

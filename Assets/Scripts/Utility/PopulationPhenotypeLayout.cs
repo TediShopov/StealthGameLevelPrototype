@@ -50,7 +50,7 @@ public class PopulationPhenotypeLayout : Population
         foreach (var chromosome in chromosomes)
         {
             LevelChromosomeBase levelChromosome = (LevelChromosomeBase)chromosome;
-            levelChromosome.Phenotype = GridLayout.GetNextLevelObject();
+            levelChromosome.Manifestation = GridLayout.GetNextLevelObject();
         }
 
         base.CreateNewGeneration(chromosomes);

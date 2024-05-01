@@ -21,7 +21,7 @@ public class EvaluatorMono : MonoBehaviour, IFitness
             LevelChromosomeBase levelChromosome = (LevelChromosomeBase)chromosome;
 
             //Only after level chromosome has been manifested to phenotype
-            if (levelChromosome.Phenotype == null)
+            if (levelChromosome.Manifestation == null)
                 throw new System.ArgumentException("Level evaluator operatos on level that have their phenotype derived");
             return levelChromosome;
         }
@@ -31,7 +31,7 @@ public class EvaluatorMono : MonoBehaviour, IFitness
     public virtual double Evaluate(IChromosome chromosome)
     {
         var levelChromosome = CheckValidLevelChromosome(chromosome);
-        GameObject levelObject = levelChromosome.Phenotype;
+        GameObject levelObject = levelChromosome.Manifestation;
         //Run the generators --> the game object is now tagged as level
         levelChromosome.PhenotypeGenerator.Generate(levelChromosome, levelObject);
 

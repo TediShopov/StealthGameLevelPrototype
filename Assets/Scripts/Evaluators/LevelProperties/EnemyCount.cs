@@ -21,7 +21,7 @@ public class EnemyCount : LevelPropertiesEvaluator
     protected override float MeasureProperty()
     {
         var enemyCounts =
-            Phenotype.GetComponentsInChildren<PatrolEnemyMono>()
+            Manifestation.GetComponentsInChildren<PatrolEnemyMono>()
             .Where(x => x is not null)
             .Count();
         MaxEnemies = CalculateUpperBoundOfEnemyRange();

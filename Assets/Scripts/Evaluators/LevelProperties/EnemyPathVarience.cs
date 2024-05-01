@@ -15,11 +15,11 @@ namespace StealthLevelEvaluation
             //TODO this could be extended to work with the predicatble nature
             // of IPredictable threat
             //            var predictableThreats =
-            //                Phenotype.GetComponentsInChildren<IPredictableThreat>()
+            //                Manifestation.GetComponentsInChildren<IPredictableThreat>()
             //                .Select(x=>x.);
 
             var enemyPathLengths =
-                Phenotype.GetComponentsInChildren<PatrolEnemyMono>()
+                Manifestation.GetComponentsInChildren<PatrolEnemyMono>()
                 .Where(x => x is not null && x.GetPatrol() is not null)
                 .Select(x => x.GetPatrol().GetPath().GetTotalLength())
                 .ToList();

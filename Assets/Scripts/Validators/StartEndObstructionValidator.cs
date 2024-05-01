@@ -19,7 +19,7 @@ namespace StealthLevelEvaluation
 
         protected override string Evaluate()
         {
-            var start = Phenotype.GetComponentInChildren<CharacterController2D>().gameObject;
+            var start = Manifestation.GetComponentInChildren<CharacterController2D>().gameObject;
             ContactFilter2D contactFilter2D = new ContactFilter2D
             {
                 useLayerMask = true,
@@ -30,7 +30,7 @@ namespace StealthLevelEvaluation
                 IsTerminating = true;
                 return (-1000).ToString();
             }
-            var end = Phenotype.GetComponentInChildren<WinTrigger>().gameObject;
+            var end = Manifestation.GetComponentInChildren<WinTrigger>().gameObject;
             if (OverlapWithCollider2d(end, contactFilter2D))
             {
                 IsTerminating = true;
@@ -56,7 +56,7 @@ namespace StealthLevelEvaluation
         public override void Init(GameObject phenotype)
         {
             IsValidator = true;
-            Phenotype = phenotype;
+            Manifestation = phenotype;
         }
     }
 }

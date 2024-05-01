@@ -100,9 +100,9 @@ public class StartEndDestinationObserveTime : MeasureMono
     public override void Init(GameObject phenotype)
     {
         IsValidator = true;
-        Phenotype = phenotype;
-        FutureLevel = Phenotype.GetComponentInChildren<IFutureLevel>();
-        Start = Phenotype.GetComponentInChildren<CharacterController2D>().gameObject;
-        End = Phenotype.GetComponentInChildren<WinTrigger>().gameObject;
+        Manifestation = phenotype;
+        FutureLevel = Manifestation.GetComponentInChildren<IFutureLevel>();
+        Start = Manifestation.GetComponentInChildren<CharacterController2D>().gameObject;
+        End = Manifestation.GetComponentInChildren<WinTrigger>().gameObject;
     }
 }

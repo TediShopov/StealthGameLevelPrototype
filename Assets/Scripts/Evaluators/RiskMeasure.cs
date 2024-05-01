@@ -29,11 +29,11 @@ namespace StealthLevelEvaluation
         protected override string Evaluate()
         {
             RiskMeasures = new List<float>();
-            var RRTVisualizers = Phenotype.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
-            var patrols = Phenotype.GetComponentsInChildren<PatrolEnemyMono>()
+            var RRTVisualizers = Manifestation.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
+            var patrols = Manifestation.GetComponentsInChildren<PatrolEnemyMono>()
                 .Select(x => x.GetPatrol());
             //var voxelizedLevel = generator.GetComponentInChildren<VoxelizedLevel>();
-            var futureLevel = Phenotype.GetComponentInChildren<IFutureLevel>();
+            var futureLevel = Manifestation.GetComponentInChildren<IFutureLevel>();
             foreach (var x in RRTVisualizers)
             {
                 if (x.RRT.Succeeded())

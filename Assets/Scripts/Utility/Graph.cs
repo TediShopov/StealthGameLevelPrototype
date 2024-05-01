@@ -7,6 +7,16 @@ public class Graph<T>
 {
     public Dictionary<T, List<T>> adjacencyList = new Dictionary<T, List<T>>();
 
+    public Graph(Graph<T> other)
+    {
+        this.adjacencyList = other.adjacencyList;
+        this.adjacencyList = other.adjacencyList;
+    }
+
+    public Graph()
+    {
+    }
+
     private void Start()
     {
     }

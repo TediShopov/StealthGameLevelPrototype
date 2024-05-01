@@ -89,7 +89,11 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         roadmap.Init(to);
         roadmap.DoMeasure(to);
         chromosome.AddOrReplace(roadmap.Result);
-        chromosome.EnemyRoadmap = RoadmapGenerator.RoadMap;
+
+        chromosome.Phenotype = new LevelPhenotype();
+
+        chromosome.Phenotype.Roadmap = RoadmapGenerator.RoadMap;
+        chromosome.Phenotype.Zones = RoadmapGenerator.LevelGrid;
 
         Profiler.BeginSample("Assign Paths");
         //Use the generated roadmap to assign guard paths

@@ -18,7 +18,7 @@ namespace StealthLevelEvaluation
 
         public override void Init(GameObject phenotype)
         {
-            Phenotype = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
+            Manifestation = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
         }
 
         protected abstract float MeasureProperty();

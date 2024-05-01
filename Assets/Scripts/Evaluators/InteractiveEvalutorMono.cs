@@ -48,7 +48,7 @@ public class InteractiveEvalutorMono : EvaluatorMono
     {
         LevelChromosomeBase levelChromosome = CheckValidLevelChromosome(chromosome);
 
-        var levelObject = levelChromosome.Phenotype;
+        var levelObject = levelChromosome.Manifestation;
 
         ////Run the generators --> the game object is now tagged as level
 
@@ -124,7 +124,7 @@ public class InteractiveEvalutorMono : EvaluatorMono
     public double Reevaluate(IChromosome chromosome)
     {
         LevelChromosomeBase levelChromosome = CheckValidLevelChromosome(chromosome);
-        var levelObject = levelChromosome.Phenotype;
+        var levelObject = levelChromosome.Manifestation;
 
         //Keep old measuremens
         float oldAS = levelChromosome.AestheticScore;
@@ -163,7 +163,7 @@ public class InteractiveEvalutorMono : EvaluatorMono
     {
         try
         {
-            var levelObject = chromosomeBase.Phenotype;
+            var levelObject = chromosomeBase.Manifestation;
             var riskMeasure = levelObject.GetComponentInChildren<RiskMeasure>();
             var pathUniqueness = levelObject.GetComponentInChildren<PathZoneUniqueness>();
             var solver = levelObject.GetComponentInChildren<RRTSolverDifficultyEvaluation>();

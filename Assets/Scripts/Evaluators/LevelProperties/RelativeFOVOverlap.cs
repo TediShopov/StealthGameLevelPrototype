@@ -26,8 +26,8 @@ namespace StealthLevelEvaluation
         {
             base.Init(phenotype);
             Data.ObstacleLayerMask = LayerMask.GetMask("Obstacle");
-            if (Phenotype != null)
-                Data.Grid = Phenotype.GetComponentInChildren<Grid>();
+            if (Manifestation != null)
+                Data.Grid = Manifestation.GetComponentInChildren<Grid>();
             else
                 throw new System.ArgumentException("No valid grid component in level");
         }
@@ -60,9 +60,9 @@ namespace StealthLevelEvaluation
         protected override float MeasureProperty()
         {
             //Get Future level instance
-            var futureLevel = Phenotype.GetComponentInChildren<IFutureLevel>(false);
-            Data._debugEnenmies = Phenotype.GetComponentsInChildren<PatrolEnemyMono>();
-            NativeGrid<bool> native = new NativeGrid<bool>(Data.Grid, Helpers.GetLevelBounds(Phenotype));
+            var futureLevel = Manifestation.GetComponentInChildren<IFutureLevel>(false);
+            Data._debugEnenmies = Manifestation.GetComponentsInChildren<PatrolEnemyMono>();
+            NativeGrid<bool> native = new NativeGrid<bool>(Data.Grid, Helpers.GetLevelBounds(Manifestation));
             native.SetAll((x, y, n) => false);
             if (Data._debugEnenmies.Length < 2)
             {

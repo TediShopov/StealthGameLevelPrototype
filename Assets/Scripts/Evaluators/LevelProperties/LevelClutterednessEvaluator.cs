@@ -19,7 +19,7 @@ namespace StealthLevelEvaluation
         {
             if (RunNow)
             {
-                this.PropertyValue = LevelClutterednessRatioResult(Phenotype);
+                this.PropertyValue = LevelClutterednessRatioResult(Manifestation);
                 //this.Value = PropertyValue.ToString();
                 Debug.Log("Ran from fixed update");
                 RunNow = false;
@@ -71,7 +71,7 @@ namespace StealthLevelEvaluation
 
         protected override float MeasureProperty()
         {
-            return LevelClutterednessRatioResult(Phenotype);
+            return LevelClutterednessRatioResult(Manifestation);
         }
     }
 }

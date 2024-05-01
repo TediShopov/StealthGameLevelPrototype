@@ -66,29 +66,29 @@ public abstract class LevelPhenotypeGenerator : LevelGeneratorBase
 
     public void ClearName(LevelChromosomeBase chromosome)
     {
-        if (chromosome == null || chromosome.Phenotype == null)
+        if (chromosome == null || chromosome.Manifestation == null)
             return;
 
-        GameObject levelGameObject = chromosome.Phenotype;
+        GameObject levelGameObject = chromosome.Manifestation;
         levelGameObject.name = "";
     }
 
     public void AppendToName(LevelChromosomeBase chromosome, string text)
     {
-        if (chromosome == null || chromosome.Phenotype == null)
+        if (chromosome == null || chromosome.Manifestation == null)
             return;
 
-        GameObject levelGameObject = chromosome.Phenotype;
+        GameObject levelGameObject = chromosome.Manifestation;
         levelGameObject.name += text;
     }
 
     public void AppendFitnessToName(LevelChromosomeBase chromosome)
     {
-        if (chromosome == null || chromosome.Phenotype == null)
+        if (chromosome == null || chromosome.Manifestation == null)
             return;
         if (chromosome.Fitness.HasValue)
         {
-            chromosome.Phenotype.name += $"Fitness: {chromosome.Fitness}";
+            chromosome.Manifestation.name += $"Fitness: {chromosome.Fitness}";
         }
     }
 

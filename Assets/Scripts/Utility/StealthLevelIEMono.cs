@@ -222,7 +222,7 @@ public class StealthLevelIEMono : MonoBehaviour
 
             //Attach mono behaviour to visualize the measurements
             ChromoseMeasurementsVisualizer.AttachDataVisualizer(
-                levelChromosome.Phenotype,
+                levelChromosome.Manifestation,
                 new Vector2(5, 5));
 
             //Clear objects name and replace it with new fitnessj
@@ -317,6 +317,9 @@ public class StealthLevelIEMono : MonoBehaviour
     }
 
     private void Ga_TerminationReached(object sender, EventArgs e)
+    //Given an level phenotype generator, population count and level size
+    // spreads levels manifestations in a grid. Used by all phenotype evalutions
+    // to trigger the level generations when needed
     {
         List<IChromosome> chromosomes = GetTopLevelsFitness();
         ManifestTopLevels(chromosomes);
