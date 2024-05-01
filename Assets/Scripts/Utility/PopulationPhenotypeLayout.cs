@@ -57,6 +57,9 @@ public class PopulationPhenotypeLayout : Population
     }
 }
 
+/// <summary>
+/// Create a matrix of empty evenly spaced gameobjects
+/// </summary>
 public class GridObjectLayout
 {
     public Vector2 ExtraSpacing = Vector2.zero;
@@ -66,8 +69,14 @@ public class GridObjectLayout
         ExtraSpacing = spacing;
     }
 
+    //Matrix of game object
     private GameObject[,] LevelObjects;
+
+    //Index of the current object to retrieve
     private int currentIndex = -1;
+
+    //The dimensions of the matrix.
+    //One property as matrix is always squre
     private int GridDimension;
 
     public GameObject GetNextLevelObject()
@@ -77,6 +86,29 @@ public class GridObjectLayout
             return null;
         return LevelObjects[currentIndex / GridDimension, currentIndex % GridDimension];
     }
+
+    //    public void ReorderObjectTransform(GameObject target,int index)
+    //    {
+    //        if (LevelObjects == null || target == null)
+    //        {
+    //            return null;
+    //        }
+    //
+    //        // Loop through the LevelObjects to find the target GameObject
+    //        for (int i = 0; i < LevelObjects.GetLength(0); i++)
+    //        {
+    //            for (int j = 0; j < LevelObjects.GetLength(1); j++)
+    //            {
+    //                if (LevelObjects[i, j] == target)
+    //                {
+    //                    return (i, j); // Return the indices if found
+    //                }
+    //            }
+    //        }
+    //
+    //        return null; // Return null if not found
+    //
+    //    }
 
     public void SpawnGrid(int populationCount, Transform transform)
     {

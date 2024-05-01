@@ -1,0 +1,1 @@
+Chromosome Hash,RoadmapFloofill(1), 5(1),GenerationAggregated(1), 26(1),ZoneCount(1), 0(1),LevelClutterednessEvaluator(1), 1(1),EnemyObstacleRatioEvaluator(1), 0(1),RelativeFOVOverlap(1), 36(1),Relative Coverage(1), 9(1),AStarHeatmapMinimalPath(1), 0(1),AStartPathEvalution(1), 0(1),AStarSafePathToEnd(1), 4(1),StartEndDestinationObserveTime(1), 0(1),Fitness(1), 0(1),

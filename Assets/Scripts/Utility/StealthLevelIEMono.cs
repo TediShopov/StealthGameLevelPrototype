@@ -9,6 +9,10 @@ using System.Runtime.CompilerServices;
 using Unity.Collections;
 using UnityEngine;
 
+/// <summary>
+///A bridge class creating interactive genetic algorithm
+///while exposing controllable properties to the editor.
+/// </summary>
 public class StealthLevelIEMono : MonoBehaviour
 {
     #region GeneticMetaproperties
@@ -109,6 +113,7 @@ public class StealthLevelIEMono : MonoBehaviour
 
         PhenotypeEvaluator.UserPreferenceModel = UserPreferences;
 
+        //Seed the randomizer used in mutators and
         GeneticSharp.RandomizationProvider.Current = new NativeRandom(Seed);
 
         //Attach tracker that keeps track of the weight of the user preference model

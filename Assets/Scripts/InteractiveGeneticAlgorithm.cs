@@ -293,6 +293,19 @@ namespace GeneticSharp.Domain
             }
         }
 
+        public void ReorderTransformHierarchy()
+        {
+            for (int i = 0; i < Population.CurrentGeneration.Chromosomes.Count; i++)
+            {
+                var chromo = Population.CurrentGeneration.Chromosomes[i];
+                if (chromo is LevelChromosomeBase)
+                {
+                    var levelChromosome = (LevelChromosomeBase)chromo;
+                    levelChromosome.Phenotype.transform.SetSiblingIndex(i);
+                }
+            }
+        }
+
         /// <summary>
         /// Evaluates the fitness.
         /// </summary>
@@ -338,6 +351,7 @@ namespace GeneticSharp.Domain
 
             Population.CurrentGeneration.Chromosomes
                = Population.CurrentGeneration.Chromosomes.OrderByDescending(c => c.Fitness.Value).ToList();
+            ReorderTransformHierarchy();
             var handle = AfterEvaluationStep;
             handle?.Invoke(this, EventArgs.Empty);
         }
