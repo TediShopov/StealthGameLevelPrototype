@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[Serializable]
 public class Graph<T>
 {
-    public Dictionary<T, List<T>> adjacencyList = new Dictionary<T, List<T>>();
+    public GenericDictionary<T, List<T>> adjacencyList =
+        new GenericDictionary<T, List<T>>();
 
     public Graph(Graph<T> other)
     {

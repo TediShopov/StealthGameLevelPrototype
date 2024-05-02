@@ -12,17 +12,25 @@ public class RoadmapVisualizer : MonoBehaviour
 
     public void Awake()
     {
-        Colors = new List<Color>();
-        Colors.Add(new Color(1, 0, 0, 0.2f));
-        Colors.Add(new Color(0, 1, 0, 0.2f));
-        Colors.Add(new Color(0, 0, 1, 0.2f));
-        Colors.Add(new Color(1, 1, 0, 0.2f));
-        Colors.Add(new Color(1, 0, 1, 0.2f));
-        Colors.Add(new Color(0, 1, 1, 0.2f));
-        var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
-        Phenotype = level.GetComponentInChildren<LevelChromosomeMono>().Chromosome.Phenotype;
-        //        Grid = new UnboundedGrid(GetComponent<Grid>(Phenotype.Zones.Grid));
-        Grid = (Phenotype.Zones.Grid);
+        try
+        {
+            Colors = new List<Color>();
+            Colors.Add(new Color(1, 0, 0, 0.2f));
+            Colors.Add(new Color(0, 1, 0, 0.2f));
+            Colors.Add(new Color(0, 0, 1, 0.2f));
+            Colors.Add(new Color(1, 1, 0, 0.2f));
+            Colors.Add(new Color(1, 0, 1, 0.2f));
+            Colors.Add(new Color(0, 1, 1, 0.2f));
+            var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
+            Phenotype = level.GetComponentInChildren<LevelChromosomeMono>().Chromosome.Phenotype;
+            //        Grid = new UnboundedGrid(GetComponent<Grid>(Phenotype.Zones.Grid));
+            Grid = (Phenotype.Zones.Grid);
+        }
+        catch (System.Exception)
+        {
+            int a = 3;
+            throw;
+        }
     }
 
     // Start is called before the first frame update

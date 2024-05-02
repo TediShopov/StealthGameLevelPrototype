@@ -334,18 +334,28 @@ public class FloodfilledRoadmapGenerator
 
     public void TransformGraphToLocalSpace(GameObject gameObject)
     {
-        RoadMap.adjacencyList =
-            RoadMap.adjacencyList
+        //Created a temporary dictionary to hold to transform and hold the
+        //local values of each node in the graph
+        Dictionary<Vector2, List<Vector2>> tempDictionary = RoadMap.adjacencyList
             .ToDictionary(kvp =>
            (Vector2)gameObject.transform.InverseTransformPoint(kvp.Key), kvp => kvp.Value);
-
-        foreach (var neighbourList in RoadMap.adjacencyList.Values)
+        foreach (var neighbourList in tempDictionary.Values)
         {
             for (int i = 0; i < neighbourList.Count; i++)
             {
                 neighbourList[i] =
                     (Vector2)gameObject.transform.InverseTransformPoint(neighbourList[i]);
             }
+        }
+        //Empty the acual graph
+        RoadMap.adjacencyList = new GenericDictionary<Vector2, List<Vector2>>();
+
+        //Refill with updated local values
+        foreach (var keyValuePair in tempDictionary)
+        {
+            RoadMap.adjacencyList.Add(
+                keyValuePair.Key,
+                keyValuePair.Value);
         }
 
         LevelGrid.Grid.Origin = new Vector2(0, 0);

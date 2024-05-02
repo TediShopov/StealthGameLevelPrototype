@@ -92,7 +92,9 @@ public class LevelPhenotype
         this.FutureLevel = other.FutureLevel;
     }
 
-    public Graph<Vector2> Roadmap;
+    //public GenericDictionary<int, string> Dict;
+    [SerializeField] public Graph<Vector2> Roadmap;
+
     public NativeGrid<int> Zones;
     [SerializeReference] public List<IPredictableThreat> Threats;
     [SerializeReference] public IFutureLevel FutureLevel;
