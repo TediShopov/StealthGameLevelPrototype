@@ -28,7 +28,6 @@ using UnityEngine.UIElements;
 ///  O*4 --> Rotation
 //   E*0 - E*5 --> Enemy behaviours to use in the next intersections
 /// </summary>
-[RequireComponent(typeof(FloodfilledRoadmapGenerator))]
 [RequireComponent(typeof(DiscretePathGenerator))]
 [RequireComponent(typeof(IFutureLevel))]
 [ExecuteInEditMode]
@@ -49,7 +48,6 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
 
     public void Awake()
     {
-        RoadmapGenerator = GetComponent<FloodfilledRoadmapGenerator>();
         PathGenerator = GetComponent<DiscretePathGenerator>();
         if (RoadmapGenerator is null)
             RoadmapGenerator = new FloodfilledRoadmapGenerator();

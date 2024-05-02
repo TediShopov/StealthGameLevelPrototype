@@ -8,25 +8,29 @@ using UnityEngine;
 //TODO change to invariance
 public class ZoneAreaVarience : LevelPropertiesEvaluator
 {
-    private FloodfilledRoadmapGenerator Roadmap;
+    //private FloodfilledRoadmapGenerator Roadmap;
     private Dictionary<int, int> zoneIdToArea = new Dictionary<int, int>();
+
     private float MaxRelativeVarience = 3.0f;
 
-    public override void Init(GameObject phenotype)
+    private LevelPhenotype Phenotype;
+
+    public override void Init(GameObject manifestation)
     {
-        base.Init(phenotype);
-        Roadmap = Manifestation.GetComponentInChildren<FloodfilledRoadmapGenerator>();
+        base.Init(manifestation);
+
+        Phenotype = manifestation.GetComponentInChildren<LevelChromosomeMono>().Chromosome.Phenotype;
     }
 
     protected override float MeasureProperty()
     {
-        if (Roadmap == null)
+        if (Phenotype == null)
             return 0;
 
         zoneIdToArea.Clear();
-        Roadmap.LevelGrid.ForEach((x, y) =>
+        Phenotype.Zones.ForEach((x, y) =>
         {
-            int zoneId = Roadmap.LevelGrid.Get(x, y);
+            int zoneId = Phenotype.Zones.Get(x, y);
             if (zoneIdToArea.ContainsKey(zoneId))
                 zoneIdToArea[zoneId]++;
             else

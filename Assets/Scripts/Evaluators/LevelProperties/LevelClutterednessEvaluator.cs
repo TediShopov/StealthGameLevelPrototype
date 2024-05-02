@@ -41,9 +41,9 @@ namespace StealthLevelEvaluation
         {
             try
             {
-                var roadmap = level.GetComponentInChildren<FloodfilledRoadmapGenerator>();
-                //Grid grid = roadmap.Grid;
-                var LevelGrid = new NativeGrid<bool>(roadmap.Grid, Helpers.GetLevelBounds(level));
+                var phenotype = level.GetComponentInChildren<LevelChromosomeMono>().Chromosome.Phenotype;
+                var LevelGrid =
+                    new NativeGrid<bool>(phenotype.Zones.Grid, Helpers.GetLevelBounds(level));
                 LevelGrid.SetAll(SetObstacleGrid);
                 int occupied = 0;
                 int unoccupied = 0;

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace StealthLevelEvaluation
@@ -10,10 +11,17 @@ namespace StealthLevelEvaluation
 
         protected override float MeasureProperty()
         {
-            var rdGen = Manifestation.GetComponentInChildren<FloodfilledRoadmapGenerator>();
-            if (rdGen == null) return 0;
+            var phenotype = Manifestation.GetComponentInChildren<LevelChromosomeMono>().Chromosome.Phenotype;
+            if (phenotype == null) return 0;
+
+            HashSet<int> uniqueZones = new HashSet<int>();
+            phenotype.Zones.ForEach((x, y) =>
+            {
+                uniqueZones.Add(phenotype.Zones.Get(x, y));
+            });
+
             //TODO add direct reference to the max possible zone
-            return Mathf.InverseLerp(MinZones, MaxZones, rdGen.ColliderKeys.Count);
+            return Mathf.InverseLerp(MinZones, MaxZones, uniqueZones.Count);
         }
     }
 }

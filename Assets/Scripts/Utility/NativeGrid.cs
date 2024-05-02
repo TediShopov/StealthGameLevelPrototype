@@ -82,6 +82,12 @@ public class NativeGrid<T>
 
     public T Get(int row, int col) => _nativeGrid[row, col];
 
+    public T Get(Vector2Int worldCoord)
+    {
+        Vector2Int nativeCoord = this.GetNativeCoord(worldCoord);
+        return Get(nativeCoord.x, nativeCoord.y);
+    }
+
     public T Set(int row, int col, T value) => _nativeGrid[row, col] = value;
 
     public bool IsInGrid(int row, int col) => row >= 0 && col >= 0

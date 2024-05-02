@@ -34,10 +34,10 @@ public class PathZoneUniqueness : MeasureMono
     }
 
     public static List<int> GetPathVisitedZones(
-        FloodfilledRoadmapGenerator floodfilled,
+        NativeGrid<int> zones,
         List<Vector3> path)
     {
-        if (floodfilled == null)
+        if (zones == null)
             throw new System.ArgumentNullException(
                 "Needs a floodfill algorithm to define level zeons");
 
@@ -45,13 +45,13 @@ public class PathZoneUniqueness : MeasureMono
 
         for (int i = 0; i < path.Count - 1; i++)
         {
-            Vector2Int segmentA = (Vector2Int)floodfilled.Grid.WorldToCell(path[i]);
-            Vector2Int segmentB = (Vector2Int)floodfilled.Grid.WorldToCell(path[i + 1]);
+            Vector2Int segmentA = (Vector2Int)zones.Grid.WorldToCell(path[i]);
+            Vector2Int segmentB = (Vector2Int)zones.Grid.WorldToCell(path[i + 1]);
             Vector2Int[] cellsAlongLine =
                 VoxelizedLevelBase.GetCellsInLine(segmentA, segmentB);
             foreach (var cellInSegment in cellsAlongLine)
             {
-                int currentZoneIndex = floodfilled.GetCellZoneIndex(cellInSegment);
+                int currentZoneIndex = zones.Get(cellInSegment);
                 //Add only if index of zone is not found previously in the array
                 //                if (zoneIndexList.Count == 0)
                 //                    zoneIndexList.Add(currentZoneIndex);
@@ -83,7 +83,10 @@ public class PathZoneUniqueness : MeasureMono
         SeenPaths = new List<List<int>>();
         var monos = GetRRTMonos();
 
-        var flood = LevelObject.GetComponentInChildren<FloodfilledRoadmapGenerator>();
+        var flood = LevelObject.GetComponentInChildren<LevelChromosomeMono>()
+            .Chromosome.Phenotype.Roadmap;
+        var zones = LevelObject.GetComponentInChildren<LevelChromosomeMono>()
+            .Chromosome.Phenotype.Zones;
 
         List<List<Vector3>> solutionPaths =
             monos
@@ -93,7 +96,7 @@ public class PathZoneUniqueness : MeasureMono
 
         List<List<int>> solutionPathsZones =
             solutionPaths
-            .Select(x => GetPathVisitedZones(flood, x))
+            .Select(x => GetPathVisitedZones(zones, x))
             .ToList();
 
         SeenPaths = new List<List<int>>();
