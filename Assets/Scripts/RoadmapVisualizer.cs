@@ -49,6 +49,7 @@ public class RoadmapVisualizer : MonoBehaviour
                 Gizmos.color = GetColorForValue(Phenotype.Zones.Get(row, col));
                 Vector3 worldPosition = Grid.GetCellCenterWorld(Phenotype.Zones.GetUnityCoord(row, col));
                 worldPosition.z = 0;
+                worldPosition = this.transform.TransformPoint(worldPosition);
                 Vector3 cellsize = new Vector3(Grid.cellSize, Grid.cellSize, Grid.cellSize);
                 cellsize.z = 1;
                 Gizmos.DrawCube(worldPosition, cellsize);
@@ -63,7 +64,7 @@ public class RoadmapVisualizer : MonoBehaviour
             if (Phenotype.Zones == null) return;
             Gizmos.color = Color.blue;
             DebugDrawGridByIndex();
-            Graph<Vector2>.DebugDrawGraph(Phenotype.Roadmap, Color.red, Color.green, 0.01f);
+            Graph<Vector2>.DebugDrawGraph(this.transform, Phenotype.Roadmap, Color.red, Color.green, 0.01f);
         }
     }
 }

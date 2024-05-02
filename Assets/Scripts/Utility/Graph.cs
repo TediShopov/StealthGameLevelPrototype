@@ -280,6 +280,21 @@ public class Graph<T>
         }
     }
 
+    public static void DebugDrawGraph(Transform world, Graph<Vector2> graph, Color nodeColor, Color connectionColor, float nodeRadius = 0.1f)
+    {
+        foreach (var node in graph.adjacencyList)
+        {
+            Gizmos.color = nodeColor;
+
+            Gizmos.DrawSphere(world.TransformPoint(node.Key), nodeRadius);
+            foreach (var connection in node.Value)
+            {
+                Gizmos.color = connectionColor;
+                Gizmos.DrawLine(world.TransformPoint(node.Key), world.TransformPoint(connection));
+            }
+        }
+    }
+
     public static void DebugDrawGraph(Graph<Vector3> graph, Color nodeColor, Color connectionColor)
     {
         foreach (var node in graph.adjacencyList)

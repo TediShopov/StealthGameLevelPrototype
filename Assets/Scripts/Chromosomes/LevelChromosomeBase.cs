@@ -24,7 +24,7 @@ public interface ILevelChromosome :
 
 public class UnboundedGrid
 {
-    public Vector2 Origin { get; private set; }
+    public Vector2 Origin { get; set; }
     public float cellSize { get; set; }
 
     public UnboundedGrid(Vector2 origin, float cellSize)

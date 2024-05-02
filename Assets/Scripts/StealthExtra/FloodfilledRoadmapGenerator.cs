@@ -328,5 +328,26 @@ public class FloodfilledRoadmapGenerator
             Vector2 superNode = PickUnvistiedSuperNode(subgraph);
             RemoveRedundantNodes(superNode, ref totalRecursion, new List<Vector2>());
         }
+
+        TransformGraphToLocalSpace(phenotype);
+    }
+
+    public void TransformGraphToLocalSpace(GameObject gameObject)
+    {
+        RoadMap.adjacencyList =
+            RoadMap.adjacencyList
+            .ToDictionary(kvp =>
+           (Vector2)gameObject.transform.InverseTransformPoint(kvp.Key), kvp => kvp.Value);
+
+        foreach (var neighbourList in RoadMap.adjacencyList.Values)
+        {
+            for (int i = 0; i < neighbourList.Count; i++)
+            {
+                neighbourList[i] =
+                    (Vector2)gameObject.transform.InverseTransformPoint(neighbourList[i]);
+            }
+        }
+
+        LevelGrid.Grid.Origin = new Vector2(0, 0);
     }
 }

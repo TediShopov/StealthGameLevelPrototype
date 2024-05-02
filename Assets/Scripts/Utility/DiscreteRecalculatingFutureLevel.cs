@@ -127,6 +127,9 @@ public class DiscreteRecalculatingFutureLevel :
 
     public Bounds CalculateBounds(LevelPhenotype levelPhenotype)
     {
+        //Vector3 min = levelPhenotype.Zones.WorldMin;
+        //Vector3 max = levelPhenotype.Zones.WorldMax;
+
         Vector3 min = levelPhenotype.Zones.WorldMin;
         Vector3 max = levelPhenotype.Zones.WorldMax;
         min.z = 0;
