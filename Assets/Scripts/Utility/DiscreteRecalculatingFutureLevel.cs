@@ -78,7 +78,7 @@ public class DiscreteRecalculatingFutureLevel :
     public NativeGrid<float> GetThreatHeatmap() => new NativeGrid<float>(_clusteredThreats);
 
     //public PatrolPath[] EnemyPatrolPaths;
-    private IPredictableThreat[] _threats;
+    [SerializeReference] private IPredictableThreat[] _threats;
 
     public IPredictableThreat[] DynamicThreats
     {

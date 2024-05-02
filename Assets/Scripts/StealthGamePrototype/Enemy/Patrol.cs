@@ -1,11 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class Patrol : IPredictableThreat
 {
-    public DefaultEnemyProperties AestheticProperties;
-    private IPatrolPath Route;
+    [SerializeField] public DefaultEnemyProperties AestheticProperties;
+    [SerializeReference] private IPatrolPath Route;
 
     private FutureTransform Transform = new FutureTransform
     {

@@ -94,7 +94,7 @@ public class LevelPhenotype
 
     public Graph<Vector2> Roadmap;
     public NativeGrid<int> Zones;
-    public List<IPredictableThreat> Threats;
+    [SerializeReference] public List<IPredictableThreat> Threats;
     public IFutureLevel FutureLevel;
 }
 
@@ -118,15 +118,15 @@ public abstract class LevelChromosomeBase : ChromosomeBase,
     public LevelPhenotypeGenerator PhenotypeGenerator;
 
     //The decoded game object - could be null if not generated
-    public LevelPhenotype Phenotype { get; set; }
+    [SerializeField] public LevelPhenotype Phenotype;
 
-    public GameObject Manifestation { get; set; }
+    [SerializeField] public GameObject Manifestation;
 
     public float AestheticScore { get; set; }
     public float EngagementScore { get; set; }
 
     [SerializeField] public Dictionary<string, MeasureResult> Measurements;
-    [SerializeField] public PropertyMeasurements AestheticProperties;
+    [SerializeReference] public PropertyMeasurements AestheticProperties;
 
     public void AddOrReplace(MeasureResult res)
     {
@@ -200,6 +200,7 @@ public abstract class LevelChromosomeBase : ChromosomeBase,
     }
 }
 
+[Serializable]
 public class PropertyMeasurements : List<float>
 {
     //List contaning all the measures

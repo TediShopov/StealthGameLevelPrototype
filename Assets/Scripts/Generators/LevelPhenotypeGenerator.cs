@@ -8,9 +8,9 @@ using UnityEngine.Rendering.VirtualTexturing;
 //GENOTYPE desciprtion:
 
 [Serializable]
-internal class LevelChromosomeMono : MonoBehaviour
+public class LevelChromosomeMono : MonoBehaviour
 {
-    [SerializeField] public LevelChromosomeBase Chromosome;
+    [SerializeReference] public LevelChromosomeBase Chromosome;
 }
 
 public abstract class LevelPhenotypeGenerator : LevelGeneratorBase

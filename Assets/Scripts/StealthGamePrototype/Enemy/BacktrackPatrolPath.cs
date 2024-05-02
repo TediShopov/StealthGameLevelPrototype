@@ -30,14 +30,15 @@ public interface ICopyable<T>
     public T Copy();
 }
 
+[Serializable]
 public class BacktrackPatrolPath : IPatrolPath
 {
     //Operates as an index, but is continous
     //E.g 1.6f would represent 60% of segments from element 1 to elements 2
-    private float relPathPostion = 0;
+    [SerializeField] private float relPathPostion = 0;
 
-    public bool TraverseForward = true;
-    private List<Vector2> Path;
+    [SerializeField] public bool TraverseForward = true;
+    [SerializeField] private List<Vector2> Path;
 
     public List<Vector2> GetPath()
     { return new List<Vector2>(Path); }

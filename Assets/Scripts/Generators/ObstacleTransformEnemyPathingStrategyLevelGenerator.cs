@@ -85,7 +85,7 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
             () => { AssignRoadmToPhenotype(chromosome, to); });
 
         MeasureResult paths = MeasureResultFromStep("Path Assignment",
-            () => { AssignPaths(geneIndex, chromosome.Phenotype.Roadmap); });
+            () => { AssignPaths(geneIndex, chromosome); });
 
         MeasureResult future = MeasureResultFromStep("Level Future",
              () => { CalculateLevelFuture(); });
@@ -141,18 +141,24 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         return toReturn;
     }
 
-    public void AssignPaths(int geneIndex, Graph<Vector2> roadmap)
+    public void AssignPaths(
+        int geneIndex, LevelChromosomeBase levelChromosomeBase)
     {
         LevelRandom = new System.Random();
         PathGenerator.geneIndex = geneIndex;
         PathGenerator.Init(To);
-        PathGenerator.Roadmap = roadmap;
+        PathGenerator.Roadmap = LevelChromosome.Phenotype.Roadmap;
         PathGenerator.LevelRandom = LevelRandom;
         PatrolEnemyMono[] enemyPaths = To.GetComponentsInChildren<PatrolEnemyMono>();
         List<List<Vector2>> paths = PathGenerator.GeneratePaths(EnemyCount);
+
+        if (LevelChromosome.Phenotype.Threats == null)
+            LevelChromosome.Phenotype.Threats = new List<IPredictableThreat>();
+
         for (int i = 0; i < EnemyCount; i++)
         {
             enemyPaths[i].InitPatrol(paths[i]);
+            levelChromosomeBase.Phenotype.Threats.Add(enemyPaths[i].GetPatrol());
         }
         geneIndex = PathGenerator.geneIndex;
     }
