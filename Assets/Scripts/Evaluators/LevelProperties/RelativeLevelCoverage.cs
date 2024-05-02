@@ -61,7 +61,7 @@ namespace StealthLevelEvaluation
                 return false;
             });
             int maxCells =
-                _staticObstacleGrid.GetCols() * _staticObstacleGrid.GetRows();
+                _staticObstacleGrid.Cols * _staticObstacleGrid.Rows;
             maxCells -= obstacleCount;
             int colliding =
                 DiscreteCollidingCells(

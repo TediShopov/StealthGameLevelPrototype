@@ -10,22 +10,36 @@ using UnityEngine;
 /// Used for discretisizing
 /// !WARNING! Grid is assumed to be a the center
 /// </summary>
+[Serializable]
 public class NativeGrid<T>
 {
-    private T[,] _nativeGrid;
+    //private GenericMatrix<T> this;
+    [SerializeField]
+    public List<T> data;
+
+    [SerializeField]
     public UnboundedGrid Grid;
 
     //Extents of the grids in cell count
-    public Vector3Int _gridMin { get; set; }
 
-    public Vector3Int _gridMax { get; set; }
+    [SerializeField]
+    public Vector3Int _gridMin;
+
+    [SerializeField]
+    public Vector3Int _gridMax;
 
     public Vector3 WorldMin => this.Grid.GetCellCenterWorld(_gridMin);
     public Vector3 WorldMax => this.Grid.GetCellCenterWorld(_gridMax);
 
-    public int GetRows() => _gridMax.y - _gridMin.y;
+    [SerializeField]
+    public int Rows;
 
-    public int GetCols() => _gridMax.x - _gridMin.x;
+    [SerializeField]
+    public int Cols;
+
+    //    public int Rows => _gridMax.y - _gridMin.y;
+    //
+    //    public int Cols => _gridMax.x - _gridMin.x;
 
     public Vector2Int GetNativeCoord(Vector2Int unityCoord)
         => new Vector2Int(unityCoord.y - _gridMin.y, unityCoord.x - _gridMin.x);
@@ -38,11 +52,9 @@ public class NativeGrid<T>
      => Grid.GetCellCenterWorld(this.GetUnityCoord(row, col));
 
     public NativeGrid(Grid unityGrid, Bounds bounds)
+
+        : this(new UnboundedGrid(unityGrid), bounds)
     {
-        this.Grid = new UnboundedGrid(unityGrid);
-        _gridMin = Grid.WorldToCell(bounds.min);
-        _gridMax = Grid.WorldToCell(bounds.max) + new Vector3Int(1, 1, 0);
-        _nativeGrid = new T[GetRows(), GetCols()];
     }
 
     public NativeGrid(UnboundedGrid grid, Bounds bounds)
@@ -50,7 +62,21 @@ public class NativeGrid<T>
         this.Grid = grid;
         _gridMin = Grid.WorldToCell(bounds.min);
         _gridMax = Grid.WorldToCell(bounds.max) + new Vector3Int(1, 1, 0);
-        _nativeGrid = new T[GetRows(), GetCols()];
+        //j_nativeGrid = new T[Rows, Cols];
+        //this = new GenericMatrix<T>(Rows, Cols);
+        Rows = _gridMax.y - _gridMin.y;
+        Cols = _gridMax.y - _gridMin.y;
+
+        if (Rows <= 0 || Cols <= 0)
+            throw new ArgumentOutOfRangeException("Matrix dimensions must be positive.");
+
+        data = new List<T>(Rows * Cols);
+
+        // Initialize the list with default values
+        for (int i = 0; i < Rows * Cols; i++)
+        {
+            data.Add(default);
+        }
     }
 
     public NativeGrid(NativeGrid<T> other)
@@ -58,29 +84,62 @@ public class NativeGrid<T>
         DeepCopy(other);
     }
 
+    private int GetIndex(int row, int column)
+    {
+        if (row < 0 || row >= Rows || column < 0 || column >= Cols)
+            throw new IndexOutOfRangeException("Invalid matrix indices.");
+
+        return row * Cols + column;
+    }
+
+    public T this[int row, int column]
+    {
+        get
+        {
+            int index = GetIndex(row, column);
+            return data[index];
+        }
+        set
+        {
+            int index = GetIndex(row, column);
+            data[index] = value;
+        }
+    }
+
     public void SetAll(Func<int, int, NativeGrid<T>, T> func)
     {
-        for (int row = 0; row < GetRows(); row++)
+        for (int row = 0; row < Rows; row++)
         {
-            for (int col = 0; col < GetCols(); col++)
+            for (int col = 0; col < Cols; col++)
             {
-                _nativeGrid[row, col] = func(row, col, this);
+                this[row, col] = func(row, col, this);
             }
         }
     }
 
+    //    public void SetAll(Func<int, int, T> func)
+    //    {
+    //        for (int row = 0; row < Rows; row++)
+    //        {
+    //            for (int col = 0; col < Cols; col++)
+    //            {
+    //                this[row, col] = func(row, col);
+    //            }
+    //        }
+    //    }
+
     public void ForEach(Action<int, int> action)
     {
-        for (int row = 0; row < GetRows(); row++)
+        for (int row = 0; row < Rows; row++)
         {
-            for (int col = 0; col < GetCols(); col++)
+            for (int col = 0; col < Cols; col++)
             {
                 action.Invoke(row, col);
             }
         }
     }
 
-    public T Get(int row, int col) => _nativeGrid[row, col];
+    public T Get(int row, int col) => this[row, col];
 
     public T Get(Vector2Int worldCoord)
     {
@@ -88,18 +147,21 @@ public class NativeGrid<T>
         return Get(nativeCoord.x, nativeCoord.y);
     }
 
-    public T Set(int row, int col, T value) => _nativeGrid[row, col] = value;
+    public T Set(int row, int col, T value) => this[row, col] = value;
 
     public bool IsInGrid(int row, int col) => row >= 0 && col >= 0
-        && row < _nativeGrid.GetLength(0) && col < _nativeGrid.GetLength(1);
+        && row < this.Rows && col < this.Cols;
 
     public void DeepCopy(NativeGrid<T> other)
     {
-        this.Grid = other.Grid;
+        this.Grid = new UnboundedGrid(other.Grid);
         this._gridMin = other._gridMin;
         this._gridMax = other._gridMax;
+        this.Rows = other.Rows;
+        this.Cols = other.Cols;
         //Perform deep copy of the other native grid
-        this._nativeGrid = Copy(other._nativeGrid);
+        //this.this = Copy(other.this);
+        this.data = new List<T>(other.data);
     }
 
     public static T[,] Copy<T>(T[,] array)

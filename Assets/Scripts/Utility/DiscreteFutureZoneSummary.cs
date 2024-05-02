@@ -29,9 +29,9 @@ public class DiscreteFutureZoneSummary : MonoBehaviour
     //    private int DiscreteNotCollidingCells(ContinuosFutureLevel futureLevel, ref NativeGrid<bool> staticObstacle)
     //    {
     //        List<Vector2> allCells = new List<Vector2>();
-    //        for (int i = 0; i < staticObstacle.GetRows(); i++)
+    //        for (int i = 0; i < staticObstacle.Rows; i++)
     //        {
-    //            for (int j = 0; j < staticObstacle.GetCols(); j++)
+    //            for (int j = 0; j < staticObstacle.Cols; j++)
     //            {
     //                if (staticObstacle.Get(i, j) == false)
     //                    allCells.Add(staticObstacle.GetWorldPosition(i, j));
@@ -81,9 +81,9 @@ public class DiscreteFutureZoneSummary : MonoBehaviour
     //        //        });
     //        //
     //        //        List<Vector2> allCells = new List<Vector2>();
-    //        //        for (int i = 0; i < _staticObstacleGrid.GetRows(); i++)
+    //        //        for (int i = 0; i < _staticObstacleGrid.Rows; i++)
     //        //        {
-    //        //            for (int j = 0; j < _staticObstacleGrid.GetCols(); j++)
+    //        //            for (int j = 0; j < _staticObstacleGrid.Cols; j++)
     //        //            {
     //        //                if (_staticObstacleGrid.Get(i, j) == false)
     //        //                    allCells.Add(_staticObstacleGrid.GetWorldPosition(i, j));

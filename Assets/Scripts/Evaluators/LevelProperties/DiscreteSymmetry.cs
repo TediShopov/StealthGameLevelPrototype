@@ -32,9 +32,9 @@ public class DiscreteSymmetry : LevelPropertiesEvaluator
 
     protected override float MeasureProperty()
     {
-        int rows = LevelGrid.GetRows();
-        int columns = LevelGrid.GetCols();
-        int middleRow = LevelGrid.GetRows() / 2;
+        int rows = LevelGrid.Rows;
+        int columns = LevelGrid.Cols;
+        int middleRow = LevelGrid.Rows / 2;
 
         float totalRowSymmetry = 0;
         for (int i = 0; i < middleRow; i++)
@@ -42,19 +42,19 @@ public class DiscreteSymmetry : LevelPropertiesEvaluator
             float rowSymmetryPercentage = RowMirrorPercentage(i, rows - 1 - i);
             totalRowSymmetry += rowSymmetryPercentage;
         }
-        return totalRowSymmetry / LevelGrid.GetRows();
+        return totalRowSymmetry / LevelGrid.Rows;
     }
 
     private float RowMirrorPercentage(int rowIndex, int otherIndex)
     {
         int syummetricalCells = 0;
-        for (int j = 0; j < LevelGrid.GetCols(); j++)
+        for (int j = 0; j < LevelGrid.Cols; j++)
         {
             if (LevelGrid.Get(rowIndex, j) == LevelGrid.Get(otherIndex, j))
             {
                 syummetricalCells++;
             }
         }
-        return (float)syummetricalCells / (float)LevelGrid.GetCols();  // mirrored
+        return (float)syummetricalCells / (float)LevelGrid.Cols;  // mirrored
     }
 }

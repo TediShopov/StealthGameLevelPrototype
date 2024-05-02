@@ -53,6 +53,8 @@ public class ChromoseMeasurementsVisualizer : MonoBehaviour
 
     public void OnDrawGizmosSelected()
     {
+        if (levelChromosome is null || levelChromosome.Measurements is null)
+            return;
         string allEvals = "";
         MeasurementType previousMeasurementType = MeasurementType.INITIALIZATION;
         allEvals += "---" + GetCategoryString(previousMeasurementType) + "---" + "\n";

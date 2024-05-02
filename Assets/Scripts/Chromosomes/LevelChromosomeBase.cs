@@ -22,15 +22,25 @@ public interface ILevelChromosome :
 {
 }
 
+[Serializable]
 public class UnboundedGrid
 {
-    public Vector2 Origin { get; set; }
-    public float cellSize { get; set; }
+    [SerializeField]
+    public Vector2 Origin;
+
+    [SerializeField]
+    public float cellSize;
 
     public UnboundedGrid(Vector2 origin, float cellSize)
     {
         Origin = origin;
         this.cellSize = cellSize;
+    }
+
+    public UnboundedGrid(UnboundedGrid other)
+    {
+        this.Origin = other.Origin;
+        this.cellSize = other.cellSize;
     }
 
     public UnboundedGrid(Grid grid)
@@ -95,7 +105,9 @@ public class LevelPhenotype
     //public GenericDictionary<int, string> Dict;
     [SerializeField] public Graph<Vector2> Roadmap;
 
-    public NativeGrid<int> Zones;
+    //[SerializeField] public GenericMatrix<int> Matrix;
+
+    [SerializeField] public NativeGrid<int> Zones;
     [SerializeReference] public List<IPredictableThreat> Threats;
     [SerializeReference] public IFutureLevel FutureLevel;
 }

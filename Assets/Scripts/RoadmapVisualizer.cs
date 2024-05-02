@@ -8,7 +8,7 @@ public class RoadmapVisualizer : MonoBehaviour
     public bool DebugDraw = true;
     public UnboundedGrid Grid;
     public List<Color> Colors;
-    public LevelPhenotype Phenotype;
+    [SerializeReference] public LevelPhenotype Phenotype;
 
     public void Awake()
     {
