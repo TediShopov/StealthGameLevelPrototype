@@ -14,27 +14,27 @@ using UnityEngine;
 public class NativeGrid<T>
 {
     //private GenericMatrix<T> this;
-    [SerializeField]
+    [SerializeField, HideInInspector]
     public List<T> data;
 
-    [SerializeField]
+    [SerializeField, HideInInspector]
     public UnboundedGrid Grid;
 
     //Extents of the grids in cell count
 
-    [SerializeField]
+    [SerializeField, HideInInspector]
     public Vector3Int _gridMin;
 
-    [SerializeField]
+    [SerializeField, HideInInspector]
     public Vector3Int _gridMax;
 
     public Vector3 WorldMin => this.Grid.GetCellCenterWorld(_gridMin);
     public Vector3 WorldMax => this.Grid.GetCellCenterWorld(_gridMax);
 
-    [SerializeField]
+    [SerializeField, HideInInspector]
     public int Rows;
 
-    [SerializeField]
+    [SerializeField, HideInInspector]
     public int Cols;
 
     //    public int Rows => _gridMax.y - _gridMin.y;

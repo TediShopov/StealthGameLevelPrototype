@@ -53,12 +53,16 @@ public class RRT : IRapidlyEpxploringRandomTree<Vector3>
     {
     }
 
+    private Transform levelTransform;
+
     public virtual void Setup(IFutureLevel discretizedLevel, float goalDist, float maxvel
-        , Vector3 start, Vector3 end)
+        , Vector3 start, Vector3 end, Transform world)
     {
+        this.levelTransform = world;
         this.FutureLevel = discretizedLevel;
-        _randomMin = discretizedLevel.GetBounds().min;
-        _randomMax = discretizedLevel.GetBounds().max;
+        _randomMin = world.TransformPoint(discretizedLevel.GetBounds().min);
+        _randomMax = world.TransformPoint(discretizedLevel.GetBounds().max);
+        //_randomMax = discretizedLevel.GetBounds().max;
         this.GoalDistance = goalDist;
         this.MaxVelocity = maxvel;
         StartNode = new TreeNode<Vector3>(start);
@@ -117,12 +121,18 @@ public class RRT : IRapidlyEpxploringRandomTree<Vector3>
             return true;
         }
 
+        //Perform static collision - against geomtry- in GLOBAL SPACE
         if (FutureLevel.IsStaticCollision(from, to))
         {
             _stats.StaticFails++;
             return true;
         }
-        else if (FutureLevel.IsDynamicCollision(from, to))
+
+        //Perform dynamic collision - against threats- in LOCAL SPACE
+        from = levelTransform.InverseTransformPoint(from);
+        to = levelTransform.InverseTransformPoint(to);
+
+        if (FutureLevel.IsDynamicCollision(from, to))
         {
             _stats.DynamicFails++;
             return true;

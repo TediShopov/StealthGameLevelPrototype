@@ -80,6 +80,7 @@ public class PathZoneUniqueness : MeasureMono
 
     protected override string Evaluate()
     {
+        return 0.ToString();
         SeenPaths = new List<List<int>>();
         var monos = GetRRTMonos();
 

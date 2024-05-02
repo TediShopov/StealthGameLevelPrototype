@@ -55,7 +55,7 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
         if (RRT == null) return;
 
         RRT.Setup(VoxelizedLevel, RRT.GoalDistance, Controller.MaxSpeed,
-            StartNode.transform.position, EndNode.transform.position);
+            StartNode.transform.position, EndNode.transform.position, level.transform);
         RRT.Run();
 
         //Ouputs RRT stats

@@ -60,17 +60,19 @@ public interface IClusterable
     // time a guards oversee a certain cell.
     //Return normalized values
     NativeGrid<float> PredicableThreatHeatmap(UnboundedGrid grid);
+
+    NativeGrid<float> GetHeatmap();
 }
 
 public class DiscreteRecalculatingFutureLevel :
-    IFutureLevel,
-    IClusterable
+    IFutureLevel
 {
     public LayerMask ObstacleLayerMask;
     public LayerMask BoundaryLayerMask;
     private Collider2D _boundary;
 
-    private NativeGrid<float> _clusteredThreats;
+    [SerializeField]
+    public NativeGrid<float> _clusteredThreats;
 
     public DiscreteRecalculatingFutureLevel(
         float step, float iterations, LevelProperties levelProperties)
@@ -82,14 +84,16 @@ public class DiscreteRecalculatingFutureLevel :
     public DiscreteRecalculatingFutureLevel(
         float step, float iterations)
     {
+        this._step = step;
+        this._iter = iterations;
     }
 
     public NativeGrid<float> GetThreatHeatmap() => new NativeGrid<float>(_clusteredThreats);
 
     //public PatrolPath[] EnemyPatrolPaths;
-    [SerializeField] private IPredictableThreat[] _threats;
+    [SerializeReference] private List<IPredictableThreat> _threats;
 
-    public IPredictableThreat[] DynamicThreats
+    public List<IPredictableThreat> DynamicThreats
     {
         get { return _threats; }
         set { _threats = value; }
@@ -113,7 +117,7 @@ public class DiscreteRecalculatingFutureLevel :
         Bounds = CalculateBounds(levelPhenotype);
         _grid = levelPhenotype.Zones.Grid;
         SolutionPaths = new List<List<Vector3>>();
-        DynamicThreats = levelPhenotype.Threats.ToArray();
+        DynamicThreats = levelPhenotype.Threats;
         _clusteredThreats = PredicableThreatHeatmap(_grid);
         //StartCoroutine(RefreshLevelSolutionObjects());
     }
@@ -216,6 +220,7 @@ public class DiscreteRecalculatingFutureLevel :
             //Get 2d position
             //float passedTim e = simulation.CurrentTime - from.z;
             float rel = Mathf.InverseLerp(from.z, to.z, simulation.CurrentTime);
+
             Vector2 positionInTime = Vector2.Lerp(from, to, rel);
             foreach (var threat in simulation.Threats)
                 if (threat.TestThreat(positionInTime))
@@ -337,5 +342,10 @@ public class DiscreteRecalculatingFutureLevel :
         other._iter = this._iter;
         other._step = this._step;
         return other;
+    }
+
+    public NativeGrid<float> GetHeatmap()
+    {
+        return this._clusteredThreats;
     }
 }

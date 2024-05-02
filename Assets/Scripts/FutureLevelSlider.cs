@@ -49,24 +49,28 @@ public class FutureLevelSlider : MonoBehaviour
 
     public void OnDrawGizmosSelected()
     {
-        //        if (_clusteredThreats != null)
-        //        {
-        //            _clusteredThreats.ForEach(
-        //                (x, y) =>
-        //                {
-        //                    Vector3 pos = _grid.GetCellCenterWorld(
-        //                    _clusteredThreats.GetUnityCoord(x, y));
-        //                    float value = _clusteredThreats.Get(x, y);
-        //                    float reverse = 1 - value;
-        //
-        //                    //Gizmos.color = new Color(reverse, reverse, reverse, 0.5f);
-        //                    //Gizmos.color = new Color(0, 0, 0, value);
-        //                    Gizmos.color = new Color(reverse, reverse, reverse, 0.5f);
-        //                    Gizmos.DrawCube(pos,
-        //                        new Vector3(_grid.cellSize, _grid.cellSize, _grid.cellSize));
-        //                }
-        //                );
-        //        }
+        var heatmap = LevelPhenotype.FutureLevel.GetHeatmap();
+        var _grid = LevelPhenotype.Zones.Grid;
+
+        if (heatmap != null)
+        {
+            heatmap.ForEach(
+                (x, y) =>
+                {
+                    Vector3 pos = LevelPhenotype.Zones.Grid.GetCellCenterWorld(
+                    heatmap.GetUnityCoord(x, y));
+                    float value = heatmap.Get(x, y);
+                    float reverse = 1 - value;
+
+                    //Gizmos.color = new Color(reverse, reverse, reverse, 0.5f);
+                    //Gizmos.color = new Color(0, 0, 0, value);
+                    Gizmos.color = new Color(reverse, reverse, reverse, 0.5f);
+                    pos = this.transform.TransformPoint(pos);
+                    Gizmos.DrawCube(pos,
+                        new Vector3(_grid.cellSize, _grid.cellSize, _grid.cellSize));
+                }
+                );
+        }
         if (EnableSetLevel == false) return;
         if (SolutionPaths == null) return;
         foreach (var path in SolutionPaths)

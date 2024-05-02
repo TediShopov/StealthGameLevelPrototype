@@ -64,9 +64,10 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
 
     public override void Generate(LevelChromosomeBase chromosome, GameObject to = null)
     {
+        To = to;
         if (this.FutureLevel == null)
         {
-            FutureLevel = new DiscreteRecalculatingFutureLevel(0.2f, 50, LevelProperties);
+            FutureLevel = new DiscreteCahcedFutureLevel(0.2f, 50, LevelProperties);
         }
 
         if (RoadmapGenerator is null)

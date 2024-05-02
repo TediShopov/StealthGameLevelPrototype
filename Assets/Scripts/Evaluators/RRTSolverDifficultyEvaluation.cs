@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class RRTSolverDifficultyEvaluation : MeasureMono
 {
     //Solver prefab of object
@@ -28,6 +29,14 @@ public class RRTSolverDifficultyEvaluation : MeasureMono
 
     protected override string Evaluate()
     {
+        for (int i = 0; i < MaxRRTAttempts; i++)
+        {
+            float time = 0;
+            var measurmentChild = new MeasureResult();
+            measurmentChild.Name = "RRT";
+            measurmentChild.Value = "-";
+            this.Result.AddChildMeasure(measurmentChild);
+        }
         Successes = 0;
         Attempts = 0;
         return CalculateDifficultyFindingSolution().ToString();

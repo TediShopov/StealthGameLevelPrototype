@@ -86,7 +86,7 @@ namespace StealthLevelEvaluation
 
         private float OverlapRelativeToDiscreteMaxFOV(IFutureLevel futureLevel)
         {
-            IPredictableThreat[] threats = futureLevel.DynamicThreats;
+            List<IPredictableThreat> threats = futureLevel.DynamicThreats;
             var simulation =
                 new DynamicLevelSimulation(
                     threats, 0, futureLevel.GetMaxSimulationTime(), futureLevel.Step);
@@ -96,14 +96,14 @@ namespace StealthLevelEvaluation
             while (simulation.IsFinished == false)
             {
                 //For each enemy pair
-                for (int i = 0; i < threats.Length - 1; i++)
+                for (int i = 0; i < threats.Count - 1; i++)
                 {
                     Bounds boundOfThreat = threats[i].GetBounds();
                     HashSet<Vector3Int> enemyOneThreatCells =
                         VisibleCells(threats[i]);
                     float maxOverlappArea = enemyOneThreatCells.Count * cellArea;
 
-                    for (int j = i + 1; j < threats.Length; j++)
+                    for (int j = i + 1; j < threats.Count; j++)
                     {
                         Bounds otherBounds = threats[j].GetBounds();
                         if (boundOfThreat.Intersects(otherBounds) == false)
