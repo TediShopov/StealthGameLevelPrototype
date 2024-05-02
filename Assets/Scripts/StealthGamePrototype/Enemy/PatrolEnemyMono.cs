@@ -10,7 +10,7 @@ using UnityEngine.Profiling;
 [ExecuteAlways]
 public class PatrolEnemyMono : MonoBehaviour, IPredictableThreat
 {
-    private Patrol Patrol;
+    public Patrol Patrol;
     public DefaultEnemyProperties EnemyProperties;
     public List<Vector2> PathPoints;
 

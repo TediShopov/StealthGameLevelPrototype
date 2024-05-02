@@ -29,7 +29,6 @@ using UnityEngine.UIElements;
 //   E*0 - E*5 --> Enemy behaviours to use in the next intersections
 /// </summary>
 [RequireComponent(typeof(DiscretePathGenerator))]
-[RequireComponent(typeof(IFutureLevel))]
 [ExecuteInEditMode]
 public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
     LevelPhenotypeGenerator
@@ -65,6 +64,11 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
 
     public override void Generate(LevelChromosomeBase chromosome, GameObject to = null)
     {
+        if (this.FutureLevel == null)
+        {
+            FutureLevel = new DiscreteRecalculatingFutureLevel(0.2f, 50, LevelProperties);
+        }
+
         if (RoadmapGenerator is null)
         {
             RoadmapGenerator = new FloodfilledRoadmapGenerator();
@@ -88,7 +92,7 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
             () => { AssignPaths(geneIndex, chromosome); });
 
         MeasureResult future = MeasureResultFromStep("Level Future",
-             () => { CalculateLevelFuture(); });
+             () => { CalculateLevelFuture(chromosome); });
 
         chromosome.AddOrReplace(geomtry);
         chromosome.AddOrReplace(roadmap);
@@ -98,15 +102,17 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         //Add extra visualizer to provide disegner insight
         // into ediot view
         this.Data.AddComponent<RoadmapVisualizer>();
+        this.Data.AddComponent<FutureLevelSlider>();
 
         UnityEngine.Debug.Log("Generation of phenotype finished");
     }
 
-    private void CalculateLevelFuture()
+    private void CalculateLevelFuture(LevelChromosomeBase chromosomeBase)
     {
         //Initialize the future level
-        var futurePrototype = FutureLevel.PrototypeComponent(Data);
-        futurePrototype.Init();
+        var futurePrototype = (IFutureLevel)FutureLevel.Clone();
+        futurePrototype.Generate(chromosomeBase.Phenotype);
+        chromosomeBase.Phenotype.FutureLevel = futurePrototype;
     }
 
     private void AssignRoadmToPhenotype(LevelChromosomeBase chromosome, GameObject to)

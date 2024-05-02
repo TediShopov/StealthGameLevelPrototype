@@ -12,7 +12,7 @@ namespace StealthLevelEvaluation
         private Collider2D PlayerCollider;
         public LayerMask ObstacleLayerMask;
         public DiscreteRecalculatingFutureLevel FutureLevel;
-        private Grid Grid;
+        private UnboundedGrid Grid;
         private HashSet<Vector2Int> UniqueVisibleCells;
         private List<AStar.Node> Path;
 
@@ -49,26 +49,31 @@ namespace StealthLevelEvaluation
             return 1.0f.ToString();
         }
 
-        public override void Init(GameObject phenotype)
+        public override void Init(GameObject manifestation)
         {
             IsValidator = true;
-            Grid grid = phenotype.GetComponentInChildren<Grid>();
-            var character = phenotype.GetComponentInChildren<CharacterController2D>().gameObject;
+
+            LevelPhenotype phenotype =
+                manifestation.GetComponentInChildren<LevelChromosomeMono>().Chromosome.Phenotype;
+
+            UnboundedGrid grid = phenotype.Zones.Grid;
+            var character = manifestation.GetComponentInChildren<CharacterController2D>().gameObject;
             StartCoord = (Vector2Int)grid.WorldToCell(character.transform.position);
             PlayerCollider = character.GetComponent<Collider2D>();
-            GoalCoord = (Vector2Int)grid.WorldToCell(phenotype.GetComponentInChildren<WinTrigger>().transform.position);
+            GoalCoord = (Vector2Int)grid.WorldToCell(manifestation.GetComponentInChildren<WinTrigger>().transform.position);
 
-            FutureLevel = phenotype
-                .GetComponentInChildren<DiscreteRecalculatingFutureLevel>();
+            //            FutureLevel = manifestation
+            //                .GetComponentInChildren<DiscreteRecalculatingFutureLevel>();
+            FutureLevel = (DiscreteRecalculatingFutureLevel)phenotype.FutureLevel;
             Grid = grid;
             if (FutureLevel != null)
             {
                 UniqueVisibleCells = FutureLevel.UniqueVisibleCells(
-                    Grid,
+                    grid,
                     0,
                     FutureLevel.GetMaxSimulationTime());
             }
-            LevelGrid = new NativeGrid<bool>(grid, Helpers.GetLevelBounds(phenotype));
+            LevelGrid = new NativeGrid<bool>(grid, Helpers.GetLevelBounds(manifestation));
             LevelGrid.SetAll(SetSafeGridCells);
         }
 
@@ -110,7 +115,8 @@ namespace StealthLevelEvaluation
             {
                 foreach (var cell in UniqueVisibleCells)
                 {
-                    Gizmos.DrawSphere(Grid.CellToWorld(new Vector3Int(cell.x, cell.y)), 0.1f);
+                    Gizmos.DrawSphere(Grid.GetCellCenterWorld(new Vector3Int(cell.x, cell.y)), 0.1f);
+                    //Gizmos.DrawSphere(Grid.CellToWorld(new Vector3Int(cell.x, cell.y)), 0.1f);
                 }
             }
             if (Path != null)

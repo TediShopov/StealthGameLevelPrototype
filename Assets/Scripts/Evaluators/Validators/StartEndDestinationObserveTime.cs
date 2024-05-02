@@ -97,11 +97,14 @@ public class StartEndDestinationObserveTime : MeasureMono
         return (float)TimeframesObserved / (float)TimesFrameSimulated;
     }
 
-    public override void Init(GameObject phenotype)
+    public override void Init(GameObject manifestation)
     {
         IsValidator = true;
-        Manifestation = phenotype;
-        FutureLevel = Manifestation.GetComponentInChildren<IFutureLevel>();
+        Manifestation = manifestation;
+        var phenotype = manifestation.GetComponentInChildren<LevelChromosomeMono>()
+            .Chromosome.Phenotype;
+
+        FutureLevel = phenotype.FutureLevel;
         Start = Manifestation.GetComponentInChildren<CharacterController2D>().gameObject;
         End = Manifestation.GetComponentInChildren<WinTrigger>().gameObject;
     }

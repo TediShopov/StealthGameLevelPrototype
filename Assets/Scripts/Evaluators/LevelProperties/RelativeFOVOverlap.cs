@@ -7,7 +7,7 @@ using UnityEngine.Profiling;
 [System.Serializable]
 public struct RelativeFovData
 {
-    public Grid Grid;
+    public UnboundedGrid Grid;
     public LayerMask ObstacleLayerMask;
     public PatrolEnemyMono[] _debugEnenmies;
 }
@@ -27,7 +27,7 @@ namespace StealthLevelEvaluation
             base.Init(phenotype);
             Data.ObstacleLayerMask = LayerMask.GetMask("Obstacle");
             if (Manifestation != null)
-                Data.Grid = Manifestation.GetComponentInChildren<Grid>();
+                Data.Grid = Manifestation.GetComponentInChildren<LevelChromosomeMono>().Chromosome.Phenotype.Zones.Grid;
             else
                 throw new System.ArgumentException("No valid grid component in level");
         }
@@ -91,7 +91,7 @@ namespace StealthLevelEvaluation
                 new DynamicLevelSimulation(
                     threats, 0, futureLevel.GetMaxSimulationTime(), futureLevel.Step);
 
-            float cellArea = (Data.Grid.cellSize.x * Data.Grid.cellSize.y);
+            float cellArea = (Data.Grid.cellSize * Data.Grid.cellSize);
             float accumulatedOverlap = 0;
             while (simulation.IsFinished == false)
             {

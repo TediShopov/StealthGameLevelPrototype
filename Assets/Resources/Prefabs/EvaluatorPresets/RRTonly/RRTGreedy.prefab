@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4520497855799095118}
-  - component: {fileID: 9193104900773606353}
   - component: {fileID: 6192551288286212373}
   - component: {fileID: -5482726476683140459}
   - component: {fileID: 8058371274532312281}
@@ -35,30 +34,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9193104900773606353
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4520497855799095119}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24e0fc32056cffc46b0d750bc5c7e935, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsValidator: 0
-  _value: 
-  Phenotype: {fileID: 0}
-  RunNow: 0
-  RunOnStart: 0
-  DrawOnSelected: 0
-  StartCoord: {x: 0, y: 0}
-  GoalCoord: {x: 0, y: 0}
-  PlayerCollider: {fileID: 0}
-  ObstacleLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!114 &6192551288286212373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,13 +48,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsValidator: 0
   _value: 0
-  Phenotype: {fileID: 0}
+  Manifestation: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
   DrawOnSelected: 0
   RRTPrefab: {fileID: 3930090248339898022, guid: 6f4aa4c6a964f8a47af5c4d52f1faf7a, type: 3}
   DeisredSuccesses: 1
   MaxRRTAttempts: 5
+  TerminateAfterSuccessesReached: 1
   Successes: 0
   Attempts: 0
 --- !u!114 &-5482726476683140459
@@ -96,7 +72,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsValidator: 0
   _value: 
-  Phenotype: {fileID: 0}
+  Manifestation: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
   DrawOnSelected: 0
@@ -114,7 +90,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsValidator: 0
   _value: 
-  Phenotype: {fileID: 0}
+  Manifestation: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
   DrawOnSelected: 0

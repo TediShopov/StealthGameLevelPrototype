@@ -13,7 +13,7 @@ public class MinimalCostOfAStarOnHeatmap : LevelPropertiesEvaluator
     private Collider2D PlayerCollider;
     public LayerMask ObstacleLayerMask;
     public DiscreteRecalculatingFutureLevel FutureLevel;
-    private Grid Grid;
+    private UnboundedGrid Grid;
     private NativeGrid<float> LevelHeatmap;
     private List<AStar.Node> Path;
 
@@ -25,7 +25,7 @@ public class MinimalCostOfAStarOnHeatmap : LevelPropertiesEvaluator
     public override void Init(GameObject phenotype)
     {
         IsValidator = true;
-        Grid grid = phenotype.GetComponentInChildren<Grid>();
+        UnboundedGrid grid = phenotype.GetComponentInChildren<LevelChromosomeMono>().Chromosome.Phenotype.Zones.Grid;
         var character = phenotype.GetComponentInChildren<CharacterController2D>().gameObject;
         StartCoord = (Vector2Int)grid.WorldToCell(character.transform.position);
         PlayerCollider = character.GetComponent<Collider2D>();

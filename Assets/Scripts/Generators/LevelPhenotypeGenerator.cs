@@ -1,7 +1,9 @@
+using Codice.Client.BaseCommands;
 using JetBrains.Annotations;
 using Mono.Cecil;
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Rendering.VirtualTexturing;
 
@@ -11,6 +13,19 @@ using UnityEngine.Rendering.VirtualTexturing;
 public class LevelChromosomeMono : MonoBehaviour
 {
     [SerializeReference] public LevelChromosomeBase Chromosome;
+
+    public static LevelChromosomeMono Find(GameObject gameObject)
+    {
+        var level = Helpers.SearchForTagUpHierarchy(gameObject, "Level");
+        if (level == null)
+            return null;
+        return level.GetComponentInChildren<LevelChromosomeMono>();
+    }
+
+    public LevelPhenotype GetPhenotype()
+    {
+        return this.Chromosome.Phenotype;
+    }
 }
 
 public abstract class LevelPhenotypeGenerator : LevelGeneratorBase
@@ -141,7 +156,7 @@ public abstract class LevelPhenotypeGenerator : LevelGeneratorBase
         var voxelizedLevel = To.gameObject.GetComponentInChildren<IFutureLevel>();
         //var multipleRRTSolvers = To.gameObject.GetComponentInChildren<MultipleRRTRunner>();
         Helpers.LogExecutionTime(levelInitializer.Init, "Level Initializer Time");
-        Helpers.LogExecutionTime(voxelizedLevel.Init, "Future Level Logic Time");
+        //Helpers.LogExecutionTime(voxelizedLevel.Init, "Future Level Logic Time");
     }
 
     //!WARNING! uses destroy immediate as mulitple level can be geenrated an

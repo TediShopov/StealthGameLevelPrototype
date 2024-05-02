@@ -12,7 +12,7 @@ public class DiscreteSymmetry : LevelPropertiesEvaluator
     public override void Init(GameObject phenotype)
     {
         base.Init(phenotype);
-        Grid grid = phenotype.GetComponentInChildren<Grid>();
+        UnboundedGrid grid = phenotype.GetComponentInChildren<LevelChromosomeMono>().Chromosome.Phenotype.Zones.Grid;
         var character = phenotype.GetComponentInChildren<CharacterController2D>().gameObject;
         PlayerCollider = character.GetComponent<Collider2D>();
         LevelGrid = new NativeGrid<bool>(grid, Helpers.GetLevelBounds(phenotype));

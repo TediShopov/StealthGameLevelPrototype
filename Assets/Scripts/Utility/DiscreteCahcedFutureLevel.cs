@@ -43,9 +43,20 @@ public class DiscreteCahcedFutureLevel : DiscreteRecalculatingFutureLevel
 {
     private StaticLevel StaticLevel;
 
-    public override void Init()
+    //    public override void Init()
+    //    {
+    //        base.Init();
+    //        StaticLevel = new StaticLevel(
+    //            this.DynamicThreats, 0, GetMaxSimulationTime(), this.Step);
+    //    }
+    public DiscreteCahcedFutureLevel(float step, int iterations, LevelProperties levelProperties)
+        : base(step, iterations, levelProperties)
     {
-        base.Init();
+    }
+
+    public override void Generate(LevelPhenotype levelPhenotype)
+    {
+        base.Generate(levelPhenotype);
         StaticLevel = new StaticLevel(
             this.DynamicThreats, 0, GetMaxSimulationTime(), this.Step);
     }
@@ -74,23 +85,18 @@ public class DiscreteCahcedFutureLevel : DiscreteRecalculatingFutureLevel
         return false;
     }
 
-    public override IFutureLevel PrototypeComponent(GameObject to)
-    {
-        var other = to.AddComponent<DiscreteCahcedFutureLevel>();
-        other.BoundaryLayerMask = this.BoundaryLayerMask;
-        other.ObstacleLayerMask = this.ObstacleLayerMask;
-        other._iter = this._iter;
-        other._step = this._step;
-        return other;
-    }
+    //    public override IFutureLevel PrototypeComponent(GameObject to)
+    //    {
+    //        var other = to.AddComponent<DiscreteCahcedFutureLevel>();
+    //        other.BoundaryLayerMask = this.BoundaryLayerMask;
+    //        other.ObstacleLayerMask = this.ObstacleLayerMask;
+    //        other._iter = this._iter;
+    //        other._step = this._step;
+    //        return other;
+    //    }
 
-    public override void Update()
-    {
-        base.Update();
-    }
-
-    public void OnDrawGizmosSelected()
-    {
-        base.OnDrawGizmosSelected();
-    }
+    //    public void OnDrawGizmosSelected()
+    //    {
+    //        base.OnDrawGizmosSelected();
+    //    }
 }

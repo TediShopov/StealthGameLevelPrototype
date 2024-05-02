@@ -95,7 +95,7 @@ public class LevelPhenotype
     public Graph<Vector2> Roadmap;
     public NativeGrid<int> Zones;
     [SerializeReference] public List<IPredictableThreat> Threats;
-    public IFutureLevel FutureLevel;
+    [SerializeReference] public IFutureLevel FutureLevel;
 }
 
 //Level chromosome base holds a reference to the phenotype/level generator

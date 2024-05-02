@@ -1,10 +1,11 @@
 using Codice.Client.Common;
+using System;
 using System.Collections.Generic;
 using System.IO.MemoryMappedFiles;
 using System.Linq;
 using UnityEngine;
 
-public interface IFutureLevel
+public interface IFutureLevel : ICloneable
 {
     IPredictableThreat[] DynamicThreats { get; }
     public float Step { get; }
@@ -12,7 +13,7 @@ public interface IFutureLevel
 
     public float GetMaxSimulationTime();
 
-    public void Init();
+    public void Generate(LevelPhenotype phenotype);
 
     public Bounds GetBounds();
 
@@ -164,5 +165,20 @@ public class VoxelizedLevelBase : MonoBehaviour, IFutureLevel
     public bool IsDynamicCollision(Vector3 from, Vector3 to)
     {
         throw new System.NotImplementedException();
+    }
+
+    public float Generate(LevelPhenotype phenotype)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    void IFutureLevel.Generate(LevelPhenotype phenotype)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public object Clone()
+    {
+        throw new NotImplementedException();
     }
 }

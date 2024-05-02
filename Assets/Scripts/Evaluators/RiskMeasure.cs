@@ -33,7 +33,8 @@ namespace StealthLevelEvaluation
             var patrols = Manifestation.GetComponentsInChildren<PatrolEnemyMono>()
                 .Select(x => x.GetPatrol());
             //var voxelizedLevel = generator.GetComponentInChildren<VoxelizedLevel>();
-            var futureLevel = Manifestation.GetComponentInChildren<IFutureLevel>();
+            var phenotype = LevelChromosomeMono.Find(this.gameObject).GetPhenotype();
+            var futureLevel = phenotype.FutureLevel;
             foreach (var x in RRTVisualizers)
             {
                 if (x.RRT.Succeeded())

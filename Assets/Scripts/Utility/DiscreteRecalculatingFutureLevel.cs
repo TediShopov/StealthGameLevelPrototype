@@ -10,12 +10,13 @@ using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.UIElements;
 
+[Serializable]
 public class DynamicLevelSimulation
 {
-    private float From;
-    private float To;
-    private float TimeStep;
-    public IEnumerable<IPredictableThreat> Threats;
+    [SerializeField] private float From;
+    [SerializeField] private float To;
+    [SerializeField] private float TimeStep;
+    [SerializeField] public IEnumerable<IPredictableThreat> Threats;
 
     public int StepCount =>
       Mathf.FloorToInt((To - From) / (float)TimeStep);
@@ -58,15 +59,11 @@ public interface IClusterable
     //Runs the level simulation in discrete timesteps and log each
     // time a guards oversee a certain cell.
     //Return normalized values
-    NativeGrid<float> PredicableThreatHeatmap(Grid grid);
+    NativeGrid<float> PredicableThreatHeatmap(UnboundedGrid grid);
 }
 
-[ExecuteAlways]
-[RequireComponent(typeof(Grid))]
 public class DiscreteRecalculatingFutureLevel :
-    MonoBehaviour,
     IFutureLevel,
-    IPrototypable<IFutureLevel>,
     IClusterable
 {
     public LayerMask ObstacleLayerMask;
@@ -75,10 +72,22 @@ public class DiscreteRecalculatingFutureLevel :
 
     private NativeGrid<float> _clusteredThreats;
 
+    public DiscreteRecalculatingFutureLevel(
+        float step, float iterations, LevelProperties levelProperties)
+    {
+        this.ObstacleLayerMask = levelProperties.ObstacleLayerMask;
+        this.BoundaryLayerMask = levelProperties.BoundaryLayerMask;
+    }
+
+    public DiscreteRecalculatingFutureLevel(
+        float step, float iterations)
+    {
+    }
+
     public NativeGrid<float> GetThreatHeatmap() => new NativeGrid<float>(_clusteredThreats);
 
     //public PatrolPath[] EnemyPatrolPaths;
-    [SerializeReference] private IPredictableThreat[] _threats;
+    [SerializeField] private IPredictableThreat[] _threats;
 
     public IPredictableThreat[] DynamicThreats
     {
@@ -88,57 +97,64 @@ public class DiscreteRecalculatingFutureLevel :
 
     [SerializeField] protected float _step = 0.2f;
     [SerializeField] protected float _iter = 50;
-    private Grid _grid;
+    private UnboundedGrid _grid;
 
     public float Step => _step;
 
     public float Iterations => _iter;
-    public bool EnableSetLevel = true;
-    public bool EnableDiscreteTimes = true;
-    public float SetTime = 0.0f;
 
     public DynamicLevelSimulation GetFullSimulation()
     {
         return new DynamicLevelSimulation(DynamicThreats, 0, GetMaxSimulationTime(), Step);
     }
 
+    public virtual void Generate(LevelPhenotype levelPhenotype)
+    {
+        Bounds = CalculateBounds(levelPhenotype);
+        _grid = levelPhenotype.Zones.Grid;
+        SolutionPaths = new List<List<Vector3>>();
+        DynamicThreats = levelPhenotype.Threats.ToArray();
+        _clusteredThreats = PredicableThreatHeatmap(_grid);
+        //StartCoroutine(RefreshLevelSolutionObjects());
+    }
+
+    private Bounds Bounds;
+
     public Bounds GetBounds()
     {
-        Vector3 min = Vector3.zero;
-        Vector3 max = Vector3.zero;
-        var _boundary = Physics2D.OverlapPoint(this.transform.position, BoundaryLayerMask);
-        if (_boundary != null)
-        {
-            min = _boundary.bounds.min;
-            max = _boundary.bounds.max;
+        return Bounds;
+    }
 
-            min.z = 0;
-            max.z = Iterations * Step;
-        }
+    public Bounds CalculateBounds(LevelPhenotype levelPhenotype)
+    {
+        Vector3 min = levelPhenotype.Zones.WorldMin;
+        Vector3 max = levelPhenotype.Zones.WorldMax;
+        min.z = 0;
+        max.z = Iterations * Step;
         Bounds bounds = new Bounds();
         bounds.min = min;
         bounds.max = max;
         return bounds;
     }
 
-    // Start is called before the first frame update
-    public virtual void Init()
-    {
-        Profiler.BeginSample("Continuos Representation");
-        var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
-        _grid = level.GetComponentInChildren<Grid>();
-
-        SolutionPaths = new List<List<Vector3>>();
-        DynamicThreats = level.GetComponentsInChildren<IPredictableThreat>();
-        _clusteredThreats = PredicableThreatHeatmap(_grid);
-        //EnemyPatrolPaths = GetEnemyPatrolPaths();
-        //enemyPaths[i].BacktrackPatrolPath = new BacktrackPatrolPath(paths[i]);
-        StartCoroutine(RefreshLevelSolutionObjects());
-        Profiler.EndSample();
-    }
+    //    // Start is called before the first frame update
+    //    public virtual void Init()
+    //    {
+    //        Profiler.BeginSample("Continuos Representation");
+    //        var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
+    //        _grid = level.GetComponentInChildren<LevelChromosomeMono>().Chromosome.Phenotype.Zones.Grid;
+    //
+    //        SolutionPaths = new List<List<Vector3>>();
+    //        DynamicThreats = level.GetComponentsInChildren<IPredictableThreat>();
+    //        _clusteredThreats = PredicableThreatHeatmap(_grid);
+    //        //EnemyPatrolPaths = GetEnemyPatrolPaths();
+    //        //enemyPaths[i].BacktrackPatrolPath = new BacktrackPatrolPath(paths[i]);
+    //        StartCoroutine(RefreshLevelSolutionObjects());
+    //        Profiler.EndSample();
+    //    }
 
     public HashSet<Vector2Int> UniqueVisibleCells(
-        Grid grid,
+        UnboundedGrid grid,
         float timeFrom,
         float timeTo,
         float step = float.MaxValue)
@@ -233,109 +249,40 @@ public class DiscreteRecalculatingFutureLevel :
 
     private List<List<Vector3>> SolutionPaths;
 
-    private IEnumerator RefreshLevelSolutionObjects()
+    //    private IEnumerator RefreshLevelSolutionObjects()
+    //    {
+    //        while (true)
+    //        {
+    //            var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
+    //            var rrts = level.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
+    //
+    //            SolutionPaths = rrts.Select(x => x.RRT)
+    //               .Where(x => x.Succeeded())
+    //               .Select(x => x.ReconstructPathToSolution())
+    //               .ToList();
+    //
+    //            yield return new WaitForSecondsRealtime(2.0f);
+    //        }
+    //    }
+
+    //    public virtual void OnDrawGizmosSelected()
+    //    {
+    //    }
+
+    //    public virtual IFutureLevel PrototypeComponent(GameObject to)
+    //    {
+    //        var other = to.AddComponent<DiscreteRecalculatingFutureLevel>();
+    //        other.BoundaryLayerMask = this.BoundaryLayerMask;
+    //        other.ObstacleLayerMask = this.ObstacleLayerMask;
+    //        other._iter = this._iter;
+    //        other._step = this._step;
+    //        return other;
+    //    }
+
+    public NativeGrid<float> PredicableThreatHeatmap
+        (UnboundedGrid grid)
     {
-        while (true)
-        {
-            var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
-            var rrts = level.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
-
-            SolutionPaths = rrts.Select(x => x.RRT)
-               .Where(x => x.Succeeded())
-               .Select(x => x.ReconstructPathToSolution())
-               .ToList();
-
-            yield return new WaitForSecondsRealtime(2.0f);
-        }
-    }
-
-    private Vector2 GetPosition(List<Vector3> solutionPath, float time)
-    {
-        if (time > solutionPath[solutionPath.Count - 1].z)
-            return Vector2.zero;
-
-        int index = 0;
-        while (index <= solutionPath.Count - 1)
-        {
-            //If current time is smaller than the time of the path in the next node
-            if (time < solutionPath[index].z)
-            {
-                if (index == 0) return Vector2.zero;
-
-                //Position is on this segment
-                float relTime = Mathf.InverseLerp(solutionPath[index - 1].z, solutionPath[index].z, time);
-                Vector2 pos = Vector2.Lerp(solutionPath[index - 1], solutionPath[index], relTime);
-                return pos;
-            }
-            index++;
-        }
-        return Vector2.zero;
-    }
-
-    public virtual void Update()
-    {
-        if (DynamicThreats == null) return;
-        foreach (var threa in DynamicThreats)
-        {
-            threa.Reset();
-            if (EnableDiscreteTimes)
-            {
-                float discreteTime = Step * Mathf.CeilToInt(SetTime / Step);
-                threa.TimeMove(discreteTime);
-            }
-            else
-            {
-                threa.TimeMove(SetTime);
-            }
-        }
-    }
-
-    public virtual void OnDrawGizmosSelected()
-    {
-        if (_clusteredThreats != null)
-        {
-            _clusteredThreats.ForEach(
-                (x, y) =>
-                {
-                    Vector3 pos = _grid.GetCellCenterWorld(
-                    _clusteredThreats.GetUnityCoord(x, y));
-                    float value = _clusteredThreats.Get(x, y);
-                    float reverse = 1 - value;
-
-                    //Gizmos.color = new Color(reverse, reverse, reverse, 0.5f);
-                    //Gizmos.color = new Color(0, 0, 0, value);
-                    Gizmos.color = new Color(reverse, reverse, reverse, 0.5f);
-                    Gizmos.DrawCube(pos, _grid.cellSize);
-                }
-                );
-        }
-        if (EnableSetLevel == false) return;
-        if (SolutionPaths == null) return;
-        foreach (var path in SolutionPaths)
-        {
-            Vector2 position = GetPosition(path, SetTime);
-            if (EnableDiscreteTimes)
-            {
-                float discreteTime = Step * Mathf.CeilToInt(SetTime / Step);
-                position = GetPosition(path, discreteTime);
-            }
-            Gizmos.DrawSphere(position, 0.1f);
-        }
-    }
-
-    public virtual IFutureLevel PrototypeComponent(GameObject to)
-    {
-        var other = to.AddComponent<DiscreteRecalculatingFutureLevel>();
-        other.BoundaryLayerMask = this.BoundaryLayerMask;
-        other.ObstacleLayerMask = this.ObstacleLayerMask;
-        other._iter = this._iter;
-        other._step = this._step;
-        return other;
-    }
-
-    public NativeGrid<float> PredicableThreatHeatmap(Grid grid)
-    {
-        NativeGrid<float> nativeGrid = new NativeGrid<float>(grid, GetBounds());
+        NativeGrid<float> nativeGrid = new NativeGrid<float>(grid, Bounds);
         //Sets all initial values to 0
         nativeGrid.SetAll((x, y, g) => 0);
 
@@ -377,5 +324,15 @@ public class DiscreteRecalculatingFutureLevel :
         });
 
         return nativeGrid;
+    }
+
+    public object Clone()
+    {
+        var other = new DiscreteRecalculatingFutureLevel(Step, Iterations);
+        other.BoundaryLayerMask = this.BoundaryLayerMask;
+        other.ObstacleLayerMask = this.ObstacleLayerMask;
+        other._iter = this._iter;
+        other._step = this._step;
+        return other;
     }
 }

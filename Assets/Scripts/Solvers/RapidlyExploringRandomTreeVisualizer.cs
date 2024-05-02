@@ -32,7 +32,12 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
         if (level == null) return;
         EndNode = Helpers.SafeGetComponentInChildren<WinTrigger>(level).gameObject;
         //VoxelizedLevel = Helpers.SafeGetComponentInChildren<VoxelizedLevelBase>(level);
-        VoxelizedLevel = level.GetComponentInChildren<IFutureLevel>(false);
+        //VoxelizedLevel = level.GetComponentInChildren<IFutureLevel>(false);
+
+        var phenotype = level.GetComponentInChildren<LevelChromosomeMono>()
+            .Chromosome.Phenotype;
+
+        VoxelizedLevel = phenotype.FutureLevel;
         StartNode = Helpers.SafeGetComponentInChildren<CharacterController2D>(level).gameObject;
         Controller = Helpers.SafeGetComponentInChildren<CharacterController2D>(level);
     }

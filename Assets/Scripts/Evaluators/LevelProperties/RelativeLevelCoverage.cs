@@ -4,7 +4,7 @@ namespace StealthLevelEvaluation
 {
     public class RelativeLevelCoverage : LevelPropertiesEvaluator
     {
-        private Grid Grid;
+        private UnboundedGrid Grid;
         private LayerMask ObstacleLayerMask;
 
         //            public RelativeLevelCoverage(GameObject level) : base(level, "Relative Level Coverage", 0)
@@ -20,7 +20,9 @@ namespace StealthLevelEvaluation
         public override void Init(GameObject phenotype)
         {
             base.Init(phenotype);
-            Grid = Manifestation.GetComponentInChildren<Grid>(false);
+            Grid = Manifestation.GetComponentInChildren<LevelChromosomeMono>()
+                .Chromosome.Phenotype.Zones.Grid;
+            //Grid = Manifestation.GetComponentInChildren<Grid>(false);
             ObstacleLayerMask = LayerMask.GetMask("Obstacle");
         }
 
@@ -50,7 +52,7 @@ namespace StealthLevelEvaluation
             {
                 if (Helpers.IsColidingCell(
                     ngrid.GetWorldPosition(row, col),
-                    Grid.cellSize,
+                    new Vector2(Grid.cellSize, Grid.cellSize),
                     ObstacleLayerMask))
                 {
                     obstacleCount++;
