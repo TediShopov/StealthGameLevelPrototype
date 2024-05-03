@@ -158,7 +158,13 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
     public void AssignPaths(
         int geneIndex, LevelChromosomeBase levelChromosomeBase)
     {
-        LevelRandom = new System.Random();
+        int seed = Mathf.CeilToInt((float)levelChromosomeBase.GetGene(geneIndex).Value
+            * (float)levelChromosomeBase.GetGene(geneIndex + 1).Value
+            * (float)levelChromosomeBase.GetGene(geneIndex + 2).Value
+            * (float)levelChromosomeBase.GetGene(geneIndex + 3).Value
+            * (float)levelChromosomeBase.GetGene(geneIndex + 4).Value);
+
+        LevelRandom = new System.Random(seed);
         PathGenerator.geneIndex = geneIndex;
         PathGenerator.Init(To);
         PathGenerator.Roadmap = LevelChromosome.Phenotype.Roadmap;

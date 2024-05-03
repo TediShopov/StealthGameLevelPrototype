@@ -279,19 +279,20 @@ namespace GeneticSharp.Domain
         {
         }
 
-        //Manifest or generates all the chromoses in this generation in the unity scene
-        public void GeneratePhenotypeForAll()
-        {
-            foreach (var chromo in Population.CurrentGeneration.Chromosomes)
-            {
-                if (chromo is LevelChromosomeBase)
-                {
-                    var unityManifestableChromo = chromo as LevelChromosomeBase;
-                    unityManifestableChromo.
-                        PhenotypeGenerator.Generate(unityManifestableChromo, unityManifestableChromo.Manifestation);
-                }
-            }
-        }
+        //
+        //        //Manifest or generates all the chromoses in this generation in the unity scene
+        //        public void GeneratePhenotypeForAll()
+        //        {
+        //            foreach (var chromo in Population.CurrentGeneration.Chromosomes)
+        //            {
+        //                if (chromo is LevelChromosomeBase)
+        //                {
+        //                    var unityManifestableChromo = chromo as LevelChromosomeBase;
+        //                    unityManifestableChromo.
+        //                        PhenotypeGenerator.Generate(unityManifestableChromo, unityManifestableChromo.Manifestation);
+        //                }
+        //            }
+        //        }
 
         public void ReorderTransformHierarchy()
         {
@@ -313,7 +314,7 @@ namespace GeneticSharp.Domain
         {
             try
             {
-                GeneratePhenotypeForAll();
+                //GeneratePhenotypeForAll();
 
                 var allChromomsome = Population.CurrentGeneration.Chromosomes;
 
