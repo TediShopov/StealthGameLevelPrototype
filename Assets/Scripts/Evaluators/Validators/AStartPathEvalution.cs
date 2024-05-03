@@ -179,12 +179,12 @@ namespace StealthLevelEvaluation
             return MeasurementType.VALIDATION;
         }
 
-        public Vector2Int StartCoord;
-        public Vector2Int GoalCoord;
         private NativeGrid<bool> LevelGrid;
         public List<AStar.Node> Path;
         public Collider2D PlayerCollider;
         public LayerMask ObstacleLayerMask;
+        private Vector2Int StartCoord;
+        private Vector2Int GoalCoord;
 
         public override string GetName()
         {
@@ -205,9 +205,10 @@ namespace StealthLevelEvaluation
         public override void Init(GameObject phenotype)
         {
             IsValidator = true;
-            UnboundedGrid grid = phenotype.GetComponentInChildren<LevelChromosomeMono>().Chromosome.Phenotype.Zones.Grid;
+            UnboundedGrid grid = new UnboundedGrid(phenotype.transform.position, 0.4f);
             var character = phenotype.GetComponentInChildren<CharacterController2D>().gameObject;
-            StartCoord = (Vector2Int)grid.WorldToCell(character.transform.position);
+            StartCoord =
+                (Vector2Int)(grid.WorldToCell(character.transform.position));
             PlayerCollider = character.GetComponent<Collider2D>();
             GoalCoord = (Vector2Int)grid.WorldToCell(phenotype.GetComponentInChildren<WinTrigger>().transform.position);
             LevelGrid = new NativeGrid<bool>(grid, Helpers.GetLevelBounds(phenotype));

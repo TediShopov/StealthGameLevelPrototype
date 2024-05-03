@@ -5,21 +5,21 @@ using UnityEngine;
 
 namespace StealthLevelEvaluation
 {
+    [ExecuteInEditMode]
     public class AStarSafePathToEnd : MeasureMono
     {
         private Vector2Int StartCoord;
         private Vector2Int GoalCoord;
         private Collider2D PlayerCollider;
         public LayerMask ObstacleLayerMask;
+
         public DiscreteRecalculatingFutureLevel FutureLevel;
-        private UnboundedGrid Grid;
-        private HashSet<Vector2Int> UniqueVisibleCells;
         private List<AStar.Node> Path;
 
         //In this case is not only the walkable tiles but
         //the tiles that are completely safe zone based on
         //a level future
-        private NativeGrid<bool> LevelGrid;
+        private NativeGrid<bool> AllowedGrid;
 
         public override MeasurementType GetCategory()
         {
@@ -34,10 +34,10 @@ namespace StealthLevelEvaluation
         protected override string Evaluate()
         {
             AStar aStar = new AStar(this.MovementCost);
-            Vector2Int startNativeCoord = LevelGrid.GetNativeCoord(StartCoord);
-            Vector2Int goalNativeCoord = LevelGrid.GetNativeCoord(GoalCoord);
-            AStar.Node start = new AStar.Node(startNativeCoord);
-            AStar.Node end = new AStar.Node(goalNativeCoord);
+            //            Vector2Int startNativeCoord = LevelGrid.GetNativeCoord(StartCoord);
+            //            Vector2Int goalNativeCoord = LevelGrid.GetNativeCoord(GoalCoord);
+            AStar.Node start = new AStar.Node(StartCoord);
+            AStar.Node end = new AStar.Node(GoalCoord);
             Path = aStar.Run(start, end);
             if (Path == null)
             {
@@ -55,26 +55,29 @@ namespace StealthLevelEvaluation
 
             LevelPhenotype phenotype =
                 manifestation.GetComponentInChildren<LevelChromosomeMono>().Chromosome.Phenotype;
+            var heatmap = phenotype.FutureLevel.GetHeatmap();
+            AllowedGrid = new NativeGrid<bool>(new UnboundedGrid(heatmap.Grid), phenotype.FutureLevel.GetBounds());
+            AllowedGrid.Grid.Origin = this.transform.position;
 
-            UnboundedGrid grid = phenotype.Zones.Grid;
-            var character = manifestation.GetComponentInChildren<CharacterController2D>().gameObject;
-            StartCoord = (Vector2Int)grid.WorldToCell(character.transform.position);
-            PlayerCollider = character.GetComponent<Collider2D>();
-            GoalCoord = (Vector2Int)grid.WorldToCell(manifestation.GetComponentInChildren<WinTrigger>().transform.position);
-
-            //            FutureLevel = manifestation
-            //                .GetComponentInChildren<DiscreteRecalculatingFutureLevel>();
-            FutureLevel = (DiscreteRecalculatingFutureLevel)phenotype.FutureLevel;
-            Grid = grid;
-            if (FutureLevel != null)
+            AllowedGrid.SetAll((x, y, AllowedGrid) =>
             {
-                UniqueVisibleCells = FutureLevel.UniqueVisibleCells(
-                    grid,
-                    0,
-                    FutureLevel.GetMaxSimulationTime());
-            }
-            LevelGrid = new NativeGrid<bool>(grid, Helpers.GetLevelBounds(manifestation));
-            LevelGrid.SetAll(SetSafeGridCells);
+                Vector3 world = AllowedGrid.GetWorldPosition(x, y);
+                if (Physics2D.OverlapCircle(world, 0.2f, ObstacleLayerMask))
+                {
+                    return false;
+                }
+                if (!Mathf.Approximately(heatmap.Get(x, y), 0.0f))
+                {
+                    return false;
+                }
+                return true;
+            });
+
+            var character = manifestation.GetComponentInChildren<CharacterController2D>().gameObject;
+            StartCoord = (Vector2Int)AllowedGrid.GetNativeCoord(character.transform.position);
+            GoalCoord = (Vector2Int)AllowedGrid.GetNativeCoord(manifestation.GetComponentInChildren<WinTrigger>().transform.position);
+
+            PlayerCollider = character.GetComponent<Collider2D>();
         }
 
         private float MovementCost(AStar.Node a, AStar.Node b)
@@ -92,38 +95,58 @@ namespace StealthLevelEvaluation
         private bool IsWalkable(int row, int col)
         {
             // Check if coordinates are within grid boundaries and the grid value indicates walkable terrain
-            return (LevelGrid.IsInGrid(row, col) && LevelGrid.Get(row, col) == true);
+            return (AllowedGrid.IsInGrid(row, col) && AllowedGrid.Get(row, col) == true);
         }
 
-        public bool SetSafeGridCells(int row, int col, NativeGrid<bool> ngrid)
-        {
-            //Return true if box cast did not collide with any obstacle
-            bool safe = !UniqueVisibleCells.Contains((Vector2Int)ngrid.GetUnityCoord(row, col));
-            bool walkable = !Physics2D.BoxCast(
-                ngrid.GetWorldPosition(row, col),
-                PlayerCollider.bounds.size,
-                0,
-                Vector3.back, 0.1f,
-                ObstacleLayerMask);
-            return safe && walkable;
-        }
+        //
+        //        public bool SetSafeGridCells(int row, int col, NativeGrid<bool> ngrid)
+        //        {
+        //            //Return true if box cast did not collide with any obstacle
+        //            bool safe = !UniqueVisibleCells.Contains((Vector2Int)ngrid.GetUnityCoord(row, col));
+        //            bool walkable = !Physics2D.BoxCast(
+        //                ngrid.GetWorldPosition(row, col),
+        //                PlayerCollider.bounds.size,
+        //                0,
+        //                Vector3.back, 0.1f,
+        //                ObstacleLayerMask);
+        //            return safe && walkable;
+        //        }
 
         private void OnDrawGizmosSelected()
         {
             if (DrawOnSelected == false) return;
-            if (UniqueVisibleCells != null)
+
+            if (AllowedGrid != null)
             {
-                foreach (var cell in UniqueVisibleCells)
-                {
-                    Gizmos.DrawSphere(Grid.GetCellCenterWorld(new Vector3Int(cell.x, cell.y)), 0.1f);
-                    //Gizmos.DrawSphere(Grid.CellToWorld(new Vector3Int(cell.x, cell.y)), 0.1f);
-                }
+                AllowedGrid.ForEach(
+                    (x, y) =>
+                    {
+                        Vector3 pos = AllowedGrid.GetWorldPosition(x, y);
+                        //pos = this.transform.TransformPoint(pos);
+
+                        if (AllowedGrid.Get(x, y) == true)
+                            Gizmos.color = Color.green;
+                        else
+                            Gizmos.color = Color.red;
+
+                        Gizmos.DrawSphere(pos, 0.1f);
+                    }
+                    );
             }
+
+            //            if (UniqueVisibleCells != null)
+            //            {
+            //                foreach (var cell in UniqueVisibleCells)
+            //                {
+            //                    Gizmos.DrawSphere(Grid.GetCellCenterWorld(new Vector3Int(cell.x, cell.y)), 0.1f);
+            //                    //Gizmos.DrawSphere(Grid.CellToWorld(new Vector3Int(cell.x, cell.y)), 0.1f);
+            //                }
+            //            }
             if (Path != null)
             {
                 foreach (var node in Path)
                 {
-                    var worldPos = LevelGrid.GetWorldPosition(node.Rows, node.Cols);
+                    var worldPos = AllowedGrid.GetWorldPosition(node.Rows, node.Cols);
                     Gizmos.color = Color.magenta;
                     Gizmos.DrawSphere(worldPos, 0.1f);
                 }

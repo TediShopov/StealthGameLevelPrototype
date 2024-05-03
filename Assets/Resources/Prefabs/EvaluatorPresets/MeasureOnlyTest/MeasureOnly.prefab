@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4520497855799095118}
   - component: {fileID: -4074138831780179867}
   - component: {fileID: -5281071348302234667}
-  - component: {fileID: 8980104959754126724}
   - component: {fileID: 4072880465894338835}
   - component: {fileID: 4089842469340156337}
   - component: {fileID: 189648958137871072}
@@ -55,12 +54,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsValidator: 1
   _value: 
-  Phenotype: {fileID: 0}
+  Manifestation: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
-  DrawOnSelected: 0
-  StartCoord: {x: 0, y: 0}
-  GoalCoord: {x: 0, y: 0}
+  DrawOnSelected: 1
   PlayerCollider: {fileID: 0}
   ObstacleLayerMask:
     serializedVersion: 2
@@ -79,34 +76,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsValidator: 1
   _value: 
-  Phenotype: {fileID: 0}
+  Manifestation: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
-  DrawOnSelected: 0
+  DrawOnSelected: 1
   ObstacleLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  FutureLevel: {fileID: 0}
---- !u!114 &8980104959754126724
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4520497855799095119}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7b99d154cd3d2744837f7cdde14cfc8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsValidator: 1
-  _value: 
-  Phenotype: {fileID: 0}
-  RunNow: 0
-  RunOnStart: 0
-  DrawOnSelected: 0
-  TimeframesObserved: 0
-  TimesFrameSimulated: 0
+  FutureLevel:
+    ObstacleLayerMask:
+      serializedVersion: 2
+      m_Bits: 0
+    BoundaryLayerMask:
+      serializedVersion: 2
+      m_Bits: 0
+    LevelManifest: {fileID: 0}
+    _clusteredThreats:
+      data: []
+      Grid:
+        Origin: {x: 0, y: 0}
+        cellSize: 0
+      _gridMin: {x: 0, y: 0, z: 0}
+      _gridMax: {x: 0, y: 0, z: 0}
+      Rows: 0
+      Cols: 0
+    _threats: []
+    _step: 0.2
+    _iter: 50
+    Bounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0, y: 0, z: 0}
+  references:
+    version: 2
+    RefIds: []
 --- !u!114 &4072880465894338835
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,7 +135,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsValidator: 0
   _value: 
-  Phenotype: {fileID: 0}
+  Manifestation: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
   DrawOnSelected: 0
@@ -152,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsValidator: 0
   _value: 
-  Phenotype: {fileID: 0}
+  Manifestation: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
   DrawOnSelected: 0
@@ -172,7 +174,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsValidator: 0
   _value: 
-  Phenotype: {fileID: 0}
+  Manifestation: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
   DrawOnSelected: 0
@@ -191,13 +193,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsValidator: 0
   _value: 
-  Phenotype: {fileID: 0}
+  Manifestation: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
   DrawOnSelected: 0
   PropertyValue: 0
   Data:
-    Grid: {fileID: 0}
+    Grid:
+      Origin: {x: 0, y: 0}
+      cellSize: 0
     ObstacleLayerMask:
       serializedVersion: 2
       m_Bits: 64
@@ -216,7 +220,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsValidator: 0
   _value: 
-  Phenotype: {fileID: 0}
+  Manifestation: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
   DrawOnSelected: 0
@@ -235,7 +239,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsValidator: 0
   _value: 
-  Phenotype: {fileID: 0}
+  Manifestation: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
   DrawOnSelected: 0
@@ -243,4 +247,3 @@ MonoBehaviour:
   ObstacleLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  FutureLevel: {fileID: 0}

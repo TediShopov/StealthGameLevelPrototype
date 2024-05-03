@@ -44,6 +44,12 @@ public class NativeGrid<T>
     public Vector2Int GetNativeCoord(Vector2Int unityCoord)
         => new Vector2Int(unityCoord.y - _gridMin.y, unityCoord.x - _gridMin.x);
 
+    public Vector2Int GetNativeCoord(Vector3 worldPosition)
+    {
+        Vector3Int worldToCell = this.Grid.WorldToCell(worldPosition);
+        return this.GetNativeCoord((Vector2Int)worldToCell);
+    }
+
     //From native to unity grid coordinates
     public Vector3Int GetUnityCoord(int row, int col)
         => new Vector3Int(col + _gridMin.x, row + _gridMin.y, 0);
