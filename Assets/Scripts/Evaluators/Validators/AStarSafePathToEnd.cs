@@ -17,8 +17,8 @@ namespace StealthLevelEvaluation
         private List<AStar.Node> Path;
 
         //In this case is not only the walkable tiles but
-        //the tiles that are completely safe zone based on
-        //a level future
+        //the tiles that are completely "safe" - not observed by
+        //any enemyu in the future leve time frameon
         private NativeGrid<bool> AllowedGrid;
 
         public override MeasurementType GetCategory()
@@ -34,8 +34,6 @@ namespace StealthLevelEvaluation
         protected override string Evaluate()
         {
             AStar aStar = new AStar(this.MovementCost);
-            //            Vector2Int startNativeCoord = LevelGrid.GetNativeCoord(StartCoord);
-            //            Vector2Int goalNativeCoord = LevelGrid.GetNativeCoord(GoalCoord);
             AStar.Node start = new AStar.Node(StartCoord);
             AStar.Node end = new AStar.Node(GoalCoord);
             Path = aStar.Run(start, end);
@@ -53,12 +51,13 @@ namespace StealthLevelEvaluation
         {
             IsValidator = true;
 
+            var chromosomeMono = manifestation.GetComponentInChildren<LevelChromosomeMono>();
+
             LevelPhenotype phenotype =
-                manifestation.GetComponentInChildren<LevelChromosomeMono>().Chromosome.Phenotype;
+                chromosomeMono.Chromosome.Phenotype;
             var heatmap = phenotype.FutureLevel.GetHeatmap();
             AllowedGrid = new NativeGrid<bool>(new UnboundedGrid(heatmap.Grid), phenotype.FutureLevel.GetBounds());
-            AllowedGrid.Grid.Origin = this.transform.position;
-
+            AllowedGrid.Grid.Origin = chromosomeMono.transform.position;
             AllowedGrid.SetAll((x, y, AllowedGrid) =>
             {
                 Vector3 world = AllowedGrid.GetWorldPosition(x, y);
@@ -98,20 +97,6 @@ namespace StealthLevelEvaluation
             return (AllowedGrid.IsInGrid(row, col) && AllowedGrid.Get(row, col) == true);
         }
 
-        //
-        //        public bool SetSafeGridCells(int row, int col, NativeGrid<bool> ngrid)
-        //        {
-        //            //Return true if box cast did not collide with any obstacle
-        //            bool safe = !UniqueVisibleCells.Contains((Vector2Int)ngrid.GetUnityCoord(row, col));
-        //            bool walkable = !Physics2D.BoxCast(
-        //                ngrid.GetWorldPosition(row, col),
-        //                PlayerCollider.bounds.size,
-        //                0,
-        //                Vector3.back, 0.1f,
-        //                ObstacleLayerMask);
-        //            return safe && walkable;
-        //        }
-
         private void OnDrawGizmosSelected()
         {
             if (DrawOnSelected == false) return;
@@ -122,26 +107,14 @@ namespace StealthLevelEvaluation
                     (x, y) =>
                     {
                         Vector3 pos = AllowedGrid.GetWorldPosition(x, y);
-                        //pos = this.transform.TransformPoint(pos);
-
                         if (AllowedGrid.Get(x, y) == true)
                             Gizmos.color = Color.green;
                         else
                             Gizmos.color = Color.red;
-
                         Gizmos.DrawSphere(pos, 0.1f);
                     }
                     );
             }
-
-            //            if (UniqueVisibleCells != null)
-            //            {
-            //                foreach (var cell in UniqueVisibleCells)
-            //                {
-            //                    Gizmos.DrawSphere(Grid.GetCellCenterWorld(new Vector3Int(cell.x, cell.y)), 0.1f);
-            //                    //Gizmos.DrawSphere(Grid.CellToWorld(new Vector3Int(cell.x, cell.y)), 0.1f);
-            //                }
-            //            }
             if (Path != null)
             {
                 foreach (var node in Path)

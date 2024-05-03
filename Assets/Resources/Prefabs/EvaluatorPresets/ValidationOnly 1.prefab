@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4520497855799095118}
-  - component: {fileID: -605473379551954984}
+  - component: {fileID: 1113118278882428552}
   m_Layer: 0
   m_Name: ValidationOnly 1
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-605473379551954984
+--- !u!114 &1113118278882428552
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,41 +41,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 4520497855799095119}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad1973ff3d699f449b4aff28915382ac, type: 3}
+  m_Script: {fileID: 11500000, guid: 24e0fc32056cffc46b0d750bc5c7e935, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsValidator: 1
+  IsValidator: 0
   _value: 
   Manifestation: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
   DrawOnSelected: 1
+  PlayerCollider: {fileID: 0}
   ObstacleLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  FutureLevel:
-    ObstacleLayerMask:
-      serializedVersion: 2
-      m_Bits: 0
-    BoundaryLayerMask:
-      serializedVersion: 2
-      m_Bits: 0
-    LevelManifest: {fileID: 0}
-    _clusteredThreats:
-      data: []
-      Grid:
-        Origin: {x: 0, y: 0}
-        cellSize: 0
-      _gridMin: {x: 0, y: 0, z: 0}
-      _gridMax: {x: 0, y: 0, z: 0}
-      Rows: 0
-      Cols: 0
-    _threats: []
-    _step: 0.2
-    _iter: 50
-    Bounds:
-      m_Center: {x: 0, y: 0, z: 0}
-      m_Extent: {x: 0, y: 0, z: 0}
-  references:
-    version: 2
-    RefIds: []
