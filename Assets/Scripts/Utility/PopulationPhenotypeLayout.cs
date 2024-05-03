@@ -43,73 +43,59 @@ public class PopulationPhenotypeLayout : Population
         base.CreateInitialGeneration();
     }
 
-    //    public override void CreateNewGeneration(IList<IChromosome> chromosomes)
-    //    {
-    //        Debug.Log("Created New Through Mono Pop");
-    //        //GridLayout.PrepareForNewGeneration();
-    //
-    //        // Find common items using an intersection of the two lists
-    //        IEnumerable<GameObject> levelsToKeep = new List<GameObject>();
-    //        IEnumerable<IChromosome> commonItems = new List<IChromosome>();
-    //        if (this.CurrentGeneration != null)
-    //        {
-    //            //Interesect with all new chromosome to find chromosome
-    //            //which are in both population anb should be kept
-    //            commonItems =
-    //                this.CurrentGeneration.Chromosomes
-    //                .Intersect(chromosomes).ToList();
-    //
-    //            //Transform to their gameobejcts
-    //            levelsToKeep =
-    //               commonItems.Select(x => ((LevelChromosomeBase)x).Manifestation)
-    //               .ToList();
-    //            for (int i = 0; i < levelsToKeep.Count(); i++)
-    //            {
-    //                Debug.Log("Level Object Should Be Kept");
-    //            }
-    //            Debug.Log($"Generaton Count: {chromosomes.Count}");
-    //
-    //            // Group the items by their value and count the number of items in each group
-    //            var occurrenceDictionary = chromosomes
-    //                .GroupBy(item => item) // Group items by their value
-    //                .ToDictionary(
-    //                    group => group.Key,  // The item itself becomes the key
-    //                    group => group.Count() // Count the number of occurrences in the group
-    //                );
-    //
-    //            Debug.Log($"Total Repetitions: {occurrenceDictionary.Count}");
-    //        }
-    //public override void CreateNewGeneration(IList<IChromosome> chromosomes)
-    //{
-    //    Debug.Log("Created New Through Mono Pop");
-    //    GridLayout.PrepareForNewGeneration();
-    //    foreach (var chromosome in chromosomes)
-    //    {
-    //        LevelChromosomeBase levelChromosome = (LevelChromosomeBase)chromosome;
-    //        levelChromosome.Manifestation = GridLayout.GetNextLevelObject();
-    //        levelChromosome.
-    //            PhenotypeGenerator
-    //            .Generate(levelChromosome, levelChromosome.Manifestation);
-    //    }
-    //    base.CreateNewGeneration(chromosomes);
-    //}
     public override void CreateNewGeneration(IList<IChromosome> chromosomes)
     {
+        List<IChromosome> chromosomeToKeep = new List<IChromosome>();
+        List<GameObject> manifestationsToKeep = new List<GameObject>();
+        if (this.CurrentGeneration != null)
+        {
+            var groupLeaders = this.CurrentGeneration.Chromosomes.GroupBy(x => x)
+                .Select(x => x.First(x => ((LevelChromosomeBase)x).Manifestation != null));
+
+            //Interesect with all new chromosome to find chromosome
+            //which are in both population anb should be kept
+            chromosomeToKeep = groupLeaders.Intersect(chromosomes).ToList();
+
+            //Transform to their gameobejcts
+            manifestationsToKeep =
+               chromosomeToKeep.Select(x => ((LevelChromosomeBase)x).Manifestation)
+               .ToList();
+            if (manifestationsToKeep.Count > 1)
+            {
+                Debug.Log($"Manifestations to keep count: {manifestationsToKeep.Count}");
+            }
+        }
+
         Debug.Log("Manifest unique only chromosome");
         var chromosomeGroups = chromosomes.GroupBy(x => x).ToList();
-        GridLayout.PrepareForNewGeneration();
+        GridLayout.currentIndex = -1;
         foreach (var group in chromosomeGroups)
         {
+            //Pick group leader
             var groupLeader = group.FirstOrDefault(x => ((LevelChromosomeBase)x).Manifestation);
             if (groupLeader == null)
                 groupLeader = group.First();
-            if (group.Count() > 1)
-            {
-                Debug.Log($"Group of: {group.Count()}");
-            }
 
             LevelChromosomeBase levelChromosome = (LevelChromosomeBase)groupLeader;
-            levelChromosome.Manifestation = GridLayout.GetNextLevelObject();
+
+            //Skip the generation of the leader chromosome if it
+            //persists into next generation
+            if (manifestationsToKeep.Contains(levelChromosome.Manifestation))
+                continue;
+
+            GameObject nextFreeManifestation = null;
+            //Pick until the manifstation does not need to persist in the
+            // next civilization
+            do
+            {
+                Debug.Log($"Skipped count:");
+                nextFreeManifestation = GridLayout.GetNextLevelObject();
+            } while (manifestationsToKeep.Contains(nextFreeManifestation));
+
+            //Clear the game object just in case
+            GridLayout.RemoveObject(nextFreeManifestation);
+            //Assign the free manifesation spot to the chromosome and generate
+            levelChromosome.Manifestation = nextFreeManifestation;
             levelChromosome.
                 PhenotypeGenerator
                 .Generate(levelChromosome, levelChromosome.Manifestation);
