@@ -296,15 +296,28 @@ namespace GeneticSharp.Domain
 
         public void ReorderTransformHierarchy()
         {
-            for (int i = 0; i < Population.CurrentGeneration.Chromosomes.Count; i++)
+            int index = 0;
+            foreach (var group in Population.CurrentGeneration.Chromosomes.GroupBy(x => x))
             {
-                var chromo = Population.CurrentGeneration.Chromosomes[i];
-                if (chromo is LevelChromosomeBase)
+                var groupLeader = (LevelChromosomeBase)
+                    group.First(x => ((LevelChromosomeBase)x).Manifestation);
+                if (group is LevelChromosomeBase)
                 {
-                    var levelChromosome = (LevelChromosomeBase)chromo;
-                    levelChromosome.Manifestation.transform.SetSiblingIndex(i);
+                    var levelChromosome = (LevelChromosomeBase)groupLeader;
+                    levelChromosome.Manifestation.transform.SetSiblingIndex(index);
                 }
+                index++;
             }
+
+            //            for (int i = 0; i < Population.CurrentGeneration.Chromosomes.Count; i++)
+            //            {
+            //                var chromo = Population.CurrentGeneration.Chromosomes[i];
+            //                if (chromo is LevelChromosomeBase)
+            //                {
+            //                    var levelChromosome = (LevelChromosomeBase)chromo;
+            //                    levelChromosome.Manifestation.transform.SetSiblingIndex(i);
+            //                }
+            //            }
         }
 
         /// <summary>
@@ -317,27 +330,47 @@ namespace GeneticSharp.Domain
                 //GeneratePhenotypeForAll();
 
                 var allChromomsome = Population.CurrentGeneration.Chromosomes;
+                var groupedChromosomes = Population.CurrentGeneration.Chromosomes
+                    .GroupBy(x => x);
 
                 //var chromosomesWithoutFitness = Population.CurrentGeneration.Chromosomes.Where(c => !c.Fitness.HasValue).ToList();
 
-                for (int i = 0; i < allChromomsome.Count; i++)
+                foreach (var groups in groupedChromosomes)
                 {
-                    var c = allChromomsome[i];
-
+                    var groupLeader = (LevelChromosomeBase)
+                        groups.First(x => ((LevelChromosomeBase)x).Manifestation);
                     TaskExecutor.Add(() =>
                     {
                         //RunEvaluateFitness(c);
-                        if (c.Fitness.HasValue)
+                        if (groupLeader.Fitness.HasValue)
                         {
-                            InteractiveEvalutorMono f = (InteractiveEvalutorMono)Fitness;
-                            c.Fitness = f.Reevaluate(c);
+                            ReevaluateGroup(groups);
                         }
                         else
                         {
-                            RunEvaluateFitness(c);
+                            RunEvaluateGroupOfIndiviudal(groups);
                         }
                     });
                 }
+
+                //                for (int i = 0; i < allChromomsome.Count; i++)
+                //                {
+                //                    var c = allChromomsome[i];
+                //
+                //                    TaskExecutor.Add(() =>
+                //                    {
+                //                        //RunEvaluateFitness(c);
+                //                        if (c.Fitness.HasValue)
+                //                        {
+                //                            InteractiveEvalutorMono f = (InteractiveEvalutorMono)Fitness;
+                //                            c.Fitness = f.Reevaluate(c);
+                //                        }
+                //                        else
+                //                        {
+                //                            RunEvaluateGroupOfIndiviudal();
+                //                        }
+                //                    });
+                //                }
 
                 if (!TaskExecutor.Start())
                 {
@@ -357,17 +390,51 @@ namespace GeneticSharp.Domain
             handle?.Invoke(this, EventArgs.Empty);
         }
 
-        /// <summary>
-        /// Runs the evaluate fitness.
-        /// </summary>
-        /// <param name="chromosome">The chromosome.</param>
-        private void RunEvaluateFitness(object chromosome)
-        {
-            var c = chromosome as IChromosome;
+        //        /// Runs the evaluate fitness.
+        //        private void RunEvaluateFitness(object chromosome)
+        //        {
+        //            var c = chromosome as IChromosome;
+        //
+        //            try
+        //            {
+        //                c.Fitness = Fitness.Evaluate(c);
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                throw new FitnessException(Fitness, "Error executing Fitness.Evaluate for chromosome: {0}".With(ex.Message), ex);
+        //            }
+        //        }
 
+        /// Runs the evaluate fitness.
+        private void RunEvaluateGroupOfIndiviudal(IEnumerable<IChromosome> identicalChromosomes)
+        {
+            var groupLeader = identicalChromosomes.First(x => ((LevelChromosomeBase)x).Manifestation);
             try
             {
-                c.Fitness = Fitness.Evaluate(c);
+                double fitness = Fitness.Evaluate(groupLeader);
+                foreach (var groupsMembers in identicalChromosomes)
+                {
+                    groupsMembers.Fitness = fitness;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new FitnessException(Fitness, "Error executing Fitness.Evaluate for chromosome: {0}".With(ex.Message), ex);
+            }
+        }
+
+        /// Runs the evaluate fitness.
+        private void ReevaluateGroup(IEnumerable<IChromosome> identicalChromosomes)
+        {
+            try
+            {
+                var groupLeader = identicalChromosomes.First(x => ((LevelChromosomeBase)x).Manifestation);
+                InteractiveEvalutorMono f = (InteractiveEvalutorMono)Fitness;
+                groupLeader.Fitness = f.Reevaluate(groupLeader);
+                foreach (var groupsMembers in identicalChromosomes)
+                {
+                    groupsMembers.Fitness = groupLeader.Fitness;
+                }
             }
             catch (Exception ex)
             {

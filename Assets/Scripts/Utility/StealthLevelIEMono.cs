@@ -215,19 +215,32 @@ public class StealthLevelIEMono : MonoBehaviour
 
     public void NameAllPhenotypeGameobjects()
     {
-        Vector2 placement = new Vector2(5, 5);
-        foreach (var chromosome in this.GeneticAlgorithm.Population.CurrentGeneration.Chromosomes)
+        try
         {
-            var levelChromosome = chromosome as LevelChromosomeBase;
+            Vector2 placement = new Vector2(5, 5);
 
-            //Attach mono behaviour to visualize the measurements
-            ChromoseMeasurementsVisualizer.AttachDataVisualizer(
-                levelChromosome.Manifestation,
-                new Vector2(5, 5));
+            foreach (var chromosome in this.GeneticAlgorithm.Population.CurrentGeneration.Chromosomes)
+            {
+                var levelChromosome = chromosome as LevelChromosomeBase;
 
-            //Clear objects name and replace it with new fitnessj
-            this.Generator.ClearName(levelChromosome);
-            this.Generator.AppendFitnessToName(levelChromosome);
+                if (levelChromosome.Manifestation != null)
+                {
+                    //Attach mono behaviour to visualize the measurements
+                    ChromoseMeasurementsVisualizer.AttachDataVisualizer(
+                        levelChromosome.Manifestation,
+                        new Vector2(5, 5));
+
+                    //Clear objects name and replace it with new fitnessj
+                    this.Generator.ClearName(levelChromosome);
+                    this.Generator.AppendFitnessToName(levelChromosome);
+                }
+            }
+        }
+        catch (Exception)
+        {
+            int a = 3;
+
+            throw;
         }
     }
 

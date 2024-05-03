@@ -79,13 +79,36 @@ public class PopulationPhenotypeLayout : Population
     //
     //            Debug.Log($"Total Repetitions: {occurrenceDictionary.Count}");
     //        }
+    //public override void CreateNewGeneration(IList<IChromosome> chromosomes)
+    //{
+    //    Debug.Log("Created New Through Mono Pop");
+    //    GridLayout.PrepareForNewGeneration();
+    //    foreach (var chromosome in chromosomes)
+    //    {
+    //        LevelChromosomeBase levelChromosome = (LevelChromosomeBase)chromosome;
+    //        levelChromosome.Manifestation = GridLayout.GetNextLevelObject();
+    //        levelChromosome.
+    //            PhenotypeGenerator
+    //            .Generate(levelChromosome, levelChromosome.Manifestation);
+    //    }
+    //    base.CreateNewGeneration(chromosomes);
+    //}
     public override void CreateNewGeneration(IList<IChromosome> chromosomes)
     {
-        Debug.Log("Created New Through Mono Pop");
+        Debug.Log("Manifest unique only chromosome");
+        var chromosomeGroups = chromosomes.GroupBy(x => x).ToList();
         GridLayout.PrepareForNewGeneration();
-        foreach (var chromosome in chromosomes)
+        foreach (var group in chromosomeGroups)
         {
-            LevelChromosomeBase levelChromosome = (LevelChromosomeBase)chromosome;
+            var groupLeader = group.FirstOrDefault(x => ((LevelChromosomeBase)x).Manifestation);
+            if (groupLeader == null)
+                groupLeader = group.First();
+            if (group.Count() > 1)
+            {
+                Debug.Log($"Group of: {group.Count()}");
+            }
+
+            LevelChromosomeBase levelChromosome = (LevelChromosomeBase)groupLeader;
             levelChromosome.Manifestation = GridLayout.GetNextLevelObject();
             levelChromosome.
                 PhenotypeGenerator
