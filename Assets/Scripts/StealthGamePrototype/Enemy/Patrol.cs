@@ -133,6 +133,7 @@ public class Patrol : IPredictableThreat
 
     public void Reset()
     {
+        this.Time = 0.0f;
         if (Route != null)
         {
             Route.Reset();

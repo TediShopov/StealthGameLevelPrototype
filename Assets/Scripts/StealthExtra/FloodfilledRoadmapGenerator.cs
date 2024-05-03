@@ -6,8 +6,13 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Profiling;
 
+[Serializable]
 public class FloodfilledRoadmapGenerator
 {
+    public FloodfilledRoadmapGenerator()
+    {
+    }
+
     //Dictionary exposed to Unity editor
     [HideInInspector] public List<Collider2D> ColliderKeys;
 

@@ -39,17 +39,16 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
     public int EnemyCount;
     private int EntityCount => (LevelChromosome.Length - 1) / 5;
 
-    [SerializeField]
-    public FloodfilledRoadmapGenerator RoadmapGenerator;
+    [SerializeField] public FloodfilledRoadmapGenerator RoadmapGenerator;
 
     [HideInInspector] public DiscretePathGenerator PathGenerator;
-    public DiscreteRecalculatingFutureLevel FutureLevel;
+    [SerializeReference, SubclassPicker] public IFutureLevel FutureLevel;
 
     public void Awake()
     {
         PathGenerator = GetComponent<DiscretePathGenerator>();
-        if (RoadmapGenerator is null)
-            RoadmapGenerator = new FloodfilledRoadmapGenerator();
+        //        if (RoadmapGenerator is null)
+        //            RoadmapGenerator = new FloodfilledRoadmapGenerator();
     }
 
     public int GetObstaclesToSpawn(ref int geneIndex)
@@ -65,17 +64,7 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
     public override void Generate(LevelChromosomeBase chromosome, GameObject to = null)
     {
         To = to;
-        if (this.FutureLevel == null)
-        {
-            FutureLevel = new DiscreteCahcedFutureLevel(0.2f, 50, LevelProperties);
-        }
-
-        if (RoadmapGenerator is null)
-        {
-            RoadmapGenerator = new FloodfilledRoadmapGenerator();
-            RoadmapGenerator.ObstacleLayerMask = LevelProperties.ObstacleLayerMask;
-            RoadmapGenerator.BoundaryLayerMask = LevelProperties.BoundaryLayerMask;
-        }
+        EnsureComponentValidity();
 
         if (chromosome is not OTEPSLevelChromosome)
             throw new System.ArgumentException("OTEPS Level generator requries OTEPS level chromosome");
@@ -106,6 +95,23 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         this.Data.AddComponent<FutureLevelSlider>();
 
         UnityEngine.Debug.Log("Generation of phenotype finished");
+    }
+
+    private void EnsureComponentValidity()
+    {
+        if (this.FutureLevel == null)
+        {
+            throw new System.ArgumentNullException(nameof(this.FutureLevel));
+            //FutureLevel = new DiscreteCahcedFutureLevel(0.2f, 50, LevelProperties);
+        }
+
+        if (RoadmapGenerator is null)
+        {
+            throw new System.ArgumentNullException(nameof(this.RoadmapGenerator));
+            //RoadmapGenerator = new FloodfilledRoadmapGenerator();
+        }
+        RoadmapGenerator.ObstacleLayerMask = LevelProperties.ObstacleLayerMask;
+        RoadmapGenerator.BoundaryLayerMask = LevelProperties.BoundaryLayerMask;
     }
 
     private void CalculateLevelFuture(LevelChromosomeBase chromosomeBase)

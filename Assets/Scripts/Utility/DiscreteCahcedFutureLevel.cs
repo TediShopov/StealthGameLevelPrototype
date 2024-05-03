@@ -1,4 +1,5 @@
 using PlasticGui.Configuration;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -39,6 +40,7 @@ public class StaticLevel
     }
 }
 
+[Serializable]
 public class DiscreteCahcedFutureLevel : DiscreteRecalculatingFutureLevel
 {
     private StaticLevel StaticLevel;
@@ -51,6 +53,10 @@ public class DiscreteCahcedFutureLevel : DiscreteRecalculatingFutureLevel
     //    }
     public DiscreteCahcedFutureLevel(float step, int iterations, LevelProperties levelProperties)
         : base(step, iterations, levelProperties)
+    {
+    }
+
+    public DiscreteCahcedFutureLevel()
     {
     }
 

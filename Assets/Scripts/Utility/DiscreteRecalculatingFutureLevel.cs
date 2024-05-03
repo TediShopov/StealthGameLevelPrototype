@@ -64,6 +64,7 @@ public interface IClusterable
     NativeGrid<float> GetHeatmap();
 }
 
+[Serializable]
 public class DiscreteRecalculatingFutureLevel :
     IFutureLevel
 {
@@ -86,6 +87,10 @@ public class DiscreteRecalculatingFutureLevel :
     {
         this._step = step;
         this._iter = iterations;
+    }
+
+    public DiscreteRecalculatingFutureLevel()
+    {
     }
 
     public NativeGrid<float> GetThreatHeatmap() => new NativeGrid<float>(_clusteredThreats);
@@ -122,7 +127,7 @@ public class DiscreteRecalculatingFutureLevel :
         //StartCoroutine(RefreshLevelSolutionObjects());
     }
 
-    private Bounds Bounds;
+    [SerializeField, HideInInspector] private Bounds Bounds;
 
     public Bounds GetBounds()
     {
