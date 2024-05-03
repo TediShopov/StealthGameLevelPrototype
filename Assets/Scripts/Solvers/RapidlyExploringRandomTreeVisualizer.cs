@@ -22,7 +22,7 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
     //public IRapidlyEpxploringRandomTree<Vector3> RRT;
     [SerializeReference, SubclassPicker] public RRT RRT;
 
-    protected GameObject level;
+    [SerializeReference, HideInInspector] protected GameObject level;
     //    public RRTStats Stats;
     //    public float SteerStep = 9999;
 
@@ -54,8 +54,10 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
         //        Stats = RRT.Stats;
         if (RRT == null) return;
 
-        RRT.Setup(VoxelizedLevel, RRT.GoalDistance, Controller.MaxSpeed,
-            StartNode.transform.position, EndNode.transform.position, level.transform);
+        var start = level.transform.InverseTransformPoint(StartNode.transform.position);
+        var goal = level.transform.InverseTransformPoint(EndNode.transform.position);
+
+        RRT.Setup(VoxelizedLevel, RRT.GoalDistance, Controller.MaxSpeed, start, goal);
         RRT.Run();
 
         //Ouputs RRT stats
@@ -99,9 +101,12 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
         //Gizmos.DrawWireSphere(this.RRT.Goal, BiasDistance);
         for (int i = 0; i < Path.Count - 1; i++)
         {
-            Gizmos.DrawSphere(Path[i], 0.1f);
-            Gizmos.DrawLine(Path[i], Path[i + 1]);
-            Handles.Label(Path[i], $"{Path[i].z.ToString("0.00")}");
+            var segmentA = level.transform.TransformPoint(Path[i]);
+            var segmentB = level.transform.TransformPoint(Path[i + 1]);
+
+            Gizmos.DrawSphere(segmentA, 0.1f);
+            Gizmos.DrawLine(segmentA, segmentB);
+            Handles.Label(segmentA, $"{segmentA.z.ToString("0.00")}");
             //Handles.Label(Path[i] + Vector3.down * 0.2f, $"{(Path[i].z)}");
             if (OutputDiscretized)
             {
@@ -112,8 +117,8 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
                     .IsDynamicCollision(Path[i], Path[i + 1]);
                 bool dynamicCollisisonLocal = VoxelizedLevel
                     .IsDynamicCollision(
-                    this.level.transform.TransformPoint(Path[i]),
-                   this.level.transform.TransformPoint(Path[i + 1]));
+                    this.level.transform.InverseTransformPoint(Path[i]),
+                   this.level.transform.InverseTransformPoint(Path[i + 1]));
                 //bool collided = VoxelizedLevel.IsColliding(Path[i], Path[i + 1], Path[i].z, Path[i + 1].z);
                 if (staticCollision)
                     Gizmos.color = Color.red;
@@ -143,10 +148,13 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
     public void DFSDraw(TreeNode<Vector3> node)
     {
         if (node == null) return;
-        Gizmos.DrawSphere(node.Content, 0.1f);
+
+        var nodeGlobalPosition = level.transform.TransformPoint(node.Content);
+        Gizmos.DrawSphere(nodeGlobalPosition, 0.1f);
         foreach (var child in node.Children)
         {
-            Gizmos.DrawLine(node.Content, child.Content);
+            var childGlobalPosition = level.transform.TransformPoint(child.Content);
+            Gizmos.DrawLine(nodeGlobalPosition, childGlobalPosition);
             DFSDraw(child);
         }
     }

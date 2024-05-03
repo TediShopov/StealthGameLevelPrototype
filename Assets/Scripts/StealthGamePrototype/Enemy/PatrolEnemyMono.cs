@@ -30,6 +30,8 @@ public class PatrolEnemyMono : MonoBehaviour, IPredictableThreat
 
     public float Time => Patrol.Time;
 
+    public Transform GlobalTransform { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
     public Patrol GetPatrol()
     { return Patrol; }
 

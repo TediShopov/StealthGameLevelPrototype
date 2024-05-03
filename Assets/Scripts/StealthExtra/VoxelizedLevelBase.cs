@@ -9,6 +9,8 @@ using UnityEngine;
 public interface IFutureLevel : ICloneable,
    IClusterable
 {
+    public Transform GlobalTransform { get; set; }
+
     List<IPredictableThreat> DynamicThreats { get; }
     public float Step { get; }
     public float Iterations { get; }
@@ -45,6 +47,8 @@ public class VoxelizedLevelBase : MonoBehaviour, IFutureLevel
     public IPredictableThreat[] DynamicThreats => throw new System.NotImplementedException();
 
     List<IPredictableThreat> IFutureLevel.DynamicThreats => throw new NotImplementedException();
+
+    public Transform GlobalTransform { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
     public float GetMaxSimulationTime() => Step * Iterations;
 
@@ -192,6 +196,11 @@ public class VoxelizedLevelBase : MonoBehaviour, IFutureLevel
     }
 
     public NativeGrid<float> GetHeatmap()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Transform GetGlobalTransform()
     {
         throw new NotImplementedException();
     }

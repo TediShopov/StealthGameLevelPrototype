@@ -37,7 +37,7 @@ public class FutureLevelSlider : MonoBehaviour
             {
                 float step = LevelPhenotype.FutureLevel.Step;
                 float discreteTime = step
-                    * Mathf.CeilToInt(SetTime / step);
+                    * Mathf.FloorToInt(SetTime / step);
                 threa.TimeMove(discreteTime);
             }
             else
@@ -75,12 +75,12 @@ public class FutureLevelSlider : MonoBehaviour
         if (SolutionPaths == null) return;
         foreach (var path in SolutionPaths)
         {
-            Vector2 position = GetPosition(path, SetTime);
+            Vector2 position = this.transform.TransformPoint(GetPosition(path, SetTime));
             if (EnableDiscreteTimes)
             {
                 float step = LevelPhenotype.FutureLevel.Step;
                 float discreteTime = step * Mathf.CeilToInt(SetTime / step);
-                position = GetPosition(path, discreteTime);
+                position = this.transform.TransformPoint(GetPosition(path, discreteTime));
             }
             Gizmos.DrawSphere(position, 0.1f);
         }

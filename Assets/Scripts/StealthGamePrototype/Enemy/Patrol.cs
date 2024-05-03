@@ -8,6 +8,13 @@ public class Patrol : IPredictableThreat
 {
     [SerializeField] public DefaultEnemyProperties AestheticProperties;
     [SerializeReference] private IPatrolPath Route;
+    [SerializeReference] public Transform LevelManifest;
+
+    public Transform GlobalTransform
+    {
+        get { return LevelManifest; }
+        set { LevelManifest = value; }
+    }
 
     private FutureTransform Transform = new FutureTransform
     {
@@ -142,13 +149,18 @@ public class Patrol : IPredictableThreat
 
     public bool TestThreat(Vector2 collision)
     {
-        return FieldOfView.TestCollision(
-            collision,
-            Transform,
-            AestheticProperties.FOV,
-            AestheticProperties.ViewDistance,
-            LayerMask.GetMask("Obstacle")
-            );
+        if (FieldOfView
+            .InSightConeDistance(collision, Transform, AestheticProperties.FOV, AestheticProperties.ViewDistance))
+        {
+            collision = GlobalTransform.TransformPoint(collision);
+            var globalPos = GlobalTransform.TransformPoint(Transform.Position);
+
+            if (!Physics2D.Linecast(collision, globalPos, LayerMask.GetMask("Obstacle")))
+            {
+                return true;
+            };
+        }
+        return false;
     }
 
     public void TimeMove(float deltaTime)

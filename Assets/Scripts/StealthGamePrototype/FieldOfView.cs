@@ -145,9 +145,40 @@ public class FieldOfView : MonoBehaviour
         return false;
     }
 
+    //    public bool TestCollision(Vector2 testPosition, Vector2 fovPosition, Vector2 globalDirection)
+    //    {
+    //        //Gloabar direction vector
+    //        Vector2 vectorToTarget = (testPosition - fovPosition).normalized;
+    //        if (!Physics2D.Linecast(testPosition, fovPosition, ObstacleLayerMask))
+    //        {
+    //            float angle = Vector2.Angle(globalDirection, vectorToTarget);
+    //            if (angle < EnemyProperties.FOV / 2.0f && Vector2.Distance(testPosition, fovPosition) <= EnemyProperties.ViewDistance)
+    //            {
+    //                return true;
+    //            }
+    //        }
+    //        return false;
+    //    }
+    //
+    //    public static bool TestCollision(Vector2 testPosition, FutureTransform ft, float fovAngle, float distance, LayerMask layerMask)
+    //    {
+    //        //Gloabar direction vector
+    //        Vector2 vectorToTarget = (testPosition - ft.Position).normalized;
+    //        if (Vector2.Distance(testPosition, ft.Position) > distance)
+    //            return false;
+    //        float angle = Vector2.Angle(ft.Direction, vectorToTarget);
+    //        if (angle >= fovAngle / 2.0f)
+    //            return false;
+    //        if (!Physics2D.Linecast(testPosition, ft.Position, layerMask))
+    //        {
+    //            return true;
+    //        }
+    //        return false;
+    //    }
     public bool TestCollision(Vector2 testPosition, Vector2 fovPosition, Vector2 globalDirection)
     {
         //Gloabar direction vector
+
         Vector2 vectorToTarget = (testPosition - fovPosition).normalized;
         if (!Physics2D.Linecast(testPosition, fovPosition, ObstacleLayerMask))
         {
@@ -160,7 +191,7 @@ public class FieldOfView : MonoBehaviour
         return false;
     }
 
-    public static bool TestCollision(Vector2 testPosition, FutureTransform ft, float fovAngle, float distance, LayerMask layerMask)
+    public static bool InSightConeDistance(Vector2 testPosition, FutureTransform ft, float fovAngle, float distance)
     {
         //Gloabar direction vector
         Vector2 vectorToTarget = (testPosition - ft.Position).normalized;
@@ -169,11 +200,8 @@ public class FieldOfView : MonoBehaviour
         float angle = Vector2.Angle(ft.Direction, vectorToTarget);
         if (angle >= fovAngle / 2.0f)
             return false;
-        if (!Physics2D.Linecast(testPosition, ft.Position, layerMask))
-        {
-            return true;
-        }
-        return false;
+
+        return true;
     }
 
     public float GetStartinAngle()

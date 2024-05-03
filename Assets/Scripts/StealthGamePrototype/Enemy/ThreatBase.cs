@@ -4,6 +4,8 @@ using UnityEngine;
 
 public interface IPredictableThreat
 {
+    public Transform GlobalTransform { get; set; }
+
     //Time frame in the future that this threat resides
     public float Time { get; }
 

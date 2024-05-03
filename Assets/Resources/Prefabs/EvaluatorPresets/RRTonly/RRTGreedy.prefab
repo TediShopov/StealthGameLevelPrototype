@@ -53,7 +53,7 @@ MonoBehaviour:
   RunOnStart: 0
   DrawOnSelected: 0
   RRTPrefab: {fileID: 3930090248339898022, guid: 6f4aa4c6a964f8a47af5c4d52f1faf7a, type: 3}
-  DeisredSuccesses: 5
+  DeisredSuccesses: 25
   MaxRRTAttempts: 25
   TerminateAfterSuccessesReached: 1
   Successes: 0

@@ -28,16 +28,20 @@ public class DynamicLevelSimulation
         IEnumerable<IPredictableThreat> threats,
         float from,
         float to,
-        float timeStep)
+        float globalTimestep)
     {
         Threats = threats;
         foreach (var t in Threats)
             t.Reset();
-        From = from;
-        To = to;
-        TimeStep = timeStep;
+
+        From = MathF.Floor(from / globalTimestep) * globalTimestep;
+        To = MathF.Ceiling(to / globalTimestep) * globalTimestep;
+
+        //        From = from;
+        //        To = to;
+        TimeStep = globalTimestep;
         foreach (var threat in Threats)
-            threat.TimeMove(from);
+            threat.TimeMove(From);
         CurrentTime = From;
     }
 
@@ -70,6 +74,7 @@ public class DiscreteRecalculatingFutureLevel :
 {
     public LayerMask ObstacleLayerMask;
     public LayerMask BoundaryLayerMask;
+    [SerializeReference] public Transform LevelManifest;
     private Collider2D _boundary;
 
     [SerializeField]
@@ -112,6 +117,12 @@ public class DiscreteRecalculatingFutureLevel :
 
     public float Iterations => _iter;
 
+    public Transform GlobalTransform
+    {
+        get { return LevelManifest; }
+        set { LevelManifest = value; }
+    }
+
     public DynamicLevelSimulation GetFullSimulation()
     {
         return new DynamicLevelSimulation(DynamicThreats, 0, GetMaxSimulationTime(), Step);
@@ -123,6 +134,8 @@ public class DiscreteRecalculatingFutureLevel :
         _grid = levelPhenotype.Zones.Grid;
         SolutionPaths = new List<List<Vector3>>();
         DynamicThreats = levelPhenotype.Threats;
+        foreach (var threat in DynamicThreats)
+            threat.GlobalTransform = GlobalTransform;
         _clusteredThreats = PredicableThreatHeatmap(_grid);
         //StartCoroutine(RefreshLevelSolutionObjects());
     }
@@ -214,6 +227,8 @@ public class DiscreteRecalculatingFutureLevel :
 
     public virtual bool IsStaticCollision(Vector3 from, Vector3 to)
     {
+        from = GlobalTransform.TransformPoint(from);
+        to = GlobalTransform.TransformPoint(to);
         return Physics2D.Linecast(from, to, ObstacleLayerMask);
     }
 
@@ -261,36 +276,6 @@ public class DiscreteRecalculatingFutureLevel :
     }
 
     private List<List<Vector3>> SolutionPaths;
-
-    //    private IEnumerator RefreshLevelSolutionObjects()
-    //    {
-    //        while (true)
-    //        {
-    //            var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
-    //            var rrts = level.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
-    //
-    //            SolutionPaths = rrts.Select(x => x.RRT)
-    //               .Where(x => x.Succeeded())
-    //               .Select(x => x.ReconstructPathToSolution())
-    //               .ToList();
-    //
-    //            yield return new WaitForSecondsRealtime(2.0f);
-    //        }
-    //    }
-
-    //    public virtual void OnDrawGizmosSelected()
-    //    {
-    //    }
-
-    //    public virtual IFutureLevel PrototypeComponent(GameObject to)
-    //    {
-    //        var other = to.AddComponent<DiscreteRecalculatingFutureLevel>();
-    //        other.BoundaryLayerMask = this.BoundaryLayerMask;
-    //        other.ObstacleLayerMask = this.ObstacleLayerMask;
-    //        other._iter = this._iter;
-    //        other._step = this._step;
-    //        return other;
-    //    }
 
     public NativeGrid<float> PredicableThreatHeatmap
         (UnboundedGrid grid)
@@ -352,5 +337,10 @@ public class DiscreteRecalculatingFutureLevel :
     public NativeGrid<float> GetHeatmap()
     {
         return this._clusteredThreats;
+    }
+
+    public Transform GetGlobalTransform()
+    {
+        return LevelManifest;
     }
 }
