@@ -105,9 +105,22 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
             //Handles.Label(Path[i] + Vector3.down * 0.2f, $"{(Path[i].z)}");
             if (OutputDiscretized)
             {
-                bool collided = VoxelizedLevel.IsColliding(Path[i], Path[i + 1], Path[i].z, Path[i + 1].z);
-                if (collided)
+                //bool collided = VoxelizedLevel.IsColliding(Path[i], Path[i + 1], Path[i].z, Path[i + 1].z);
+                bool staticCollision = VoxelizedLevel
+                    .IsStaticCollision(Path[i], Path[i + 1]);
+                bool dynamicCollisisonGlobal = VoxelizedLevel
+                    .IsDynamicCollision(Path[i], Path[i + 1]);
+                bool dynamicCollisisonLocal = VoxelizedLevel
+                    .IsDynamicCollision(
+                    this.level.transform.TransformPoint(Path[i]),
+                   this.level.transform.TransformPoint(Path[i + 1]));
+                //bool collided = VoxelizedLevel.IsColliding(Path[i], Path[i + 1], Path[i].z, Path[i + 1].z);
+                if (staticCollision)
                     Gizmos.color = Color.red;
+                else if (dynamicCollisisonGlobal)
+                    Gizmos.color = Color.blue;
+                else if (dynamicCollisisonLocal)
+                    Gizmos.color = Color.magenta;
                 else
                     Gizmos.color = Color.green;
 

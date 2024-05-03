@@ -79,7 +79,8 @@ public class DiscreteCahcedFutureLevel : DiscreteRecalculatingFutureLevel
 
         for (int i = fromTimeFrameIndex; i <= toTimeFrameIndex; i++)
         {
-            float rel = Mathf.InverseLerp(from.z, to.z, index * Step);
+            //float rel = Mathf.InverseLerp(from.z, to.z, index * Step);
+            float rel = Mathf.InverseLerp(from.z, to.z, i * Step);
             Vector2 positionInTime = Vector2.Lerp(from, to, rel);
             foreach (var threat in this.StaticLevel.LevelThreats[i])
             {
