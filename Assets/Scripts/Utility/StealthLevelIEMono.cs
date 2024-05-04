@@ -225,10 +225,14 @@ public class StealthLevelIEMono : MonoBehaviour
 
                 if (levelChromosome.Manifestation != null)
                 {
-                    //Attach mono behaviour to visualize the measurements
-                    ChromoseMeasurementsVisualizer.AttachDataVisualizer(
-                        levelChromosome.Manifestation,
-                        new Vector2(5, 5));
+                    if (levelChromosome.Manifestation.GetComponentInChildren<ChromoseMeasurementsVisualizer>()
+                        == null)
+                    {
+                        //Attach mono behaviour to visualize the measurements
+                        ChromoseMeasurementsVisualizer.AttachDataVisualizer(
+                            levelChromosome.Manifestation,
+                            new Vector2(5, 5));
+                    }
 
                     //Clear objects name and replace it with new fitnessj
                     this.Generator.ClearName(levelChromosome);

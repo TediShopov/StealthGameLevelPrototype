@@ -297,16 +297,23 @@ namespace GeneticSharp.Domain
         public void ReorderTransformHierarchy()
         {
             int index = 0;
-            foreach (var group in Population.CurrentGeneration.Chromosomes.GroupBy(x => x))
+
+            //On th assumption that fitness is assigned on all group members
+            var groupLeadersOrder = Population.CurrentGeneration.Chromosomes.GroupBy(x => x)
+                .OrderByDescending(x => x.First().Fitness).ToList();
+
+            foreach (var group in groupLeadersOrder)
             {
                 var groupLeader = (LevelChromosomeBase)
                     group.First(x => ((LevelChromosomeBase)x).Manifestation);
-                if (group is LevelChromosomeBase)
+                if (groupLeader is LevelChromosomeBase)
                 {
                     var levelChromosome = (LevelChromosomeBase)groupLeader;
+                    levelChromosome.Manifestation.transform.SetAsLastSibling();
+                    UnityEngine.Debug.Log($"Level group Fitness: {groupLeader.Fitness} placed at {index}");
                     levelChromosome.Manifestation.transform.SetSiblingIndex(index);
+                    index++;
                 }
-                index++;
             }
 
             //            for (int i = 0; i < Population.CurrentGeneration.Chromosomes.Count; i++)
