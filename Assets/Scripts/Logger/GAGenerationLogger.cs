@@ -8,11 +8,28 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public class GAGenerationLogger
+[ExecuteInEditMode]
+public class GAGenerationLogger : MonoBehaviour
 {
-    private InteractiveGeneticAlgorithm GA;
-    public int LogEveryNGenerations = 1;
-    private int LastLoggedGeneration = 0;
+    [SerializeReference, HideInInspector] private InteractiveGeneticAlgorithm oldGA = null;
+    [SerializeReference] private InteractiveGeneticAlgorithm GA = null;
+    [SerializeField] public int LogEveryNGenerations = 1;
+    [SerializeField, HideInInspector] private int LastLoggedGeneration = 0;
+
+    public void Update()
+    {
+        if (GA != oldGA)
+        //if (GA != null && GA.Equals(oldGA) == false)
+        {
+            if (oldGA != null)
+                UnbindFrom(oldGA);
+
+            oldGA = GA;
+
+            if (GA != null)
+                BindTo(GA);
+        }
+    }
 
     public GAGenerationLogger(int everyN)
     {
@@ -21,10 +38,17 @@ public class GAGenerationLogger
 
     public void BindTo(InteractiveGeneticAlgorithm ga)
     {
-        GA = ga;
-        GA.GenerationRan += AppendEvaluationsEveryNGenerations;
-        GA.TerminationReached += AppendAfterTermination;
+        Debug.Log($"Bounded To Ga {ga.gameObject.name} ");
+        ga.GenerationRan += AppendEvaluationsEveryNGenerations;
+        ga.TerminationReached += AppendAfterTermination;
         AlgorithmName = GetDefaultName();
+    }
+
+    public void UnbindFrom(InteractiveGeneticAlgorithm ga)
+    {
+        Debug.Log($"Unbound from {ga.gameObject.name}");
+        ga.GenerationRan -= AppendEvaluationsEveryNGenerations;
+        ga.TerminationReached -= AppendAfterTermination;
     }
 
     private void AppendEvaluationsEveryNGenerations(object sender, EventArgs e)

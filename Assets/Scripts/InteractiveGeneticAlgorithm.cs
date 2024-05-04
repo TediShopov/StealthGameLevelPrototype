@@ -40,10 +40,7 @@ namespace GeneticSharp.Domain
         //How many of the top performing level should we keep track of
         public int TopNLevels = 5;
 
-        public GAGenerationLogger GAGenerationLogger;
         public int IndependentRuns = 5;
-        public int LogEveryGenerations = 5;
-        public bool LogMeasurements = false;
 
         #region UserPreferenceModel
 
@@ -457,7 +454,6 @@ namespace GeneticSharp.Domain
 
         public void SetupGA()
         {
-            GAGenerationLogger = null;
             RandomSeedGenerator = new System.Random(Seed);
             var selection = new TournamentSelection(3);
             var crossover = new TwoPointCrossover();
@@ -483,11 +479,11 @@ namespace GeneticSharp.Domain
             var handler = FinishIESetup;
             handler?.Invoke(this, EventArgs.Empty);
 
-            if (this.LogMeasurements && GAGenerationLogger == null)
-            {
-                GAGenerationLogger = new GAGenerationLogger(LogEveryGenerations);
-                GAGenerationLogger.BindTo(this);
-            }
+            //            if (this.LogMeasurements && GAGenerationLogger == null)
+            //            {
+            //                GAGenerationLogger = new GAGenerationLogger(LogEveryGenerations);
+            //                GAGenerationLogger.BindTo(this);
+            //            }
         }
 
         public void ApplyChangesToPreferenceModel()
