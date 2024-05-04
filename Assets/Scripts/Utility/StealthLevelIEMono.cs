@@ -291,22 +291,19 @@ public class StealthLevelIEMono : MonoBehaviour
     {
         for (int i = 0; i < IndependentRuns; i++)
         {
-            DisposeOldPopulation();
-            //PhenotypeEvaluator.IE = this;
-            PhenotypeEvaluator.UserPreferenceModel = this.UserPreferences;
-            this.GenerationSelecitons = new List<LevelChromosomeBase>();
-            this.InteractiveSelections = new List<List<LevelChromosomeBase>>();
-
-            GeneticSharp.RandomizationProvider.Current = new NativeRandom(Seed);
-
-            SetupGA();
-            GeneticAlgorithm.State = GeneticAlgorithmState.Started;
-            GeneticAlgorithm.Population.CreateInitialGeneration();
-            GeneticAlgorithm.EvaluateFitness();
-            while (GeneticAlgorithm.State != GeneticAlgorithmState.TerminationReached)
+            StartGA();
+            for (int j = 0; j < AimedGenerations; j++)
             {
-                DoGeneration();
+                GeneticAlgorithm.EndCurrentGeneration();
+                GeneticAlgorithm.EvolveOneGeneration();
+                //Evaluates fitness but also manifest the level
+                // in the unity scene
+                GeneticAlgorithm.EvaluateFitness();
             }
+
+            //Do not remove ga result in last run
+            if (i != IndependentRuns - 1)
+                EndGA();
         }
     }
 

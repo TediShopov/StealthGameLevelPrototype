@@ -56,7 +56,7 @@ MonoBehaviour:
   Manifestation: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
-  DrawOnSelected: 1
+  DrawOnSelected: 0
   PlayerCollider: {fileID: 0}
   ObstacleLayerMask:
     serializedVersion: 2
@@ -78,7 +78,7 @@ MonoBehaviour:
   Manifestation: {fileID: 0}
   RunNow: 0
   RunOnStart: 0
-  DrawOnSelected: 1
+  DrawOnSelected: 0
   ObstacleLayerMask:
     serializedVersion: 2
     m_Bits: 64

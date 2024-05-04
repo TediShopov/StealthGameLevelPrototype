@@ -59,9 +59,12 @@ public class PopulationPhenotypeLayout : Population
             //is produced without cloning it. (Common in one-way crossovers)
             foreach (var chromosomeToKeep in chromosomesToKeep)
             {
-                var newPopToKeep = chromosomes.First(x => x.Equals(chromosomeToKeep));
-                ((LevelChromosomeBase)newPopToKeep).Manifestation =
-                    ((LevelChromosomeBase)chromosomeToKeep).Manifestation;
+                var newLevel = (LevelChromosomeBase)chromosomes.First(x => x.Equals(chromosomeToKeep));
+                var oldLevel = (LevelChromosomeBase)chromosomeToKeep;
+                newLevel.Transfer(oldLevel);
+
+                //                ((LevelChromosomeBase)newPopToKeep).Manifestation =
+                //                    ((LevelChromosomeBase)chromosomeToKeep).Manifestation;
             }
 
             //Transform to their gameobejcts

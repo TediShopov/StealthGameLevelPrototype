@@ -160,6 +160,23 @@ public abstract class LevelChromosomeBase : ChromosomeBase,
         return clone;
     }
 
+    public LevelChromosomeBase(LevelChromosomeBase other)
+        : base(other.Length)
+    {
+        this.Transfer(other);
+    }
+
+    public void Transfer(LevelChromosomeBase other)
+    {
+        this.Measurements = other.Measurements;
+        this.AestheticProperties = other.AestheticProperties;
+        this.AestheticScore = other.AestheticScore;
+        this.Phenotype = other.Phenotype;
+        this.Manifestation = other.Manifestation;
+        this.EngagementScore = other.EngagementScore;
+        this.Fitness = other.Fitness;
+    }
+
     public override bool Equals(object obj)
     {
         if (obj is LevelChromosomeBase)

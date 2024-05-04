@@ -349,6 +349,12 @@ namespace GeneticSharp.Domain
                     TaskExecutor.Add(() =>
                     {
                         //RunEvaluateFitness(c);
+                        if (groupLeader.Manifestation is null &&
+                        groupLeader.Fitness.HasValue)
+                        {
+                            UnityEngine.Debug.Log(
+                                $"Replicated: {groupLeader.Manifestation.name}");
+                        }
                         if (groupLeader.Fitness.HasValue)
                         {
                             ReevaluateGroup(groups);

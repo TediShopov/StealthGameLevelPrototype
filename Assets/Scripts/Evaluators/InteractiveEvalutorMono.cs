@@ -134,9 +134,9 @@ public class InteractiveEvalutorMono : EvaluatorMono
                 levelChromosome.GetAestheticScore(UserPreferenceModel);
         }
 
-        var evaluator = Instantiate(EvaluatorHolder, levelObject.transform);
+        //var evaluator = Instantiate(EvaluatorHolder, levelObject.transform);
         //Combine engagment score and aesthetic score
-        float oldFitness = (float)levelChromosome.Fitness;
+        //float oldFitness = (float)levelChromosome.Fitness;
         float eval = -100;
         if (OnlyAesthetic)
         {

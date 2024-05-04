@@ -226,10 +226,10 @@ namespace StealthLevelEvaluation
             if (Path == null)
             {
                 IsTerminating = true;
-                return 0.0f.ToString();
+                return "NoPath";
             }
             Debug.Log($"Path count from A* is: {Path.Count}");
-            return 0.0f.ToString();
+            return "GeomtricalPathFound";
         }
 
         private float MovementCost(AStar.Node a, AStar.Node b)
