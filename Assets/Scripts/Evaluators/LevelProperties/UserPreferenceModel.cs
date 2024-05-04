@@ -39,7 +39,7 @@ public interface IAestheticMeasurable<T>
 [Serializable]
 public class UserPreferenceModel : IPreferenceModel<LevelChromosomeBase>
 {
-    private List<IObserver<IList<float>>> Observers;
+    [SerializeField, HideInInspector] private List<IObserver<IList<float>>> Observers;
     [SerializeReference] private List<float> _weights;
 
     [SerializeField, HideInInspector]
@@ -200,6 +200,7 @@ public class UserPreferenceModel : IPreferenceModel<LevelChromosomeBase>
 
     public void Notify(IList<float> subject)
     {
+        if (Observers == null) return;
         foreach (var item in Observers)
         {
             item.Update(new List<float>(this.Weights));

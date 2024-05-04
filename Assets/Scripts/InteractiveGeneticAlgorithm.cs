@@ -47,9 +47,6 @@ namespace GeneticSharp.Domain
 
         #region UserPreferenceModel
 
-        //Holds the weights of aesthetic function to reward
-        //public UserPreferenceModel UserPreferences;
-
         //Hold the user prefferecd - slected chromosomed
         public List<LevelChromosomeBase> GenerationSelecitons
             = new List<LevelChromosomeBase>();
@@ -106,13 +103,12 @@ namespace GeneticSharp.Domain
         /// <param name="crossover">The crossover operator.</param>
         /// <param name="mutation">The mutation operator.</param>
         public InteractiveGeneticAlgorithm(
-                          IPopulation population,
                           IFitness fitness,
                           ISelection selection,
                           ICrossover crossover,
                           IMutation mutation)
         {
-            this.CreateFrom(population, fitness, selection, crossover, mutation);
+            this.CreateFrom(fitness, selection, crossover, mutation);
         }
 
         public void Awake()
@@ -122,20 +118,16 @@ namespace GeneticSharp.Domain
         }
 
         public void CreateFrom(
-                           IPopulation population,
                           IFitness fitness,
                           ISelection selection,
                           ICrossover crossover,
                           IMutation mutation)
         {
-            ExceptionHelper.ThrowIfNull("population", population);
             ExceptionHelper.ThrowIfNull("fitness", fitness);
             ExceptionHelper.ThrowIfNull("selection", selection);
             ExceptionHelper.ThrowIfNull("crossover", crossover);
             ExceptionHelper.ThrowIfNull("mutation", mutation);
 
-            Population = population;
-            Fitness = fitness;
             Selection = selection;
             Crossover = crossover;
             Mutation = mutation;
@@ -172,9 +164,9 @@ namespace GeneticSharp.Domain
 
         public IOperatorsStrategy OperatorsStrategy { get; set; }
 
-        public IPopulation Population { get; private set; }
+        public IPopulation Population => PopulationPhenotypeLayout;
 
-        public IFitness Fitness { get; private set; }
+        public IFitness Fitness => PhenotypeEvaluator;
 
         public ISelection Selection { get; set; }
 
@@ -399,8 +391,7 @@ namespace GeneticSharp.Domain
             try
             {
                 var groupLeader = identicalChromosomes.First(x => ((LevelChromosomeBase)x).Manifestation);
-                InteractiveEvalutorMono f = (InteractiveEvalutorMono)Fitness;
-                groupLeader.Fitness = f.Reevaluate(groupLeader);
+                groupLeader.Fitness = PhenotypeEvaluator.Reevaluate(groupLeader);
                 foreach (var groupsMembers in identicalChromosomes)
                 {
                     groupsMembers.Fitness = groupLeader.Fitness;
@@ -446,16 +437,13 @@ namespace GeneticSharp.Domain
             //            }
 
             //Normalize the user preferences
-            //UserPreferences.Normalize(UserPreferences.Weights);
-
-            //PhenotypeEvaluator.UserPreferenceModel = UserPreferences;
-
-            //Seed the randomizer used in mutators and
-            GeneticSharp.RandomizationProvider.Current = new NativeRandom(Seed);
-
+            PhenotypeEvaluator.Prepare();
             //Attach tracker that keeps track of the weight of the user preference model
             //and their changes throughout the generations
             AttachUserPreferenceLogger();
+
+            //Seed the randomizer used in mutators and
+            GeneticSharp.RandomizationProvider.Current = new NativeRandom(Seed);
 
             //Clear selections
             this.GenerationSelecitons = new List<LevelChromosomeBase>();
@@ -475,10 +463,10 @@ namespace GeneticSharp.Domain
             var crossover = new TwoPointCrossover();
             var mutation = new CustomMutators(1, 1, 1);
             var chromosome = Generator.GetAdamChromosome(RandomSeedGenerator.Next());
-            var population = new PopulationPhenotypeLayout(PopulationPhenotypeLayout, this.gameObject, chromosome);
+            PopulationPhenotypeLayout =
+                new PopulationPhenotypeLayout(PopulationPhenotypeLayout, this.gameObject, chromosome);
 
             this.CreateFrom(
-                population,
                 PhenotypeEvaluator,
                 selection,
                 crossover,
@@ -512,7 +500,9 @@ namespace GeneticSharp.Domain
 
             if (GenerationSelecitons.Count == 0) return;
 
-            //UserPreferences.AlterPreferences(GenerationSelecitons[0], unselected);
+            PhenotypeEvaluator
+                .UserPreferenceModel
+                .AlterPreferences(GenerationSelecitons[0], unselected);
             //UserPreferences.Alter(GenerationSelecitons, unselected);
         }
 
@@ -597,7 +587,7 @@ namespace GeneticSharp.Domain
         private void AttachUserPreferenceLogger()
         {
             PreferenceTracker = new UserPrefereneceTracker(this);
-            //UserPreferences.Attach(PreferenceTracker);
+            PhenotypeEvaluator.UserPreferenceModel.Attach(PreferenceTracker);
         }
 
         public void RandomizeSeed()

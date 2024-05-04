@@ -6,6 +6,13 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
+public interface ISubjectiveFitness : IFitness
+{
+    public UserPreferenceModel UserPreferenceWeights { get; set; }
+
+    public double Reevaluate(IChromosome chromosome);
+}
+
 [ExecuteInEditMode]
 public class InteractiveEvalutorMono : EvaluatorMono
 {
@@ -39,6 +46,11 @@ public class InteractiveEvalutorMono : EvaluatorMono
             OldEvaluatorPrefab = this.EvaluatorHolder.gameObject;
             UserPreferenceModel.UpdateWeights(GetCountOfLevelProperties());
         }
+    }
+
+    public void Prepare()
+    {
+        this.UserPreferenceModel.Normalize();
     }
 
     //public InteractiveGeneticAlgorithm IE;

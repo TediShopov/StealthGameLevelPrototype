@@ -274,7 +274,13 @@ public class PropertyMeasurements : List<float>
 
         foreach (var propertyMeasuremnts in measurementInstances)
         {
-            averageMeasurement += propertyMeasuremnts;
+            try
+            {
+                averageMeasurement += propertyMeasuremnts;
+            }
+            catch (Exception)
+            {
+            }
         }
         averageMeasurement.DividceEach(measurementInstances.Count);
         return averageMeasurement;
