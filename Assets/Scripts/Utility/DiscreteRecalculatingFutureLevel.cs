@@ -307,8 +307,11 @@ public class DiscreteRecalculatingFutureLevel :
                             //Index of the same element in the native grid
                             Vector2Int nativeCoord = nativeGrid
                                 .GetNativeCoord(new Vector2Int(x, y));
-                            nativeGrid.Set(nativeCoord.x, nativeCoord.y,
-                                nativeGrid.Get(nativeCoord.x, nativeCoord.y) + 1);
+                            if (nativeGrid.IsInGrid(nativeCoord.x, nativeCoord.y))
+                            {
+                                nativeGrid.Set(nativeCoord.x, nativeCoord.y,
+                                    nativeGrid.Get(nativeCoord.x, nativeCoord.y) + 1);
+                            }
                         }
                     }
                 }

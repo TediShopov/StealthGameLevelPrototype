@@ -125,6 +125,7 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
 
     private void AssignRoadmToPhenotype(LevelChromosomeBase chromosome, GameObject to)
     {
+        RoadmapGenerator.LevelProperties = this.LevelProperties;
         RoadmapGenerator.Generate(to);
         chromosome.Phenotype.Roadmap = RoadmapGenerator.RoadMap;
         chromosome.Phenotype.Zones = RoadmapGenerator.LevelGrid;

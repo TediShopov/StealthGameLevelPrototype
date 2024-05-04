@@ -3,6 +3,7 @@ using StealthLevelEvaluation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Profiling;
 
@@ -15,6 +16,8 @@ public class FloodfilledRoadmapGenerator
 
     //Dictionary exposed to Unity editor
     [HideInInspector] public List<Collider2D> ColliderKeys;
+
+    public LevelProperties LevelProperties;
 
     public bool ExtraChecks = false;
     public float EnemyBSRadius = 1.0f;
@@ -314,13 +317,17 @@ public class FloodfilledRoadmapGenerator
         return hit.Select(x => x.collider).ToArray();
     }
 
-    public void Generate(GameObject phenotype)
+    public void Generate(GameObject manifest)
     {
         ColliderKeys = new List<Collider2D>();
         _debugSimplifiedConnections = new List<Tuple<Vector2, Vector2>>();
-        this.Grid = new UnboundedGrid(phenotype.transform.position, 0.4f);
+        this.Grid = new UnboundedGrid(manifest.transform.position, 0.4f);
+
+        var bounds = Helpers.GetLevelBounds(manifest.gameObject);
+        //Small offset to include right and top borders in all cases.
+        bounds.max += new Vector3(0.4f, 0.4f, 0);
         LevelGrid =
-            new NativeGrid<int>(this.Grid, Helpers.GetLevelBounds(phenotype.gameObject));
+            new NativeGrid<int>(this.Grid, bounds);
 
         LevelGrid.SetAll(SetCellColliderIndex);
         RoadMap = new Graph<Vector2>();
@@ -334,7 +341,7 @@ public class FloodfilledRoadmapGenerator
             RemoveRedundantNodes(superNode, ref totalRecursion, new List<Vector2>());
         }
 
-        TransformGraphToLocalSpace(phenotype);
+        TransformGraphToLocalSpace(manifest);
     }
 
     public void TransformGraphToLocalSpace(GameObject gameObject)
