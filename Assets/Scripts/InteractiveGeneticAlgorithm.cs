@@ -48,7 +48,7 @@ namespace GeneticSharp.Domain
         #region UserPreferenceModel
 
         //Holds the weights of aesthetic function to reward
-        public UserPreferenceModel UserPreferences;
+        //public UserPreferenceModel UserPreferences;
 
         //Hold the user prefferecd - slected chromosomed
         public List<LevelChromosomeBase> GenerationSelecitons
@@ -439,16 +439,16 @@ namespace GeneticSharp.Domain
             this.SetupGA();
 
             //Validate and change the preference model to default if needed
-            if (IsValidUserPreferenceModel
-                (UserPreferences, PhenotypeEvaluator.GetCountOfLevelProperties()) == false)
-            {
-                SetUserPreferencesToDefault();
-            }
+            //            if (IsValidUserPreferenceModel
+            //                (UserPreferences, PhenotypeEvaluator.GetCountOfLevelProperties()) == false)
+            //            {
+            //                SetUserPreferencesToDefault();
+            //            }
 
             //Normalize the user preferences
-            UserPreferences.Normalize(UserPreferences.Weights);
+            //UserPreferences.Normalize(UserPreferences.Weights);
 
-            PhenotypeEvaluator.UserPreferenceModel = UserPreferences;
+            //PhenotypeEvaluator.UserPreferenceModel = UserPreferences;
 
             //Seed the randomizer used in mutators and
             GeneticSharp.RandomizationProvider.Current = new NativeRandom(Seed);
@@ -512,7 +512,7 @@ namespace GeneticSharp.Domain
 
             if (GenerationSelecitons.Count == 0) return;
 
-            UserPreferences.AlterPreferences(GenerationSelecitons[0], unselected);
+            //UserPreferences.AlterPreferences(GenerationSelecitons[0], unselected);
             //UserPreferences.Alter(GenerationSelecitons, unselected);
         }
 
@@ -521,7 +521,7 @@ namespace GeneticSharp.Domain
             GenerationSelecitons = new List<LevelChromosomeBase>();
             InteractiveSelections = new List<List<LevelChromosomeBase>>();
             DisposeOldPopulation();
-            RefreshPreferencesWeight();
+            //RefreshPreferencesWeight();
             this.State = GeneticAlgorithmState.NotStarted;
         }
 
@@ -594,38 +594,15 @@ namespace GeneticSharp.Domain
             return ue is not null && ue.Weights.Count == necessaryWerghtCount;
         }
 
-        private void SetUserPreferencesToDefault()
-        {
-            if (UserPreferences is null)
-                UserPreferences.SetToDefault();
-            else
-                this.UserPreferences =
-                    new UserPreferenceModel(PhenotypeEvaluator.GetCountOfLevelProperties());
-        }
-
         private void AttachUserPreferenceLogger()
         {
             PreferenceTracker = new UserPrefereneceTracker(this);
-            UserPreferences.Attach(PreferenceTracker);
+            //UserPreferences.Attach(PreferenceTracker);
         }
 
         public void RandomizeSeed()
         {
             Seed = new System.Random().Next();
-        }
-
-        public void RefreshPreferencesWeight()
-        {
-            //Validate and change the preference model to default if needed
-            if (IsValidUserPreferenceModel
-                (UserPreferences, PhenotypeEvaluator.GetCountOfLevelProperties()) == false)
-            {
-                SetUserPreferencesToDefault();
-            }
-            //Normalize the user preferences
-            UserPreferences.Normalize(UserPreferences.Weights);
-
-            PhenotypeEvaluator.UserPreferenceModel = UserPreferences;
         }
 
         public void RunWithSyntheticModel()

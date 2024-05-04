@@ -24,9 +24,9 @@ public class StealthLevelIEEditor : Editor
         InteractiveGeneticAlgorithm ie = (InteractiveGeneticAlgorithm)target;
         //base.OnInspectorGUI();
 
-        serializedObject.Update();
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("UserPreferences"));
-        serializedObject.ApplyModifiedProperties();
+        //        serializedObject.Update();
+        //        EditorGUILayout.PropertyField(serializedObject.FindProperty("UserPreferences"));
+        //        serializedObject.ApplyModifiedProperties();
         //        if (ie.UserPreferences is not null)
         //        {
         //
@@ -135,11 +135,6 @@ public class StealthLevelIEEditor : Editor
                     //Debug.Log($"First value of weights {ie.UserPreferences[0]}");
                     ie.RunWithSyntheticModel();
                 }
-            }
-
-            if (GUILayout.Button("Reset Weights"))
-            {
-                ie.RefreshPreferencesWeight();
             }
             if (GUILayout.Button("Randmozise Seed"))
             {

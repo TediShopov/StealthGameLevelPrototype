@@ -3,23 +3,44 @@ using StealthLevelEvaluation;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
-//[System.Serializable]
-//public struct UserPreferenceModel
-//{
-//    public float OverallPathRisk;
-//    public float SuccessChance;
-//    public float PathUniqeness;
-//}
-
+[ExecuteInEditMode]
 public class InteractiveEvalutorMono : EvaluatorMono
 {
     //private List<MeasureMono> Evaluators = new List<MeasureMono>();
     public LevelProperties LevelProperties;
 
     public bool OnlyAesthetic;
+
     public UserPreferenceModel UserPreferenceModel;
+
+    [SerializeField] public GameObject OldEvaluatorPrefab = null;
+
+    public void Awake()
+    {
+        this.UserPreferenceModel = new UserPreferenceModel(this, 1);
+    }
+
+    public void Update()
+    {
+        if (this.EvaluatorHolder == null) return;
+        //Check if there is a different evaluator used
+        if (this.OldEvaluatorPrefab == null)
+        {
+            //Reset the weight to new evaluator
+            OldEvaluatorPrefab = this.EvaluatorHolder.gameObject;
+            UserPreferenceModel.UpdateWeights(GetCountOfLevelProperties());
+        }
+        else if (this.EvaluatorHolder.gameObject.Equals(OldEvaluatorPrefab) == false)
+        {
+            //Reset the weight to new evaluator
+            OldEvaluatorPrefab = this.EvaluatorHolder.gameObject;
+            UserPreferenceModel.UpdateWeights(GetCountOfLevelProperties());
+        }
+    }
+
     //public InteractiveGeneticAlgorithm IE;
 
     public int GetCountOfLevelProperties()

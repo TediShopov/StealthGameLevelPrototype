@@ -41,6 +41,12 @@ public class UserPreferenceModel : IPreferenceModel<LevelChromosomeBase>
 {
     private List<IObserver<IList<float>>> Observers;
     [SerializeReference] private List<float> _weights;
+
+    [SerializeField, HideInInspector]
+    public InteractiveEvalutorMono Evaluator;
+
+    [SerializeField]
+    [Range(0, 1)]
     public float Step;
 
     public IList<float> Weights
@@ -49,8 +55,9 @@ public class UserPreferenceModel : IPreferenceModel<LevelChromosomeBase>
         set { _weights = (List<float>)value; }
     }
 
-    public UserPreferenceModel(int preferencesCount)
+    public UserPreferenceModel(InteractiveEvalutorMono eval, int preferencesCount)
     {
+        Evaluator = eval;
         this.Weights = GetDefault(preferencesCount);
     }
 
@@ -63,6 +70,23 @@ public class UserPreferenceModel : IPreferenceModel<LevelChromosomeBase>
         }
         Normalize(equalWeightProperties);
         return equalWeightProperties;
+    }
+
+    private static bool IsValidUserPreferenceModel(UserPreferenceModel ue, int necessaryWerghtCount)
+    {
+        return ue is not null && ue.Weights.Count == necessaryWerghtCount;
+    }
+
+    public void RefreshPreferencesWeight()
+    {
+        //Validate and change the preference model to default if needed
+        if (IsValidUserPreferenceModel
+            (this, Evaluator.GetCountOfLevelProperties()) == false)
+        {
+            SetToDefault();
+        }
+        //Normalize the user preferences
+        Normalize(Weights);
     }
 
     private float NewMax(
@@ -134,9 +158,19 @@ public class UserPreferenceModel : IPreferenceModel<LevelChromosomeBase>
         Notify(this.Weights);
     }
 
+    public void UpdateWeights(int count)
+    {
+        this.Weights = GetDefault(count);
+    }
+
     public void SetToDefault()
     {
         this.Weights = GetDefault(Weights.Count);
+    }
+
+    public void Normalize()
+    {
+        Normalize(this.Weights);
     }
 
     public void Normalize(IList<float> weights)

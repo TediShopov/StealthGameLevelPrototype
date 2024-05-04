@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class EvaluatorMono : MonoBehaviour, IFitness
 {
-    public GameObject EvaluatorHolder;
+    [SerializeField] public GameObject EvaluatorHolder;
     //private List<MeasureMono> Evaluators = new List<MeasureMono>();
 
     public LevelChromosomeBase CheckValidLevelChromosome(IChromosome chromosome)

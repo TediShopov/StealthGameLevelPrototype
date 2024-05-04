@@ -84,9 +84,9 @@ public class GAGenerationLogger
     private string GetUserPrefferenceModel()
     {
         string preferences = "";
-        preferences += "Preference Model,";
-        foreach (float weight in GA.UserPreferences.Weights)
-            preferences += weight + ",";
+        //        preferences += "Preference Model,";
+        //        foreach (float weight in GA.UserPreferences.Weights)
+        //            preferences += weight + ",";
         return preferences;
     }
 
