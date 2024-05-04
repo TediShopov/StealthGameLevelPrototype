@@ -10,7 +10,6 @@ using UnityEngine;
 
 public class GAGenerationLogger
 {
-    private StealthLevelIEMono InteractiveGeneticMono;
     private InteractiveGeneticAlgorithm GA;
     public int LogEveryNGenerations = 1;
     private int LastLoggedGeneration = 0;
@@ -20,10 +19,9 @@ public class GAGenerationLogger
         this.LogEveryNGenerations = everyN;
     }
 
-    public void BindTo(StealthLevelIEMono stealthLevelIEMono)
+    public void BindTo(InteractiveGeneticAlgorithm ga)
     {
-        InteractiveGeneticMono = stealthLevelIEMono;
-        GA = InteractiveGeneticMono.GeneticAlgorithm;
+        GA = ga;
         GA.GenerationRan += AppendEvaluationsEveryNGenerations;
         GA.TerminationReached += AppendAfterTermination;
         AlgorithmName = GetDefaultName();
@@ -78,29 +76,22 @@ public class GAGenerationLogger
 
     public string GetDefaultName()
     {
-        return $"GEN_{InteractiveGeneticMono.AimedGenerations}" +
-            $"_POP{InteractiveGeneticMono.GeneticAlgorithm.Population.MaxSize}" +
-            $"_SZ{InteractiveGeneticMono.LevelProperties.LevelSize}_IndividualTimes";
+        return $"GEN_{GA.AimedGenerations}" +
+            $"_POP{GA.Population.MaxSize}" +
+            $"_SZ{GA.LevelProperties.LevelSize}_IndividualTimes";
     }
-
-    //    private string AlgorithmName =>
-    //        $"GEN_{InteractiveGeneticMono.AimedGenerations}" +
-    //            $"_POP{InteractiveGeneticMono.PopulationCount}" +
-    //            $"_SZ{InteractiveGeneticMono.LevelProperties.LevelSize}_IndividualTimes";
 
     private string GetUserPrefferenceModel()
     {
         string preferences = "";
         preferences += "Preference Model,";
-        foreach (float weight in InteractiveGeneticMono.UserPreferences.Weights)
+        foreach (float weight in GA.UserPreferences.Weights)
             preferences += weight + ",";
         return preferences;
     }
 
     private void AppendEvaluationToCsv(IList<Generation> generationsToOutput)
     {
-        var GA = InteractiveGeneticMono.GeneticAlgorithm;
-
         string values = string.Empty;
         foreach (var gen in generationsToOutput)
         {
@@ -139,6 +130,6 @@ public class GAGenerationLogger
 
     private void AppendEvaluationToCsv()
     {
-        AppendEvaluationToCsv(InteractiveGeneticMono.GeneticAlgorithm.Population.Generations);
+        AppendEvaluationToCsv(GA.Population.Generations);
     }
 }

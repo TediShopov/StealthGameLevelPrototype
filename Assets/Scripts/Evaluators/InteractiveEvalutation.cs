@@ -1,4 +1,5 @@
 using GeneticSharp;
+using GeneticSharp.Domain;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,13 +10,13 @@ using static UnityEngine.GraphicsBuffer;
 [ExecuteInEditMode]
 public class InteractiveEvalutation : MonoBehaviour
 {
-    private StealthLevelIEMono IEMono;
+    private InteractiveGeneticAlgorithm IEMono;
     private LevelChromosomeBase Chromosome;
     private bool _isSelected = false;
 
     public void Awake()
     {
-        IEMono = this.GetComponentInParent<StealthLevelIEMono>();
+        IEMono = this.GetComponentInParent<InteractiveGeneticAlgorithm>();
         if (IEMono != null)
             SceneView.duringSceneGui += this.DrawSelectionButton;
     }

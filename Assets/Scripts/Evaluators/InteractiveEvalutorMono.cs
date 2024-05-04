@@ -20,7 +20,7 @@ public class InteractiveEvalutorMono : EvaluatorMono
 
     public bool OnlyAesthetic;
     public UserPreferenceModel UserPreferenceModel;
-    //public StealthLevelIEMono IE;
+    //public InteractiveGeneticAlgorithm IE;
 
     public int GetCountOfLevelProperties()
     {

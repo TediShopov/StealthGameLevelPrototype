@@ -1,8 +1,9 @@
+using GeneticSharp.Domain;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(StealthLevelIEMono))]
+[CustomEditor(typeof(InteractiveGeneticAlgorithm))]
 public class StealthLevelIEEditor : Editor
 {
     private bool showMetaproperties = true;
@@ -20,7 +21,7 @@ public class StealthLevelIEEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        StealthLevelIEMono ie = (StealthLevelIEMono)target;
+        InteractiveGeneticAlgorithm ie = (InteractiveGeneticAlgorithm)target;
         //base.OnInspectorGUI();
 
         serializedObject.Update();
@@ -59,15 +60,15 @@ public class StealthLevelIEEditor : Editor
             EditorGUILayout.LabelField("Selections Count: ", ie.GenerationSelecitons.Count.ToString());
 
             //- Best Fitness
-            if (ie.GeneticAlgorithm.BestChromosome != null)
+            if (ie.BestChromosome != null)
             {
                 EditorGUILayout.LabelField("Best chromose fitness is:",
-                    ie.GeneticAlgorithm.BestChromosome.Fitness.ToString());
+                    ie.BestChromosome.Fitness.ToString());
             }
 
             //- Current Generation
             EditorGUILayout.LabelField("Current Generation: ",
-                ie.GeneticAlgorithm.GenerationsNumber.ToString());
+                ie.GenerationsNumber.ToString());
 
             if (GUILayout.Button("Run Generation"))
             {
@@ -81,12 +82,28 @@ public class StealthLevelIEEditor : Editor
             {
                 //ie.PopulationCount = EditorGUILayout.IntField("Population Count", ie.PopulationCount);
 
-                ie.SyntheticGenerations = EditorGUILayout.IntField("Synthetic Generaitons ",
+                ie.SyntheticGenerations =
+                    EditorGUILayout.IntField(
+                        "Synthetic Generaitons ",
                     ie.SyntheticGenerations);
-                ie.AimedGenerations = EditorGUILayout.IntField("Generaiton", ie.AimedGenerations);
 
-                ie.CrossoverProb = EditorGUILayout.Slider("Crossover", ie.CrossoverProb, 0.0f, 1.0f);
-                ie.MutationProb = EditorGUILayout.Slider("Mutation", ie.MutationProb, 0.0f, 1.0f);
+                ie.AimedGenerations = EditorGUILayout.IntField(
+                    "Generaiton",
+                    ie.AimedGenerations);
+
+                ie.CrossoverProbability =
+                    EditorGUILayout.Slider(
+                        "Crossover",
+                        ie.CrossoverProbability,
+                        0.0f,
+                        1.0f);
+
+                ie.MutationProbability =
+                    EditorGUILayout.Slider(
+                        "Mutation",
+                        ie.MutationProbability,
+                        0.0f,
+                        1.0f);
 
                 //ie.Step = EditorGUILayout.Slider("Step", ie.Step, 0, 1);
             }
@@ -101,15 +118,10 @@ public class StealthLevelIEEditor : Editor
                 ie.Seed = EditorGUILayout.IntField("Seed: ", ie.Seed);
             }
 
-            showLayout = EditorGUILayout.Foldout(showLayout, "Layout");
-            if (showLayout)
-            {
-                // ie.ExtraSpacing = EditorGUILayout.Vector2Field("Extra Spacing: ", ie.ExtraSpacing);
-                serializedObject.Update();
-                var ppl = serializedObject.FindProperty("PopulationPhenotypeLayout");
-                EditorGUILayout.PropertyField(ppl);
-                serializedObject.ApplyModifiedProperties();
-            }
+            serializedObject.Update();
+            var ppl = serializedObject.FindProperty("PopulationPhenotypeLayout");
+            EditorGUILayout.PropertyField(ppl);
+            serializedObject.ApplyModifiedProperties();
             showLogging = EditorGUILayout.Foldout(showLogging, "Logging");
             if (showLogging)
             {
