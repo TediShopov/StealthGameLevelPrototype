@@ -138,6 +138,7 @@ public abstract class LevelChromosomeBase : ChromosomeBase,
 
     public float AestheticScore { get; set; }
     public float EngagementScore { get; set; }
+    public bool Feasibility { get; set; }
 
     [SerializeField] public Dictionary<string, MeasureResult> Measurements;
     [SerializeReference] public PropertyMeasurements AestheticProperties;
@@ -149,7 +150,9 @@ public abstract class LevelChromosomeBase : ChromosomeBase,
 
     public bool IsFeasible()
     {
-        return this.Fitness.HasValue && this.Fitness.Value != -100;
+        return Feasibility;
+        //        return IsFeasible;
+        //        return this.Fitness.HasValue && this.Fitness.Value != -100;
     }
 
     public override IChromosome Clone()

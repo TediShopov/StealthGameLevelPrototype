@@ -34,8 +34,16 @@ namespace GeneticSharp
             var feasible = EvolveIsland(FeasibleSelection);
             var infeasbile = EvolveIsland(InfeasibleSelection);
 
+            Debug.Log($"_DEB_ Feasible: {feasible.Count}");
+            Debug.Log($"_DEB_ Infeasible: {infeasbile.Count}");
+
             var combined = feasible.Concat(infeasbile).ToList();
-            PopulationPhenotypeLayout.CreateNewGeneration(combined);
+            Debug.Log($"_DEB_ Combined: {combined.Count}");
+
+            var newGenerationChromosomes =
+                Reinsertion.SelectChromosomes(PopulationPhenotypeLayout,
+                combined, PopulationPhenotypeLayout.CurrentGeneration.Chromosomes);
+            PopulationPhenotypeLayout.CreateNewGeneration(newGenerationChromosomes);
             //return EndCurrentGeneration();
         }
 
@@ -43,16 +51,14 @@ namespace GeneticSharp
         {
             var pop = PopulationPhenotypeLayout;
             var parents =
-                selection.SelectChromosomes(pop.MinSize, pop.CurrentGeneration);
+                selection.SelectChromosomes(Mathf.FloorToInt(pop.MinSize * 0.5f), pop.CurrentGeneration);
 
             var offspring =
                 OperatorsStrategy.Cross(pop, Crossover, CrossoverProbability, parents);
 
             OperatorsStrategy.Mutate(Mutation, MutationProbability, offspring);
 
-            var newGenerationChromosomes =
-                Reinsertion.SelectChromosomes(pop, offspring, parents);
-            return newGenerationChromosomes;
+            return offspring;
         }
     }
 

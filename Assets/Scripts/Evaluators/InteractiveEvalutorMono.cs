@@ -20,7 +20,8 @@ public class InteractiveEvalutorMono : EvaluatorMono
     //private List<MeasureMono> Evaluators = new List<MeasureMono>();
     public LevelProperties LevelProperties;
 
-    public bool OnlyAesthetic;
+    public bool ToogleAestheticContribution;
+    public bool ToogleEngagementContribution;
 
     [SerializeField]
     public EvaluatorMono ObjectiveFitness;
@@ -101,17 +102,17 @@ public class InteractiveEvalutorMono : EvaluatorMono
             .ThenByDescending(x => x.IsValidator)
             .ToArray();
 
-        bool infeasible = false;
+        levelChromosome.Feasibility = true;
         foreach (var e in Evaluators)
         {
             e.Init(levelObject.gameObject);
 
-            if (infeasible == false)
+            if (levelChromosome.Feasibility == true)
             {
                 e.DoMeasure(levelObject.gameObject);
                 if (e.IsTerminating)
                 {
-                    infeasible = true;
+                    levelChromosome.Feasibility = false;
                 }
             }
         }
@@ -136,18 +137,18 @@ public class InteractiveEvalutorMono : EvaluatorMono
         AssigneEngagementScore(levelChromosome);
 
         float eval = -100;
-        if (infeasible == false)
+        if (levelChromosome.Feasibility == true)
         {
-            if (OnlyAesthetic)
+            eval = 0;
+            if (ToogleAestheticContribution)
             {
-                //Combine engagment score and aesthetic score
-                eval = levelChromosome.AestheticScore;
+                eval += levelChromosome.AestheticScore;
             }
-            else
+            if (ToogleEngagementContribution)
             {
                 levelChromosome.EngagementScore =
                     (float)ObjectiveFitness.AttachToAndEvaluate(levelChromosome);
-                eval = levelChromosome.AestheticScore + levelChromosome.EngagementScore;
+                eval += levelChromosome.EngagementScore;
             }
         }
         levelChromosome.AddOrReplace(
@@ -173,17 +174,19 @@ public class InteractiveEvalutorMono : EvaluatorMono
                 levelChromosome.GetAestheticScore(UserPreferenceModel);
         }
 
-        //var evaluator = Instantiate(EvaluatorHolder, levelObject.transform);
-        //Combine engagment score and aesthetic score
-        //float oldFitness = (float)levelChromosome.Fitness;
         float eval = -100;
-        if (OnlyAesthetic)
+        //Combine engagment score and aesthetic score
+        if (levelChromosome.Feasibility == true)
         {
-            eval = levelChromosome.AestheticScore;
-        }
-        else
-        {
-            eval = levelChromosome.AestheticScore + levelChromosome.EngagementScore;
+            eval = 0;
+            if (ToogleAestheticContribution)
+            {
+                eval += levelChromosome.AestheticScore;
+            }
+            if (ToogleEngagementContribution)
+            {
+                eval += levelChromosome.EngagementScore;
+            }
         }
 
         if (Mathf.Approximately(eval, (float)levelChromosome.Fitness) == false)
@@ -191,10 +194,6 @@ public class InteractiveEvalutorMono : EvaluatorMono
             Debug.Log($"Aesthetic score changed with {levelChromosome.AestheticScore - oldAS}");
             Debug.Log($"Fitness changed with {eval - levelChromosome.Fitness}");
         }
-        //`MeasureResult? t = levelChromosome.Measurements
-        //    .FirstOrDefault(x => x.Category == MeasurementType.OVERALLFITNESS);
-        //if(t.HasValue)
-        //    t.GetValueOrDefault() = levelChromosome.Fitness.ToString();
         return eval;
     }
 
