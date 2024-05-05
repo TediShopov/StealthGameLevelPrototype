@@ -31,6 +31,48 @@ public class Helpers : MonoBehaviour
         return level;
     }
 
+    // Function to get cells in a 2D grid that lie in a line
+    public static Vector2Int[] GetCellsInLine(Vector2Int start, Vector2Int end)
+    {
+        Vector2Int[] cells = new Vector2Int[Mathf.Max(Mathf.Abs(end.x - start.x), Mathf.Abs(end.y - start.y)) + 1];
+        int i = 0;
+
+        int x = start.x;
+        int y = start.y;
+
+        int dx = Mathf.Abs(end.x - start.x);
+        int dy = Mathf.Abs(end.y - start.y);
+
+        int sx = (start.x < end.x) ? 1 : -1;
+        int sy = (start.y < end.y) ? 1 : -1;
+        int err = dx - dy;
+
+        while (true)
+        {
+            cells[i] = new Vector2Int(x, y);
+            i++;
+
+            if (x == end.x && y == end.y)
+                break;
+
+            int err2 = 2 * err;
+
+            if (err2 > -dy)
+            {
+                err -= dy;
+                x += sx;
+            }
+
+            if (err2 < dx)
+            {
+                err += dx;
+                y += sy;
+            }
+        }
+
+        return cells;
+    }
+
     public static float GetRandomFloat(System.Random random, float minValue, float maxValue)
     {
         // Generate a random float within a custom range

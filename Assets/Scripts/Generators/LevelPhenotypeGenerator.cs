@@ -132,12 +132,7 @@ public abstract class LevelPhenotypeGenerator : LevelGeneratorBase
 
     protected void InitializeAdditionalLevelData()
     {
-        var levelInitializer = To.gameObject.GetComponentInChildren<InitializeStealthLevel>();
-        //var voxelizedLevel = gameObject.GetComponentInChildren<>();
         var voxelizedLevel = To.gameObject.GetComponentInChildren<IFutureLevel>();
-        //var multipleRRTSolvers = To.gameObject.GetComponentInChildren<MultipleRRTRunner>();
-        Helpers.LogExecutionTime(levelInitializer.Init, "Level Initializer Time");
-        //Helpers.LogExecutionTime(voxelizedLevel.Init, "Future Level Logic Time");
     }
 
     //!WARNING! uses destroy immediate as mulitple level can be geenrated an

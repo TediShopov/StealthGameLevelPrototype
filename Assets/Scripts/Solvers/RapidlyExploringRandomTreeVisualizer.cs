@@ -128,18 +128,18 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
                 else
                     Gizmos.color = Color.green;
 
-                if (VoxelizedLevel is VoxelizedLevel)
-                {
-                    VoxelizedLevel v = (VoxelizedLevel)VoxelizedLevel;
-                    Handles.Label(Path[i] + Vector3.down * 0.2f, $"{v.GetFutureLevelIndex(Path[i].z)}");
-                    Vector2Int startCell = (Vector2Int)v.Grid.WorldToCell(Path[i]);
-                    Vector2Int endCell = (Vector2Int)v.Grid.WorldToCell(Path[i + 1]);
-                    var listOfRCells = VoxelizedLevelBase.GetCellsInLine(startCell, endCell);
-                    foreach (var cell in listOfRCells)
-                    {
-                        Gizmos.DrawSphere(v.Grid.GetCellCenterWorld(new Vector3Int(cell.x, cell.y, 0)), 0.1f);
-                    }
-                }
+                //                if (VoxelizedLevel is VoxelizedLevel)
+                //                {
+                //                    VoxelizedLevel v = (VoxelizedLevel)VoxelizedLevel;
+                //                    Handles.Label(Path[i] + Vector3.down * 0.2f, $"{v.GetFutureLevelIndex(Path[i].z)}");
+                //                    Vector2Int startCell = (Vector2Int)v.Grid.WorldToCell(Path[i]);
+                //                    Vector2Int endCell = (Vector2Int)v.Grid.WorldToCell(Path[i + 1]);
+                //                    var listOfRCells = VoxelizedLevelBase.GetCellsInLine(startCell, endCell);
+                //                    foreach (var cell in listOfRCells)
+                //                    {
+                //                        Gizmos.DrawSphere(v.Grid.GetCellCenterWorld(new Vector3Int(cell.x, cell.y, 0)), 0.1f);
+                //                    }
+                //                }
             }
         }
     }

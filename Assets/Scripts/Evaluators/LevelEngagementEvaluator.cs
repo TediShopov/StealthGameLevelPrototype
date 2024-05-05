@@ -124,7 +124,7 @@ public class LevelEngagementEvaluator : EvaluatorMono
             Vector2Int segmentA = (Vector2Int)zones.Grid.WorldToCell(path[i]);
             Vector2Int segmentB = (Vector2Int)zones.Grid.WorldToCell(path[i + 1]);
             Vector2Int[] cellsAlongLine =
-                VoxelizedLevelBase.GetCellsInLine(segmentA, segmentB);
+                Helpers.GetCellsInLine(segmentA, segmentB);
             foreach (var cellInSegment in cellsAlongLine)
             {
                 int currentZoneIndex = zones.Get(cellInSegment);
