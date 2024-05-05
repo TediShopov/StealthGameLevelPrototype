@@ -146,6 +146,8 @@ public class GridObjectLayout
     //One property as matrix is always squre
     private int GridDimension;
 
+    public int GetGridDimension => GridDimension;
+
     public int GetMaxIndex => GridDimension * GridDimension - 1;
 
     public GameObject GetNextLevelObject()

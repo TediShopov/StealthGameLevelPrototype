@@ -8,7 +8,7 @@ using UnityEngine;
 namespace GeneticSharp.Domain
 {
     [ExecuteInEditMode]
-    public sealed class InteractiveGeneticAlgorithm : MonoBehaviour, IGeneticAlgorithm
+    public class InteractiveGeneticAlgorithm : MonoBehaviour, IGeneticAlgorithm
     {
         [SerializeField]
         [Range(0, 1)]
@@ -246,7 +246,7 @@ namespace GeneticSharp.Domain
 
         #region Methods
 
-        public void EvolveOneGeneration()
+        public virtual void EvolveOneGeneration()
         {
             var parents = SelectParents();
             var offspring = Cross(parents);
@@ -260,7 +260,7 @@ namespace GeneticSharp.Domain
         /// Ends the current generation.
         /// </summary>
         /// <returns><c>true</c>, if current generation was ended, <c>false</c> otherwise.</returns>
-        public bool EndCurrentGeneration()
+        public virtual bool EndCurrentGeneration()
         {
             //EvaluateFitness();
             Population.EndCurrentGeneration();
@@ -287,12 +287,13 @@ namespace GeneticSharp.Domain
             return false;
         }
 
-        public void ReorderTransformHierarchy()
+        public void ReorderTransformHierarchy(Population population)
+
         {
             int index = 0;
 
             //On th assumption that fitness is assigned on all group members
-            var groupLeadersOrder = Population.CurrentGeneration.Chromosomes.GroupBy(x => x)
+            var groupLeadersOrder = population.CurrentGeneration.Chromosomes.GroupBy(x => x)
                 .OrderByDescending(x => x.First().Fitness).ToList();
 
             foreach (var group in groupLeadersOrder)
@@ -310,14 +311,12 @@ namespace GeneticSharp.Domain
             }
         }
 
-        public void EvaluateFitness()
+        public void EvaluateFitness(Population pop)
         {
             try
             {
-                //GeneratePhenotypeForAll();
-
-                var allChromomsome = Population.CurrentGeneration.Chromosomes;
-                var groupedChromosomes = Population.CurrentGeneration.Chromosomes
+                var allChromomsome = pop.CurrentGeneration.Chromosomes;
+                var groupedChromosomes = pop.CurrentGeneration.Chromosomes
                     .GroupBy(x => x);
 
                 //var chromosomesWithoutFitness = Population.CurrentGeneration.Chromosomes.Where(c => !c.Fitness.HasValue).ToList();
@@ -356,10 +355,15 @@ namespace GeneticSharp.Domain
                 TaskExecutor.Stop();
                 TaskExecutor.Clear();
             }
+            pop.CurrentGeneration.Chromosomes =
+                Population.CurrentGeneration.Chromosomes.OrderByDescending(c => c.Fitness.Value).ToList();
+            //GeneratePhenotypeForAll();
+        }
 
-            Population.CurrentGeneration.Chromosomes
-               = Population.CurrentGeneration.Chromosomes.OrderByDescending(c => c.Fitness.Value).ToList();
-            ReorderTransformHierarchy();
+        public virtual void EvaluateFitness()
+        {
+            EvaluateFitness(PopulationPhenotypeLayout);
+            ReorderTransformHierarchy(PopulationPhenotypeLayout);
             var handle = AfterEvaluationStep;
             handle?.Invoke(this, EventArgs.Empty);
         }
@@ -452,7 +456,7 @@ namespace GeneticSharp.Domain
             this.EvaluateFitness();
         }
 
-        public void SetupGA()
+        public virtual void SetupGA()
         {
             RandomSeedGenerator = new System.Random(Seed);
             var selection = new TournamentSelection(3);

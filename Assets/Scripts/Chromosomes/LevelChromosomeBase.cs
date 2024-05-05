@@ -147,6 +147,11 @@ public abstract class LevelChromosomeBase : ChromosomeBase,
         this.Measurements[res.Name] = res;
     }
 
+    public bool IsFeasible()
+    {
+        return this.Fitness.HasValue && this.Fitness.Value != -100;
+    }
+
     public override IChromosome Clone()
     {
         //var clone =new LevelChromosome(Length, PhenotypeGenerator);
