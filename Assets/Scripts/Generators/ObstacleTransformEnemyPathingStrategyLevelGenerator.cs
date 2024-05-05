@@ -159,29 +159,38 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
     public void AssignPaths(
         int geneIndex, LevelChromosomeBase levelChromosomeBase)
     {
-        int seed = Mathf.CeilToInt((float)levelChromosomeBase.GetGene(geneIndex).Value
-            * (float)levelChromosomeBase.GetGene(geneIndex + 1).Value
-            * (float)levelChromosomeBase.GetGene(geneIndex + 2).Value
-            * (float)levelChromosomeBase.GetGene(geneIndex + 3).Value
-            * (float)levelChromosomeBase.GetGene(geneIndex + 4).Value);
-
-        LevelRandom = new System.Random(seed);
-        PathGenerator.geneIndex = geneIndex;
-        PathGenerator.Init(To);
-        PathGenerator.Roadmap = LevelChromosome.Phenotype.Roadmap;
-        PathGenerator.LevelRandom = LevelRandom;
-        PatrolEnemyMono[] enemyPaths = To.GetComponentsInChildren<PatrolEnemyMono>();
-        List<List<Vector2>> paths = PathGenerator.GeneratePaths(EnemyCount);
-
-        if (LevelChromosome.Phenotype.Threats == null)
-            LevelChromosome.Phenotype.Threats = new List<IPredictableThreat>();
-
-        for (int i = 0; i < EnemyCount; i++)
+        try
         {
-            enemyPaths[i].InitPatrol(paths[i]);
-            levelChromosomeBase.Phenotype.Threats.Add(enemyPaths[i].GetPatrol());
+            int seed = Mathf.CeilToInt((float)levelChromosomeBase.GetGene(geneIndex).Value
+                * (float)levelChromosomeBase.GetGene(geneIndex + 1).Value
+                * (float)levelChromosomeBase.GetGene(geneIndex + 2).Value
+                * (float)levelChromosomeBase.GetGene(geneIndex + 3).Value
+                * (float)levelChromosomeBase.GetGene(geneIndex + 4).Value);
+
+            LevelRandom = new System.Random(seed);
+            PathGenerator.geneIndex = geneIndex;
+            PathGenerator.Init(To);
+            PathGenerator.Roadmap = LevelChromosome.Phenotype.Roadmap;
+            PathGenerator.LevelRandom = LevelRandom;
+            PatrolEnemyMono[] enemyPaths = To.GetComponentsInChildren<PatrolEnemyMono>();
+            List<List<Vector2>> paths = PathGenerator.GeneratePaths(EnemyCount);
+
+            if (LevelChromosome.Phenotype.Threats == null)
+                LevelChromosome.Phenotype.Threats = new List<IPredictableThreat>();
+
+            for (int i = 0; i < EnemyCount; i++)
+            {
+                enemyPaths[i].InitPatrol(paths[i]);
+                levelChromosomeBase.Phenotype.Threats.Add(enemyPaths[i].GetPatrol());
+            }
+            geneIndex = PathGenerator.geneIndex;
         }
-        geneIndex = PathGenerator.geneIndex;
+        catch (System.Exception)
+        {
+            UnityEngine.Debug.Log($"Error getting {geneIndex} from {levelChromosomeBase.Length}");
+
+            throw;
+        }
     }
 
     protected override int GenerateLevelContent(LevelChromosomeBase chromosome)

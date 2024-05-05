@@ -322,6 +322,25 @@ public class PatrrolEditTests
     }
 
     [Test]
+    public void BacktrackingGetCurrentAtEnd()
+    {
+        // Use the Assert class to test conditions
+        var path =
+            new List<Vector2>()
+            {
+                new Vector2(0,0),
+                new Vector2(12f,0),
+                new Vector2(15.5213f,0),
+                new Vector2(17.0f,0),
+            };
+
+        BacktrackPatrolPath backtrackPatrolPath = new BacktrackPatrolPath(path);
+        Assert.IsNotNull(backtrackPatrolPath.GetSegment(3));
+        backtrackPatrolPath.TraverseForward = false;
+        Assert.IsNotNull(backtrackPatrolPath.GetSegment(0));
+    }
+
+    [Test]
     public void IndexingTes()
     {
         var path =

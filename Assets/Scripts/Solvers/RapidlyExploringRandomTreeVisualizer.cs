@@ -11,7 +11,6 @@ public class RapidlyExploringRandomTreeVisualizer : MonoBehaviour
     [HideInInspector] public CharacterController2D Controller;
     [HideInInspector] public GameObject StartNode;
     [HideInInspector] public GameObject EndNode;
-    public int maxIterations = 1000;
 
     //    public float GoalDistance = 1.0f;
     //    public float BiasDistance = 25.0f;

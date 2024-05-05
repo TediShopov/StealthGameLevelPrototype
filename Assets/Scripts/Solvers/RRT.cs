@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -58,17 +59,14 @@ public class RRT : IRapidlyEpxploringRandomTree<Vector3>
     public virtual void Setup(IFutureLevel discretizedLevel, float goalDist, float maxvel
         , Vector3 start, Vector3 end)
     {
+        this._stats = new RRTStats();
         this.FutureLevel = discretizedLevel;
-        //        _randomMin = world.TransformPoint(discretizedLevel.GetBounds().min);
-        //        _randomMax = world.TransformPoint(discretizedLevel.GetBounds().max);
         _randomMin = discretizedLevel.GetBounds().min;
         _randomMax = discretizedLevel.GetBounds().max;
-        //_randomMax = discretizedLevel.GetBounds().max;
         this.GoalDistance = goalDist;
         this.MaxVelocity = maxvel;
         StartNode = new TreeNode<Vector3>(start);
         Goal = end;
-        //Initializing mapping from explored states to tree node that contain information about parent and children
         _stateToTreeNode = new Dictionary<Vector3, TreeNode<Vector3>>();
         _stateToTreeNode.Add(start, StartNode);
 

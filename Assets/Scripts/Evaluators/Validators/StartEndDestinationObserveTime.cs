@@ -9,10 +9,13 @@ using UnityEngine;
 public class StartEndDestinationObserveTime : MeasureMono
 {
     private IFutureLevel FutureLevel;
+    private NativeGrid<float> Heatmap;
     private GameObject Start;
     private GameObject End;
-    public int TimeframesObserved = 0;
-    public int TimesFrameSimulated = 0;
+    public int MaxTimeFrameObservedStart = 3;
+    public int MaxTimeFramesObservedEnd = 3;
+    public int FrameObserveStart = 0;
+    public int FrameObserveEnd = 0;
 
     public override MeasurementType GetCategory()
     {
@@ -26,75 +29,29 @@ public class StartEndDestinationObserveTime : MeasureMono
 
     protected override string Evaluate()
     {
-        float percetangeOfTimeFramesObserved = PercentageOfTimeFramesObserved(100);
-        return percetangeOfTimeFramesObserved.ToString();
+        if (Passes())
+            return "True";
+        else
+        {
+            IsTerminating = true;
+            return "False";
+        }
     }
 
-    //     private float PercentageOfTimeFramesObserved(float maxTime)
-    //     {
-    //         //
-    //         int timeframesObserved = 0;
-    //         int timesFrameSimulated = 0;
-    //         List<BacktrackPatrolPath> simulatedPaths = PatrolPaths
-    //             .Select(x => new BacktrackPatrolPath(x.BacktrackPatrolPath)).ToList();
-    //         float speed = PatrolPaths[0].EnemyProperties.Speed;
-    //         float vd = PatrolPaths[0].EnemyProperties.ViewDistance;
-    //         float fov = PatrolPaths[0].EnemyProperties.FOV;
-    //         for (float time = 0; time <= maxTime; time += FutureLevel.Step)
-    //         {
-    //             timesFrameSimulated++;
-    //             //Move all paths
-    //             simulatedPaths.ForEach(x => x.MoveAlong(FutureLevel.Step * speed));
-    //             for (int i = 0; i < simulatedPaths.Count; i++)
-    //             {
-    //                 FutureTransform enemyFT = PatrolPath.GetPathOrientedTransform(simulatedPaths[i]);
-    //                 bool observerStart = FieldOfView.TestCollision(
-    //                     Start.transform.position,
-    //                     enemyFT,
-    //                     fov,
-    //                     vd,
-    //                     LayerMask.GetMask("Obstacle"));
-    //                 bool observesEnd = FieldOfView.TestCollision(
-    //                     End.transform.position,
-    //                     enemyFT,
-    //                     fov,
-    //                     vd,
-    //                     LayerMask.GetMask("Obstacle"));
-    //                 if (observerStart || observesEnd)
-    //                 {
-    //                     timeframesObserved++;
-    //                     break;
-    //                 }
-    //             }
-    //         }
-    //         if (timesFrameSimulated == 0) { return 0; }
-    //         return (float)timeframesObserved / (float)timesFrameSimulated;
-    //    }
-    private float PercentageOfTimeFramesObserved(float maxTime)
+    private bool Passes()
     {
-        TimeframesObserved = 0;
-        TimesFrameSimulated = 0;
+        Vector2Int startNativeCoord = Heatmap.GetNativeCoord(Start.transform.position);
+        Vector2Int endNativeCoord = Heatmap.GetNativeCoord(End.transform.position);
 
-        var contLevel = (DiscreteRecalculatingFutureLevel)FutureLevel;
-        var simulation = contLevel.GetFullSimulation();
+        FrameObserveStart = Mathf.FloorToInt(Heatmap.Get(startNativeCoord.x, startNativeCoord.y) * FutureLevel.Iterations);
+        FrameObserveEnd = Mathf.FloorToInt(Heatmap.Get(endNativeCoord.x, endNativeCoord.y) * FutureLevel.Iterations);
 
-        while (simulation.IsFinished == false)
-        {
-            foreach (var threat in simulation.Threats)
-            {
-                if (threat.TestThreat(Start.transform.position)
-                    || threat.TestThreat(End.transform.position))
-                {
-                    TimeframesObserved++;
-                    IsTerminating = true;
-                    return 0.0f;
-                }
-            }
-            TimesFrameSimulated++;
-            simulation.Progress();
-        }
-        if (TimesFrameSimulated == 0) { return 0; }
-        return (float)TimeframesObserved / (float)TimesFrameSimulated;
+        if (FrameObserveStart > MaxTimeFrameObservedStart)
+            return false;
+        if (FrameObserveEnd > MaxTimeFramesObservedEnd)
+            return false;
+
+        return true;
     }
 
     public override void Init(GameObject manifestation)
@@ -105,6 +62,8 @@ public class StartEndDestinationObserveTime : MeasureMono
             .Chromosome.Phenotype;
 
         FutureLevel = phenotype.FutureLevel;
+        Heatmap = new NativeGrid<float>(FutureLevel.GetHeatmap());
+        Heatmap.Grid.Origin = this.Manifestation.transform.position;
         Start = Manifestation.GetComponentInChildren<CharacterController2D>().gameObject;
         End = Manifestation.GetComponentInChildren<WinTrigger>().gameObject;
     }

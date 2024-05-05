@@ -1,3 +1,4 @@
+using Codice.Client.Common;
 using GeneticSharp;
 using StealthLevelEvaluation;
 using System.Collections;
@@ -20,6 +21,9 @@ public class InteractiveEvalutorMono : EvaluatorMono
     public LevelProperties LevelProperties;
 
     public bool OnlyAesthetic;
+
+    [SerializeField]
+    public EvaluatorMono ObjectiveFitness;
 
     public UserPreferenceModel UserPreferenceModel;
 
@@ -79,7 +83,7 @@ public class InteractiveEvalutorMono : EvaluatorMono
 
     public override double Evaluate(IChromosome chromosome)
     {
-        LevelChromosomeBase levelChromosome = CheckValidLevelChromosome(chromosome);
+        LevelChromosomeBase levelChromosome = TryGetValidLevelChromosome(chromosome);
 
         var levelObject = levelChromosome.Manifestation;
 
@@ -141,6 +145,8 @@ public class InteractiveEvalutorMono : EvaluatorMono
             }
             else
             {
+                levelChromosome.EngagementScore =
+                    (float)ObjectiveFitness.AttachToAndEvaluate(levelChromosome);
                 eval = levelChromosome.AestheticScore + levelChromosome.EngagementScore;
             }
         }
@@ -156,7 +162,7 @@ public class InteractiveEvalutorMono : EvaluatorMono
 
     public double Reevaluate(IChromosome chromosome)
     {
-        LevelChromosomeBase levelChromosome = CheckValidLevelChromosome(chromosome);
+        LevelChromosomeBase levelChromosome = TryGetValidLevelChromosome(chromosome);
         var levelObject = levelChromosome.Manifestation;
 
         //Keep old measuremens

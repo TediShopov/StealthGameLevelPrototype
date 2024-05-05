@@ -105,6 +105,11 @@ public class BacktrackPatrolPath : IPatrolPath
         }
 
         var tempTraverse = TraverseForward;
+        if (relPathPostion == 0)
+            tempTraverse = true;
+        if (relPathPostion == Path.Count - 1)
+            tempTraverse = false;
+
         if (rel % 1 == 0)
         {
             from = GetIndex(rel);
