@@ -134,7 +134,6 @@ public class InteractiveEvalutorMono : EvaluatorMono
             levelChromosome.AestheticScore =
                 levelChromosome.GetAestheticScore(UserPreferenceModel);
         }
-        AssigneEngagementScore(levelChromosome);
 
         float eval = -100;
         if (levelChromosome.Feasibility == true)
@@ -195,24 +194,6 @@ public class InteractiveEvalutorMono : EvaluatorMono
             Debug.Log($"Fitness changed with {eval - levelChromosome.Fitness}");
         }
         return eval;
-    }
-
-    private void AssigneEngagementScore(LevelChromosomeBase chromosomeBase)
-    {
-        try
-        {
-            var levelObject = chromosomeBase.Manifestation;
-            var riskMeasure = levelObject.GetComponentInChildren<RiskMeasure>();
-            var pathUniqueness = levelObject.GetComponentInChildren<PathZoneUniqueness>();
-            var solver = levelObject.GetComponentInChildren<RRTSolverDifficultyEvaluation>();
-
-            chromosomeBase.EngagementScore =
-                solver.Chance * riskMeasure.RiskMeasures.Min() * pathUniqueness.SeenPaths.Count();
-        }
-        catch (System.Exception)
-        {
-            chromosomeBase.EngagementScore = 0;
-        }
     }
 }
 
