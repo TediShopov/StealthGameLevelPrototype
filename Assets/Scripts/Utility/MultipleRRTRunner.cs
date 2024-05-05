@@ -11,7 +11,7 @@ public class MultipleRRTRunner : MonoBehaviour
     public int Runs = 1;
 
     //    public int maxIterations = 1000;
-    //    public float GoalDistance = 1.0f;
+    //    public float _goalDistance = 1.0f;
     //    public float BiasDistance = 25.0f;
     public GameObject RRTPrefab;
 

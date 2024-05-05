@@ -1,34 +1,24 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class TreeNode<T>
-{
-    public TreeNode(T curr)
-    {
-        this.Content = curr;
-    }
-
-    public T Content;
-    public TreeNode<T> Parent = null;
-    public List<TreeNode<T>> Children = new List<TreeNode<T>>();
-
-    public void AddChild(TreeNode<T> child)
-    {
-        child.Parent = this;
-        Children.Add(child);
-    }
-}
-
+/// <summary>
+/// Adds an additional "Bias step" every time a connection is made in
+/// the proximity of goal. Bias step can produce more of themselves
+/// to converge to the goal.
+/// Additionaly first pick a random 2d position and then picks a random time
+/// that could be reached by player (given max speed and distance from start)
+/// </summary>
+[Serializable]
 public class RRTBiased : RRT
 {
-    private TreeNode<Vector3> _lastAddedState;
-    private Vector3 _lastBiasedState;
-
     //If nodes distance to goal is closer than this bias distance, node will performed Biased Step next
     //iteration to steer it to goal
-    public float BiasDistance;
+    [SerializeField] private float _biasDistance;
 
+    private TreeNode<Vector3> _lastAddedState;
+    private Vector3 _lastBiasedState;
     public RRTBiased()
     {
     }
@@ -57,11 +47,14 @@ public class RRTBiased : RRT
         return stepResult;
     }
 
-    public bool IsInBiasDistance(Vector3 state, Vector3 goal)
+    public float GetRandomReachableTime(Vector2 point)
     {
-        return Vector2.Distance(state, goal) < BiasDistance;
+        float d = Vector2.Distance(StartNode.Content, point);
+        float minimumTimeToReach = d / _maxVelocity;
+        return
+           UnityEngine.
+           Random.Range(minimumTimeToReach, _randomMax.z);
     }
-
     public override Vector3 GetRandomState()
     {
         //First sample a 2d position in the level
@@ -74,25 +67,16 @@ public class RRTBiased : RRT
             _randomMax.z);
         return new Vector3(goalSubState.x, goalSubState.y, time);
     }
-
-    //Gets the minimum time to reach from one state to another
-    //solely based on max speed on a straight line
-    private float MinimumTimeToReach(Vector2 start, Vector2 end)
+    public bool IsInBiasDistance(Vector3 state, Vector3 goal)
     {
-        float distance = Vector2.Distance(start, end);
-        float minimumTimeToReach = distance / MaxVelocity;
-        return minimumTimeToReach;
+        return Vector2.Distance(state, goal) < _biasDistance;
     }
-
-    public float GetRandomReachableTime(Vector2 point)
+    private Vector3 BiasToGoal(Vector3 from, Vector3 goalState)
     {
-        float d = Vector2.Distance(StartNode.Content, point);
-        float minimumTimeToReach = d / MaxVelocity;
-        return
-           UnityEngine.
-           Random.Range(minimumTimeToReach, _randomMax.z);
+        float d = Vector2.Distance(from, goalState);
+        float minimumTimeToReach = d / _maxVelocity;
+        return new Vector3(goalState.x, goalState.y, from.z + minimumTimeToReach);
     }
-
     //Gets the last node added to the RRT and steers it to goal, this should only be called
     //when last added nodes distance to goal is smaller than the bias
     private TreeNode<Vector3> DoBiasedStep()
@@ -109,24 +93,12 @@ public class RRTBiased : RRT
         }
         return null;
     }
-
-    private Vector3 BiasToGoal(Vector3 from, Vector3 goalState)
+    //Gets the minimum time to reach from one state to another
+    //solely based on max speed on a straight line
+    private float MinimumTimeToReach(Vector2 start, Vector2 end)
     {
-        float d = Vector2.Distance(from, goalState);
-        float minimumTimeToReach = d / MaxVelocity;
-        return new Vector3(goalState.x, goalState.y, from.z + minimumTimeToReach);
-    }
-
-    private TreeNode<Vector3> AddToTreeStates(Vector3 newPoint, Vector3 nearestPoint)
-    {
-        if (_stateToTreeNode.ContainsKey(nearestPoint))
-        {
-            _kdTree.AddKDNode(KDTree.ToFloatArray(newPoint));
-            TreeNode<Vector3> newStateNode = new TreeNode<Vector3>(newPoint);
-            _stateToTreeNode.Add(newPoint, newStateNode);
-            _stateToTreeNode[nearestPoint].AddChild(newStateNode);
-            return newStateNode;
-        }
-        return null;
+        float distance = Vector2.Distance(start, end);
+        float minimumTimeToReach = distance / _maxVelocity;
+        return minimumTimeToReach;
     }
 }
