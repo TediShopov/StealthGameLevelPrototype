@@ -444,7 +444,8 @@ namespace GeneticSharp.Domain
             AttachUserPreferenceLogger();
 
             //Seed the randomizer used in mutators and
-            GeneticSharp.RandomizationProvider.Current = new NativeRandom(Seed);
+            GeneticSharp.RandomizationProvider.Current =
+                new NativeRandomProvider(Seed);
 
             //Clear selections
             this.GenerationSelecitons = new List<LevelChromosomeBase>();
@@ -461,7 +462,7 @@ namespace GeneticSharp.Domain
             RandomSeedGenerator = new System.Random(Seed);
             var selection = new TournamentSelection(3);
             var crossover = new TwoPointCrossover();
-            var mutation = new CustomMutators(1, 1, 1);
+            var mutation = new OTEPSVariableLenghtMutator(1, 1, 1);
             var chromosome = Generator.GetAdamChromosome(RandomSeedGenerator.Next());
             PopulationPhenotypeLayout =
                 new PopulationPhenotypeLayout(PopulationPhenotypeLayout, this.gameObject, chromosome);
