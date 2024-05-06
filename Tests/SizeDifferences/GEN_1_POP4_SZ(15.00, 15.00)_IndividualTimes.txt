@@ -1,6 +1,0 @@
-Risk Measure of solutions,Relative Level Coverage,Average realtive overlapping areas,
-0,114,24,
-2,209,20,
-0,171,98,
-0,239,25,
-
