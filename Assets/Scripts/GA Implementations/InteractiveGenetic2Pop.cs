@@ -8,15 +8,17 @@ namespace GeneticSharp
 {
     public class InteractiveGenetic2Pop : InteractiveGeneticAlgorithm
     {
-        public FeasibleSelectionWrapper FeasibleSelection;
-        public FeasibleSelectionWrapper InfeasibleSelection;
+        private FeasibleSelectionWrapper _feasibleSelection;
+        private FeasibleSelectionWrapper _infeasibleSelection;
 
         public override void SetupGA()
         {
             base.SetupGA();
 
-            this.FeasibleSelection = new FeasibleSelectionWrapper(2, true, this.Selection);
-            this.InfeasibleSelection = new FeasibleSelectionWrapper(2, false, this.Selection);
+            this._feasibleSelection =
+                new FeasibleSelectionWrapper(2, true, this.Selection);
+            this._infeasibleSelection =
+                new FeasibleSelectionWrapper(2, false, this.Selection);
         }
 
         public InteractiveGenetic2Pop(
@@ -31,8 +33,8 @@ namespace GeneticSharp
         public override void EvolveOneGeneration()
         {
             //Evolve feasible
-            var feasible = EvolveIsland(FeasibleSelection);
-            var infeasbile = EvolveIsland(InfeasibleSelection);
+            var feasible = EvolveIsland(_feasibleSelection);
+            var infeasbile = EvolveIsland(_infeasibleSelection);
 
             Debug.Log($"_DEB_ Feasible: {feasible.Count}");
             Debug.Log($"_DEB_ Infeasible: {infeasbile.Count}");
@@ -43,6 +45,7 @@ namespace GeneticSharp
             var newGenerationChromosomes =
                 Reinsertion.SelectChromosomes(PopulationPhenotypeLayout,
                 combined, PopulationPhenotypeLayout.CurrentGeneration.Chromosomes);
+            Debug.Log($"_DEB_ After Insertion: {newGenerationChromosomes.Count}");
             PopulationPhenotypeLayout.CreateNewGeneration(newGenerationChromosomes);
             //return EndCurrentGeneration();
         }
@@ -62,6 +65,10 @@ namespace GeneticSharp
         }
     }
 
+    /// <summary>
+    /// A wrapper of a selection strategies that filters chromosome in generation
+    /// by their feasibility
+    /// </summary>
     public class FeasibleSelectionWrapper : SelectionBase
     {
         private ISelection PrimarySelectionStrategy;
@@ -79,7 +86,7 @@ namespace GeneticSharp
             try
             {
                 var feasibleGeneration = new Generation(generation.Number,
-                    generation.Chromosomes.Where(x => ((LevelChromosomeBase)x).IsFeasible() == Feasibility).ToList());
+                    generation.Chromosomes.Where(x => ((LevelChromosomeBase)x).Feasibility == Feasibility).ToList());
 
                 Debug.Log($"Feasibility {Feasibility}, Generaiton Count: {feasibleGeneration.Chromosomes.Count}");
 

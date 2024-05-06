@@ -46,7 +46,7 @@ public class UserPreferenceModel : IPreferenceModel<LevelChromosomeBase>
     public InteractiveEvalutorMono Evaluator;
 
     [SerializeField]
-    [Range(0, 1)]
+    [Range(0.01f, 1)]
     public float Step;
 
     public IList<float> Weights

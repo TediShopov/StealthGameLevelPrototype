@@ -332,6 +332,7 @@ public class DiscreteRecalculatingFutureLevel :
         var other = new DiscreteRecalculatingFutureLevel(Step, Iterations);
         other.BoundaryLayerMask = this.BoundaryLayerMask;
         other.ObstacleLayerMask = this.ObstacleLayerMask;
+        other.GlobalTransform = this.GlobalTransform;
         other._iter = this._iter;
         other._step = this._step;
         return other;

@@ -91,19 +91,4 @@ public class DiscreteCahcedFutureLevel : DiscreteRecalculatingFutureLevel
         }
         return false;
     }
-
-    //    public override IFutureLevel PrototypeComponent(GameObject to)
-    //    {
-    //        var other = to.AddComponent<DiscreteCahcedFutureLevel>();
-    //        other.BoundaryLayerMask = this.BoundaryLayerMask;
-    //        other.ObstacleLayerMask = this.ObstacleLayerMask;
-    //        other._iter = this._iter;
-    //        other._step = this._step;
-    //        return other;
-    //    }
-
-    //    public void OnDrawGizmosSelected()
-    //    {
-    //        base.OnDrawGizmosSelected();
-    //    }
 }

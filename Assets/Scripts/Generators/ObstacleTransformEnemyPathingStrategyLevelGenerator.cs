@@ -118,7 +118,14 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
     {
         //Initialize the future level
         var futurePrototype = (IFutureLevel)FutureLevel.Clone();
-        futurePrototype.GlobalTransform = chromosomeBase.Manifestation.transform;
+        try
+        {
+            futurePrototype.GlobalTransform = chromosomeBase.Manifestation.transform;
+        }
+        catch (System.Exception)
+        {
+            throw;
+        }
         futurePrototype.Generate(chromosomeBase.Phenotype);
         chromosomeBase.Phenotype.FutureLevel = futurePrototype;
     }

@@ -53,6 +53,10 @@ public class InteractiveGeneticAlgorithmEditor : Editor
         ie.AimedGenerations = EditorGUILayout.IntField(
             "Generaiton",
             ie.AimedGenerations);
+        ie.TopNLevels =
+            EditorGUILayout.IntField(
+                "Top N",
+            ie.TopNLevels);
 
         ie.CrossoverProbability =
             EditorGUILayout.Slider(

@@ -10,39 +10,26 @@ namespace GeneticSharp.Domain
     [ExecuteInEditMode]
     public class InteractiveGeneticAlgorithm : MonoBehaviour, IGeneticAlgorithm
     {
-        [SerializeField]
-        [Range(0, 1)]
+        public int IndependentRuns = 5; //Number of runs with synthetic model
+        public int AimedGenerations = 10; //Generation until termination
+        public int SyntheticGenerations = 5;//Number of generations after user selection
+        public int TopNLevels = 5;//Number of levels to keep track
+
+        [SerializeField, Range(0, 1)]
         public float CrossoverProbability;
 
-        [SerializeField]
-        [Range(0, 1)]
+        [SerializeField, Range(0, 1)]
         public float MutationProbability;
 
-        //The max generation after which the algorithm terminated
-        public int AimedGenerations = 10;
-
-        //The synthetic generation run after every user selection
-        public int SyntheticGenerations = 5;
-
-        //        //Level configuration
         public LevelProperties LevelProperties;
-
-        //Generates (phenotype) stealth level from chromosome
         public LevelPhenotypeGenerator Generator;
-
-        //Evaluates the phenotype
         public InteractiveEvalutorMono PhenotypeEvaluator;
 
         //Population for both chromosomes and phenotypes
         //Manges lifetime of phenotypes in unity scene
         public PopulationPhenotypeLayout PopulationPhenotypeLayout;
 
-        //How many of the top performing level should we keep track of
-        public int TopNLevels = 5;
-
-        public int IndependentRuns = 5;
-
-        #region UserPreferenceModel
+        #region UserSelections
 
         //Hold the user prefferecd - slected chromosomed
         public List<LevelChromosomeBase> GenerationSelecitons
@@ -55,7 +42,7 @@ namespace GeneticSharp.Domain
         //Tracker for user preference changes
         public UserPrefereneceTracker PreferenceTracker;
 
-        #endregion UserPreferenceModel
+        #endregion UserSelections
 
         #region Randomness
 
@@ -63,8 +50,6 @@ namespace GeneticSharp.Domain
         public int Seed;
 
         #endregion Randomness
-
-        //Holds the weights of aesthetic function to reward
 
         #region Constants
 
@@ -82,10 +67,8 @@ namespace GeneticSharp.Domain
 
         #region Fields
 
-        private bool m_stopRequested;
-        private readonly object m_lock = new object();
         private GeneticAlgorithmState m_state;
-        private readonly Stopwatch m_stopwatch = new Stopwatch();
+        private bool m_stopRequested;
 
         #endregion Fields
 
@@ -141,47 +124,21 @@ namespace GeneticSharp.Domain
 
         #region Events
 
-        public event EventHandler FinishIESetup;
+        public event EventHandler AfterEvaluationStep;
 
-        public event EventHandler InteractiveStepReached;
+        public event EventHandler FinishIESetup;
 
         public event EventHandler GenerationRan;
 
-        public event EventHandler TerminationReached;
-
-        public event EventHandler AfterEvaluationStep;
+        public event EventHandler InteractiveStepReached;
 
         public event EventHandler Stopped;
+
+        public event EventHandler TerminationReached;
 
         #endregion Events
 
         #region AestheticProperties
-
-        public List<IChromosome> UserSelectedChromose { get; set; }
-
-        public IOperatorsStrategy OperatorsStrategy { get; set; }
-
-        public IPopulation Population => PopulationPhenotypeLayout;
-
-        public IFitness Fitness => PhenotypeEvaluator;
-
-        public ISelection Selection { get; set; }
-
-        public ICrossover Crossover { get; set; }
-
-        public IMutation Mutation { get; set; }
-
-        public IReinsertion Reinsertion { get; set; }
-
-        public ITermination Termination { get; set; }
-
-        public int GenerationsNumber
-        {
-            get
-            {
-                return Population.GenerationsNumber;
-            }
-        }
 
         public IChromosome BestChromosome
         {
@@ -191,11 +148,41 @@ namespace GeneticSharp.Domain
             }
         }
 
-        /// <summary>
-        /// Gets the time evolving.
-        /// </summary>
-        public TimeSpan TimeEvolving { get; private set; }
+        public ICrossover Crossover { get; set; }
+        public IFitness Fitness => PhenotypeEvaluator;
+        public int GenerationsNumber
+        {
+            get
+            {
+                return Population.GenerationsNumber;
+            }
+        }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is running.
+        /// </summary>
+        /// <value><c>true</c> if this instance is running; otherwise, <c>false</c>.</value>
+        public bool IsRunning
+        {
+            get
+            {
+                return State == GeneticAlgorithmState.Started || State == GeneticAlgorithmState.Resumed;
+            }
+        }
+
+        public IMutation Mutation { get; set; }
+        public IOperatorsStrategy OperatorsStrategy { get; set; }
+        public IPopulation Population => PopulationPhenotypeLayout;
+        public int Property
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public IReinsertion Reinsertion { get; set; }
+        public ISelection Selection { get; set; }
         /// <summary>
         /// Gets the state.
         /// </summary>
@@ -218,44 +205,65 @@ namespace GeneticSharp.Domain
         }
 
         /// <summary>
-        /// Gets a value indicating whether this instance is running.
-        /// </summary>
-        /// <value><c>true</c> if this instance is running; otherwise, <c>false</c>.</value>
-        public bool IsRunning
-        {
-            get
-            {
-                return State == GeneticAlgorithmState.Started || State == GeneticAlgorithmState.Resumed;
-            }
-        }
-
-        /// <summary>
         /// Gets or sets the task executor which will be used to execute fitness evaluation.
         /// </summary>
         public ITaskExecutor TaskExecutor { get; set; }
 
-        public int Property
-        {
-            get => default;
-            set
-            {
-            }
-        }
+        public ITermination Termination { get; set; }
+        /// <summary>
+        /// Gets the time evolving.
+        /// </summary>
+        public TimeSpan TimeEvolving { get; private set; }
+
+        public List<IChromosome> UserSelectedChromose { get; set; }
 
         #endregion AestheticProperties
 
         #region Methods
 
-        public virtual void EvolveOneGeneration()
+        public void ApplyChangesToPreferenceModel()
         {
-            var parents = SelectParents();
-            var offspring = Cross(parents);
-            Mutate(offspring);
-            var newGenerationChromosomes = Reinsert(offspring, parents);
-            Population.CreateNewGeneration(newGenerationChromosomes);
-            //return EndCurrentGeneration();
-        }
+            List<LevelChromosomeBase> unselected =
+                this.Population.CurrentGeneration.Chromosomes
+                .Select(x => (LevelChromosomeBase)x)
+                .Where(x => GenerationSelecitons.Contains(x) == false) //Must not be contained by selections
+                .ToList();
 
+            if (GenerationSelecitons.Count == 0) return;
+
+            PhenotypeEvaluator
+                .UserPreferenceModel
+                .AlterPreferences(GenerationSelecitons[0], unselected);
+            //UserPreferences.Alter(GenerationSelecitons, unselected);
+        }
+        public void DisposeOldPopulation()
+        {
+            var tempList = this.transform.Cast<Transform>().ToList();
+            foreach (var child in tempList)
+            {
+                GameObject.DestroyImmediate(child.gameObject);
+            }
+        }
+        public void DoGeneration()
+        {
+            if (this.State == GeneticAlgorithmState.Started)
+            {
+                ApplyChangesToPreferenceModel();
+                for (int i = 0; i < SyntheticGenerations; i++)
+                {
+                    InteractiveSelections.Add(GenerationSelecitons);
+                    GenerationSelecitons.Clear();
+
+                    this.EvolveOneGeneration();
+
+                    //Evaluates fitness but also manifest the level
+                    // in the unity scene
+                    this.EvaluateFitness();
+
+                    this.EndCurrentGeneration();
+                }
+            }
+        }
         /// <summary>
         /// Ends the current generation.
         /// </summary>
@@ -286,31 +294,14 @@ namespace GeneticSharp.Domain
 
             return false;
         }
-
-        public void ReorderTransformHierarchy(Population population)
-
+        public void EndGA()
         {
-            int index = 0;
-
-            //On th assumption that fitness is assigned on all group members
-            var groupLeadersOrder = population.CurrentGeneration.Chromosomes.GroupBy(x => x)
-                .OrderByDescending(x => x.First().Fitness).ToList();
-
-            foreach (var group in groupLeadersOrder)
-            {
-                var groupLeader = (LevelChromosomeBase)
-                    group.First(x => ((LevelChromosomeBase)x).Manifestation);
-                if (groupLeader is LevelChromosomeBase)
-                {
-                    var levelChromosome = (LevelChromosomeBase)groupLeader;
-                    levelChromosome.Manifestation.transform.SetAsLastSibling();
-                    UnityEngine.Debug.Log($"Level group Fitness: {groupLeader.Fitness} placed at {index}");
-                    levelChromosome.Manifestation.transform.SetSiblingIndex(index);
-                    index++;
-                }
-            }
+            GenerationSelecitons = new List<LevelChromosomeBase>();
+            InteractiveSelections = new List<List<LevelChromosomeBase>>();
+            DisposeOldPopulation();
+            //RefreshPreferencesWeight();
+            this.State = GeneticAlgorithmState.NotStarted;
         }
-
         public void EvaluateFitness(Population pop)
         {
             try
@@ -359,7 +350,6 @@ namespace GeneticSharp.Domain
                 Population.CurrentGeneration.Chromosomes.OrderByDescending(c => c.Fitness.Value).ToList();
             //GeneratePhenotypeForAll();
         }
-
         public virtual void EvaluateFitness()
         {
             EvaluateFitness(PopulationPhenotypeLayout);
@@ -367,96 +357,97 @@ namespace GeneticSharp.Domain
             var handle = AfterEvaluationStep;
             handle?.Invoke(this, EventArgs.Empty);
         }
-
-        /// Runs the evaluate fitness.
-        private void RunEvaluateGroupOfIndiviudal(IEnumerable<IChromosome> identicalChromosomes)
+        public virtual void EvolveOneGeneration()
         {
-            var groupLeader = identicalChromosomes.First(x => ((LevelChromosomeBase)x).Manifestation);
-            try
+            var parents = SelectParents();
+            var offspring = Cross(parents);
+            Mutate(offspring);
+            var newGenerationChromosomes = Reinsert(offspring, parents);
+            Population.CreateNewGeneration(newGenerationChromosomes);
+            //return EndCurrentGeneration();
+        }
+        public void NameAllPhenotypeGameobjects()
+        {
+            Vector2 placement = new Vector2(5, 5);
+
+            foreach (var chromosome in Population.CurrentGeneration.Chromosomes)
             {
-                double fitness = Fitness.Evaluate(groupLeader);
-                foreach (var groupsMembers in identicalChromosomes)
+                var levelChromosome = chromosome as LevelChromosomeBase;
+
+                if (levelChromosome.Manifestation != null)
                 {
-                    groupsMembers.Fitness = fitness;
+                    if (levelChromosome.Manifestation.GetComponentInChildren<ChromoseMeasurementsVisualizer>()
+                        == null)
+                    {
+                        //Attach mono behaviour to visualize the measurements
+                        ChromoseMeasurementsVisualizer.AttachDataVisualizer(
+                            levelChromosome.Manifestation,
+                            new Vector2(5, 5));
+                    }
+
+                    //Clear objects name and replace it with new fitnessj
+                    this.Generator.ClearName(levelChromosome);
+                    this.Generator.AppendFitnessToName(levelChromosome);
                 }
             }
-            catch (Exception ex)
-            {
-                throw new FitnessException(Fitness, "Error executing Fitness.Evaluate for chromosome: {0}".With(ex.Message), ex);
-            }
         }
-
-        /// Runs the evaluate fitness.
-        private void ReevaluateGroup(IEnumerable<IChromosome> identicalChromosomes)
+        public void RandomizeSeed()
         {
-            try
+            Seed = new System.Random().Next();
+        }
+        public void ReorderTransformHierarchy(Population population)
+
+        {
+            int index = 0;
+
+            //On th assumption that fitness is assigned on all group members
+            var groupLeadersOrder = population.CurrentGeneration.Chromosomes.GroupBy(x => x)
+                .OrderByDescending(x => x.First().Fitness).ToList();
+
+            foreach (var group in groupLeadersOrder)
             {
-                var groupLeader = identicalChromosomes.First(x => ((LevelChromosomeBase)x).Manifestation);
-                groupLeader.Fitness = PhenotypeEvaluator.Reevaluate(groupLeader);
-                foreach (var groupsMembers in identicalChromosomes)
+                var groupLeader = (LevelChromosomeBase)
+                    group.First(x => ((LevelChromosomeBase)x).Manifestation);
+                if (groupLeader is LevelChromosomeBase)
                 {
-                    groupsMembers.Fitness = groupLeader.Fitness;
+                    var levelChromosome = (LevelChromosomeBase)groupLeader;
+                    levelChromosome.Manifestation.transform.SetAsLastSibling();
+                    UnityEngine.Debug.Log($"Level group Fitness: {groupLeader.Fitness} placed at {index}");
+                    levelChromosome.Manifestation.transform.SetSiblingIndex(index);
+                    index++;
                 }
             }
-            catch (Exception ex)
+        }
+        public void RunWithSyntheticModel()
+        {
+            for (int i = 0; i < IndependentRuns; i++)
             {
-                throw new FitnessException(Fitness, "Error executing Fitness.Evaluate for chromosome: {0}".With(ex.Message), ex);
+                StartGA();
+                for (int j = 0; j < AimedGenerations; j++)
+                {
+                    this.EvolveOneGeneration();
+                    //Evaluates fitness but also manifest the level
+                    // in the unity scene
+                    this.EvaluateFitness();
+                    this.EndCurrentGeneration();
+                }
+
+                //Do not remove ga result in last run
+                if (i != IndependentRuns - 1)
+                    EndGA();
             }
         }
-
-        private IList<IChromosome> SelectParents()
+        public void SelectChromosome(LevelChromosomeBase chromosome)
         {
-            return Selection.SelectChromosomes(Population.MinSize, Population.CurrentGeneration);
+            if (GenerationSelecitons.Contains(chromosome))
+            {
+                GenerationSelecitons.Remove(chromosome);
+            }
+            else
+            {
+                GenerationSelecitons.Add(chromosome);
+            }
         }
-
-        private IList<IChromosome> Cross(IList<IChromosome> parents)
-        {
-            return OperatorsStrategy.Cross(Population, Crossover, CrossoverProbability, parents);
-        }
-
-        private void Mutate(IList<IChromosome> chromosomes)
-        {
-            OperatorsStrategy.Mutate(Mutation, MutationProbability, chromosomes);
-        }
-
-        private IList<IChromosome> Reinsert(IList<IChromosome> offspring, IList<IChromosome> parents)
-        {
-            return Reinsertion.SelectChromosomes(Population, offspring, parents);
-        }
-
-        public void StartGA()
-        {
-            this.DisposeOldPopulation();
-
-            this.SetupGA();
-
-            //Validate and change the preference model to default if needed
-            //            if (IsValidUserPreferenceModel
-            //                (UserPreferences, PhenotypeEvaluator.GetCountOfLevelProperties()) == false)
-            //            {
-            //                SetUserPreferencesToDefault();
-            //            }
-
-            //Normalize the user preferences
-            PhenotypeEvaluator.Prepare();
-            //Attach tracker that keeps track of the weight of the user preference model
-            //and their changes throughout the generations
-            AttachUserPreferenceLogger();
-
-            //Seed the randomizer used in mutators and
-            GeneticSharp.RandomizationProvider.Current =
-                new NativeRandomProvider(Seed);
-
-            //Clear selections
-            this.GenerationSelecitons = new List<LevelChromosomeBase>();
-            this.InteractiveSelections = new List<List<LevelChromosomeBase>>();
-
-            //Startup the interactive evolutionary algoritm
-            this.State = GeneticAlgorithmState.Started;
-            this.Population.CreateInitialGeneration();
-            this.EvaluateFitness();
-        }
-
         public virtual void SetupGA()
         {
             RandomSeedGenerator = new System.Random(Seed);
@@ -478,187 +469,78 @@ namespace GeneticSharp.Domain
 
             //Assign events
             this.AfterEvaluationStep += Ga_AfterEvaluation;
+            this.GenerationRan -= Ga_GenerationRan;
             this.GenerationRan += Ga_GenerationRan;
+            this.TerminationReached -= Ga_TerminationReached;
             this.TerminationReached += Ga_TerminationReached;
 
             var handler = FinishIESetup;
             handler?.Invoke(this, EventArgs.Empty);
-
-            //            if (this.LogMeasurements && GAGenerationLogger == null)
-            //            {
-            //                GAGenerationLogger = new GAGenerationLogger(LogEveryGenerations);
-            //                GAGenerationLogger.BindTo(this);
-            //            }
         }
-
-        public void ApplyChangesToPreferenceModel()
+        public void StartGA()
         {
-            List<LevelChromosomeBase> unselected =
-                this.Population.CurrentGeneration.Chromosomes
-                .Select(x => (LevelChromosomeBase)x)
-                .Where(x => GenerationSelecitons.Contains(x) == false) //Must not be contained by selections
-                .ToList();
-
-            if (GenerationSelecitons.Count == 0) return;
-
-            PhenotypeEvaluator
-                .UserPreferenceModel
-                .AlterPreferences(GenerationSelecitons[0], unselected);
-            //UserPreferences.Alter(GenerationSelecitons, unselected);
-        }
-
-        public void EndGA()
-        {
-            GenerationSelecitons = new List<LevelChromosomeBase>();
-            InteractiveSelections = new List<List<LevelChromosomeBase>>();
             DisposeOldPopulation();
-            //RefreshPreferencesWeight();
-            this.State = GeneticAlgorithmState.NotStarted;
+            SetupGA();
+
+            //Normalize the user preferences
+            PhenotypeEvaluator.Prepare();
+
+            //Attach tracker that keeps track of the weight of the user preference model
+            //and their changes throughout the generations
+            AttachUserPreferenceLogger();
+
+            //Seed the randomizer used in mutators and
+            GeneticSharp.RandomizationProvider.Current =
+                new NativeRandomProvider(Seed);
+
+            //Clear selections
+            GenerationSelecitons =
+                new List<LevelChromosomeBase>();
+            InteractiveSelections =
+                new List<List<LevelChromosomeBase>>();
+
+            //Startup the interactive evolutionary algoritm
+            State = GeneticAlgorithmState.Started;
+            Population.CreateInitialGeneration();
+            EvaluateFitness();
         }
-
-        public void DisposeOldPopulation()
-        {
-            var tempList = this.transform.Cast<Transform>().ToList();
-            foreach (var child in tempList)
-            {
-                GameObject.DestroyImmediate(child.gameObject);
-            }
-        }
-
-        public void DoGeneration()
-        {
-            if (this.State == GeneticAlgorithmState.Started)
-            {
-                ApplyChangesToPreferenceModel();
-                for (int i = 0; i < SyntheticGenerations; i++)
-                {
-                    InteractiveSelections.Add(GenerationSelecitons);
-                    GenerationSelecitons.Clear();
-
-                    this.EndCurrentGeneration();
-                    this.EvolveOneGeneration();
-
-                    //Evaluates fitness but also manifest the level
-                    // in the unity scene
-                    this.EvaluateFitness();
-                }
-            }
-        }
-
-        public void NameAllPhenotypeGameobjects()
-        {
-            try
-            {
-                Vector2 placement = new Vector2(5, 5);
-
-                foreach (var chromosome in Population.CurrentGeneration.Chromosomes)
-                {
-                    var levelChromosome = chromosome as LevelChromosomeBase;
-
-                    if (levelChromosome.Manifestation != null)
-                    {
-                        if (levelChromosome.Manifestation.GetComponentInChildren<ChromoseMeasurementsVisualizer>()
-                            == null)
-                        {
-                            //Attach mono behaviour to visualize the measurements
-                            ChromoseMeasurementsVisualizer.AttachDataVisualizer(
-                                levelChromosome.Manifestation,
-                                new Vector2(5, 5));
-                        }
-
-                        //Clear objects name and replace it with new fitnessj
-                        this.Generator.ClearName(levelChromosome);
-                        this.Generator.AppendFitnessToName(levelChromosome);
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                int a = 3;
-
-                throw;
-            }
-        }
-
-        private static bool IsValidUserPreferenceModel(UserPreferenceModel ue, int necessaryWerghtCount)
-        {
-            return ue is not null && ue.Weights.Count == necessaryWerghtCount;
-        }
-
         private void AttachUserPreferenceLogger()
         {
             PreferenceTracker = new UserPrefereneceTracker(this);
-            PhenotypeEvaluator.UserPreferenceModel.Attach(PreferenceTracker);
+            PhenotypeEvaluator.UserPreferenceModel.
+                Attach(PreferenceTracker);
         }
-
-        public void RandomizeSeed()
+        private IList<IChromosome> Cross(IList<IChromosome> parents)
         {
-            Seed = new System.Random().Next();
+            return OperatorsStrategy.Cross(Population, Crossover, CrossoverProbability, parents);
         }
-
-        public void RunWithSyntheticModel()
-        {
-            for (int i = 0; i < IndependentRuns; i++)
-            {
-                StartGA();
-                for (int j = 0; j < AimedGenerations; j++)
-                {
-                    this.EndCurrentGeneration();
-                    this.EvolveOneGeneration();
-                    //Evaluates fitness but also manifest the level
-                    // in the unity scene
-                    this.EvaluateFitness();
-                }
-
-                //Do not remove ga result in last run
-                if (i != IndependentRuns - 1)
-                    EndGA();
-            }
-        }
-
-        public void SelectChromosome(LevelChromosomeBase chromosome)
-        {
-            if (GenerationSelecitons.Contains(chromosome))
-            {
-                GenerationSelecitons.Remove(chromosome);
-            }
-            else
-            {
-                GenerationSelecitons.Add(chromosome);
-            }
-        }
-
         private void Ga_AfterEvaluation(object sender, EventArgs e)
         {
+            UnityEngine.Debug.Log($"_DEB_ AfterEval");
             NameAllPhenotypeGameobjects();
         }
-
         private void Ga_GenerationRan(object sender, EventArgs e)
         {
             NameAllPhenotypeGameobjects();
+
+            UnityEngine.Debug.Log($"_DEB_ GenRan");
             UnityEngine.Debug.Log($"{this.GenerationsNumber} Generation Ran");
         }
-
         private void Ga_TerminationReached(object sender, EventArgs e)
         //Given an level phenotype generator, population count and level size
         // spreads levels manifestations in a grid. Used by all phenotype evalutions
         // to trigger the level generations when needed
         {
+            UnityEngine.Debug.Log($"_DEB_ Termination");
             List<IChromosome> chromosomes = GetTopLevelsFitness();
             ManifestTopLevels(chromosomes);
         }
-
         private List<IChromosome> GetTopLevelsFitness()
         {
-            foreach (var gen in this.Population.Generations)
-            {
-                foreach (var c in gen.Chromosomes)
-                {
-                    UnityEngine.Debug.Log($"Generation {gen.Number} - Fitness {c.Fitness}");
-                }
-            }
+            List<IChromosome> testC = this.Population.Generations.SelectMany(x => x.Chromosomes).ToList();
+
             List<IChromosome> topN = this.Population.Generations.SelectMany(x => x.Chromosomes)
-                .Distinct().
+                .
                 OrderByDescending(x => x.Fitness).Take(TopNLevels).ToList();
             int n = 0;
             foreach (var top in topN)
@@ -668,21 +550,82 @@ namespace GeneticSharp.Domain
             }
             return topN;
         }
-
+        private GameObject[] TopLevelManifestations = new GameObject[1];
         private void ManifestTopLevels(List<IChromosome> chromosomes)
         {
             //Start with y down
             Vector3 TopLevelsPos = this.transform.position - new Vector3(0, 30, 0);
+
+            foreach (var top in TopLevelManifestations)
+            {
+                DestroyImmediate(top);
+            }
+
+            TopLevelManifestations = new GameObject[chromosomes.Count];
             for (int i = 0; i < chromosomes.Count; i++)
             {
                 TopLevelsPos += new Vector3(25, 0, 0);
-                var level = Instantiate(Generator, TopLevelsPos,
-                    Quaternion.identity, this.transform);
-                level.gameObject.name = $"Top {i} - {chromosomes[i].Fitness}";
-                var levelChromosome = (OTEPSLevelChromosome)chromosomes[i];
-                levelChromosome.PhenotypeGenerator.Generate(levelChromosome, level.gameObject);
-                ChromoseMeasurementsVisualizer.AttachDataVisualizer(level.gameObject);
+                var levelChromosome =
+                    (OTEPSLevelChromosome)chromosomes[i];
+                var manifestation =
+                    new GameObject($"Top {i} - {chromosomes[i].Fitness}");
+                manifestation.transform.position = TopLevelsPos;
+                manifestation.transform.SetParent(this.transform, false);
+                levelChromosome.Manifestation = manifestation;
+                levelChromosome.
+                    PhenotypeGenerator
+                    .Generate(levelChromosome, levelChromosome.Manifestation);
+
+                TopLevelManifestations[i] = levelChromosome.Manifestation;
             }
+            Physics2D.SyncTransforms();
+        }
+        private void Mutate(IList<IChromosome> chromosomes)
+        {
+            OperatorsStrategy.Mutate(Mutation, MutationProbability, chromosomes);
+        }
+
+        /// Runs the evaluate fitness.
+        private void RunEvaluateGroupOfIndiviudal(IEnumerable<IChromosome> identicalChromosomes)
+        {
+            var groupLeader = identicalChromosomes.First(x => ((LevelChromosomeBase)x).Manifestation);
+            try
+            {
+                double fitness = Fitness.Evaluate(groupLeader);
+                foreach (var groupsMembers in identicalChromosomes)
+                {
+                    groupsMembers.Fitness = fitness;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new FitnessException(Fitness, "Error executing Fitness.Evaluate for chromosome: {0}".With(ex.Message), ex);
+            }
+        }
+        /// Runs the evaluate fitness.
+        private void ReevaluateGroup(IEnumerable<IChromosome> identicalChromosomes)
+        {
+            try
+            {
+                var groupLeader = identicalChromosomes.First(x => ((LevelChromosomeBase)x).Manifestation);
+                groupLeader.Fitness = PhenotypeEvaluator.Reevaluate(groupLeader);
+                foreach (var groupsMembers in identicalChromosomes)
+                {
+                    groupsMembers.Fitness = groupLeader.Fitness;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new FitnessException(Fitness, "Error executing Fitness.Evaluate for chromosome: {0}".With(ex.Message), ex);
+            }
+        }
+        private IList<IChromosome> Reinsert(IList<IChromosome> offspring, IList<IChromosome> parents)
+        {
+            return Reinsertion.SelectChromosomes(Population, offspring, parents);
+        }
+        private IList<IChromosome> SelectParents()
+        {
+            return Selection.SelectChromosomes(Population.MinSize, Population.CurrentGeneration);
         }
 
         #endregion Methods

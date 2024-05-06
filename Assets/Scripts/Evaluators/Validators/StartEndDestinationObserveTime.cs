@@ -6,6 +6,7 @@ using UnityEngine;
 
 //Provides negative fitness depening on how much spawn or destination areas
 // are observed by guard FOVS
+[ExecuteInEditMode]
 public class StartEndDestinationObserveTime : MeasureMono
 {
     private IFutureLevel FutureLevel;
@@ -40,6 +41,19 @@ public class StartEndDestinationObserveTime : MeasureMono
 
     private bool Passes()
     {
+        if (Manifestation != null)
+            Init(Manifestation);
+        else
+        {
+            var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
+            if (level != null)
+            {
+                Manifestation = level;
+                Init(level);
+            }
+            else return false;
+        }
+
         Vector2Int startNativeCoord = Heatmap.GetNativeCoord(Start.transform.position);
         Vector2Int endNativeCoord = Heatmap.GetNativeCoord(End.transform.position);
 

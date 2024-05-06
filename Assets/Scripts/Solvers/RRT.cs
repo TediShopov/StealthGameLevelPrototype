@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 //Wrapper class to encapsualte any data in a tree node
@@ -26,6 +27,7 @@ public class RRT : IRapidlyEpxploringRandomTree<Vector3>
     [SerializeField] public RRTStats _stats;
     [SerializeField] private int _maxIterations; //Max iterations before terminating
     [SerializeField] private float _steerStep;
+    [SerializeField] private bool _naiveNN = true;
     [HideInInspector] private readonly float _delta = 0.1f;
 
     [HideInInspector] public IFutureLevel _futureLevel;
@@ -136,9 +138,9 @@ public class RRT : IRapidlyEpxploringRandomTree<Vector3>
     //Tries to reach a predetermined state
     public virtual TreeNode<Vector3> DoStep(Vector3 target)
     {
-        var nearestNode = KDTree.NearestNeighbor(_kdTree, KDTree.ToFloatArray(target));
+        //var nearestNode = GetNearestNode(target);
 
-        var nearestPoint = (Vector3)nearestNode;
+        var nearestPoint = (Vector3)GetNearestPoint(target);
 
         Vector3 newPoint = Steer((Vector3)nearestPoint, target);
 
@@ -147,6 +149,36 @@ public class RRT : IRapidlyEpxploringRandomTree<Vector3>
             return AddToTreeStates(newPoint, nearestPoint);
         }
         return null;
+    }
+    public Vector3 GetNearestPoint(Vector3 target)
+    {
+        if (_naiveNN)
+            return NaiveNN(target);
+        else
+            return KNN(target);
+    }
+    public Vector3 NaiveNN(Vector3 target)
+    {
+        return (Vector3)KDTree.NearestNeighbor(_kdTree, KDTree.ToFloatArray(target));
+    }
+    public Vector3 KNN(Vector3 target)
+    {
+        float[] targetArray = KDTree.ToFloatArray(target);
+        float[][] knn = _kdTree.KNearestNeighbors(targetArray, 4);
+
+        float[] maxFeasible = knn[0];
+        foreach (var n in knn)
+        {
+            if (n[2] < targetArray[2])
+            {
+                if (KDTree.FloatDistance(targetArray, n) <
+                    KDTree.FloatDistance(targetArray, maxFeasible))
+                {
+                    maxFeasible = n;
+                }
+            }
+        }
+        return new Vector3(maxFeasible[0], maxFeasible[1], maxFeasible[2]);
     }
 
     //Traverse the tree from the branch all the way up to the root and
