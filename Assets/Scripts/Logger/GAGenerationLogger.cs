@@ -11,23 +11,23 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class GAGenerationLogger : MonoBehaviour
 {
-    [SerializeReference, HideInInspector] private InteractiveGeneticAlgorithm oldGA = null;
-    [SerializeReference] private InteractiveGeneticAlgorithm GA = null;
+    [SerializeReference, HideInInspector] private InteractiveGeneticAlgorithm _oldGA = null;
+    [SerializeReference] protected InteractiveGeneticAlgorithm _ga = null;
     [SerializeField] public int LogEveryNGenerations = 1;
     [SerializeField, HideInInspector] private int LastLoggedGeneration = 0;
 
-    public void Update()
+    public virtual void Update()
     {
-        if (GA != oldGA)
-        //if (GA != null && GA.Equals(oldGA) == false)
+        if (_ga != _oldGA)
+        //if (_ga != null && _ga.Equals(_oldGA) == false)
         {
-            if (oldGA != null)
-                UnbindFrom(oldGA);
+            if (_oldGA != null)
+                UnbindFrom(_oldGA);
 
-            oldGA = GA;
+            _oldGA = _ga;
 
-            if (GA != null)
-                BindTo(GA);
+            if (_ga != null)
+                BindTo(_ga);
         }
     }
 
@@ -36,7 +36,7 @@ public class GAGenerationLogger : MonoBehaviour
         this.LogEveryNGenerations = everyN;
     }
 
-    public void BindTo(InteractiveGeneticAlgorithm ga)
+    public virtual void BindTo(InteractiveGeneticAlgorithm ga)
     {
         Debug.Log($"Bounded To Ga {ga.gameObject.name} ");
         ga.GenerationRan += AppendEvaluationsEveryNGenerations;
@@ -44,7 +44,7 @@ public class GAGenerationLogger : MonoBehaviour
         AlgorithmName = GetDefaultName();
     }
 
-    public void UnbindFrom(InteractiveGeneticAlgorithm ga)
+    public virtual void UnbindFrom(InteractiveGeneticAlgorithm ga)
     {
         Debug.Log($"Unbound from {ga.gameObject.name}");
         ga.GenerationRan -= AppendEvaluationsEveryNGenerations;
@@ -53,10 +53,10 @@ public class GAGenerationLogger : MonoBehaviour
 
     private void AppendEvaluationsEveryNGenerations(object sender, EventArgs e)
     {
-        int genNubmer = GA.Population.CurrentGeneration.Number;
+        int genNubmer = _ga.Population.CurrentGeneration.Number;
         if (genNubmer <= 1)
         {
-            string header = GetHeader(GA.Population.Generations);
+            string header = GetHeader(_ga.Population.Generations);
             Helpers.SaveToCSV($"Tests/{AlgorithmName}.txt", header);
         }
 
@@ -64,23 +64,23 @@ public class GAGenerationLogger : MonoBehaviour
         {
             int logsOccured = genNubmer / LogEveryNGenerations;
             AppendEvaluationToCsv(
-                GA.Population.Generations.TakeLast(LogEveryNGenerations).ToList());
-            LastLoggedGeneration = GA.GenerationsNumber;
+                _ga.Population.Generations.TakeLast(LogEveryNGenerations).ToList());
+            LastLoggedGeneration = _ga.GenerationsNumber;
         }
     }
 
     private void AppendAfterTermination(object sender, EventArgs e)
     {
         IList<Generation> generationToLog =
-            GA.Population.Generations.Skip(LastLoggedGeneration).ToList();
+            _ga.Population.Generations.Skip(LastLoggedGeneration).ToList();
         AppendEvaluationToCsv(generationToLog);
     }
 
     private string GetHeader(IList<Generation> generationsToOutput)
     {
         StringBuilder header = new StringBuilder();
-        //var bestInfo = (LevelChromosomeBase)GA.Population.CurrentGeneration.Chromosomes.First();
-        var bestInfo = (LevelChromosomeBase)GA.Population.CurrentGeneration.Chromosomes
+        //var bestInfo = (LevelChromosomeBase)_ga.Population.CurrentGeneration.Chromosomes.First();
+        var bestInfo = (LevelChromosomeBase)_ga.Population.CurrentGeneration.Chromosomes
             .First();
 
         header.Append($"Chromosome Hash,");
@@ -100,16 +100,16 @@ public class GAGenerationLogger : MonoBehaviour
 
     public string GetDefaultName()
     {
-        return $"GEN_{GA.AimedGenerations}" +
-            $"_POP{GA.Population.MaxSize}" +
-            $"_SZ{GA.LevelProperties.LevelSize}_IndividualTimes";
+        return $"GEN_{_ga.AimedGenerations}" +
+            $"_POP{_ga.Population.MaxSize}" +
+            $"_SZ{_ga.LevelProperties.LevelSize}_IndividualTimes";
     }
 
     private string GetUserPrefferenceModel()
     {
         string preferences = "";
         //        preferences += "Preference Model,";
-        //        foreach (float weight in GA.UserPreferences.Weights)
+        //        foreach (float weight in _ga.UserPreferences.Weights)
         //            preferences += weight + ",";
         return preferences;
     }
@@ -154,6 +154,6 @@ public class GAGenerationLogger : MonoBehaviour
 
     private void AppendEvaluationToCsv()
     {
-        AppendEvaluationToCsv(GA.Population.Generations);
+        AppendEvaluationToCsv(_ga.Population.Generations);
     }
 }

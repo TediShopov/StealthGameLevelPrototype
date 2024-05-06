@@ -27,7 +27,7 @@ public class InteractiveGenetic2PopEditr : InteractiveGeneticAlgorithmEditor
         }
         catch (System.Exception)
         {
-            //((InteractiveGenetic2Pop)target).EndGA();
+            ((InteractiveGenetic2Pop)target).EndGA();
             throw;
         }
     }

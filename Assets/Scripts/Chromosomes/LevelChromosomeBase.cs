@@ -33,13 +33,23 @@ public abstract class LevelChromosomeBase : ChromosomeBase,
     [SerializeReference] public PropertyMeasurements AestheticProperties;
     public float AestheticScore { get; set; }
     public float EngagementScore { get; set; }
-    public bool Feasibility { get; set; }
 
-    public LevelChromosomeBase(LevelChromosomeBase other)
-        : base(other.Length)
+    [SerializeField]
+    private bool _feas;
+
+    public bool Feasibility
     {
-        this.Transfer(other);
+        get { return _feas; }
+        set { _feas = value; }
     }
+
+    //public bool Feasibility { get; set; }
+
+    //    public LevelChromosomeBase(LevelChromosomeBase other)
+    //        : base(other.Length)
+    //    {
+    //        this.Transfer(other);
+    //    }
     protected LevelChromosomeBase(int length, LevelPhenotypeGenerator generator) : base(length)
     {
         PhenotypeGenerator = generator;
@@ -69,8 +79,9 @@ public abstract class LevelChromosomeBase : ChromosomeBase,
         clone.Measurements = this.Measurements;
         clone.AestheticProperties = this.AestheticProperties;
         clone.AestheticScore = this.AestheticScore;
-        clone.Phenotype = this.Phenotype;
-        clone.Manifestation = this.Manifestation;
+        //        clone.Phenotype = this.Phenotype;
+        //        clone.Manifestation = this.Manifestation;
+        clone.Feasibility = this.Feasibility;
         clone.EngagementScore = this.EngagementScore;
         return clone;
     }
@@ -112,5 +123,6 @@ public abstract class LevelChromosomeBase : ChromosomeBase,
         this.Manifestation = other.Manifestation;
         this.EngagementScore = other.EngagementScore;
         this.Fitness = other.Fitness;
+        this.Feasibility = other.Feasibility;
     }
 }

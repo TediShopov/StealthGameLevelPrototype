@@ -91,6 +91,40 @@ namespace GeneticSharp.Domain
             this.CreateFrom(fitness, selection, crossover, mutation);
         }
 
+        public void CheckValidityOfFeasibles()
+        {
+            var correct = this.Population.CurrentGeneration.Chromosomes
+                .Select(x => ((LevelChromosomeBase)x))
+                 .Where(x => ((LevelChromosomeBase)x).Feasibility == true)
+                 .Where(x => x.Manifestation == true);
+            var incorrect = this.Population.CurrentGeneration.Chromosomes
+                .Select(x => ((LevelChromosomeBase)x))
+                 .Where(x => ((LevelChromosomeBase)x).Feasibility == false)
+                 .Where(x => x.Fitness.HasValue)
+                 .Where(x => x.Fitness != -100);
+            if (incorrect.Count() > 0)
+            {
+                UnityEngine.Debug.Log("_DEB_ Incorrect feasibility spotted");
+                foreach (var item in incorrect)
+                {
+                    UnityEngine.Debug.Log($"_DEB_ IFS {item.GetHashCode()} {item.Fitness} {item.Feasibility}");
+                    var foundCorrect = correct.FirstOrDefault(x => x.Equals(item));
+                    if (foundCorrect != null)
+                        UnityEngine.Debug.Log($"_DEB_ IFSCC {foundCorrect.GetHashCode()} {foundCorrect.Fitness} {foundCorrect.Feasibility}");
+                }
+            }
+        }
+        public void CheckAnyManifestationsInOffspring(IEnumerable<IChromosome> c)
+        {
+            var query = c
+                 .Select(x => ((LevelChromosomeBase)x))
+                 .Where(x => x.Manifestation != null || x.Phenotype != null).ToList();
+            if (query.Count() > 0)
+            {
+                UnityEngine.Debug.Log("_DEB_ Incorrect Manifestations");
+            }
+        }
+
         public void Awake()
         {
             this.State = GeneticAlgorithmState.NotStarted;
@@ -254,13 +288,12 @@ namespace GeneticSharp.Domain
                     InteractiveSelections.Add(GenerationSelecitons);
                     GenerationSelecitons.Clear();
 
+                    this.EndCurrentGeneration();
                     this.EvolveOneGeneration();
 
                     //Evaluates fitness but also manifest the level
                     // in the unity scene
                     this.EvaluateFitness();
-
-                    this.EndCurrentGeneration();
                 }
             }
         }
@@ -319,7 +352,7 @@ namespace GeneticSharp.Domain
                     TaskExecutor.Add(() =>
                     {
                         //RunEvaluateFitness(c);
-                        if (groupLeader.Manifestation is null &&
+                        if (groupLeader.Manifestation is not null &&
                         groupLeader.Fitness.HasValue)
                         {
                             UnityEngine.Debug.Log(
@@ -363,7 +396,9 @@ namespace GeneticSharp.Domain
             var offspring = Cross(parents);
             Mutate(offspring);
             var newGenerationChromosomes = Reinsert(offspring, parents);
+            CheckAnyManifestationsInOffspring(newGenerationChromosomes);
             Population.CreateNewGeneration(newGenerationChromosomes);
+            CheckValidityOfFeasibles();
             //return EndCurrentGeneration();
         }
         public void NameAllPhenotypeGameobjects()
@@ -452,6 +487,7 @@ namespace GeneticSharp.Domain
         {
             RandomSeedGenerator = new System.Random(Seed);
             var selection = new TournamentSelection(3);
+            //var crossover = new TwoPointCrossover();
             var crossover = new TwoPointCrossover();
             var mutation = new OTEPSVariableLenghtMutator(1, 1, 1);
             var chromosome = Generator.GetAdamChromosome(RandomSeedGenerator.Next());
@@ -468,6 +504,7 @@ namespace GeneticSharp.Domain
                 new GenerationNumberTermination(AimedGenerations);
 
             //Assign events
+            this.AfterEvaluationStep -= Ga_AfterEvaluation;
             this.AfterEvaluationStep += Ga_AfterEvaluation;
             this.GenerationRan -= Ga_GenerationRan;
             this.GenerationRan += Ga_GenerationRan;
@@ -503,6 +540,7 @@ namespace GeneticSharp.Domain
             State = GeneticAlgorithmState.Started;
             Population.CreateInitialGeneration();
             EvaluateFitness();
+            CheckValidityOfFeasibles();
         }
         private void AttachUserPreferenceLogger()
         {
@@ -595,6 +633,8 @@ namespace GeneticSharp.Domain
                 foreach (var groupsMembers in identicalChromosomes)
                 {
                     groupsMembers.Fitness = fitness;
+                    ((LevelChromosomeBase)groupsMembers).Feasibility
+                        = ((LevelChromosomeBase)groupLeader).Feasibility;
                 }
             }
             catch (Exception ex)

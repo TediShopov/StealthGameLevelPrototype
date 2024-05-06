@@ -32,6 +32,8 @@ namespace GeneticSharp
 
         public override void EvolveOneGeneration()
         {
+            //Catch a bug where feasibilkity is false but fitness is not -100
+
             //Evolve feasible
             var feasible = EvolveIsland(_feasibleSelection);
             var infeasbile = EvolveIsland(_infeasibleSelection);
@@ -41,26 +43,38 @@ namespace GeneticSharp
 
             var combined = feasible.Concat(infeasbile).ToList();
             Debug.Log($"_DEB_ Combined: {combined.Count}");
+            PopulationPhenotypeLayout.CreateNewGeneration(combined);
+            CheckValidityOfFeasibles();
 
-            var newGenerationChromosomes =
-                Reinsertion.SelectChromosomes(PopulationPhenotypeLayout,
-                combined, PopulationPhenotypeLayout.CurrentGeneration.Chromosomes);
-            Debug.Log($"_DEB_ After Insertion: {newGenerationChromosomes.Count}");
-            PopulationPhenotypeLayout.CreateNewGeneration(newGenerationChromosomes);
+            //            Debug.Log($"_DEB_ After Insertion: {newGenerationChromosomes.Count}");
+            //            PopulationPhenotypeLayout.CreateNewGeneration(newGenerationChromosomes);
             //return EndCurrentGeneration();
         }
 
         private IList<IChromosome> EvolveIsland(ISelection selection)
         {
             var pop = PopulationPhenotypeLayout;
+            int oldMin = pop.Min;
+            int oldMax = pop.Max;
+
+            Population.MinSize = Mathf.FloorToInt(oldMin * 0.5f);
+            Population.MaxSize = Mathf.FloorToInt(oldMax * 0.5f);
+
             var parents =
-                selection.SelectChromosomes(Mathf.FloorToInt(pop.MinSize * 0.5f), pop.CurrentGeneration);
+                selection.SelectChromosomes(Population.MinSize, pop.CurrentGeneration);
 
             var offspring =
                 OperatorsStrategy.Cross(pop, Crossover, CrossoverProbability, parents);
 
             OperatorsStrategy.Mutate(Mutation, MutationProbability, offspring);
 
+            //Modulate minsize to and maxsize of population to reinsert correctyl
+            offspring =
+                Reinsertion.SelectChromosomes(PopulationPhenotypeLayout,
+                offspring, parents);
+
+            Population.MinSize = oldMin;
+            Population.MaxSize = oldMax;
             return offspring;
         }
     }
@@ -86,7 +100,8 @@ namespace GeneticSharp
             try
             {
                 var feasibleGeneration = new Generation(generation.Number,
-                    generation.Chromosomes.Where(x => ((LevelChromosomeBase)x).Feasibility == Feasibility).ToList());
+                    generation.Chromosomes.Where(
+                        x => ((LevelChromosomeBase)x).Feasibility == Feasibility).ToList());
 
                 Debug.Log($"Feasibility {Feasibility}, Generaiton Count: {feasibleGeneration.Chromosomes.Count}");
 
