@@ -35,8 +35,16 @@ namespace GeneticSharp
             //Catch a bug where feasibilkity is false but fitness is not -100
 
             //Evolve feasible
-            var feasible = EvolveIsland(_feasibleSelection);
-            var infeasbile = EvolveIsland(_infeasibleSelection);
+            int eMin = Mathf.FloorToInt(Population.MinSize * 0.5f);
+            int eMax = Mathf.FloorToInt(Population.MaxSize * 0.5f);
+            var feasible = EvolveIsland(eMin, eMax, _feasibleSelection);
+
+            //Infeasible offspring occupy the needed space to fill the
+            //population size  marks
+            var infeasbile = EvolveIsland(
+                Population.MinSize - feasible.Count,
+                Population.MaxSize - feasible.Count,
+                _infeasibleSelection);
 
             Debug.Log($"_DEB_ Feasible: {feasible.Count}");
             Debug.Log($"_DEB_ Infeasible: {infeasbile.Count}");
@@ -51,14 +59,14 @@ namespace GeneticSharp
             //return EndCurrentGeneration();
         }
 
-        private IList<IChromosome> EvolveIsland(ISelection selection)
+        private IList<IChromosome> EvolveIsland(int min, int max, ISelection selection)
         {
             var pop = PopulationPhenotypeLayout;
             int oldMin = pop.Min;
             int oldMax = pop.Max;
 
-            Population.MinSize = Mathf.FloorToInt(oldMin * 0.5f);
-            Population.MaxSize = Mathf.FloorToInt(oldMax * 0.5f);
+            Population.MinSize = min;
+            Population.MaxSize = max;
 
             var parents =
                 selection.SelectChromosomes(Population.MinSize, pop.CurrentGeneration);
