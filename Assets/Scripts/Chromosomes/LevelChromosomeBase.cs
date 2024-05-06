@@ -79,8 +79,8 @@ public abstract class LevelChromosomeBase : ChromosomeBase,
         clone.Measurements = this.Measurements;
         clone.AestheticProperties = this.AestheticProperties;
         clone.AestheticScore = this.AestheticScore;
-        //        clone.Phenotype = this.Phenotype;
-        //        clone.Manifestation = this.Manifestation;
+        clone.Phenotype = this.Phenotype;
+        clone.Manifestation = this.Manifestation;
         clone.Feasibility = this.Feasibility;
         clone.EngagementScore = this.EngagementScore;
         return clone;

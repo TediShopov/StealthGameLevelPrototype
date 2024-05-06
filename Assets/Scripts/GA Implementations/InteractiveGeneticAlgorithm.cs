@@ -577,8 +577,9 @@ namespace GeneticSharp.Domain
         {
             List<IChromosome> testC = this.Population.Generations.SelectMany(x => x.Chromosomes).ToList();
 
-            List<IChromosome> topN = this.Population.Generations.SelectMany(x => x.Chromosomes)
-                .
+            List<IChromosome> topN = this.Population.Generations
+                .SelectMany(x => x.Chromosomes).
+                Distinct().
                 OrderByDescending(x => x.Fitness).Take(TopNLevels).ToList();
             int n = 0;
             foreach (var top in topN)
