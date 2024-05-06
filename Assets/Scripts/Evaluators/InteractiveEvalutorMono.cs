@@ -70,6 +70,16 @@ public class InteractiveEvalutorMono : EvaluatorMono
             .Count();
         return countOfPropertyEvaluators;
     }
+    public string[] GetNamesOfLevelProperties()
+    {
+        var evaluatorsInPrefab = EvaluatorHolder.GetComponents<MeasureMono>();
+
+        var countOfPropertyEvaluators =
+            evaluatorsInPrefab
+            .Where(x => x.GetCategory() == MeasurementType.PROPERTIES)
+            .Select(x => x.GetName());
+        return countOfPropertyEvaluators.ToArray();
+    }
 
     public void AppendAestheticMeasureToObject(
         LevelChromosomeBase chromo,
