@@ -1,17 +1,9 @@
-using Codice.CM.SEIDInfo;
-using PlasticPipe.Certificates;
 using StealthLevelEvaluation;
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using Unity.Plastic.Newtonsoft.Json.Serialization;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Profiling;
-using UnityEngine.UIElements;
 
 /// <summary>
 /// OTEPS is a level generator that encodes level obstacles transform in its layout explicitly
@@ -66,8 +58,8 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         To = to;
         EnsureComponentValidity();
 
-        if (chromosome is not OTEPSLevelChromosome)
-            throw new System.ArgumentException("OTEPS Level generator requries OTEPS level chromosome");
+        //        if (chromosome is not OTEPSLevelChromosome)
+        //            throw new System.ArgumentException("OTEPS Level generator requries OTEPS level chromosome");
 
         chromosome.Phenotype = new LevelPhenotype();
         int geneIndex = 0;
@@ -97,7 +89,7 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         UnityEngine.Debug.Log("Generation of phenotype finished");
     }
 
-    private void EnsureComponentValidity()
+    protected virtual void EnsureComponentValidity()
     {
         if (this.FutureLevel == null)
         {
@@ -114,7 +106,7 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         RoadmapGenerator.BoundaryLayerMask = LevelProperties.BoundaryLayerMask;
     }
 
-    private void CalculateLevelFuture(LevelChromosomeBase chromosomeBase)
+    protected void CalculateLevelFuture(LevelChromosomeBase chromosomeBase)
     {
         //Initialize the future level
         var futurePrototype = (IFutureLevel)FutureLevel.Clone();
@@ -130,7 +122,7 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         chromosomeBase.Phenotype.FutureLevel = futurePrototype;
     }
 
-    private void AssignRoadmToPhenotype(LevelChromosomeBase chromosome, GameObject to)
+    protected void AssignRoadmToPhenotype(LevelChromosomeBase chromosome, GameObject to)
     {
         RoadmapGenerator.LevelProperties = this.LevelProperties;
         RoadmapGenerator.Generate(to);
@@ -138,7 +130,7 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         chromosome.Phenotype.Zones = RoadmapGenerator.LevelGrid;
     }
 
-    private int GenerateGeometry(LevelChromosomeBase chromosome, GameObject to)
+    protected int GenerateGeometry(LevelChromosomeBase chromosome, GameObject to)
     {
         CreateLevelStructure(to);
 
@@ -153,7 +145,7 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         return geneIndex;
     }
 
-    public MeasureResult MeasureResultFromStep(string stepName, Action action)
+    public MeasureResult MeasureResultFromStep(string stepName, System.Action action)
     {
         var toReturn = new MeasureResult();
         toReturn.Name = stepName;
