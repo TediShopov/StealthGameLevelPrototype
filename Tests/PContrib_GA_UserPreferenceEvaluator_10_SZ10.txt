@@ -69,3 +69,13 @@ GEN,LevelClutterednessEvaluator_Weight,LevelClutterednessEvaluator_Value,Relativ
 11,0.2,0.3070349,0.2,0,0.2,0,0.2,0.3354554,0.2,0.8560907,
 11,0.2,0.3054017,0.2,0,0.2,0,0.2,0.4137255,0.2,0.8175552,
 
+GEN,LevelClutterednessEvaluator_Weight,LevelClutterednessEvaluator_Value,RelativeFOVOverlap_Weight,RelativeFOVOverlap_Value,Relative Coverage_Weight,Relative Coverage_Value,ZoneAreaVarience_Weight,ZoneAreaVarience_Value,EnemyPathVarience_Weight,EnemyPathVarience_Value,
+
+1,0.2,0.277449,0.2,0,0.2,0,0.2,0.2507187,0.2,0.4188891,
+1,0.2,0.1655125,0.2,0,0.2,0,0.2,0.2925708,0.2,0.5721337,
+
+GEN,LevelClutterednessEvaluator_Weight,LevelClutterednessEvaluator_Value,RelativeFOVOverlap_Weight,RelativeFOVOverlap_Value,Relative Coverage_Weight,Relative Coverage_Value,ZoneAreaVarience_Weight,ZoneAreaVarience_Value,EnemyPathVarience_Weight,EnemyPathVarience_Value,
+
+1,0.2,0.1655125,0.2,0,0.2,0,0.2,0.2925708,0.2,0.5721337,
+1,0.2,0.277449,0.2,0,0.2,0,0.2,0.2426765,0.2,0.4188891,
+

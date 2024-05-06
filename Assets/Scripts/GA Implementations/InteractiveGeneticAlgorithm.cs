@@ -594,9 +594,12 @@ namespace GeneticSharp.Domain
             //Start with y down
             Vector3 TopLevelsPos = this.transform.position - new Vector3(0, 30, 0);
 
-            foreach (var top in TopLevelManifestations)
+            if (TopLevelManifestations != null)
             {
-                DestroyImmediate(top);
+                foreach (var top in TopLevelManifestations)
+                {
+                    DestroyImmediate(top);
+                }
             }
 
             TopLevelManifestations = new GameObject[chromosomes.Count];

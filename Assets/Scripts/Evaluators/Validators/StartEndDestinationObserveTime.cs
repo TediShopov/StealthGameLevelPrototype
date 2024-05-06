@@ -38,6 +38,19 @@ public class StartEndDestinationObserveTime : MeasureMono
             return "False";
         }
     }
+    private List<Vector2Int> GetNeighbours(Vector2Int nc)
+    {
+        return new List<Vector2Int> {
+            new Vector2Int(nc.x, nc.y+1),
+            new Vector2Int(nc.x, nc.y-1),
+            new Vector2Int(nc.x+1, nc.y+1),
+            new Vector2Int(nc.x+1, nc.y-1),
+            new Vector2Int(nc.x-1, nc.y+1),
+            new Vector2Int(nc.x-1, nc.y-1),
+            new Vector2Int(nc.x+1, nc.y),
+            new Vector2Int(nc.x-1,nc.y),
+        };
+    }
 
     private bool Passes()
     {
@@ -54,11 +67,27 @@ public class StartEndDestinationObserveTime : MeasureMono
             else return false;
         }
 
-        Vector2Int startNativeCoord = Heatmap.GetNativeCoord(Start.transform.position);
-        Vector2Int endNativeCoord = Heatmap.GetNativeCoord(End.transform.position);
+        {
+            Vector2Int startNativeCoord = Heatmap.GetNativeCoord(Start.transform.position);
+            List<Vector2Int> startCoords = new List<Vector2Int> { startNativeCoord };
+            startCoords.AddRange(GetNeighbours(startNativeCoord));
+            foreach (var coord in startCoords)
+            {
+                FrameObserveStart +=
+                    Mathf.FloorToInt(Heatmap.Get(coord.x, coord.y) * FutureLevel.Iterations);
+            }
+        }
 
-        FrameObserveStart = Mathf.FloorToInt(Heatmap.Get(startNativeCoord.x, startNativeCoord.y) * FutureLevel.Iterations);
-        FrameObserveEnd = Mathf.FloorToInt(Heatmap.Get(endNativeCoord.x, endNativeCoord.y) * FutureLevel.Iterations);
+        {
+            Vector2Int endNativeCoord = Heatmap.GetNativeCoord(End.transform.position);
+            List<Vector2Int> endCoords = new List<Vector2Int> { endNativeCoord };
+            endCoords.AddRange(GetNeighbours(endNativeCoord));
+            foreach (var coord in endCoords)
+            {
+                FrameObserveEnd +=
+                    Mathf.FloorToInt(Heatmap.Get(coord.x, coord.y) * FutureLevel.Iterations);
+            }
+        }
 
         if (FrameObserveStart > MaxTimeFrameObservedStart)
             return false;

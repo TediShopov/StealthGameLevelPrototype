@@ -259,7 +259,7 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
                 gm.layer = LayerMask.NameToLayer("Obstacle");
 
                 comp.geometryType = CompositeCollider2D.GeometryType.Polygons;
-                comp.generationType = CompositeCollider2D.GenerationType.Manual;
+                comp.generationType = CompositeCollider2D.GenerationType.Synchronous;
                 colliders.RemoveAll(x => overlappingCollider.Contains(x));
 
                 AddShapesToCompositeObject(overlappingCollider, comp);

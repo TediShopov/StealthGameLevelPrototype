@@ -10,6 +10,7 @@ using UnityEngine;
 public class EvaluatorMono : MonoBehaviour, IFitness, IPrototypable<EvaluatorMono>
 {
     [SerializeField] public GameObject EvaluatorHolder;
+    public double Evaluation = 0;
     //private List<MeasureMono> Evaluators = new List<MeasureMono>();
 
     public LevelChromosomeBase TryGetValidLevelChromosome(IChromosome chromosome)
@@ -28,11 +29,12 @@ public class EvaluatorMono : MonoBehaviour, IFitness, IPrototypable<EvaluatorMon
         throw new System.ArgumentException("Level evaluator require ohe chromosome to inherite from LevelChromosomeBase");
     }
 
-    public double AttachToAndEvaluate(IChromosome chromosome)
+    public EvaluatorMono AttachToAndEvaluate(IChromosome chromosome)
     {
         LevelChromosomeBase levelChromosome = TryGetValidLevelChromosome(chromosome);
         EvaluatorMono evaluatorPrototype = this.PrototypeComponent(levelChromosome.Manifestation);
-        return evaluatorPrototype.Evaluate(chromosome);
+        Evaluation = evaluatorPrototype.Evaluate(chromosome);
+        return evaluatorPrototype;
     }
 
     public virtual double Evaluate(IChromosome chromosome)

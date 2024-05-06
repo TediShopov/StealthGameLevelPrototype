@@ -52,7 +52,8 @@ public class LevelEngagementEvaluator : EvaluatorMono
         RRTList = new List<RRT>();
 
         var rrtContainer = new GameObject($"{this.RRT.GetType().Name}");
-        rrtContainer.transform.SetParent(this.transform);
+        rrtContainer.transform.position = new Vector3(0, 0, 0);
+        rrtContainer.transform.SetParent(this.transform, false);
         var rrtVisualizer =
             rrtContainer.AddComponent<RapidlyExploringRandomTreeVisualizer>();
         rrtVisualizer.RRT = this.RRT;
@@ -68,7 +69,7 @@ public class LevelEngagementEvaluator : EvaluatorMono
 
     private static float GetRRTSuccessRate(List<RRT> rrtList)
     {
-        return rrtList.Count(x => x.Succeeded()) / rrtList.Count();
+        return (float)rrtList.Count(x => x.Succeeded()) / (float)rrtList.Count();
     }
 
     private float GetMinimumRiskMeasure(List<RRT> rrtList)

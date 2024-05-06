@@ -28,6 +28,7 @@ public class RRT : IRapidlyEpxploringRandomTree<Vector3>
     [SerializeField] private int _maxIterations; //Max iterations before terminating
     [SerializeField] private float _steerStep;
     [SerializeField] private bool _naiveNN = true;
+    [SerializeField] public float Time = 0;
     [HideInInspector] private readonly float _delta = 0.1f;
 
     [HideInInspector] public IFutureLevel _futureLevel;
@@ -61,25 +62,29 @@ public class RRT : IRapidlyEpxploringRandomTree<Vector3>
     //Runs the algorithm until either max iterations is reached or solution is found
     public void Run()
     {
-        while (_iterations < MaxIterations)
+        Time = Helpers.TrackExecutionTime(() =>
         {
-            TreeNode<Vector3> stepResult = null;
-            stepResult = DoStep();
-            //If steps collision check did not pass they will return
-            //empty step so it has to be checked again
-            if (stepResult != null)
+            while (_iterations < MaxIterations)
             {
-                //If it is close enough to goal by some user defined critera,
-                //the algorithm has found a path
-                if (IsGoalState(stepResult.Content))
+                TreeNode<Vector3> stepResult = null;
+                stepResult = DoStep();
+                //If steps collision check did not pass they will return
+                //empty step so it has to be checked again
+                if (stepResult != null)
                 {
-                    GoalNodeFound = stepResult;
-                    break;
+                    //If it is close enough to goal by some user defined critera,
+                    //the algorithm has found a path
+                    if (IsGoalState(stepResult.Content))
+                    {
+                        GoalNodeFound = stepResult;
+                        break;
+                    }
                 }
+                _iterations++;
             }
-            _iterations++;
+            _stats.TotalIterations = _iterations;
         }
-        _stats.TotalIterations = _iterations;
+            );
     }
     //Has a solution been found
     public bool Succeeded()

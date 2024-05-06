@@ -116,9 +116,8 @@ public class FutureLevelSlider : MonoBehaviour
             var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
             var rrts = level.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
 
-            SolutionPaths = rrts.Select(x => x.RRT)
-               .Where(x => x.Succeeded())
-               .Select(x => x.ReconstructPathToSolution())
+            SolutionPaths = rrts.Select(x => x.Path)
+                .Where(X => X.Count != 0)
                .ToList();
 
             yield return new WaitForSecondsRealtime(2.0f);

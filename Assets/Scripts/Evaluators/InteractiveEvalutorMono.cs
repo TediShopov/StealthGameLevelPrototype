@@ -156,7 +156,7 @@ public class InteractiveEvalutorMono : EvaluatorMono
             if (ToogleEngagementContribution)
             {
                 levelChromosome.EngagementScore =
-                    (float)ObjectiveFitness.AttachToAndEvaluate(levelChromosome);
+                    (float)ObjectiveFitness.AttachToAndEvaluate(levelChromosome).Evaluation;
                 eval += levelChromosome.EngagementScore;
             }
         }
