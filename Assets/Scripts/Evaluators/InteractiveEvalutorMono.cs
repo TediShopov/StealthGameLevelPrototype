@@ -26,6 +26,7 @@ public class InteractiveEvalutorMono : EvaluatorMono
     [SerializeField]
     public EvaluatorMono ObjectiveFitness;
 
+    [SerializeField]
     public UserPreferenceModel UserPreferenceModel;
 
     [SerializeField] public GameObject OldEvaluatorPrefab = null;

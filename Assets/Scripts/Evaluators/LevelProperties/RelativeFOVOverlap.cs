@@ -60,7 +60,8 @@ namespace StealthLevelEvaluation
         protected override float MeasureProperty()
         {
             //Get Future level instance
-            var futureLevel = Manifestation.GetComponentInChildren<IFutureLevel>(false);
+            LevelChromosomeBase chromosome = LevelChromosomeMono.Find(this.gameObject).Chromosome;
+            var futureLevel = chromosome.Phenotype.FutureLevel;
             Data._debugEnenmies = Manifestation.GetComponentsInChildren<PatrolEnemyMono>();
             NativeGrid<bool> native = new NativeGrid<bool>(Data.Grid, Helpers.GetLevelBounds(Manifestation));
             native.SetAll((x, y, n) => false);
