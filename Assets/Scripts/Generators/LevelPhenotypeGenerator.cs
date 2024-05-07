@@ -17,12 +17,12 @@ public abstract class LevelPhenotypeGenerator : LevelGeneratorBase
     //public System.Random RandomSeed;
     public bool DisposeNow = false;
 
-    public int MinEnemiesSpawned = 1;
-    public int MaxEnemiesSpawned = 3;
-    public int StartingObstacleCount = 3;
+    //    public int MinEnemiesSpawned = 1;
+    //    public int MaxEnemiesSpawned = 3;
+    //    public int StartingObstacleCount = 3;
 
     protected LevelChromosomeBase LevelChromosome;
-    public int IndexOfChromosome;
+    [HideInInspector] public int IndexOfChromosome;
 
     //    public void Awake()
     //    {
@@ -90,44 +90,7 @@ public abstract class LevelPhenotypeGenerator : LevelGeneratorBase
 
     protected virtual int GenerateLevelContent(LevelChromosomeBase chromosome)
     {
-        int geneIndex = 0;
-        int ObstaclesSpawned = (chromosome.Length - 4) / 5;
-        var Obstacles = new GameObject("Obstacles");
-
-        //Test for off by oen errors
-        for (int i = 0; i < ObstaclesSpawned; i++)
-        {
-            SpawnObstacle(ref geneIndex, LevelBounds, Obstacles);
-        }
-
-        //Read enemy counts and spawn enemies
-        int enemyCount = Mathf.CeilToInt(
-            Mathf.Lerp(
-                MinEnemiesSpawned,
-                MaxEnemiesSpawned,
-                geneIndex));
-
-        for (int i = 0; i < enemyCount; i++)
-        {
-            Instantiate(LevelProperties.EnemyPrefab, To.transform);
-        }
-
-        //Enemy Behaviour
-
-        var pathGenerator =
-            To.GetComponentInChildren<PathGeneratorClass>();
-
-        //Enemy path geenerator seed
-        int pathSeed = Mathf.CeilToInt(
-            GetGeneValue(geneIndex)
-            * GetGeneValue(geneIndex + 1)
-            * GetGeneValue(geneIndex + 2)
-            * GetGeneValue(geneIndex + 3));
-        geneIndex += 4;
-        pathGenerator.LevelRandom = new System.Random(pathSeed);
-
-        Physics2D.SyncTransforms();
-        return geneIndex;
+        throw new NotImplementedException();
     }
 
     protected void InitializeAdditionalLevelData()

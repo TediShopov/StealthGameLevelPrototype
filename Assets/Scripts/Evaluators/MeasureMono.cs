@@ -113,6 +113,8 @@ namespace StealthLevelEvaluation
 
     public abstract class MeasureMono : MonoBehaviour, IMeasure<GameObject>
     {
+        protected readonly string PassStr = "Pass";
+        protected readonly string FailStr = "Fail";
         private bool _evaluted;
 
         //Validators are always run first.

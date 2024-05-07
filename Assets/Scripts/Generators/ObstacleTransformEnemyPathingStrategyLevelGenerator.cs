@@ -27,9 +27,9 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
 {
     public const int ObstaccleGeneLength = 5;
     public const int EnemyGeneLength = 5;
-    public int NecessaryObstacles = 3;
-    public int EnemyCount;
-    private int EntityCount => (LevelChromosome.Length - 1) / 5;
+    [HideInInspector] public int NecessaryObstacles = 3;
+    [HideInInspector] public int EnemyCount;
+    [HideInInspector] private int EntityCount => (LevelChromosome.Length - 1) / 5;
 
     [SerializeField] public FloodfilledRoadmapGenerator RoadmapGenerator;
 

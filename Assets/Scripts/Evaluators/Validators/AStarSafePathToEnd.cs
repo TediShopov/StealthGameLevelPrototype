@@ -40,11 +40,11 @@ namespace StealthLevelEvaluation
             if (Path == null)
             {
                 IsTerminating = false;
-                return 0.0f.ToString();
+                return PassStr;
             }
             Debug.Log($"Path count from A* is: {Path.Count}");
             IsTerminating = true;
-            return 1.0f.ToString();
+            return FailStr;
         }
 
         public override void Init(GameObject manifestation)

@@ -31,11 +31,11 @@ public class StartEndDestinationObserveTime : MeasureMono
     protected override string Evaluate()
     {
         if (Passes())
-            return "True";
+            return PassStr;
         else
         {
             IsTerminating = true;
-            return "False";
+            return FailStr;
         }
     }
     private List<Vector2Int> GetNeighbours(Vector2Int nc)
