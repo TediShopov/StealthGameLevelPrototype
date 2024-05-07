@@ -12,6 +12,7 @@ public class FutureLevelSlider : MonoBehaviour
     public bool EnableSetLevel = true;
     public bool EnableDiscreteTimes = true;
     public float SetTime = 0.0f;
+    public bool DrawHeatmap = true;
 
     public void Awake()
     {
@@ -29,6 +30,12 @@ public class FutureLevelSlider : MonoBehaviour
 
     public virtual void Update()
     {
+        var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
+        var rrts = level.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
+
+        SolutionPaths = rrts.Select(x => x.Path)
+            .Where(X => X.Count != 0)
+           .ToList();
         if (PatrolObjects == null) return;
         foreach (var threa in PatrolObjects)
         {
@@ -52,7 +59,7 @@ public class FutureLevelSlider : MonoBehaviour
         var heatmap = LevelPhenotype.FutureLevel.GetHeatmap();
         var _grid = LevelPhenotype.Zones.Grid;
 
-        if (heatmap != null)
+        if (heatmap != null && DrawHeatmap)
         {
             heatmap.ForEach(
                 (x, y) =>
@@ -75,6 +82,7 @@ public class FutureLevelSlider : MonoBehaviour
         if (SolutionPaths == null) return;
         foreach (var path in SolutionPaths)
         {
+            Gizmos.color = Color.green;
             Vector2 position = this.transform.TransformPoint(GetPosition(path, SetTime));
             if (EnableDiscreteTimes)
             {
@@ -113,13 +121,6 @@ public class FutureLevelSlider : MonoBehaviour
     {
         while (true)
         {
-            var level = Helpers.SearchForTagUpHierarchy(this.gameObject, "Level");
-            var rrts = level.GetComponentsInChildren<RapidlyExploringRandomTreeVisualizer>();
-
-            SolutionPaths = rrts.Select(x => x.Path)
-                .Where(X => X.Count != 0)
-               .ToList();
-
             yield return new WaitForSecondsRealtime(2.0f);
         }
     }
