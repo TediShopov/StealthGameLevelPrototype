@@ -1,3 +1,4 @@
+using GeneticSharp;
 using StealthLevelEvaluation;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
     public const int EnemyGeneLength = 5;
     [HideInInspector] public int NecessaryObstacles = 3;
     [HideInInspector] public int EnemyCount;
+
     [HideInInspector] private int EntityCount => (LevelChromosome.Length - 1) / 5;
 
     [SerializeField] public FloodfilledRoadmapGenerator RoadmapGenerator;

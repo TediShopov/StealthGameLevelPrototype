@@ -381,8 +381,9 @@ namespace GeneticSharp.Domain
             }
             pop.CurrentGeneration.Chromosomes =
                 Population.CurrentGeneration.Chromosomes.OrderByDescending(c => c.Fitness.Value).ToList();
-            //GeneratePhenotypeForAll();
         }
+        //GeneratePhenotypeForAll();
+
         public virtual void EvaluateFitness()
         {
             EvaluateFitness(PopulationPhenotypeLayout);
@@ -486,10 +487,17 @@ namespace GeneticSharp.Domain
         public virtual void SetupGA()
         {
             RandomSeedGenerator = new System.Random(Seed);
-            var selection = new TournamentSelection(3);
-            //var crossover = new TwoPointCrossover();
-            var crossover = new TwoPointCrossover();
-            var mutation = new OTEPSVariableLenghtMutator(1, 1, 1);
+
+            ISelection selection = new TournamentSelection(3);
+            ICrossover crossover;
+            if (Generator.Crossover is null)
+                crossover = new TwoPointCrossover();
+            else crossover = Generator.Crossover;
+            IMutation mutation;
+            if (Generator.Mutation is null)
+                mutation = new OTEPSVariableLenghtMutator(1, 1, 1);
+            else mutation = Generator.Mutation;
+
             var chromosome = Generator.GetAdamChromosome(RandomSeedGenerator.Next());
             PopulationPhenotypeLayout =
                 new PopulationPhenotypeLayout(PopulationPhenotypeLayout, this.gameObject, chromosome);

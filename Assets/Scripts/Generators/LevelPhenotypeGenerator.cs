@@ -1,4 +1,5 @@
 using Codice.Client.BaseCommands;
+using GeneticSharp;
 using JetBrains.Annotations;
 using Mono.Cecil;
 using System;
@@ -16,6 +17,9 @@ public abstract class LevelPhenotypeGenerator : LevelGeneratorBase
 
     //public System.Random RandomSeed;
     public bool DisposeNow = false;
+
+    [SerializeReference, SubclassPicker] public CrossoverBase Crossover;
+    [SerializeReference, SubclassPicker] public MutationBase Mutation;
 
     //    public int MinEnemiesSpawned = 1;
     //    public int MaxEnemiesSpawned = 3;

@@ -7,9 +7,14 @@ using UnityEngine;
 
 public class OTEPSVariableLenghtMutator : MutationBase
 {
-    private float[] _probabilities = new float[3];
+    [SerializeField]
+    private List<float> _probabilities = new List<float>();
+
     private UniformMutation _wholeGeneUniformMutation = new UniformMutation(true);
 
+    public OTEPSVariableLenghtMutator()
+    {
+    }
     public OTEPSVariableLenghtMutator(
         float weightAdd,
         float weightRemove,
@@ -32,7 +37,7 @@ public class OTEPSVariableLenghtMutator : MutationBase
         double cumulativeProbability = 0;
         int chosenOutcome = 0;
 
-        for (int i = 0; i < _probabilities.Length; i++)
+        for (int i = 0; i < _probabilities.Count; i++)
         {
             cumulativeProbability += _probabilities[i];
 
