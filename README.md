@@ -4,7 +4,14 @@
 This project is a Unity Editor tool designed to produce stealth level segments using an interactive evolutionary process. A stealth level is a rectangle area with static obstacles and dynamic, predictable dangers (patrols).  
 The current implementation use a standard GA (Genetic Algorithm) and FI2-POP (Feasible Infeasible Population) to generate an array of stealth levels with a single click.
 
+![First Generation Of Randomly Selected Levels](RandomGeneration.png)
+
 The purpose of this program is to aid level designers by offering visual feedback in multiple formats, such as enemy roadmaps, level zones, threat heatmaps, and the output of a level solver.
+
+![Level roadmap and threat heatmap](LevelRoadmap.png)
+
+![RRT solution in 2D](RRT2D.png)
+![RRT solution in 3D](RRT3D.png)
 
 ## How to use
 In its current form the code is no package and requires copying the source files into and existing Unity Project to use the functionalities. Interface Generation scene contains configuration for both genetic algorithms that can be run from the get go. RRT performance scene is mainly used for comparing the performance of level solvers implementations on a suite of user-picked levels. Measures from loggers are outputted in Tests folder.
