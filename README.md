@@ -10,8 +10,9 @@ The purpose of this program is to aid level designers by offering visual feedbac
 
 ![Level roadmap and threat heatmap](LevelRoadmap.png)
 
-![RRT solution in 2D](RRT2D.png)
-![RRT solution in 3D](RRT3D.png)
+<img src="RRT2D.png" width="45%"></img> <img src="RRT3D.png" width="45%"></img> 
+
+
 
 ## How to use
 In its current form the code is no package and requires copying the source files into and existing Unity Project to use the functionalities. Interface Generation scene contains configuration for both genetic algorithms that can be run from the get go. RRT performance scene is mainly used for comparing the performance of level solvers implementations on a suite of user-picked levels. Measures from loggers are outputted in Tests folder.
