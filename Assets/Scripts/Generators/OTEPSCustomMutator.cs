@@ -21,15 +21,21 @@ public class OTEPSVariableLenghtMutator : MutationBase
         float weightRandom)
     {
         float total = weightAdd + weightRemove + weightRandom;
-        _probabilities[0] = weightAdd / total;
-        _probabilities[1] = weightRemove / total;
-        _probabilities[2] = weightRandom / total;
+        _probabilities[0] = weightAdd;
+        _probabilities[1] = weightRemove;
+        _probabilities[2] = weightRandom;
+    }
+    public void Normalize()
+    {
+        _probabilities.Select(x => x / _probabilities.Sum(x => x)).ToList();
     }
 
     public bool IsOrdered => true;
 
     protected override void PerformMutate(IChromosome chromosome, float probability)
     {
+        Normalize();
+
         double isMutating = RandomizationProvider.Current.GetDouble(0, 1); // Random number between 0 and 1
         if (isMutating >= probability) return;
         //Uniform chance to pick one of 4 mutation strategiesweightAdd

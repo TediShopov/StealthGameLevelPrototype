@@ -188,7 +188,8 @@ public class ObstacleTransformEnemyPathingStrategyLevelGenerator :
         }
         catch (System.Exception)
         {
-            UnityEngine.Debug.Log($"Error getting {geneIndex} from {levelChromosomeBase.Length}");
+            UnityEngine.Debug.Log($"Error getting {geneIndex} " +
+                $"{(float)levelChromosomeBase.GetGene(geneIndex).Value} from {levelChromosomeBase.Length}");
 
             throw;
         }

@@ -38,9 +38,18 @@ public class DiscretePathGenerator : MonoBehaviour, IPathGenerator
         for (int i = 0; i < 4; i++)
         {
             int stratIndex = (int)(
-                (float)Chromosome.GetGene(geneIndex).Value * Stategies.Count - 1);
-            EnemyPathingStategy enemyPathingStategy = Stategies[stratIndex];
-            localStrats.Add(enemyPathingStategy);
+                (float)Chromosome.GetGene(geneIndex).Value * (Stategies.Count - 1));
+            try
+            {
+                EnemyPathingStategy enemyPathingStategy = Stategies[stratIndex];
+                localStrats.Add(enemyPathingStategy);
+            }
+            catch (Exception)
+            {
+                Debug.LogWarning($"_DEB_ {(float)Chromosome.GetGene(geneIndex).Value} {stratIndex}");
+
+                throw;
+            }
             geneIndex++;
         }
         int randomNodeIndex = LevelRandom.Next(0, Roadmap.adjacencyList.Count - 1);
