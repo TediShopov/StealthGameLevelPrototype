@@ -380,11 +380,7 @@ public class VoronoiDirectObstacleEnemyPathingStrategy : ObstacleTransformEnemyP
 
         List<UnityEngine.Vector2> polygonPoints = new List<UnityEngine.Vector2>();
 
-        //        TriFace2[] faces = new TriFace2[5];
-        //        triangulation.GetFaces(faces, 5);
-
         //Get the triangulation index count
-
         for (int i = 0; i < triangulation.IndiceCount; i++)
         {
             //Get gene
@@ -396,27 +392,6 @@ public class VoronoiDirectObstacleEnemyPathingStrategy : ObstacleTransformEnemyP
 
             polygonPoints.Clear();
         }
-
-        //For each triangle face (structure that known neighborus)
-        //add to polygon points
-
-        //        for (int i = 0; i < chromosome.Length; i++)
-        //        {
-        //            //bool isObstacle = (bool)chromosome.GetGene(i).Value;
-        //            TriFace2 face = triangulation.GetFace(i);
-        //            IEnumerable<TriVertex2> triVertices = face.EnumerateVertices(triangulation);
-        //            foreach (var triVertex in triVertices)
-        //            {
-        //                polygonPoints.Add(new UnityEngine.Vector2((float)triVertex.Point.x, (float)triVertex.Point.y));
-        //            }
-        //            polygonPoints.Clear();
-        //        }
-
-        //Test for off by oen errors
-        //        for (int i = 0; i < ObstacleCount; i++)
-        //        {
-        //            SpawnObstacle(ref geneIndex, LevelBounds, Obstacles);
-        //        }
 
         //Read enemy counts and spawn enemies
 

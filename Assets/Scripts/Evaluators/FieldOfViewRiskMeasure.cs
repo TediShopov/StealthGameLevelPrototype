@@ -68,7 +68,11 @@ public class FieldOfViewRiskMeasure : ISolutionPathRiskMeasurement
 
     {
         SolutionPath = solutionPath;
-        EnemyPatrols = enemyPatrols;
+        EnemyPatrols = new List<Patrol>(enemyPatrols);
+        foreach (var p in enemyPatrols)
+        {
+            p.Reset();
+        }
     }
 
     public SolutionPath SolutionPath { get; set; }
@@ -103,12 +107,15 @@ public class FieldOfViewRiskMeasure : ISolutionPathRiskMeasurement
     public float RiskOfEnemy(FutureTransform player, Patrol enemy)
     {
         if (enemy.TestThreat(player.Position)) return 0;
-        return RiskFromAngle(player, enemy) / DistanceCubed(player, enemy.GetTransform());
+        return RiskFromAngle(player, enemy) / DistanceCubed(player, enemy);
     }
 
-    public float DistanceCubed(FutureTransform player, FutureTransform enemy)
+    public float DistanceCubed(FutureTransform player, Patrol enemy)
     {
-        return Mathf.Pow(Vector2.Distance(enemy.Position, player.Position), 3);
+        float normalizedDistance = Vector2.Distance(enemy.GetTransform().Position, player.Position) /
+            enemy.AestheticProperties.ViewDistance;
+
+        return Mathf.Pow(normalizedDistance, 3);
     }
 
     public float RiskFromAngle(FutureTransform player, Patrol enemy)

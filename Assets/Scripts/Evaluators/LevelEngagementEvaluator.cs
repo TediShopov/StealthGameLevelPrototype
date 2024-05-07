@@ -15,6 +15,9 @@ public class LevelEngagementEvaluator : EvaluatorMono
     [SerializeField, Range(0, 1)]
     public float TargetSuccessRate;
 
+    [SerializeField, Range(0.01f, 6)]
+    public float TargetRisk;
+
     [HideInInspector] public List<RRT> RRTList;
     [SerializeField] public IFutureLevel FutureLevel;
 
@@ -44,6 +47,7 @@ public class LevelEngagementEvaluator : EvaluatorMono
         //Transfer only the max iteratation and the rrt base class
         proto.RRT = this.RRT;
         proto.TargetSuccessRate = this.TargetSuccessRate;
+        proto.TargetRisk = this.TargetRisk;
         return proto;
     }
 
@@ -167,6 +171,15 @@ public class LevelEngagementEvaluator : EvaluatorMono
         score = 1 / (1 + Mathf.Exp(-difference));
         return score;
     }
+    public float CalculateRiskScore(float successRate, float targetRate)
+    {
+        if (successRate == 0)
+            return 0;
+        float difference = Math.Abs(successRate - targetRate);
+        float score = 1 - difference;
+        score = Math.Max(0, Math.Min(1, score));
+        return score;
+    }
 
     public override double Evaluate(IChromosome chromosome)
     {
@@ -183,9 +196,10 @@ public class LevelEngagementEvaluator : EvaluatorMono
             return 0;
 
         float successRateScore = CalculateSuccessRateScore(SuccessRate, TargetSuccessRate);
-        float pathUniqunesScore = Mathf.InverseLerp(0, 12, PathUniquness);
+        float pathUniqunesScore = Mathf.InverseLerp(6, 15, PathUniquness);
+        float minRiskScore = CalculateRiskScore(MinRisk, TargetRisk);
 
-        //return (successRateScore + pathUniqunesScore + MinRisk) / 3;
-        return (successRateScore + MinRisk) / 2;
+        Evaluation = (float)(successRateScore + minRiskScore) / 2 * pathUniqunesScore;
+        return Evaluation;
     }
 }
