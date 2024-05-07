@@ -4,8 +4,9 @@
 This project is a Unity Editor tool designed to produce stealth level segments using an interactive evolutionary process. A stealth level is a rectangle area with static obstacles and dynamic, predictable dangers (patrols).  
 The current implementation use a standard GA (Genetic Algorithm) and FI2-POP (Feasible Infeasible Population) to generate an array of stealth levels with a single click.
 
+
 <p align="center">
-  <img width="60%"  src="RandomGeneration.png">
+  <img width="48"  src="RandomGeneration.png">
 </p>
 
 
